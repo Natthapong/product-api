@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import th.co.truemoney.product.api.util.ResponseParameter;
 import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.domain.SigninBean;
+import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 import th.co.truemoney.serviceinventory.service.LoginService;
 
 @Controller
@@ -40,8 +41,9 @@ public class UserActionController extends BaseController{
 			result.put("ACCESS_TOKEN", token);
 			result.put(ResponseParameter.STATUS, "20000");
 			result.put(ResponseParameter.NAMESPACE, "TMN-PRODUCT");
-		} catch (Exception e) {
-			//TODO
+		} catch (ServiceInventoryException e) {
+			result.put(ResponseParameter.STATUS, e.getCode());
+			result.put(ResponseParameter.NAMESPACE, e.getNamespace());
 		}
 		return result;
 	}

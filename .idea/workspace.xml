@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="231fc719-8b2d-48da-9671-ffdd1c55ae2a" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/th/co/truemoney/product/api/controller/UserActionController.java" afterPath="$PROJECT_DIR$/src/main/java/th/co/truemoney/product/api/controller/UserActionController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/messages_en_US.properties" afterPath="$PROJECT_DIR$/src/main/resources/messages_en_US.properties" />
-    </list>
+    <list default="true" id="231fc719-8b2d-48da-9671-ffdd1c55ae2a" name="Default" comment="" />
     <ignored path="product-api.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="231fc719-8b2d-48da-9671-ffdd1c55ae2a" time="1363142766902" ignored="false" />

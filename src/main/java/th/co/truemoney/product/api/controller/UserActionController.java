@@ -3,6 +3,7 @@ package th.co.truemoney.product.api.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,9 +11,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.util.ResponseParameter;
+import th.co.truemoney.serviceinventory.domain.SigninBean;
+import th.co.truemoney.serviceinventory.service.LoginService;
 
 @Controller
 public class UserActionController {
+	
+	@Autowired
+	LoginService loginService;
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	@ResponseBody
@@ -26,8 +32,17 @@ public class UserActionController {
 			return result;
 		}
 		
-		result.put(ResponseParameter.STATUS, "20000");
-		result.put(ResponseParameter.NAMESPACE, "TMN-PRODUCT");
+		SigninBean req = new SigninBean();
+		req.setUserName(username);
+		req.setPassword(accessKey);
+		try {
+			String token = loginService.login(req);
+			result.put("ACCESS_TOKEN", token);
+			result.put(ResponseParameter.STATUS, "20000");
+			result.put(ResponseParameter.NAMESPACE, "TMN-PRODUCT");
+		} catch (Exception e) {
+			//TODO
+		}
 		return result;
 	}
 	

@@ -1,5 +1,6 @@
 package th.co.truemoney.product.api.controller;
 
+import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,9 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.ResponseParameter;
+import th.co.truemoney.product.api.util.ValidateUtil;
 
 @Controller
-public class UserActionController {
+public class UserActionController extends BaseController{
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	@ResponseBody
@@ -20,11 +22,9 @@ public class UserActionController {
 			@RequestParam(value="username", required=false) String username, 
 			@RequestParam(value="accessKey", required=false) String accessKey) {
 		Map<String, Object> result = new HashMap<String, Object>();
+
 		// validate
-		if (username == null || username.isEmpty()) {
-			result.put(ResponseParameter.STATUS, "1");
-			return result;
-		}
+	    validateLogin(username);
 		
 		result.put(ResponseParameter.STATUS, "20000");
 		result.put(ResponseParameter.NAMESPACE, "TMN-PRODUCT");
@@ -38,5 +38,15 @@ public class UserActionController {
 	public Map<String, String> extendSession(String sessionId) {
 		return null;
 	}
+
+    private void validateLogin(String username){
+        if (username == null || username.isEmpty()) {
+            throw new InvalidParameterException("50001");
+        }else if(!ValidateUtil.checkEmail(username)){
+            throw new InvalidParameterException("50001");
+        }else if(!ValidateUtil.checkMobileNumber(username)){
+            throw new InvalidParameterException("50001");
+        }
+    }
 	
 }

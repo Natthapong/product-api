@@ -7,8 +7,8 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import th.co.truemoney.product.api.ResponseParameter;
 import th.co.truemoney.product.api.util.MessageManager;
+import th.co.truemoney.product.api.util.ResponseParameter;
 
 @Aspect
 public class ResponseHandlingAspect {
@@ -17,7 +17,7 @@ public class ResponseHandlingAspect {
 	private MessageManager messageManager;
 	
 	@AfterReturning(
-	      pointcut = "execution(* th.co.truemoney.product.api.controller.UserActionController.login(..))",
+	      pointcut = "within(th.co.truemoney.product.api.controller..*)",
 	      returning= "result")
 	public void logAfterReturning(JoinPoint joinPoint, Map<String, Object> result) {
 		String namespace = (String)result.get(ResponseParameter.NAMESPACE);

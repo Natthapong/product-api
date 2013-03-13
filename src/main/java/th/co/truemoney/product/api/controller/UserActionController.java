@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import th.co.truemoney.product.api.ResponseParameter;
+import th.co.truemoney.product.api.util.ResponseParameter;
 
 @Controller
 public class UserActionController {

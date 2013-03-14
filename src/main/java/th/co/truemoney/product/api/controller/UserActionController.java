@@ -8,14 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import th.co.truemoney.product.api.domain.LoginBean;
 import th.co.truemoney.product.api.util.ResponseParameter;
 import th.co.truemoney.product.api.util.ValidateUtil;
-import th.co.truemoney.serviceinventory.domain.SigninBean;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.Login;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
@@ -30,27 +30,21 @@ public class UserActionController extends BaseController {
 
 	@RequestMapping(value = "/signin", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> signin(
-			@RequestParam(value = "username", required = false) String username,
-			@RequestParam(value = "password", required = false) String password) {
+	public Map<String, Object> signin(@RequestBody LoginBean request) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> data = new HashMap<String, Object>();
 
-		//System.out.println("username = "+username);
-		//System.out.println("password ="+password);
-		
+		// TODO add log here
+		System.out.println(request.getUsername());
+		System.out.println(request.getPassword());
+
 		// validate
-		validateSignin(username);
-		
-		SigninBean req = new SigninBean();
-		req.setUserName(username);
-		req.setPassword(password);
-		req.setChannelId(CHANNEL_ID);
+		validateSignin(request.getUsername());
 
+		Login login = new Login(request.getUsername(), request.getPassword());
 		try {
-			String token = profileService.login(CHANNEL_ID, new Login(username,
-					password));
+			String token = profileService.login(CHANNEL_ID, login);
 
+			Map<String, Object> data = new HashMap<String, Object>();
 			data.put("accessToken", token);
 			data.put("fullname", "John Doe");
 			data.put("currentBalance", 0.00);
@@ -61,6 +55,7 @@ public class UserActionController extends BaseController {
 			result.put(ResponseParameter.STATUS, e.getErrorCode());
 			result.put(ResponseParameter.NAMESPACE, e.getErrorNamespace());
 		}
+
 		return result;
 	}
 
@@ -81,11 +76,11 @@ public class UserActionController extends BaseController {
 	}
 
 	private void validateSignin(String username) {
-		boolean isEmail = ValidateUtil.checkEmail(username);
-		boolean isMobile = ValidateUtil.checkMobileNumber(username);
 
-		if (!isEmail && !isMobile) {
-			throw new InvalidParameterException("50001");
+		if (!ValidateUtil.checkEmail(username)) {
+			if (!ValidateUtil.checkMobileNumber(username)) {
+				throw new InvalidParameterException("50001");
+			}
 		}
 	}
 

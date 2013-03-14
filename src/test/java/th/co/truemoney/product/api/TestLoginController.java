@@ -8,6 +8,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import th.co.truemoney.product.api.controller.UserActionController;
+import th.co.truemoney.product.api.domain.LoginBean;
 
 public class TestLoginController {
 	
@@ -15,7 +16,7 @@ public class TestLoginController {
 	@Test(expected=InvalidParameterException.class)
 	public void testLoginInvalidUsernameAndAccessKey() {
 		UserActionController controller = new UserActionController();
-		controller.signin(null, null);
+		controller.signin(null);
 		fail("Login validation failed.");
 	}
 	
@@ -23,7 +24,7 @@ public class TestLoginController {
 	@Test(expected=InvalidParameterException.class)
 	public void testLoginInvalidUsernameFormat() {
 		UserActionController controller = new UserActionController();
-		controller.signin("-wrong@emailaddress.com", "!@#$%^");
+		controller.signin(new LoginBean("-wrong@emailaddress.com", "!@#$%^"));
 		fail("Login validation failed.");
 	}
 }

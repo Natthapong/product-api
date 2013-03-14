@@ -25,7 +25,7 @@ public class UserActionController extends BaseController {
 
 	@Autowired
 	TmnProfileService profileService;
-	
+
 	private static final int CHANNEL_ID = 41;
 
 	@RequestMapping(value = "/signin", method = RequestMethod.POST)
@@ -34,6 +34,7 @@ public class UserActionController extends BaseController {
 			@RequestParam(value = "username", required = false) String username,
 			@RequestParam(value = "password", required = false) String password) {
 		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> data = new HashMap<String, Object>();
 
 		// validate
 		validateSignin(username);
@@ -44,10 +45,15 @@ public class UserActionController extends BaseController {
 		req.setChannelId(CHANNEL_ID);
 
 		try {
-			String token = profileService.login(CHANNEL_ID, new Login(username, password));
-			result.put("ACCESS_TOKEN", token);
+			String token = profileService.login(CHANNEL_ID, new Login(username,
+					password));
+
+			data.put("accessToken", token);
+			data.put("fullname", "John Doe");
+			data.put("currentBalance", 0.00);
 			result.put(ResponseParameter.STATUS, "20000");
 			result.put(ResponseParameter.NAMESPACE, "TMN-PRODUCT");
+			result.put("data", data);
 		} catch (ServiceInventoryException e) {
 			result.put(ResponseParameter.STATUS, e.getErrorCode());
 			result.put(ResponseParameter.NAMESPACE, e.getErrorNamespace());
@@ -74,9 +80,8 @@ public class UserActionController extends BaseController {
 	private void validateSignin(String username) {
 		if (username == null || username.isEmpty()) {
 			throw new InvalidParameterException("50001");
-		} else if (!ValidateUtil.checkEmail(username)) {
-			throw new InvalidParameterException("50001");
-		} else if (!ValidateUtil.checkMobileNumber(username)) {
+		} else if (!ValidateUtil.checkEmail(username)
+				|| !ValidateUtil.checkMobileNumber(username)) {
 			throw new InvalidParameterException("50001");
 		}
 	}

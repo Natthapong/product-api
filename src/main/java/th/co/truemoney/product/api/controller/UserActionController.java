@@ -28,6 +28,10 @@ public class UserActionController extends BaseController {
 
 	private static final int CHANNEL_ID = 41;
 	
+	public void setProfileService(TmnProfileService profileService) {
+		this.profileService = profileService;
+	}
+	
 	@RequestMapping(value = "/signin", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> signin(@RequestBody LoginBean request) {

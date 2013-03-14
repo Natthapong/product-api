@@ -27,7 +27,7 @@ public class ValidateUtil {
 	}
 
 	public static boolean checkIsNull(String param){
-		if (param.equals(null)) {
+		if (param == null) {
 			return true;
 		} else {
 			return false;

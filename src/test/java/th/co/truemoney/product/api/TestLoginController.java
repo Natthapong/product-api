@@ -15,7 +15,7 @@ public class TestLoginController {
 	@Test(expected=InvalidParameterException.class)
 	public void testLoginInvalidUsernameAndAccessKey() {
 		UserActionController controller = new UserActionController();
-		controller.login(null, null);
+		controller.signin(null, null);
 		fail("Login validation failed.");
 	}
 	
@@ -23,7 +23,7 @@ public class TestLoginController {
 	@Test(expected=InvalidParameterException.class)
 	public void testLoginInvalidUsernameFormat() {
 		UserActionController controller = new UserActionController();
-		controller.login("-wrong@emailaddress.com", "!@#$%^");
+		controller.signin("-wrong@emailaddress.com", "!@#$%^");
 		fail("Login validation failed.");
 	}
 }

@@ -27,15 +27,11 @@ public class UserActionController extends BaseController {
 	TmnProfileService profileService;
 
 	private static final int CHANNEL_ID = 41;
-<<<<<<< HEAD
 
-=======
-	
 	public void setProfileService(TmnProfileService profileService) {
 		this.profileService = profileService;
 	}
-	
->>>>>>> a10b2647c25e4a6cc2709bfe7e5959306e3db4a1
+
 	@RequestMapping(value = "/signin", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> signin(@RequestBody LoginBean request) {
@@ -94,7 +90,7 @@ public class UserActionController extends BaseController {
 
 	@Async
 	private void doSignout(String token) {
-		profileService.logout(token, CHANNEL_ID);
+		profileService.logout(CHANNEL_ID, token);
 	}
 
 }

@@ -36,9 +36,12 @@ public class UserActionController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> data = new HashMap<String, Object>();
 
+		//System.out.println("username = "+username);
+		//System.out.println("password ="+password);
+		
 		// validate
 		validateSignin(username);
-
+		
 		SigninBean req = new SigninBean();
 		req.setUserName(username);
 		req.setPassword(password);
@@ -78,10 +81,10 @@ public class UserActionController extends BaseController {
 	}
 
 	private void validateSignin(String username) {
-		if (username == null || username.isEmpty()) {
-			throw new InvalidParameterException("50001");
-		} else if (!ValidateUtil.checkEmail(username)
-				|| !ValidateUtil.checkMobileNumber(username)) {
+		boolean isEmail = ValidateUtil.checkEmail(username);
+		boolean isMobile = ValidateUtil.checkMobileNumber(username);
+
+		if (!isEmail && !isMobile) {
 			throw new InvalidParameterException("50001");
 		}
 	}

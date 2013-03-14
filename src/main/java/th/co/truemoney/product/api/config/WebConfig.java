@@ -15,7 +15,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan(basePackages = "th.co.truemoney.product.api")
+@ComponentScan({"th.co.truemoney.product.api", "th.co.truemoney.serviceinventory.ewallet.client"})
 public class WebConfig extends WebMvcConfigurerAdapter {
 	
 	@Bean

@@ -13,17 +13,17 @@ import org.springframework.web.context.request.WebRequest;
 import th.co.truemoney.product.api.util.ResponseParameter;
 
 public class BaseController {
-	
+
 	@ExceptionHandler(InvalidParameterException.class)
 	public @ResponseBody
     Map<String,String> handleAllExceptions(Exception exception, WebRequest request,
 			HttpServletResponse response) {
-        Map<String,String> error = new HashMap<>();
+        Map<String,String> error = new HashMap<String, String>();
 
 		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		error.put(ResponseParameter.STATUS, exception.getMessage());
                 error.put(ResponseParameter.NAMESPACE, "TMN-PRODUCT");
 		return error;
 	}
-	
+
 }

@@ -26,7 +26,11 @@ public class ValidateUtil {
 		return false;
 	}
 
+<<<<<<< HEAD
 	public static boolean checkIsNull(String param) {
+=======
+	public static boolean checkIsNull(String param){
+>>>>>>> a10b2647c25e4a6cc2709bfe7e5959306e3db4a1
 		if (param == null) {
 			return true;
 		} else {

@@ -36,9 +36,6 @@ public class UserActionController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> signin(@RequestBody LoginBean request) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		//TODO add log here
-		System.out.println(request.getUsername());
-		System.out.println(request.getPassword());
 		
 		// validate
 		validateSignin(request.getUsername());

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
 import th.co.truemoney.product.api.util.ResponseParameter;
-import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 public class BaseController {
 
@@ -27,6 +26,7 @@ public class BaseController {
 		return error;
 	}
 	
+	/*
 	@ExceptionHandler(ServiceInventoryException.class)
 	public @ResponseBody
 	Map<String,String> handleServiceInventoryExceptions(ServiceInventoryException exception, WebRequest request,
@@ -38,5 +38,6 @@ public class BaseController {
 		error.put(ResponseParameter.NAMESPACE, exception.getErrorNamespace());
 		return error;
 	}
+	*/
 
 }

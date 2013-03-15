@@ -18,6 +18,7 @@ import th.co.truemoney.product.api.util.ResponseParameter;
 import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.Login;
+import th.co.truemoney.serviceinventory.ewallet.domain.TmnProfile;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 @Controller
@@ -48,10 +49,12 @@ public class UserActionController extends BaseController {
 		try {
 			String token = profileService.login(CHANNEL_ID, login);
 
+			TmnProfile profile = getUserProfile(token, request.getPassword());
+
 			Map<String, Object> data = new HashMap<String, Object>();
 			data.put("accessToken", token);
-			data.put("fullname", "John Doe");
-			data.put("currentBalance", 0.00);
+			data.put("fullname", profile.getFullname());
+			data.put("currentBalance", profile.getBalance());
 			result.put(ResponseParameter.STATUS, "20000");
 			result.put(ResponseParameter.NAMESPACE, "TMN-PRODUCT");
 			result.put("data", data);
@@ -75,8 +78,14 @@ public class UserActionController extends BaseController {
 		return result;
 	}
 
-	public Map<String, String> extendSession(String sessionId) {
+	public Map<String, String> extendSession(String sessionID) {
 		return null;
+	}
+
+	private TmnProfile getUserProfile(String accesstoken,
+			String checksum) {
+		return profileService.getTruemoneyProfile(CHANNEL_ID, accesstoken,
+				checksum);
 	}
 
 	private void validateSignin(String username) {

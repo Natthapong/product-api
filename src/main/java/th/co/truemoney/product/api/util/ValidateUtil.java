@@ -10,7 +10,7 @@ public class ValidateUtil {
 			.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 					+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 
-	public static boolean checkMobileNumber(String mobileNo){
+	public static boolean checkMobileNumber(String mobileNo) {
 		if (!checkIsNull(mobileNo)) {
 			Matcher matcher = MOBILE_PATTERN.matcher(mobileNo);
 			return matcher.matches();
@@ -18,7 +18,7 @@ public class ValidateUtil {
 		return false;
 	}
 
-	public static boolean checkEmail(String email){
+	public static boolean checkEmail(String email) {
 		if (!checkIsNull(email)) {
 			Matcher matcher = EMAIL_PATTERN.matcher(email);
 			return matcher.matches();
@@ -26,12 +26,12 @@ public class ValidateUtil {
 		return false;
 	}
 
-	public static boolean checkIsNull(String param){
+	public static boolean checkIsNull(String param) {
 		if (param == null) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 }

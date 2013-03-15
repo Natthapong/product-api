@@ -27,23 +27,22 @@ public class UserActionController extends BaseController {
 	TmnProfileService profileService;
 
 	private static final int CHANNEL_ID = 41;
-	
+
 	public void setProfileService(TmnProfileService profileService) {
 		this.profileService = profileService;
 	}
-	
+
 	@RequestMapping(value = "/signin", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> signin(@RequestBody LoginBean request) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		
 		// validate
 		validateSignin(request.getUsername());
 
 		Login login = new Login(request.getUsername(), request.getPassword());
 		try {
 			String token = profileService.login(CHANNEL_ID, login);
-			
+
 			Map<String, Object> data = new HashMap<String, Object>();
 			data.put("accessToken", token);
 			data.put("fullname", "John Doe");
@@ -55,7 +54,7 @@ public class UserActionController extends BaseController {
 			result.put(ResponseParameter.STATUS, e.getErrorCode());
 			result.put(ResponseParameter.NAMESPACE, e.getErrorNamespace());
 		}
-		
+
 		return result;
 	}
 
@@ -76,16 +75,17 @@ public class UserActionController extends BaseController {
 	}
 
 	private void validateSignin(String username) {
+
 		if (!ValidateUtil.checkEmail(username)) {
 			if (!ValidateUtil.checkMobileNumber(username)) {
 				throw new InvalidParameterException("50001");
 			}
-		}	
+		}
 	}
 
 	@Async
 	private void doSignout(String token) {
-		profileService.logout(token, CHANNEL_ID);
+		profileService.logout(CHANNEL_ID, token);
 	}
 
 }

@@ -6,7 +6,9 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 import th.co.truemoney.product.api.aspect.LoggingAspect;
 import th.co.truemoney.product.api.aspect.ResponseHandlingAspect;
+import th.co.truemoney.serviceinventory.ewallet.SourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
+import th.co.truemoney.serviceinventory.ewallet.client.SourceOfFundServiceClient;
 import th.co.truemoney.serviceinventory.ewallet.client.TmnProfileServiceClient;
 
 @Configuration
@@ -26,6 +28,11 @@ public class AppConfig {
 	@Bean
 	public TmnProfileService profileService() {
 		return new TmnProfileServiceClient();
+	}
+	
+	@Bean
+	public SourceOfFundService sourceOfFundService() {
+		return new SourceOfFundServiceClient();
 	}
 
 }

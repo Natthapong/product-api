@@ -12,7 +12,6 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import th.co.truemoney.product.api.controller.UserActionController;
 import th.co.truemoney.product.api.domain.LoginBean;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.Login;
@@ -52,6 +51,7 @@ public class TestLoginController {
 	/**
 	 * Test Sign in Success
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void loginSuccess() {
 		Integer CHANNEL_ID = 41;

@@ -43,12 +43,14 @@ public class UserActionController extends BaseController {
 			Login login = new Login(request.getUsername(), request.getPassword());
 			String token = profileService.login(CHANNEL_ID, login);
 
-			TmnProfile profile = getUserProfile(token, request.getPassword());
+			//TmnProfile profile = getUserProfile(token, request.getPassword());
 
 			Map<String, Object> data = new HashMap<String, Object>();
 			data.put("accessToken", token);
-			data.put("fullname", profile.getFullname());
-			data.put("currentBalance", profile.getBalance());
+			//data.put("fullname", profile.getFullname());
+			data.put("fullname", "John Doe");
+			//data.put("currentBalance", profile.getBalance());
+			data.put("currentBalance", 0.00);
 			result.put(ResponseParameter.STATUS, "20000");
 			result.put(ResponseParameter.NAMESPACE, "TMN-PRODUCT");
 			result.put("data", data);
@@ -75,8 +77,8 @@ public class UserActionController extends BaseController {
 		return null;
 	}
 
-	private TmnProfile getUserProfile(String accesstoken,
-			String checksum) {
+	@SuppressWarnings("unused")
+	private TmnProfile getUserProfile(String accesstoken, String checksum) {
 		return profileService.getTruemoneyProfile(CHANNEL_ID, accesstoken,
 				checksum);
 	}

@@ -51,7 +51,7 @@
 "instruction.addmoney.direct.debit":
 "https://secure.truemoney-dev.com/m/tmn_webview/direct_debit/index.html",
 "signin.url":
-"https://secure.truemoney-dev.com/api/v1/signin/email?",
+"https://secure.truemoney-dev.com/api/v1/signin?",
 "signup.url":
 "https://secure.truemoney-dev.com/api/v1/signup?",
 "signup.verify.email.url":

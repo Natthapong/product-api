@@ -4,7 +4,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 
-@Aspect
+//@Aspect
 public class LoggingAspect {
  
 	@Before("execution(* th.co.truemoney.product.api.controller.UserActionController.login(..))")

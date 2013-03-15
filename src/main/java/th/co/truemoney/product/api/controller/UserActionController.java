@@ -39,25 +39,21 @@ public class UserActionController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		// validate
 		validateSignin(request.getUsername());
-		try {
-			Login login = new Login(request.getUsername(), request.getPassword());
-			String token = profileService.login(CHANNEL_ID, login);
+		Login login = new Login(request.getUsername(), request.getPassword());
+		String token = profileService.login(CHANNEL_ID, login);
 
-			//TmnProfile profile = getUserProfile(token, request.getPassword());
+		//TmnProfile profile = getUserProfile(token, request.getPassword());
 
-			Map<String, Object> data = new HashMap<String, Object>();
-			data.put("accessToken", token);
-			//data.put("fullname", profile.getFullname());
-			data.put("fullname", "John Doe");
-			//data.put("currentBalance", profile.getBalance());
-			data.put("currentBalance", 0.00);
-			result.put(ResponseParameter.STATUS, "20000");
-			result.put(ResponseParameter.NAMESPACE, "TMN-PRODUCT");
-			result.put("data", data);
-		} catch (ServiceInventoryException e) {
-			result.put(ResponseParameter.STATUS, e.getErrorCode());
-			result.put(ResponseParameter.NAMESPACE, e.getErrorNamespace());
-		}
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("accessToken", token);
+		//data.put("fullname", profile.getFullname());
+		data.put("fullname", "John Doe");
+		//data.put("currentBalance", profile.getBalance());
+		data.put("currentBalance", 0.00);
+		result.put(ResponseParameter.STATUS, "20000");
+		result.put(ResponseParameter.NAMESPACE, "TMN-PRODUCT");
+		result.put("data", data);
+		
 		return result;
 	}
 

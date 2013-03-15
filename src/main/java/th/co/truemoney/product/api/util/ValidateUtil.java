@@ -1,6 +1,5 @@
 package th.co.truemoney.product.api.util;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ValidateUtil {
@@ -11,27 +10,25 @@ public class ValidateUtil {
 					+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 
 	public static boolean checkMobileNumber(String mobileNo) {
-		if (!checkIsNull(mobileNo)) {
-			Matcher matcher = MOBILE_PATTERN.matcher(mobileNo);
-			return matcher.matches();
-		}
-		return false;
-	}
-
-	public static boolean checkEmail(String email) {
-		if (!checkIsNull(email)) {
-			Matcher matcher = EMAIL_PATTERN.matcher(email);
-			return matcher.matches();
-		}
-		return false;
-	}
-
-	public static boolean checkIsNull(String param) {
-		if (param == null) {
-			return true;
-		} else {
+		if (isEmpty(mobileNo)) {
 			return false;
+		} else {
+			return MOBILE_PATTERN.matcher(mobileNo).matches();
 		}
 	}
 
+	public static boolean checkEmail(String email) {		
+		if (isEmpty(email)) {
+			return false;
+		} else {
+			return EMAIL_PATTERN.matcher(email).matches();
+		}
+	}
+
+	public static boolean isEmpty(String s) {
+		if (s != null)
+			return s.isEmpty();
+		return true;
+	}
 }
+

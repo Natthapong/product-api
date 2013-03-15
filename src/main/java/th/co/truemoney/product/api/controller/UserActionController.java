@@ -34,27 +34,21 @@ public class UserActionController extends BaseController {
 
 	@RequestMapping(value = "/signin", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> signin(@RequestBody LoginBean request) {
+	public Map<String, Object> signin(@RequestBody LoginBean request) throws ServiceInventoryException {
 		Map<String, Object> result = new HashMap<String, Object>();
 		// validate
 		validateSignin(request.getUsername());
 
 		Login login = new Login(request.getUsername(), request.getPassword());
-		try {
-			String token = profileService.login(CHANNEL_ID, login);
+		String token = profileService.login(CHANNEL_ID, login);
 
-			Map<String, Object> data = new HashMap<String, Object>();
-			data.put("accessToken", token);
-			data.put("fullname", "John Doe");
-			data.put("currentBalance", 0.00);
-			result.put(ResponseParameter.STATUS, "20000");
-			result.put(ResponseParameter.NAMESPACE, "TMN-PRODUCT");
-			result.put("data", data);
-		} catch (ServiceInventoryException e) {
-			result.put(ResponseParameter.STATUS, e.getErrorCode());
-			result.put(ResponseParameter.NAMESPACE, e.getErrorNamespace());
-		}
-
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("accessToken", token);
+		data.put("fullname", "John Doe");
+		data.put("currentBalance", 0.00);
+		result.put(ResponseParameter.STATUS, "20000");
+		result.put(ResponseParameter.NAMESPACE, "TMN-PRODUCT");
+		result.put("data", data);
 		return result;
 	}
 

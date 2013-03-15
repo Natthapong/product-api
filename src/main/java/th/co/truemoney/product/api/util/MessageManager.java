@@ -14,6 +14,8 @@ public class MessageManager implements MessageSourceAware {
 	@Autowired
 	private MessageSource messageSource;
 	
+	public static final String UNKNOWN_MESSAGE = "Unknown Message Error";
+	
 	private static final Locale EN = new Locale("en", "US");
 	private static final Locale TH = new Locale("th", "TH");
 	
@@ -22,23 +24,19 @@ public class MessageManager implements MessageSourceAware {
 	}
 	
 	public String getMessageTh(String namespace, String code){
-		String message = "";
-		try {
-			message = messageSource.getMessage(namespace + "." + code, null, TH);
-		} catch (NoSuchMessageException e) {
-			message = "Unknown Message Error";
-		}
-		return message;
+		return getMessage(namespace + "." + code, TH);
 	}
 	
 	public String getMessageEn(String namespace, String code){
-		String message = "";
+		return getMessage(namespace + "." + code, EN);
+	}
+	
+	private String getMessage(String key, Locale loc) {
 		try {
-			message = messageSource.getMessage(namespace + "." + code, null, EN);
+			return messageSource.getMessage(key, null, loc);
 		} catch (NoSuchMessageException e) {
-			message = "Unknown Message Error";
+			return UNKNOWN_MESSAGE;
 		}
-		return message;
 	}
 	
 }

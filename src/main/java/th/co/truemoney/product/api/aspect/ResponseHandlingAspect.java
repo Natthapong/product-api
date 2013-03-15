@@ -22,7 +22,7 @@ public class ResponseHandlingAspect {
 	public void logAfterReturning(JoinPoint joinPoint, Map<String, Object> result) {
 		String namespace = (String)result.get(ResponseParameter.NAMESPACE);
 		String status = (String)result.get(ResponseParameter.STATUS);
-		result.put(ResponseParameter.DESCRIPTION_EN, messageManager.getMessageEn(namespace, status));
-		result.put(ResponseParameter.DESCRIPTION_TH, messageManager.getMessageTh(namespace, status));
+		result.put(ResponseParameter.MESSAGE_EN, messageManager.getMessageEn(namespace, status));
+		result.put(ResponseParameter.MESSAGE_TH, messageManager.getMessageTh(namespace, status));
    }
 }

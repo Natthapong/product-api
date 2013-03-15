@@ -6,8 +6,8 @@ public class ResponseParameter {
 	
 	public static final String NAMESPACE = "namespace";
 	
-	public static final String DESCRIPTION_EN = "descriptionEn";
+	public static final String MESSAGE_EN = "messageEn";
 	
-	public static final String DESCRIPTION_TH = "descriptionTh";
+	public static final String MESSAGE_TH = "messageTh";
 
 }

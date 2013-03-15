@@ -70,7 +70,7 @@ public class DirectDebitController {
 			returnData.put("bankNameEN", debit.getBankNameEn());
 			returnData.put("minAmount", debit.getMinAmount());
 			returnData.put("maxAmount", debit.getMaxAmount());
-			returnData.put("sourceOfFundID", debit.getSourceId());
+			returnData.put("sourceOfFundID", debit.getSourceOfFundId());
 
 			if (debit.getBankCode().equals("SCB")) {
 				returnData

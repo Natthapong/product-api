@@ -1,5 +1,6 @@
 package th.co.truemoney.product.api.controller;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -9,26 +10,29 @@ import java.util.Map;
 
 import net.minidev.json.JSONObject;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.util.ResponseParameter;
 
+@Controller
 public class MockController {
 
-	@RequestMapping(value = "/add-money/ewallet/banks", method = RequestMethod.GET)
+	@RequestMapping(value = "/mock/add-money/ewallet/banks/{username}/{accessToken}", method = RequestMethod.GET)
 	public @ResponseBody
-	Map<String, Object> getDirectDebitInformation() {
+	Map<String, Object> getDirectDebitInformation(
+			@PathVariable(value = "username") String username,
+			@PathVariable(value = "accessToken") String accessToken) {
 
 		JSONObject response = new JSONObject();
-		JSONObject data = new JSONObject();
 		JSONObject result = new JSONObject();
 
 		List<Map<String, Object>> listOfBank = new ArrayList<Map<String, Object>>();
 		Map<String, Object> scb = new HashMap<String,Object>();
+		scb.put("sourceOfFundID", "1");
 		scb.put("bankCode", "SCB");
 		scb.put("bankName", "ไทยพาณิชย์");
 		scb.put("bankNumber", "XXXX7890");
@@ -39,6 +43,7 @@ public class MockController {
 		listOfBank.add(scb);
 
 		Map<String, Object> bbl = new HashMap<String,Object>();
+		bbl.put("sourceOfFundID", "2");
 		bbl.put("bankCode", "BBL");
 		bbl.put("bankName", "กรุงเทพ");
 		bbl.put("bankNumber", "XXXX7891");
@@ -49,6 +54,7 @@ public class MockController {
 		listOfBank.add(bbl);
 
 		Map<String, Object> ktb = new HashMap<String,Object>();
+		ktb.put("sourceOfFundID", "3");
 		ktb.put("bankCode", "KTB");
 		ktb.put("bankName", "กรุงไทย");
 		ktb.put("bankNumber", "XXXX7892");
@@ -59,6 +65,7 @@ public class MockController {
 		listOfBank.add(ktb);
 
 		Map<String, Object> bay = new HashMap<String,Object>();
+		bay.put("sourceOfFundID", "4");
 		bay.put("bankCode", "BAY");
 		bay.put("bankName", "กรุงศรีอยุธยา");
 		bay.put("bankNumber", "XXXX7893");
@@ -70,21 +77,19 @@ public class MockController {
 
 		result.put("listOfBank", listOfBank);
 
-		data.put("data", result);
-
 		response.put(ResponseParameter.STATUS, "20000");
 		response.put(ResponseParameter.NAMESPACE, "TMN-PRODUCT");
-		response.put("data", data);
+		response.put("data", result);
 		return response;
 
 	}
 
-	@RequestMapping(value = "/add-money/verify/ewallet", method = RequestMethod.POST)
+	@RequestMapping(value = "/mock/add-money/verify/ewallet/{amount}/{bankCode}/{accessToken}", method = RequestMethod.POST)
 	public @ResponseBody
 	Map<String, Object> verifyEwallet(
-			@RequestParam(value = "amount") Double amount,
-			@RequestParam(value = "bankCode") String bankCode,
-			@RequestParam(value = "token") String token) {
+			@PathVariable(value = "amount") BigDecimal amount,
+			@PathVariable(value = "bankCode") String bankCode,
+			@PathVariable(value = "accessToken") String token) {
 		Map<String, Object> data = new HashMap<String,Object>();
 		if ("SCB".equals(bankCode)) {
 			data.put("urlLogo",
@@ -123,11 +128,11 @@ public class MockController {
 
 	}
 
-	@RequestMapping(value = "/add-money/send/otp/{transactionID}/{accessToken}", method = RequestMethod.POST)
+	@RequestMapping(value = "/mock/add-money/send/otp/{transactionID}/{accessToken}", method = RequestMethod.POST)
 	public @ResponseBody
 	Map<String, Object> sendOTP(
 			@PathVariable(value = "transactionID") String transactionID,
-			@RequestParam(value = "accessToken") String token) {
+			@PathVariable(value = "accessToken") String token) {
 		Map<String, Object> data = new HashMap<String,Object>();
 
 		data.put("otp", "287492");
@@ -143,10 +148,10 @@ public class MockController {
 
 	}
 
-	@RequestMapping(value = "/add-money/confirm/ewallet/{accessToken}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/mock/add-money/confirm/ewallet/{accessToken}", method = RequestMethod.PUT)
 	public @ResponseBody
 	Map<String, Object> confirmEwallet(
-			@RequestParam(value = "accessToken") String token) {
+			@PathVariable(value = "accessToken") String token) {
 		JSONObject response = new JSONObject();
 		Map<String, Object> data = new HashMap<String, Object>();
 		response.put(ResponseParameter.STATUS, "20000");
@@ -156,16 +161,17 @@ public class MockController {
 
 	}
 
-	@RequestMapping(value = "/add-money/checkstatus/ewallet/{accessToken}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/mock/add-money/checkstatus/ewallet/{accessToken}", method = RequestMethod.PUT)
 	public @ResponseBody
 	Map<String, Object> checkStatus(
-			@RequestParam(value = "accessToken") String token) {
+			@PathVariable(value = "accessToken") String token) {
 		Map<String, Object> data = new HashMap<String, Object>();
 
 		data.put("urlLogo",
 				"https://secure.truemoney-dev.com/m/tmn_webview/images/normal/Bank-SCB-2.png");
 		data.put("bankNameTH", "ไทยพาณิชย์");
 		data.put("bankNameEN", "scb");
+		data.put("bankCode", "scb");
 		data.put("bankNumber", "XXXX9845");
 		Calendar currentDate = Calendar.getInstance();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MMM/dd HH:mm");

@@ -23,7 +23,7 @@ import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 @Controller
 public class UserActionController extends BaseController {
-
+	
 	@Autowired
 	TmnProfileService profileService;
 
@@ -52,6 +52,8 @@ public class UserActionController extends BaseController {
 		data.put("currentBalance", 0.00);
 		result.put(ResponseParameter.STATUS, "20000");
 		result.put(ResponseParameter.NAMESPACE, "TMN-PRODUCT");
+		result.put(ResponseParameter.MESSAGE_EN, messageManager.getMessageEn("TMN-PRODUCT", "2000"));
+		result.put(ResponseParameter.MESSAGE_TH, messageManager.getMessageTh("TMN-PRODUCT", "2000"));
 		result.put("data", data);
 		
 		return result;

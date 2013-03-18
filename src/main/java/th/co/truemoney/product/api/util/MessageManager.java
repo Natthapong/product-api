@@ -1,6 +1,7 @@
 package th.co.truemoney.product.api.util;
 
 import java.util.Locale;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -38,5 +39,18 @@ public class MessageManager implements MessageSourceAware {
 			return UNKNOWN_MESSAGE;
 		}
 	}
-	
+
+	public Map<String, Object> mapStatusMessage(Map<String, Object> response) {
+		if (response != null) {
+			if (response.containsKey(ResponseParameter.STATUS) && response.containsKey(ResponseParameter.NAMESPACE)) {
+				String status = (String)response.get(ResponseParameter.STATUS);
+				String namespace = (String)response.get(ResponseParameter.NAMESPACE);
+				String messageEn = this.getMessageEn(namespace, status);
+				String messageTh = this.getMessageTh(namespace, status);
+				response.put(ResponseParameter.MESSAGE_EN, messageEn);
+				response.put(ResponseParameter.MESSAGE_TH, messageTh);
+			} 
+		}
+		return response;
+	}
 }

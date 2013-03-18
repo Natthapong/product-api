@@ -18,13 +18,13 @@ import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 public class BaseController {
 	
 	@Autowired
-	private MessageManager messageManager;
+	protected MessageManager messageManager;
 	
 	@ExceptionHandler(InvalidParameterException.class)
 	public @ResponseBody
-    Map<String,String> handleInvalidParameterExceptions(InvalidParameterException exception, WebRequest request,
+    Map<String, Object> handleInvalidParameterExceptions(InvalidParameterException exception, WebRequest request,
 			HttpServletResponse response) {
-        Map<String,String> error = new HashMap<String, String>();
+        Map<String, Object> error = new HashMap<String, Object>();
         
         String namespace = "TMN-PRODUCT";
         String status    = exception.getMessage();
@@ -32,25 +32,21 @@ public class BaseController {
 		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		error.put(ResponseParameter.STATUS, status);
 		error.put(ResponseParameter.NAMESPACE, namespace);
-		error.put(ResponseParameter.MESSAGE_EN, messageManager.getMessageEn(namespace, status));
-		error.put(ResponseParameter.MESSAGE_TH, messageManager.getMessageTh(namespace, status));
-		return error;
+		return messageManager.mapStatusMessage(error);
 	}
 	
 	@ExceptionHandler(ServiceInventoryException.class)
 	public @ResponseBody
-	Map<String,String> handleServiceInventoryExceptions(ServiceInventoryException exception, WebRequest request,
+	Map<String, Object> handleServiceInventoryExceptions(ServiceInventoryException exception, WebRequest request,
 			HttpServletResponse response) {
-        Map<String,String> error = new HashMap<String, String>();
+        Map<String, Object> error = new HashMap<String, Object>();
         String namespace = exception.getErrorNamespace();
         String status    = exception.getErrorCode();
         
 		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		error.put(ResponseParameter.STATUS, status);
 		error.put(ResponseParameter.NAMESPACE, namespace);
-		error.put(ResponseParameter.MESSAGE_EN, messageManager.getMessageEn(namespace, status));
-		error.put(ResponseParameter.MESSAGE_TH, messageManager.getMessageTh(namespace, status));
-		return error;
+		return messageManager.mapStatusMessage(error);
 	}
-
+	
 }

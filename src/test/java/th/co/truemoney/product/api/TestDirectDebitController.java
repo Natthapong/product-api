@@ -14,7 +14,7 @@ public class TestDirectDebitController {
 	@Test(expected = ServiceInventoryException.class)
 	public void notGetListBank() {
 		DirectDebitController controller = new DirectDebitController();
-		controller.getBankList("user1.test.v1@gmail.com", "55555555");
+		controller.getUserDirectDebitSources("user1.test.v1@gmail.com", "55555555");
 		fail("Cannot get bank list.");
 	}
 

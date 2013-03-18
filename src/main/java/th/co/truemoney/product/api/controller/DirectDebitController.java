@@ -1,6 +1,5 @@
 package th.co.truemoney.product.api.controller;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,10 +10,14 @@ import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import th.co.truemoney.product.api.domain.TopupDirectDebitRequest;
+import th.co.truemoney.product.api.domain.TopupOrderConfirmRequest;
+import th.co.truemoney.product.api.domain.TopupQuotableRequest;
 import th.co.truemoney.product.api.util.ResponseParameter;
 import th.co.truemoney.serviceinventory.ewallet.SourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.domain.DirectDebit;
@@ -22,14 +25,14 @@ import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 @Controller
 @RequestMapping(value = "/add-money/ewallet")
-public class DirectDebitController {
-
+public class DirectDebitController extends BaseController {
+	
 	@Autowired
 	SourceOfFundService sourceOfFundService;
-
+	
 	@RequestMapping(value = "/banks/{username}/{accessToken}", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> getBankList(@PathVariable String username,
+	public Map<String, Object> getUserDirectDebitSources(@PathVariable String username,
 			@PathVariable String accessToken) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> data = new HashMap<String, Object>();
@@ -47,15 +50,77 @@ public class DirectDebitController {
 			result.put(ResponseParameter.NAMESPACE, e.getErrorNamespace());
 		}
 
-		return result;
+		return messageManager.mapStatusMessage(result);
 	}
-
-	public Map<String, String> verify(BigDecimal amount) {
+	
+	/**
+	 * Create direct debit quotation 
+	 */
+	@RequestMapping(value = "/directdebit/quote/create/{accessToken}", method = RequestMethod.POST)
+	public 
+	@ResponseBody Map<String, Object> createDirectDebitTopupQuote(
+			@RequestBody TopupDirectDebitRequest request, 
+			@PathVariable String accessToken) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		return messageManager.mapStatusMessage(result);
+	}
+	
+	/**
+	 * Get direct debit quotation details
+	 */
+	@RequestMapping(value = "/directdebit/quote/details/{accessToken}", method = RequestMethod.GET)
+	public 
+	@ResponseBody Map<String, Object> getDirectDebitTopupQuoteDetials(
+			@RequestBody TopupQuotableRequest request, 
+			@PathVariable String accessToken) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		return messageManager.mapStatusMessage(result);
+	}
+	
+	/**
+	 * Send OTP
+	 */
+	@RequestMapping(value = "/directdebit/order/create/{accessToken}", method = RequestMethod.POST)
+	public 
+	@ResponseBody Map<String, Object> placeDirectDebitTopupOrder(
+			@RequestBody TopupQuotableRequest request, 
+			@PathVariable String accessToken) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		return messageManager.mapStatusMessage(result);
+	}
+	
+	/**
+	 * Confirm transaction
+	 */
+	@RequestMapping(value = "/directdebit/order/confirm/{accessToken}", method = RequestMethod.POST)
+	public 
+	@ResponseBody Map<String, Object> confirmDirectDebitTopuOrder(
+			@RequestBody TopupOrderConfirmRequest request, 
+			@PathVariable String accessToken) {
 		return null;
 	}
-
-	public Map<String, String> confirm(BigDecimal amount) {
-		return null;
+	
+	/**
+	 * Polling for transaction status
+	 */
+	@RequestMapping(value = "/directdebit/order/{topUpOrderId}/status/{accessToken}", method = RequestMethod.GET)
+	public 
+	@ResponseBody Map<String, Object> getDirectDebitTopupStatus(
+			@PathVariable String topUpOrderId, 
+			@PathVariable String accessToken) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		return messageManager.mapStatusMessage(result);
+	}
+	
+	/**
+	 * Get transaction detail after transaction done successfully
+	 */
+	@RequestMapping(value = "/directdebit/order/{topUpOrderId}/details/{accessToken}", method = RequestMethod.GET)
+	public Map<String, Object> getDirectDebitTopupDetails(
+			@PathVariable String topUpOrderId, 
+			@PathVariable String accessToken) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		return messageManager.mapStatusMessage(result);
 	}
 
 	private List<JSONObject> prepareData(List<DirectDebit> listBank) {

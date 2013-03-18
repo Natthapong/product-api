@@ -11,28 +11,23 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import th.co.truemoney.product.api.config.TestAppConfig;
 import th.co.truemoney.product.api.domain.LoginBean;
 import th.co.truemoney.product.api.util.MessageManager;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.Login;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes= {TestAppConfig.class })
+@RunWith(MockitoJUnitRunner.class)
 public class TestLoginController {
 	
 	UserActionController userController;
 	
-	@Autowired
-	TmnProfileService profileService;
+	TmnProfileService profileService = Mockito.mock(TmnProfileService.class);
 	
-	@Autowired
-	MessageManager messageManager;
+	MessageManager messageManager = Mockito.mock(MessageManager.class);
 	
 	@Before
 	public void setup() {

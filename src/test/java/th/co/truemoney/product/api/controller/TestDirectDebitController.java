@@ -1,4 +1,4 @@
-package th.co.truemoney.product.api;
+package th.co.truemoney.product.api.controller;
 
 import static org.junit.Assert.fail;
 

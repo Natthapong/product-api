@@ -55,6 +55,7 @@ public class DirectDebitController extends BaseController {
 	
 	/**
 	 * Create direct debit quotation 
+	 * Verify amount
 	 */
 	@RequestMapping(value = "/directdebit/quote/create/{accessToken}", method = RequestMethod.POST)
 	public 
@@ -92,7 +93,7 @@ public class DirectDebitController extends BaseController {
 	/**
 	 * Confirm transaction
 	 */
-	@RequestMapping(value = "/directdebit/order/confirm/{accessToken}", method = RequestMethod.POST)
+	@RequestMapping(value = "/directdebit/order/confirm/{accessToken}", method = RequestMethod.PUT)
 	public 
 	@ResponseBody Map<String, Object> confirmDirectDebitTopuOrder(
 			@RequestBody TopupOrderConfirmRequest request, 

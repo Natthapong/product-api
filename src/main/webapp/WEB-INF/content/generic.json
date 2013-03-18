@@ -1,43 +1,4 @@
 {
-"addmoney.cashcard.fee.list":
-[
-{
-"cashCardAmount":
-"50",
-"fee":
-"3.50"
-},
-{
-"cashCardAmount":
-"90",
-"fee":
-"6.30"
-},
-{
-"cashCardAmount":
-"150",
-"fee":
-"10.50"
-},
-{
-"cashCardAmount":
-"300",
-"fee":
-"21.00"
-},
-{
-"cashCardAmount":
-"500",
-"fee":
-"35.00"
-},
-{
-"cashCardAmount":
-"1000",
-"fee":
-"70.00"
-}
-],
 
 "addmoney.cashcard.url" : "https://secure.truemoney-dev.com/api/v1/add-money/cashcard?",
 
@@ -75,11 +36,13 @@
 
 "login.mock" : "https://secure.truemoney-dev.com/api/v1/signin/loginmock?",
 
-"addmoney.verify.ewallet.mock" : "https://secure.truemoney-dev.com/api/v1/add-money/verify/ewallet?",
+"addmoney.ewallet.directdebit.mock" : "https://secure.truemoney-dev.com/api/v1/mock/add-money/ewallet/banks/%@/%@?",
 
-"addmoney.otp.ewallet.mock" : "https://secure.truemoney-dev.com/api/v1/add-money/send/otp/%@/%@?",
+"addmoney.verify.ewallet.mock" : "https://secure.truemoney-dev.com/api/v1/mock/add-money/verify/ewallet?",
 
-"addmoney.confirm.ewallet.mock" : "https://secure.truemoney-dev.com/api/v1/add-money/confirm/ewallet/%@?",
+"addmoney.otp.ewallet.mock" : "https://secure.truemoney-dev.com/api/v1/mock/add-money/send/otp/%@/%@?",
 
-"addmoney.status.ewallet.mock" : "https://secure.truemoney-dev.com/api/v1/add-money/checkstatus/ewallet?"
+"addmoney.confirm.ewallet.mock" : "https://secure.truemoney-dev.com/api/v1/mock/add-money/confirm/ewallet/%@?",
+
+"addmoney.status.ewallet.mock" : "https://secure.truemoney-dev.com/api/v1/mock/add-money/checkstatus/ewallet?"
 }

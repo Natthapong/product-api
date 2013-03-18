@@ -20,6 +20,10 @@ public class BaseController {
 	@Autowired
 	protected MessageManager messageManager;
 	
+	public void setMessageManager(MessageManager messageManager) {
+		this.messageManager = messageManager;
+	}
+	
 	@ExceptionHandler(InvalidParameterException.class)
 	public @ResponseBody
     Map<String, Object> handleInvalidParameterExceptions(InvalidParameterException exception, WebRequest request,

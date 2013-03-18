@@ -38,46 +38,48 @@
 "70.00"
 }
 ],
-"addmoney.cashcard.url":
-"https://secure.truemoney-dev.com/api/v1/add-money/cashcard?",
-"billpay.billinfo.url":
-"https://secure.truemoney-dev.com/api/v1/bill/barcode/%@?",
-"billpay.confirm.url":
-"https://secure.truemoney-dev.com/api/v1/bill/confirm/%@/%@?",
-"billpay.verify.url":
-"https://secure.truemoney-dev.com/api/v1/bill/verify/%@/%@?",
-"instruction.addmoney.atm":
-"https://secure.truemoney-dev.com/m/tmn_webview/atm/index.html",
-"instruction.addmoney.direct.debit":
-"https://secure.truemoney-dev.com/m/tmn_webview/direct_debit/index.html",
-"signin.url":
-"https://secure.truemoney-dev.com/api/v1/signin?",
-"signup.url":
-"https://secure.truemoney-dev.com/api/v1/signup?",
-"signup.verify.email.url":
-"https://secure.truemoney-dev.com/api/v1/signup/email/%@?",
-"signup.verify.mobile.url":
-"https://secure.truemoney-dev.com/api/v1/signup/mobile/%@?",
-"statusCode.notEnoughMoney":
-"40006",
-"topup.truemove.otp.url":
-"https://secure.truemoney-dev.com/api/v1/topup/truemoveh/otp?",
-"topup.truemove.url":
-"https://secure.truemoney-dev.com/api/v1/topup/truemoveh?"
-"addmoney.ewallet.directdebit.information.url":
-"https://secure.truemoney-dev.com/api/v1/add-money/ewallet/banks?",
 
-"login.mock":"https://secure.truemoney-dev.com/api/v1/signin/loginmock?",
+"addmoney.cashcard.url" : "https://secure.truemoney-dev.com/api/v1/add-money/cashcard?",
 
-"addmoney.verify.ewallet.mock":
-"https://secure.truemoney-dev.com/api/v1/add-money/verify/ewallet?",
+"billpay.billinfo.url" : "https://secure.truemoney-dev.com/api/v1/bill/barcode/%@?",
 
-"addmoney.otp.ewallet.mock":
-"https://secure.truemoney-dev.com/api/v1/add-money/send/otp/%@/%@?",
+"billpay.confirm.url" : "https://secure.truemoney-dev.com/api/v1/bill/confirm/%@/%@?",
 
-"addmoney.confirm.ewallet.mock":
-"https://secure.truemoney-dev.com/api/v1/add-money/confirm/ewallet/%@?",
+"billpay.verify.url" : "https://secure.truemoney-dev.com/api/v1/bill/verify/%@/%@?",
 
-"addmoney.status.ewallet.mock":
-"https://secure.truemoney-dev.com/api/v1/add-money/checkstatus/ewallet?"
+"instruction.addmoney.atm" : "https://secure.truemoney-dev.com/m/tmn_webview/atm/index.html",
+
+"instruction.addmoney.direct.debit" : "https://secure.truemoney-dev.com/m/tmn_webview/direct_debit/index.html",
+
+"instruction.addmoney.kiosk" : "http://secure.truemoney-dev.com/m/tmn_webview/kiosk/kiosk.html",
+
+"instruction.addmoney.trm" : "http://secure.truemoney-dev.com/m/tmn_webview/trm/trueshop.html",
+
+"instruction.addmoney.tmx" : "http://secure.truemoney-dev.com/m/tmn_webview/tmx/cp_freshmart.html",
+
+"signin.url" : "https://secure.truemoney-dev.com/api/v1/signin?",
+
+"signup.url" : "https://secure.truemoney-dev.com/api/v1/signup?",
+
+"signup.verify.email.url" : "https://secure.truemoney-dev.com/api/v1/signup/email/%@?",
+
+"signup.verify.mobile.url" : "https://secure.truemoney-dev.com/api/v1/signup/mobile/%@?",
+
+"statusCode.notEnoughMoney" : "40006",
+
+"topup.truemove.otp.url" : "https://secure.truemoney-dev.com/api/v1/topup/truemoveh/otp?",
+
+"topup.truemove.url" : "https://secure.truemoney-dev.com/api/v1/topup/truemoveh?",
+
+"addmoney.ewallet.directdebit.information.url" : "https://secure.truemoney-dev.com/api/v1/add-money/ewallet/banks/%@/%@?",
+
+"login.mock" : "https://secure.truemoney-dev.com/api/v1/signin/loginmock?",
+
+"addmoney.verify.ewallet.mock" : "https://secure.truemoney-dev.com/api/v1/add-money/verify/ewallet?",
+
+"addmoney.otp.ewallet.mock" : "https://secure.truemoney-dev.com/api/v1/add-money/send/otp/%@/%@?",
+
+"addmoney.confirm.ewallet.mock" : "https://secure.truemoney-dev.com/api/v1/add-money/confirm/ewallet/%@?",
+
+"addmoney.status.ewallet.mock" : "https://secure.truemoney-dev.com/api/v1/add-money/checkstatus/ewallet?"
 }

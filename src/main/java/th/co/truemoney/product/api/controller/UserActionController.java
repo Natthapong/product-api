@@ -57,9 +57,9 @@ public class UserActionController extends BaseController {
 		return result;
 	}
 
-	@RequestMapping(value = "/signout/{token}", method = RequestMethod.GET)
+	@RequestMapping(value = "/signout/{accessToken}", method = RequestMethod.GET)
 	public Map<String, Object> signout(
-			@PathVariable(value = "token") String token) {
+			@PathVariable(value = "accessToken") String token) {
 		doSignout(token);
 		Map<String, Object> result = new HashMap<String, Object>();
 
@@ -75,7 +75,7 @@ public class UserActionController extends BaseController {
 
 	@SuppressWarnings("unused")
 	private TmnProfile getUserProfile(String accesstoken, String checksum) {
-		return profileService.getTruemoneyProfile(CHANNEL_ID, accesstoken,
+		return profileService.getTruemoneyProfile(accesstoken,
 				checksum);
 	}
 
@@ -90,7 +90,7 @@ public class UserActionController extends BaseController {
 
 	@Async
 	private void doSignout(String token) {
-		profileService.logout(CHANNEL_ID, token);
+		profileService.logout(token);
 	}
 
 }

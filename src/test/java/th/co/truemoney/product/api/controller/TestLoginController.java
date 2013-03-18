@@ -3,7 +3,6 @@ package th.co.truemoney.product.api.controller;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.security.InvalidParameterException;
@@ -11,23 +10,35 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import th.co.truemoney.product.api.config.TestAppConfig;
 import th.co.truemoney.product.api.domain.LoginBean;
+import th.co.truemoney.product.api.util.MessageManager;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.Login;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes= {TestAppConfig.class })
 public class TestLoginController {
 	
-	UserActionController controller;
+	UserActionController userController;
 	
+	@Autowired
 	TmnProfileService profileService;
+	
+	@Autowired
+	MessageManager messageManager;
 	
 	@Before
 	public void setup() {
-		profileService = mock(TmnProfileService.class);
-		controller = new UserActionController();
-		controller.setProfileService(profileService);
+		this.userController = new UserActionController();
+		this.userController.setProfileService(profileService);
+		this.userController.setMessageManager(messageManager);
 	}
 	
 	/**
@@ -35,7 +46,7 @@ public class TestLoginController {
 	 */
 	@Test(expected=InvalidParameterException.class)
 	public void loginWithEmptyUsernameAndPassword() throws InvalidParameterException {
-		controller.signin(new LoginBean(null, null));
+		userController.signin(new LoginBean(null, null));
 		fail("Login validation failed.");
 	}
 	
@@ -44,7 +55,7 @@ public class TestLoginController {
 	 */
 	@Test(expected=InvalidParameterException.class)
 	public void loginWithInvalidUsernameFormat() throws InvalidParameterException {
-		controller.signin(new LoginBean("wrong_email_address", "password"));
+		userController.signin(new LoginBean("wrong_email_address", "password"));
 		fail("Login validation failed.");
 	}
 	
@@ -62,7 +73,7 @@ public class TestLoginController {
 			profileService.login(CHANNEL_ID, login)
 		).thenReturn("ANY_NOT_NULL_STRING");
 		
-		Map<String, Object> result = controller.signin(new LoginBean(username, password));
+		Map<String, Object> result = userController.signin(new LoginBean(username, password));
 		assertNotNull(result);
 		
 		Map<String, Object> data = (Map<String, Object>) result.get("data");
@@ -85,7 +96,7 @@ public class TestLoginController {
 		).thenThrow(new ServiceInventoryException("CODE", "ERR_DESC", "NAMESPACE"));
 		
 		try {
-			controller.signin(new LoginBean(username, password));
+			userController.signin(new LoginBean(username, password));
 			fail("login exception handling failed");
 		} catch (ServiceInventoryException e) {
 			assertNotNull(e.getErrorCode());

@@ -1,103 +1,108 @@
 package th.co.truemoney.product.api.controller;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.security.InvalidParameterException;
-import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
+import th.co.truemoney.product.api.config.TestWebConfig;
 import th.co.truemoney.product.api.domain.LoginBean;
-import th.co.truemoney.product.api.util.MessageManager;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.Login;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
+@ContextConfiguration(classes = { TestWebConfig.class })
 public class TestLoginController {
 	
-	UserActionController userController;
-	
-	TmnProfileService profileService = Mockito.mock(TmnProfileService.class);
-	
-	MessageManager messageManager = Mockito.mock(MessageManager.class);
-	
+	private MockMvc mockMvc;
+
+	@Autowired
+	private WebApplicationContext wac;
+
+	@Autowired
+	private TmnProfileService tmnProfileServiceMock;
+
 	@Before
 	public void setup() {
-		this.userController = new UserActionController();
-		this.userController.setProfileService(profileService);
-		this.userController.setMessageManager(messageManager);
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		this.tmnProfileServiceMock = wac.getBean(TmnProfileService.class);
+	}
+
+	@After
+	public void tierDown() {
+		reset(this.tmnProfileServiceMock);
 	}
 	
-	/**
-	 * Test Sign in failed with empty username and password
-	 */
-	@Test(expected=InvalidParameterException.class)
-	public void loginWithEmptyUsernameAndPassword() throws InvalidParameterException {
-		userController.signin(new LoginBean(null, null));
-		fail("Login validation failed.");
+	@Test 
+	public void loginInputValidationFailed() throws Exception {
+		when(
+			this.tmnProfileServiceMock.login(
+				any(Integer.class), 
+				any(Login.class)
+			)
+		).thenReturn("token-string");
+			
+		ObjectMapper mapper = new ObjectMapper();
+		LoginBean login = new LoginBean("customer@truemoney.co.th", "password");
+		this.mockMvc.perform(post("/signin")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(mapper.writeValueAsBytes(login)))
+			.andExpect(status().isOk());
 	}
 	
-	/**
-	 * Test Sign in invalid username
-	 */
-	@Test(expected=InvalidParameterException.class)
-	public void loginWithInvalidUsernameFormat() throws InvalidParameterException {
-		userController.signin(new LoginBean("wrong_email_address", "password"));
-		fail("Login validation failed.");
-	}
-	
-	/**
-	 * Test Sign in Success
-	 */
-	@SuppressWarnings("unchecked")
 	@Test
-	public void loginSuccess() {
-		Integer CHANNEL_ID = 41;
-		String username = "customer@truemoney.co.th";
-		String password = "hashed-string-password";
-		Login login = new Login(username, password);
+	public void loginSuccess() throws Exception {
 		when(
-			profileService.login(CHANNEL_ID, login)
-		).thenReturn("ANY_NOT_NULL_STRING");
+			this.tmnProfileServiceMock.login(
+				any(Integer.class), 
+				any(Login.class)
+			)
+		).thenReturn("token-string");
 		
-		Map<String, Object> result = userController.signin(new LoginBean(username, password));
-		assertNotNull(result);
-		
-		Map<String, Object> data = (Map<String, Object>) result.get("data");
-		assertNotNull(data);
-		assertTrue(data.containsKey("accessToken"));
-		assertTrue(data.containsKey("fullname"));
-		assertTrue(data.containsKey("currentBalance"));
+		ObjectMapper mapper = new ObjectMapper();
+		LoginBean login = new LoginBean("wrong@email", "password");
+		this.mockMvc.perform(post("/signin")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(mapper.writeValueAsBytes(login)))
+			.andExpect(status().is(HttpServletResponse.SC_BAD_REQUEST));
 	}
 	
-	/**
-	 * Test Sign in Failed
-	 */
-	public void loginFailed() {
-		Integer CHANNEL_ID = 41;
-		String username = "customer@truemoney.co.th";
-		String password = "hashed-string-password";
-		Login login = new Login(username, password);
+	@Test
+	public void loginNotSuccess() throws Exception {
 		when(
-			profileService.login(CHANNEL_ID, login)
-		).thenThrow(new ServiceInventoryException("CODE", "ERR_DESC", "NAMESPACE"));
+			this.tmnProfileServiceMock.login(
+				any(Integer.class), 
+				any(Login.class)
+			)
+		).thenThrow(
+				new ServiceInventoryException("4", "Invalid Username or Password", "umarket")
+		);
 		
-		try {
-			userController.signin(new LoginBean(username, password));
-			fail("login exception handling failed");
-		} catch (ServiceInventoryException e) {
-			assertNotNull(e.getErrorCode());
-			assertNotNull(e.getErrorDescription());
-			assertNotNull(e.getErrorNamespace());
-		}
+		ObjectMapper mapper = new ObjectMapper();
+		LoginBean login = new LoginBean("customer@truemoney.co.th", "password");
+		this.mockMvc.perform(post("/signin")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(mapper.writeValueAsBytes(login)))
+			.andExpect(status().is(HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
 	}
-	
+
 }

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import net.minidev.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import th.co.truemoney.product.api.domain.TopupOrderConfirmRequest;
 import th.co.truemoney.product.api.domain.TopupQuotableRequest;
 import th.co.truemoney.product.api.util.ResponseParameter;
 import th.co.truemoney.serviceinventory.ewallet.SourceOfFundService;
+import th.co.truemoney.serviceinventory.ewallet.TopUpService;
 import th.co.truemoney.serviceinventory.ewallet.domain.DirectDebit;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
@@ -30,10 +33,15 @@ public class DirectDebitController extends BaseController {
 	@Autowired
 	SourceOfFundService sourceOfFundService;
 	
+	@Autowired
+	TopUpService topupService;
+	
 	@RequestMapping(value = "/banks/{username}/{accessToken}", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> getUserDirectDebitSources(@PathVariable String username,
-			@PathVariable String accessToken) {
+	public Map<String, Object> getUserDirectDebitSources(
+			@PathVariable String username,
+			@PathVariable String accessToken,
+			HttpServletResponse response) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> data = new HashMap<String, Object>();
 
@@ -46,11 +54,11 @@ public class DirectDebitController extends BaseController {
 			result.put(ResponseParameter.NAMESPACE, "TMN-PRODUCT");
 			result.put("data", data);
 		} catch (ServiceInventoryException e) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			result.put(ResponseParameter.STATUS, e.getErrorCode());
 			result.put(ResponseParameter.NAMESPACE, e.getErrorNamespace());
 		}
-
-		return messageManager.mapStatusMessage(result);
+		return result;
 	}
 	
 	/**

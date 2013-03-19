@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import th.co.truemoney.product.api.util.MessageManager;
 import th.co.truemoney.serviceinventory.ewallet.SourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
+import th.co.truemoney.serviceinventory.ewallet.TopUpService;
 
 @EnableWebMvc
 @Configuration
@@ -27,6 +28,11 @@ public class TestWebConfig {
 	@Bean
 	public MessageManager messageManager() {
 		return Mockito.mock(MessageManager.class);
+	}
+	
+	@Bean
+	public TopUpService topupService() {
+		return Mockito.mock(TopUpService.class);
 	}
 	
 }

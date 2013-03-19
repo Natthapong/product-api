@@ -77,7 +77,7 @@ public class TestDirectDebitController {
 		scb.setBankNameTh("ธนาคารไทยพานิชย์");
 		scb.setMaxAmount(new BigDecimal(5000.00));
 		scb.setMinAmount(new BigDecimal(500.00));
-		scb.setSourceOfFundId(fakeSourceOfFundId);
+		scb.setSourceOfFundID(fakeSourceOfFundId);
 		scb.setSourceOfFundType(fakeSourceOfFundType);
 		
 		List<DirectDebit> returnedDirectDebitList = new ArrayList<DirectDebit>();

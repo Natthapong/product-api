@@ -144,11 +144,10 @@ public class DirectDebitController extends BaseController {
 	 * Get transaction detail after transaction done successfully
 	 */
 	@RequestMapping(value = "/directdebit/order/{topupOrderID}/details/{accessToken}", method = RequestMethod.GET)
-	public Map<String, Object> getDirectDebitTopupDetails(
+	public ProductResponse getDirectDebitTopupDetails(
 			@PathVariable String topupOrderID, 
 			@PathVariable String accessToken) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		return result;
+		return null;
 	}
 
 	private List<JSONObject> prepareData(List<DirectDebit> listBank) {

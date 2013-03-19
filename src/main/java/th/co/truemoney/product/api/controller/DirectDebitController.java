@@ -24,7 +24,9 @@ import th.co.truemoney.product.api.util.ResponseParameter;
 import th.co.truemoney.serviceinventory.ewallet.SourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
 import th.co.truemoney.serviceinventory.ewallet.domain.DirectDebit;
-import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
+import th.co.truemoney.serviceinventory.ewallet.domain.QuoteRequest;
+import th.co.truemoney.serviceinventory.ewallet.domain.TopUpOrder;
+import th.co.truemoney.serviceinventory.ewallet.domain.TopUpQuote;
 
 @Controller
 @RequestMapping(value = "/add-money/ewallet")
@@ -42,22 +44,18 @@ public class DirectDebitController extends BaseController {
 			@PathVariable String username,
 			@PathVariable String accessToken,
 			HttpServletResponse response) {
+		
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> data = new HashMap<String, Object>();
 
-		try {
-			List<DirectDebit> listBank = sourceOfFundService
-					.getUserDirectDebitSources(username, accessToken);
+		List<DirectDebit> listBank = sourceOfFundService.getUserDirectDebitSources(username, accessToken);
 
-			data.put("listOfBank", prepareData(listBank));
-			result.put(ResponseParameter.STATUS, "20000");
-			result.put(ResponseParameter.NAMESPACE, "TMN-PRODUCT");
-			result.put("data", data);
-		} catch (ServiceInventoryException e) {
-			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-			result.put(ResponseParameter.STATUS, e.getErrorCode());
-			result.put(ResponseParameter.NAMESPACE, e.getErrorNamespace());
-		}
+		data.put("listOfBank", prepareData(listBank));
+		result.put(ResponseParameter.STATUS, "20000");
+		result.put(ResponseParameter.NAMESPACE, "TMN-PRODUCT");
+		result.put(ResponseParameter.MESSAGE_EN, messageManager.getMessageEn("TMN-PRODUCT", "20000"));
+		result.put(ResponseParameter.MESSAGE_TH, messageManager.getMessageTh("TMN-PRODUCT", "20000"));
+		result.put("data", data);
 		return result;
 	}
 	
@@ -69,9 +67,34 @@ public class DirectDebitController extends BaseController {
 	public 
 	@ResponseBody Map<String, Object> createDirectDebitTopupQuote(
 			@RequestBody TopupDirectDebitRequest request, 
-			@PathVariable String accessToken) {
+			@PathVariable String accessToken,
+			HttpServletResponse response) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		return messageManager.mapStatusMessage(result);
+		
+		QuoteRequest quoteRequest = new QuoteRequest();
+		quoteRequest.setAmount(request.getAmount());
+		quoteRequest.setChecksum(request.getChecksum());
+		
+		TopUpQuote quote = this.topupService.createTopUpQuoteFromDirectDebit(
+				request.getSourceOfFundID(), quoteRequest, accessToken);
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("quoteID", quote.getID());
+		data.put("amount", quote.getAmount());
+		data.put("fee", quote.getTopUpFee());
+		data.put("bankNumber", "");//TODO
+		data.put("bankNameEN", "");//TODO
+		data.put("bankNameTH", "");//TODO
+		data.put("sourceOfFundID", quote.getSourceOfFund().getSourceOfFundID());//TODO
+		data.put("accessToken", quote.getAccessTokenID());//TODO
+		data.put("urlLogo", "");//TODO
+		result.put("data", data);
+		
+		result.put(ResponseParameter.STATUS, "20000");
+		result.put(ResponseParameter.NAMESPACE, "TMN-PRODUCT");
+		result.put(ResponseParameter.MESSAGE_EN, messageManager.getMessageEn("TMN-PRODUCT", "20000"));
+		result.put(ResponseParameter.MESSAGE_TH, messageManager.getMessageTh("TMN-PRODUCT", "20000"));
+
+		return result;
 	}
 	
 	/**
@@ -83,6 +106,7 @@ public class DirectDebitController extends BaseController {
 			@RequestBody TopupQuotableRequest request, 
 			@PathVariable String accessToken) {
 		Map<String, Object> result = new HashMap<String, Object>();
+		//TODO
 		return messageManager.mapStatusMessage(result);
 	}
 	
@@ -97,6 +121,16 @@ public class DirectDebitController extends BaseController {
 			@RequestBody TopupQuotableRequest request, 
 			@PathVariable String accessToken) {
 		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> data = new HashMap<String, Object>();
+		TopUpOrder order = this.topupService.requestPlaceOrder(request.getQuoteID(), accessToken);
+		data.put("topupOrderID", order.getConfirmationInfo().getTransactionID());
+		data.put("amount", order.getAmount());
+		data.put("otpRefCode", order.getOtpReferenceCode());
+		result.put("data", data);
+		result.put(ResponseParameter.STATUS, "20000");
+		result.put(ResponseParameter.NAMESPACE, "TMN-PRODUCT");
+		result.put(ResponseParameter.MESSAGE_EN, messageManager.getMessageEn("TMN-PRODUCT", "20000"));
+		result.put(ResponseParameter.MESSAGE_TH, messageManager.getMessageTh("TMN-PRODUCT", "20000"));
 		return messageManager.mapStatusMessage(result);
 	}
 	
@@ -110,6 +144,9 @@ public class DirectDebitController extends BaseController {
 	@ResponseBody Map<String, Object> confirmDirectDebitTopuOrder(
 			@RequestBody TopupOrderConfirmRequest request, 
 			@PathVariable String accessToken) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> data = new HashMap<String, Object>();
+		
 		return null;
 	}
 	

@@ -4,18 +4,18 @@ import java.math.BigDecimal;
 
 public class TopupDirectDebitRequest {
 	
-	private String sourceOfFundId;
+	private String sourceOfFundID;
 	
 	private BigDecimal amount;
 	
 	private String checksum;
 
-	public String getSourceOfFundId() {
-		return sourceOfFundId;
+	public String getSourceOfFundID() {
+		return sourceOfFundID;
 	}
 
-	public void setSourceOfFundId(String sourceOfFundId) {
-		this.sourceOfFundId = sourceOfFundId;
+	public void setSourceOfFundID(String sourceOfFundID) {
+		this.sourceOfFundID = sourceOfFundID;
 	}
 
 	public BigDecimal getAmount() {

@@ -26,8 +26,10 @@ public class BaseController {
 	
 	@ExceptionHandler(InvalidParameterException.class)
 	public @ResponseBody
-    Map<String, Object> handleInvalidParameterExceptions(InvalidParameterException exception, WebRequest request,
+    Map<String, Object> handleInvalidParameterExceptions(
+    		InvalidParameterException exception, 
 			HttpServletResponse response) {
+		
         Map<String, Object> error = new HashMap<String, Object>();
         
         String namespace = "TMN-PRODUCT";
@@ -41,8 +43,10 @@ public class BaseController {
 	
 	@ExceptionHandler(ServiceInventoryException.class)
 	public @ResponseBody
-	Map<String, Object> handleServiceInventoryExceptions(ServiceInventoryException exception, WebRequest request,
+	Map<String, Object> handleServiceInventoryExceptions(
+			ServiceInventoryException exception, 
 			HttpServletResponse response) {
+		
         Map<String, Object> error = new HashMap<String, Object>();
         String namespace = exception.getErrorNamespace();
         String status    = exception.getErrorCode();

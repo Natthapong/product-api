@@ -95,6 +95,8 @@ public class TestDirectDebitController {
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$.status").value("20000"))
 					.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
+					.andExpect(jsonPath("$.messageEn").exists())
+					.andExpect(jsonPath("$.messageTh").exists())
 					.andExpect(jsonPath("$.data").exists())
 					.andExpect(jsonPath("$..listOfBank").isArray())
 					.andExpect(jsonPath("$..listOfBank[0].bankNameEN").value("Siam Commercial Bank"));
@@ -114,8 +116,12 @@ public class TestDirectDebitController {
 		
 		this.mockMvc.perform(
 				get(directDebitURL).accept(MediaType.APPLICATION_JSON))
-					.andExpect(status().isNotFound())
+					.andExpect(status().isInternalServerError())
 					.andExpect(jsonPath("$.status").value(failedCode))
-					.andExpect(jsonPath("$.namespace").value(failedNamespace));
+					.andExpect(jsonPath("$.namespace").value(failedNamespace))
+					.andExpect(jsonPath("$.messageEn").exists())
+					.andExpect(jsonPath("$.messageTh").exists());
 	}
+	
+	
 }

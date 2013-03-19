@@ -1,9 +1,11 @@
 package th.co.truemoney.product.api.config;
 
 import org.mockito.Mockito;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import th.co.truemoney.product.api.util.MessageManager;
@@ -13,8 +15,15 @@ import th.co.truemoney.serviceinventory.ewallet.TopUpService;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan({"th.co.truemoney.product.api.controller"})
+@ComponentScan({"th.co.truemoney.product.api.controller", "th.co.truemoney.product.api.util"})
 public class TestWebConfig {
+	
+	@Bean
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("messages");
+        return messageSource;
+    }
 	
 	@Bean
 	public TmnProfileService profileService() {

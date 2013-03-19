@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -93,7 +94,7 @@ public class TestDirectDebitController {
 		this.mockMvc.perform(
 				get(directDebitURL).accept(MediaType.APPLICATION_JSON))
 					.andExpect(status().isOk())
-					.andExpect(jsonPath("$.status").value("20000"))
+					.andExpect(jsonPath("$.code").value("20000"))
 					.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
 					.andExpect(jsonPath("$.messageEn").exists())
 					.andExpect(jsonPath("$.messageTh").exists())
@@ -117,7 +118,7 @@ public class TestDirectDebitController {
 		this.mockMvc.perform(
 				get(directDebitURL).accept(MediaType.APPLICATION_JSON))
 					.andExpect(status().isInternalServerError())
-					.andExpect(jsonPath("$.status").value(failedCode))
+					.andExpect(jsonPath("$.code").value(failedCode))
 					.andExpect(jsonPath("$.namespace").value(failedNamespace))
 					.andExpect(jsonPath("$.messageEn").exists())
 					.andExpect(jsonPath("$.messageTh").exists());

@@ -2,14 +2,14 @@ package th.co.truemoney.product.api.domain;
 
 public class TopupQuotableRequest {
 
-	private String quoteId;
+	private String quoteID;
 
-	public String getQuoteId() {
-		return quoteId;
+	public String getQuoteID() {
+		return quoteID;
 	}
 
-	public void setQuoteId(String quoteId) {
-		this.quoteId = quoteId;
+	public void setQuoteID(String quoteID) {
+		this.quoteID = quoteID;
 	}
 	
 }

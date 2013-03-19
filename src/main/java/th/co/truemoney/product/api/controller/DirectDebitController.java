@@ -80,6 +80,8 @@ public class DirectDebitController extends BaseController {
 	
 	/**
 	 * Send OTP
+	 * service-inventory-api : requestPlaceOrder(String quoteId, String accessToken)
+	 * return TopUpOrder;
 	 */
 	@RequestMapping(value = "/directdebit/order/create/{accessToken}", method = RequestMethod.POST)
 	public 
@@ -92,6 +94,8 @@ public class DirectDebitController extends BaseController {
 	
 	/**
 	 * Confirm transaction
+	 * confirmPlaceOrder(String topUpOrderId, OTP otp, String accessToken
+	 * return TopUpOrder;
 	 */
 	@RequestMapping(value = "/directdebit/order/confirm/{accessToken}", method = RequestMethod.PUT)
 	public 

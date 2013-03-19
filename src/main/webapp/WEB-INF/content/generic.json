@@ -1,13 +1,4 @@
 {
-
-"addmoney.cashcard.url" : "https://secure.truemoney-dev.com/api/v1/add-money/cashcard?",
-
-"billpay.billinfo.url" : "https://secure.truemoney-dev.com/api/v1/bill/barcode/%@?",
-
-"billpay.confirm.url" : "https://secure.truemoney-dev.com/api/v1/bill/confirm/%@/%@?",
-
-"billpay.verify.url" : "https://secure.truemoney-dev.com/api/v1/bill/verify/%@/%@?",
-
 "instruction.addmoney.atm" : "https://secure.truemoney-dev.com/m/tmn_webview/atm/index.html",
 
 "instruction.addmoney.direct.debit" : "https://secure.truemoney-dev.com/m/tmn_webview/direct_debit/index.html",
@@ -20,29 +11,15 @@
 
 "signin.url" : "https://secure.truemoney-dev.com/api/v1/signin?",
 
-"signup.url" : "https://secure.truemoney-dev.com/api/v1/signup?",
+"ewallet.addmoney.directdebit.soflist.url" : "https://secure.truemoney-dev.com/api/v1/add-money/ewallet/banks/%@/%@?",
 
-"signup.verify.email.url" : "https://secure.truemoney-dev.com/api/v1/signup/email/%@?",
+"ewallet.addmoney.directdebit.soflist.mock" : "https://secure.truemoney-dev.com/api/v1/mock/add-money/ewallet/banks/%@/%@?",
 
-"signup.verify.mobile.url" : "https://secure.truemoney-dev.com/api/v1/signup/mobile/%@?",
+"ewallet.addmoney.directdebit.verify.mock" : "https://secure.truemoney-dev.com/api/v1/mock/add-money/verify/ewallet?",
 
-"statusCode.notEnoughMoney" : "40006",
+"ewallet.addmoney.directdebit.otp.mock" : "https://secure.truemoney-dev.com/api/v1/mock/add-money/send/otp/%@/%@?",
 
-"topup.truemove.otp.url" : "https://secure.truemoney-dev.com/api/v1/topup/truemoveh/otp?",
+"ewallet.addmoney.directdebit.confirm.mock" : "https://secure.truemoney-dev.com/api/v1/mock/add-money/confirm/ewallet/%@?",
 
-"topup.truemove.url" : "https://secure.truemoney-dev.com/api/v1/topup/truemoveh?",
-
-"addmoney.ewallet.directdebit.information.url" : "https://secure.truemoney-dev.com/api/v1/add-money/ewallet/banks/%@/%@?",
-
-"login.mock" : "https://secure.truemoney-dev.com/api/v1/signin/loginmock?",
-
-"addmoney.ewallet.directdebit.mock" : "https://secure.truemoney-dev.com/api/v1/mock/add-money/ewallet/banks/%@/%@?",
-
-"addmoney.verify.ewallet.mock" : "https://secure.truemoney-dev.com/api/v1/mock/add-money/verify/ewallet?",
-
-"addmoney.otp.ewallet.mock" : "https://secure.truemoney-dev.com/api/v1/mock/add-money/send/otp/%@/%@?",
-
-"addmoney.confirm.ewallet.mock" : "https://secure.truemoney-dev.com/api/v1/mock/add-money/confirm/ewallet/%@?",
-
-"addmoney.status.ewallet.mock" : "https://secure.truemoney-dev.com/api/v1/mock/add-money/checkstatus/ewallet?"
+"ewallet.addmoney.directdebit.status.mock" : "https://secure.truemoney-dev.com/api/v1/mock/add-money/checkstatus/ewallet?"
 }

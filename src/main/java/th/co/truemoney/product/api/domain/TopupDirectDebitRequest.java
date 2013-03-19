@@ -7,6 +7,8 @@ public class TopupDirectDebitRequest {
 	private String sourceOfFundId;
 	
 	private BigDecimal amount;
+	
+	private String checksum;
 
 	public String getSourceOfFundId() {
 		return sourceOfFundId;
@@ -24,4 +26,12 @@ public class TopupDirectDebitRequest {
 		this.amount = amount;
 	}
 
+	public String getChecksum() {
+		return checksum;
+	}
+
+	public void setChecksum(String checksum) {
+		this.checksum = checksum;
+	}
+	
 }

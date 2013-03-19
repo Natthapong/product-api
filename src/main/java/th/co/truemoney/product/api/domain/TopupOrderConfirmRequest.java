@@ -1,17 +1,21 @@
 package th.co.truemoney.product.api.domain;
 
 public class TopupOrderConfirmRequest {
-	
-	private String topUpOrderId;
-	
+
+	private String topupOrderID;
+
 	private String otpString;
 
-	public String getTopUpOrderId() {
-		return topUpOrderId;
+	private String otpRefCode;
+
+	private String checksum;
+
+	public String getTopupOrderID() {
+		return topupOrderID;
 	}
 
-	public void setTopUpOrderId(String topUpOrderId) {
-		this.topUpOrderId = topUpOrderId;
+	public void setTopupOrderID(String topupOrderID) {
+		this.topupOrderID = topupOrderID;
 	}
 
 	public String getOtpString() {
@@ -20,6 +24,22 @@ public class TopupOrderConfirmRequest {
 
 	public void setOtpString(String otpString) {
 		this.otpString = otpString;
+	}
+
+	public String getOtpRefCode() {
+		return otpRefCode;
+	}
+
+	public void setOtpRefCode(String otpRefCode) {
+		this.otpRefCode = otpRefCode;
+	}
+
+	public String getChecksum() {
+		return checksum;
+	}
+
+	public void setChecksum(String checksum) {
+		this.checksum = checksum;
 	}
 
 }

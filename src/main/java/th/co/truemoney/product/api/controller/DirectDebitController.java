@@ -153,10 +153,10 @@ public class DirectDebitController extends BaseController {
 	/**
 	 * Polling for transaction status
 	 */
-	@RequestMapping(value = "/directdebit/order/{topUpOrderId}/status/{accessToken}", method = RequestMethod.GET)
+	@RequestMapping(value = "/directdebit/order/{topupOrderID}/status/{accessToken}", method = RequestMethod.GET)
 	public 
 	@ResponseBody Map<String, Object> getDirectDebitTopupStatus(
-			@PathVariable String topUpOrderId, 
+			@PathVariable String topupOrderID, 
 			@PathVariable String accessToken) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		return messageManager.mapStatusMessage(result);
@@ -165,9 +165,9 @@ public class DirectDebitController extends BaseController {
 	/**
 	 * Get transaction detail after transaction done successfully
 	 */
-	@RequestMapping(value = "/directdebit/order/{topUpOrderId}/details/{accessToken}", method = RequestMethod.GET)
+	@RequestMapping(value = "/directdebit/order/{topupOrderID}/details/{accessToken}", method = RequestMethod.GET)
 	public Map<String, Object> getDirectDebitTopupDetails(
-			@PathVariable String topUpOrderId, 
+			@PathVariable String topupOrderID, 
 			@PathVariable String accessToken) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		return messageManager.mapStatusMessage(result);

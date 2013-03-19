@@ -3,11 +3,11 @@ package th.co.truemoney.product.api.domain;
 import java.math.BigDecimal;
 
 public class TopupDirectDebitRequest {
-	
+
 	private String sourceOfFundID;
-	
+
 	private BigDecimal amount;
-	
+
 	private String checksum;
 
 	public String getSourceOfFundID() {
@@ -33,5 +33,5 @@ public class TopupDirectDebitRequest {
 	public void setChecksum(String checksum) {
 		this.checksum = checksum;
 	}
-	
+
 }

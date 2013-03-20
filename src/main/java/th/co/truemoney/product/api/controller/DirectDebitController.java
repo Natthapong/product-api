@@ -17,14 +17,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.domain.TopupDirectDebitRequest;
 import th.co.truemoney.product.api.domain.TopupOrderConfirmRequest;
 import th.co.truemoney.product.api.domain.TopupQuotableRequest;
-import th.co.truemoney.product.api.util.ResponseParameter;
 import th.co.truemoney.serviceinventory.ewallet.SourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
 import th.co.truemoney.serviceinventory.ewallet.domain.DirectDebit;
-import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
+import th.co.truemoney.serviceinventory.ewallet.domain.QuoteRequest;
+import th.co.truemoney.serviceinventory.ewallet.domain.TopUpOrder;
+import th.co.truemoney.serviceinventory.ewallet.domain.TopUpQuote;
 
 @Controller
 @RequestMapping(value = "/add-money/ewallet")
@@ -38,27 +40,17 @@ public class DirectDebitController extends BaseController {
 	
 	@RequestMapping(value = "/banks/{username}/{accessToken}", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> getUserDirectDebitSources(
+	public ProductResponse getUserDirectDebitSources(
 			@PathVariable String username,
 			@PathVariable String accessToken,
 			HttpServletResponse response) {
-		Map<String, Object> result = new HashMap<String, Object>();
+		
+		List<DirectDebit> listBank = sourceOfFundService.getUserDirectDebitSources(username, accessToken);
+		
 		Map<String, Object> data = new HashMap<String, Object>();
-
-		try {
-			List<DirectDebit> listBank = sourceOfFundService
-					.getUserDirectDebitSources(username, accessToken);
-
-			data.put("listOfBank", prepareData(listBank));
-			result.put(ResponseParameter.STATUS, "20000");
-			result.put(ResponseParameter.NAMESPACE, "TMN-PRODUCT");
-			result.put("data", data);
-		} catch (ServiceInventoryException e) {
-			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-			result.put(ResponseParameter.STATUS, e.getErrorCode());
-			result.put(ResponseParameter.NAMESPACE, e.getErrorNamespace());
-		}
-		return result;
+		data.put("listOfBank", prepareData(listBank));
+		
+		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	
 	/**
@@ -67,11 +59,29 @@ public class DirectDebitController extends BaseController {
 	 */
 	@RequestMapping(value = "/directdebit/quote/create/{accessToken}", method = RequestMethod.POST)
 	public 
-	@ResponseBody Map<String, Object> createDirectDebitTopupQuote(
+	@ResponseBody ProductResponse createDirectDebitTopupQuote(
 			@RequestBody TopupDirectDebitRequest request, 
-			@PathVariable String accessToken) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		return messageManager.mapStatusMessage(result);
+			@PathVariable String accessToken,
+			HttpServletResponse response) {
+		
+		QuoteRequest quoteRequest = new QuoteRequest();
+		quoteRequest.setAmount(request.getAmount());
+		quoteRequest.setChecksum(request.getChecksum());
+		
+		TopUpQuote quote = this.topupService.createTopUpQuoteFromDirectDebit(
+				request.getSourceOfFundID(), quoteRequest, accessToken);
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("quoteID", quote.getID());
+		data.put("amount", quote.getAmount());
+		data.put("fee", quote.getTopUpFee());
+		data.put("bankNumber", "");//TODO
+		data.put("bankNameEN", "");//TODO
+		data.put("bankNameTH", "");//TODO
+		data.put("sourceOfFundID", quote.getSourceOfFund().getSourceOfFundID());//TODO
+		data.put("accessToken", quote.getAccessTokenID());//TODO
+		data.put("urlLogo", "");//TODO
+		
+		return responseFactory.createSuccessProductResonse(data);
 	}
 	
 	/**
@@ -79,11 +89,11 @@ public class DirectDebitController extends BaseController {
 	 */
 	@RequestMapping(value = "/directdebit/quote/details/{accessToken}", method = RequestMethod.GET)
 	public 
-	@ResponseBody Map<String, Object> getDirectDebitTopupQuoteDetials(
+	@ResponseBody ProductResponse getDirectDebitTopupQuoteDetials(
 			@RequestBody TopupQuotableRequest request, 
 			@PathVariable String accessToken) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		return messageManager.mapStatusMessage(result);
+		//TODO
+		return null;
 	}
 	
 	/**
@@ -93,11 +103,17 @@ public class DirectDebitController extends BaseController {
 	 */
 	@RequestMapping(value = "/directdebit/order/create/{accessToken}", method = RequestMethod.POST)
 	public 
-	@ResponseBody Map<String, Object> placeDirectDebitTopupOrder(
+	@ResponseBody ProductResponse placeDirectDebitTopupOrder(
 			@RequestBody TopupQuotableRequest request, 
 			@PathVariable String accessToken) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		return messageManager.mapStatusMessage(result);
+		
+		TopUpOrder order = this.topupService.requestPlaceOrder(request.getQuoteID(), accessToken);
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("topupOrderID", order.getConfirmationInfo().getTransactionID());
+		data.put("amount", order.getAmount());
+		data.put("otpRefCode", order.getOtpReferenceCode());
+		
+		return responseFactory.createSuccessProductResonse(data);
 	}
 	
 	/**
@@ -107,7 +123,7 @@ public class DirectDebitController extends BaseController {
 	 */
 	@RequestMapping(value = "/directdebit/order/confirm/{accessToken}", method = RequestMethod.PUT)
 	public 
-	@ResponseBody Map<String, Object> confirmDirectDebitTopuOrder(
+	@ResponseBody ProductResponse confirmDirectDebitTopuOrder(
 			@RequestBody TopupOrderConfirmRequest request, 
 			@PathVariable String accessToken) {
 		return null;
@@ -118,22 +134,20 @@ public class DirectDebitController extends BaseController {
 	 */
 	@RequestMapping(value = "/directdebit/order/{topupOrderID}/status/{accessToken}", method = RequestMethod.GET)
 	public 
-	@ResponseBody Map<String, Object> getDirectDebitTopupStatus(
+	@ResponseBody ProductResponse getDirectDebitTopupStatus(
 			@PathVariable String topupOrderID, 
 			@PathVariable String accessToken) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		return messageManager.mapStatusMessage(result);
+		return null;
 	}
 	
 	/**
 	 * Get transaction detail after transaction done successfully
 	 */
 	@RequestMapping(value = "/directdebit/order/{topupOrderID}/details/{accessToken}", method = RequestMethod.GET)
-	public Map<String, Object> getDirectDebitTopupDetails(
+	public ProductResponse getDirectDebitTopupDetails(
 			@PathVariable String topupOrderID, 
 			@PathVariable String accessToken) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		return messageManager.mapStatusMessage(result);
+		return null;
 	}
 
 	private List<JSONObject> prepareData(List<DirectDebit> listBank) {

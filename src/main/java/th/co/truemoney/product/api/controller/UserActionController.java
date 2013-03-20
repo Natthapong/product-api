@@ -75,10 +75,8 @@ public class UserActionController extends BaseController {
 		return null;
 	}
 
-	@SuppressWarnings("unused")
 	private TmnProfile getUserProfile(String accesstoken, String checksum) {
-		return profileService.getTruemoneyProfile(accesstoken,
-				checksum);
+		return profileService.getTruemoneyProfile(accesstoken);
 	}
 
 	private void validateSignin(String username, String password) {

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.domain.TopupDirectDebitRequest;
+import th.co.truemoney.product.api.domain.TopupOrderConfirmRequest;
 import th.co.truemoney.product.api.domain.TopupQuotableRequest;
 import th.co.truemoney.product.api.util.ResponseParameter;
 
@@ -148,7 +149,7 @@ public class MockController {
 
 	@RequestMapping(value = "/mock/add-money/confirm/ewallet/{accessToken}", method = RequestMethod.PUT)
 	public @ResponseBody
-	Map<String, Object> confirmEwallet(@RequestBody TopupQuotableRequest request, 
+	Map<String, Object> confirmEwallet(@RequestBody TopupOrderConfirmRequest request, 
 			@PathVariable String accessToken) {
 		JSONObject response = new JSONObject();
 		Map<String, Object> data = new HashMap<String, Object>();

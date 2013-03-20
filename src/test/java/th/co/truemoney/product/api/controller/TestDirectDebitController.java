@@ -153,8 +153,7 @@ public class TestDirectDebitController {
 	@SuppressWarnings("serial")
 	@Test@Ignore
 	public void createDirectdebitQuoteSuccess() throws Exception {
-		
-		String fakeBankAccountNumber = "XXXX XXXX XXXX 1234"; 
+		 
 		String fakeSourceOfFundId = "B00001";
 		String fakeSourceOfFundType = "DDB"; //suppose to be direct debit
 		
@@ -164,10 +163,6 @@ public class TestDirectDebitController {
 		fakeSourceOfFund.setSourceOfFundType(fakeSourceOfFundType);
 		
 		TopUpQuote topUpQuote = new TopUpQuote();
-		topUpQuote.setBankCode("SCB");
-		topUpQuote.setBankAccountNumber(fakeBankAccountNumber);
-		topUpQuote.setBankNameEn("Siam Commercial Bank");
-		topUpQuote.setBankNameTh("ธนาคารไทยพานิชย์");
 		topUpQuote.setAmount(new BigDecimal(5000.00));
 		topUpQuote.setSourceOfFund(fakeSourceOfFund);
 		

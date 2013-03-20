@@ -23,7 +23,7 @@ public class ProductResponseFactory {
 		success.setNamespace(PRODUCT_NAMESPACE);
 		success.setMessageEn(messageManager.getMessageEn(PRODUCT_NAMESPACE, SUCCESS_CODE));
 		success.setMessageTh(messageManager.getMessageTh(PRODUCT_NAMESPACE, SUCCESS_CODE));
-		if (data != null)
+		if (data != null && !data.isEmpty())
 			success.setData(data);
 		return success;
 	}
@@ -35,7 +35,7 @@ public class ProductResponseFactory {
 		error.setMessageEn(messageManager.getMessageEn(namespace, code));
 		error.setMessageTh(messageManager.getMessageTh(namespace, code));
 		error.setTitleEn(messageManager.getTitleEn(namespace, code, new Object[0]));
-		error.setTitleTh(messageManager.getTitleEn(namespace, code, new Object[0]));
+		error.setTitleTh(messageManager.getTitleTh(namespace, code, new Object[0]));
 		error.setOriginalMessage(description);
 		return error;
 	}

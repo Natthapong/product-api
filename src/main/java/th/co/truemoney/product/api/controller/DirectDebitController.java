@@ -171,7 +171,7 @@ public class DirectDebitController extends BaseController {
 		data.put("bankNameEN", "");//TODO
 		data.put("bankNameTH", "");//TODO
 		data.put("fee", order.getTopUpFee());
-		data.put("urlLogo", "");//TODO
+		data.put("urlLogo", order.getBankCode());
 		data.put("currentBalance", "");//TODO
 		
 		return this.responseFactory.createSuccessProductResonse(data);

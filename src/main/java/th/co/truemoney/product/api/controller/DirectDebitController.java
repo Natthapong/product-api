@@ -99,8 +99,20 @@ public class DirectDebitController extends BaseController {
 	@ResponseBody ProductResponse getDirectDebitTopupQuoteDetials(
 			@RequestBody TopupQuotableRequest request, 
 			@PathVariable String accessToken) {
-		//TODO To be implement
-		return null;
+		
+		TopUpQuote quote = this.topupService.getTopUpQuoteDetails(request.getQuoteID(), accessToken);
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("quoteID", quote.getID());
+		data.put("amount", quote.getAmount());
+		data.put("fee", quote.getTopUpFee());
+		data.put("bankNumber", "");//TODO
+		data.put("bankNameEN", "");//TODO
+		data.put("bankNameTH", "");//TODO
+		data.put("urlLogo", "");//TODO
+		data.put("sourceOfFundID", quote.getSourceOfFund().getSourceOfFundID());
+		data.put("accessToken", quote.getAccessTokenID());
+		
+		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	
 	/**

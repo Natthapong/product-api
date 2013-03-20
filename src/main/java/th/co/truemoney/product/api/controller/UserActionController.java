@@ -38,7 +38,7 @@ public class UserActionController extends BaseController {
 	public Map<String, Object> signin(@RequestBody LoginBean request) throws ServiceInventoryException {
 		Map<String, Object> result = new HashMap<String, Object>();
 		// validate
-		validateSignin(request.getUsername());
+		validateSignin(request.getUsername(), request.getPassword());
 		Login login = new Login(request.getUsername(), request.getPassword());
 		String token = profileService.login(CHANNEL_ID, login);
 
@@ -81,12 +81,16 @@ public class UserActionController extends BaseController {
 				checksum);
 	}
 
-	private void validateSignin(String username) {
+	private void validateSignin(String username, String password) {
 
 		if (!ValidateUtil.checkEmail(username)) {
 			if (!ValidateUtil.checkMobileNumber(username)) {
 				throw new InvalidParameterException("50001");
 			}
+		}
+		
+		if(ValidateUtil.isEmpty(password)){
+			throw new InvalidParameterException("50001");
 		}
 	}
 

@@ -8,10 +8,8 @@ import th.co.truemoney.product.api.aspect.LoggingAspect;
 import th.co.truemoney.product.api.aspect.ResponseHandlingAspect;
 import th.co.truemoney.serviceinventory.ewallet.SourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
-import th.co.truemoney.serviceinventory.ewallet.TopUpService;
 import th.co.truemoney.serviceinventory.ewallet.client.SourceOfFundServiceClient;
 import th.co.truemoney.serviceinventory.ewallet.client.TmnProfileServiceClient;
-import th.co.truemoney.serviceinventory.ewallet.client.TmnTopupServiceClient;
 
 @Configuration
 @EnableAspectJAutoProxy
@@ -36,10 +34,5 @@ public class AppConfig {
 	public SourceOfFundService sourceOfFundService() {
 		return new SourceOfFundServiceClient();
 	}
-
-//	@Bean
-//	public TopUpService topUpService() {
-//		return new TmnTopupServiceClient();
-//	}
 
 }

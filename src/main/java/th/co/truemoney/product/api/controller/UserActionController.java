@@ -22,7 +22,7 @@ import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 @Controller
 public class UserActionController extends BaseController {
-	
+
 	@Autowired
 	TmnProfileService profileService;
 
@@ -34,25 +34,34 @@ public class UserActionController extends BaseController {
 
 	@RequestMapping(value = "/signin", method = RequestMethod.POST)
 	@ResponseBody
-	public ProductResponse signin(@RequestBody LoginBean request) throws ServiceInventoryException {
+	public ProductResponse signin(@RequestBody LoginBean request)
+			throws ServiceInventoryException {
 
 		// validate
-		validateSignin(request.getUsername(), request.getPassword());
-		
-		Login login = new Login(request.getUsername(), request.getPassword());
-		String token = profileService.login(CHANNEL_ID, login);
+		validateSignin(request.getUsername(), request.getPassword(),
+				request.getType());
 
-		//TmnProfile profile = getUserProfile(token, request.getPassword());
-		//Map<String, Object> data = new HashMap<String, Object>();
-		//data.put("fullname", profile.getFullname());
-		//data.put("currentBalance", profile.getBalance());
-		
-		Map<String, Object> mockData = new HashMap<String, Object>();
-		mockData.put("accessToken", token);
-		mockData.put("fullname", "John Doe");
-		mockData.put("currentBalance", 0.00);
-		
-		return this.responseFactory.createSuccessProductResonse(mockData);
+		Login login = new Login(request.getUsername(), request.getPassword());
+		String token = "";
+		try {
+			token = profileService.login(CHANNEL_ID, login);
+		} catch (ServiceInventoryException e) {
+			if ("mobile".equals(request.getType())) {
+				return this.responseFactory.createErrorProductResponse("50001",
+						"TMN-PRODUCT", "Invalid mobile or pin");
+			}
+			throw e;
+		}
+
+		TmnProfile profile = profileService.getTruemoneyProfile(token);
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("fullname", profile.getFullname());
+		data.put("currentBalance", profile.getBalance());
+		data.put("mobileNumber", profile.getMobileno());
+		data.put("email", profile.getEmail());
+		data.put("accessToken", token);
+
+		return this.responseFactory.createSuccessProductResonse(data);
 	}
 
 	@RequestMapping(value = "/signout/{accessToken}", method = RequestMethod.POST)
@@ -67,26 +76,26 @@ public class UserActionController extends BaseController {
 		return null;
 	}
 
-	public TmnProfile getUserProfile(String accesstoken, String checksum) {
-		return profileService.getTruemoneyProfile(accesstoken);
-	}
+	private void validateSignin(String username, String password, String type) {
 
-	private void validateSignin(String username, String password) {
-
-		if (!ValidateUtil.checkEmail(username)) {
-			if (!ValidateUtil.checkMobileNumber(username)) {
-				throw new InvalidParameterException("50001");
+		if (type != null) {
+			if ("email".equals(type)) {
+				if (!ValidateUtil.checkEmail(username)) {
+					throw new InvalidParameterException("50000");
+				}
+				if (ValidateUtil.isEmpty(password)) {
+					throw new InvalidParameterException("50000");
+				}
+			} else if ("mobile".equals(type)) {
+				if (!ValidateUtil.checkMobileNumber(username)) {
+					throw new InvalidParameterException("50001");
+				}
+				if (ValidateUtil.isEmpty(password)) {
+					throw new InvalidParameterException("50001");
+				}
 			}
 		}
-		
-		if(ValidateUtil.isEmpty(password)){
-			throw new InvalidParameterException("50001");
-		}
 	}
 
-//	@Async
-//	private void doSignout(String token) {
-//		profileService.logout(token);
-//	}
 
 }

@@ -11,6 +11,8 @@
 
 "signin.url" : "https://secure.truemoney-dev.com/api/v1/signin?",
 
+"signout.url" : "https://secure.truemoney-dev.com/api/v1/signout/%@?",
+
 "ewallet.addmoney.directdebit.soflist.url" : "https://secure.truemoney-dev.com/api/v1/add-money/ewallet/banks/%@/%@?",
 
 "ewallet.addmoney.directdebit.verify.url" : "https://secure.truemoney-dev.com/api/v1/directdebit/quote/create/%@?",

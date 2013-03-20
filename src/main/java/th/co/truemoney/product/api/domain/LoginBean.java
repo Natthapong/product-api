@@ -1,21 +1,24 @@
 package th.co.truemoney.product.api.domain;
 
 public class LoginBean {
-	
+
 	private String username;
-	
+
 	private String password;
-	
+
+	private String type;
+
 	public LoginBean() {
 		super();
 	}
-	
-	public LoginBean(String username, String password) {
+
+	public LoginBean(String username, String password, String type) {
 		super();
 		this.username = username;
 		this.password = password;
+		this.type = type;
 	}
-	
+
 	public String getUsername() {
 		return username;
 	}
@@ -31,5 +34,13 @@ public class LoginBean {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 }

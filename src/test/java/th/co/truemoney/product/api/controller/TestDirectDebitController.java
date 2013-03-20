@@ -5,6 +5,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -27,11 +29,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import th.co.truemoney.product.api.config.TestWebConfig;
+import th.co.truemoney.product.api.domain.TopupDirectDebitRequest;
 import th.co.truemoney.serviceinventory.ewallet.SourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
 import th.co.truemoney.serviceinventory.ewallet.domain.DirectDebit;
 import th.co.truemoney.serviceinventory.ewallet.domain.QuoteRequest;
-import th.co.truemoney.serviceinventory.ewallet.domain.SourceOfFund;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpQuote;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
@@ -153,23 +155,33 @@ public class TestDirectDebitController {
 	@SuppressWarnings("serial")
 	@Test@Ignore
 	public void createDirectdebitQuoteSuccess() throws Exception {
-		 
+		String fakeBankAccountNumber = "1111111111111";
 		String fakeSourceOfFundId = "B00001";
 		String fakeSourceOfFundType = "DDB"; //suppose to be direct debit
 		
-		SourceOfFund fakeSourceOfFund = new SourceOfFund() {};
+		ObjectMapper mapper = new ObjectMapper();
+		
+		DirectDebit fakeSourceOfFund = new DirectDebit();
 		
 		fakeSourceOfFund.setSourceOfFundID(fakeSourceOfFundId);
 		fakeSourceOfFund.setSourceOfFundType(fakeSourceOfFundType);
+		fakeSourceOfFund.setBankCode("SCB");
+		fakeSourceOfFund.setBankAccountNumber(fakeBankAccountNumber);
+		fakeSourceOfFund.setBankNameEn("Siam Commercial Bank");
+		fakeSourceOfFund.setBankNameTh("ธนาคารไทยพานิชย์");
 		
 		TopUpQuote topUpQuote = new TopUpQuote();
 		topUpQuote.setAmount(new BigDecimal(5000.00));
 		topUpQuote.setSourceOfFund(fakeSourceOfFund);
+		topUpQuote.setAccessTokenID(fakeAccessToken);
+		topUpQuote.setID("342");
+		topUpQuote.setTopUpFee(new BigDecimal(10.00));
+		topUpQuote.setUsername("sdfsdf");
 		
-		
-		QuoteRequest quoteRequest = new QuoteRequest();
-		quoteRequest.setAmount(new BigDecimal(5000.00));
-		quoteRequest.setChecksum("0000000000");
+		TopupDirectDebitRequest request = new TopupDirectDebitRequest();
+		request.setAmount(new BigDecimal(100.00));
+		request.setChecksum("00000000000000");
+		request.setSourceOfFundID("B00001");
 		
 		when(
 			this.topupServiceMock.createTopUpQuoteFromDirectDebit(
@@ -178,7 +190,8 @@ public class TestDirectDebitController {
 		).thenReturn(topUpQuote);
 		
 		this.mockMvc.perform(post(createQuoteURL)
-				.contentType(MediaType.APPLICATION_JSON))
+				.contentType(MediaType.APPLICATION_JSON).content(
+						mapper.writeValueAsBytes(request))).andDo(print())
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$.code").value("20000"))
 					.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
@@ -196,22 +209,29 @@ public class TestDirectDebitController {
 					.andExpect(jsonPath("$..urlLogo").exists());
 	}
 	
-	@Test@Ignore
+	@Test
 	public void createDirectdebitQuoteFailed() throws Exception {
 		String failedCode = "20000";
 		String failedMessage  = "Source of fund is null or empty";
 		String failedNamespace = "TMN-SERVICE-INVENTORY";
+		
+		ObjectMapper mapper = new ObjectMapper();
+		TopupDirectDebitRequest request = new TopupDirectDebitRequest();
+		request.setAmount(new BigDecimal(100.00));
+		request.setChecksum("00000000000000");
+		request.setSourceOfFundID("1");
+		
 		when(
-			this.sourceOfFundServiceMock.getUserDirectDebitSources(
-				any(String.class), 
-				any(String.class))
+				this.topupServiceMock.createTopUpQuoteFromDirectDebit(
+						any(String.class),any(QuoteRequest.class),any(String.class))
 			)
 		.thenThrow(new ServiceInventoryException(failedCode, failedMessage, failedNamespace));
 		
 		this.mockMvc.perform(
 				post(createQuoteURL)
-				.contentType(MediaType.APPLICATION_JSON))
-					.andExpect(status().isBadRequest())
+				.contentType(MediaType.APPLICATION_JSON).content(
+						mapper.writeValueAsBytes(request)))
+					.andExpect(status().isInternalServerError())
 					.andExpect(jsonPath("$.code").value(failedCode))
 					.andExpect(jsonPath("$.namespace").value(failedNamespace))
 					.andExpect(jsonPath("$.messageEn").exists())

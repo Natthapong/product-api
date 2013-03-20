@@ -81,9 +81,10 @@ public class DirectDebitController extends BaseController {
 		data.put("quoteID", quote.getID());
 		data.put("amount", quote.getAmount());
 		data.put("fee", quote.getTopUpFee());
-		data.put("bankNumber", "");//TODO
-		data.put("bankNameEN", "");//TODO
-		data.put("bankNameTH", "");//TODO
+		DirectDebit db = (DirectDebit)quote.getSourceOfFund();
+		data.put("bankNumber", db.getBankAccountNumber());
+		data.put("bankNameEN", db.getBankNameEn());
+		data.put("bankNameTH", db.getBankNameTh());
 		data.put("urlLogo", "");//TODO
 		data.put("sourceOfFundID", quote.getSourceOfFund().getSourceOfFundID());
 		data.put("accessToken", quote.getAccessTokenID());
@@ -105,9 +106,10 @@ public class DirectDebitController extends BaseController {
 		data.put("quoteID", quote.getID());
 		data.put("amount", quote.getAmount());
 		data.put("fee", quote.getTopUpFee());
-		data.put("bankNumber", "");//TODO
-		data.put("bankNameEN", "");//TODO
-		data.put("bankNameTH", "");//TODO
+		DirectDebit db = (DirectDebit)quote.getSourceOfFund();
+		data.put("bankNumber", db.getBankAccountNumber());
+		data.put("bankNameEN", db.getBankNameEn());
+		data.put("bankNameTH", db.getBankNameTh());
 		data.put("urlLogo", "");//TODO
 		data.put("sourceOfFundID", quote.getSourceOfFund().getSourceOfFundID());
 		data.put("accessToken", quote.getAccessTokenID());
@@ -186,9 +188,10 @@ public class DirectDebitController extends BaseController {
 		data.put("transactionID", order.getConfirmationInfo().getTransactionID());
 		data.put("transactionDate", order.getConfirmationInfo().getTransactionDate());
 		data.put("amount", order.getAmount());
-		data.put("bankNumber", "");//TODO
-		data.put("bankNameEN", "");//TODO
-		data.put("bankNameTH", "");//TODO
+		DirectDebit db = (DirectDebit)order.getSourceOfFund();
+		data.put("bankNumber", db.getBankAccountNumber());
+		data.put("bankNameEN", db.getBankNameEn());
+		data.put("bankNameTH", db.getBankNameTh());
 		data.put("urlLogo", "");//TODO
 		data.put("fee", order.getTopUpFee());
 		data.put("currentBalance", balance);

@@ -23,19 +23,20 @@ public class ProductResponseFactory {
 		success.setNamespace(PRODUCT_NAMESPACE);
 		success.setMessageEn(messageManager.getMessageEn(PRODUCT_NAMESPACE, SUCCESS_CODE));
 		success.setMessageTh(messageManager.getMessageTh(PRODUCT_NAMESPACE, SUCCESS_CODE));
-		//TODO set headerEn and headerTh
 		if (data != null)
 			success.setData(data);
 		return success;
 	}
 	
-	public ProductResponse createErrorProductResponse(String code, String namespace) {
+	public ProductResponse createErrorProductResponse(String code, String namespace, String description) {
 		ProductResponse error = new ProductResponse();
 		error.setCode(code);
 		error.setNamespace(namespace);
 		error.setMessageEn(messageManager.getMessageEn(namespace, code));
 		error.setMessageTh(messageManager.getMessageTh(namespace, code));
-		//TODO set headerEn and headerTh
+		error.setTitleEn(messageManager.getTitleEn(namespace, code, new Object[0]));
+		error.setTitleTh(messageManager.getTitleEn(namespace, code, new Object[0]));
+		error.setOriginalMessage(description);
 		return error;
 	}
 }

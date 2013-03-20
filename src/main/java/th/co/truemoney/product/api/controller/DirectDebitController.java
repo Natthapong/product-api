@@ -1,5 +1,6 @@
 package th.co.truemoney.product.api.controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +23,7 @@ import th.co.truemoney.product.api.domain.TopupDirectDebitRequest;
 import th.co.truemoney.product.api.domain.TopupOrderConfirmRequest;
 import th.co.truemoney.product.api.domain.TopupQuotableRequest;
 import th.co.truemoney.serviceinventory.ewallet.SourceOfFundService;
+import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
 import th.co.truemoney.serviceinventory.ewallet.domain.DirectDebit;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
@@ -39,6 +41,9 @@ public class DirectDebitController extends BaseController {
 	
 	@Autowired
 	TopUpService topupService;
+	
+	@Autowired
+	TmnProfileService profileService;
 	
 	@RequestMapping(value = "/banks/{username}/{accessToken}", method = RequestMethod.GET)
 	@ResponseBody
@@ -79,9 +84,9 @@ public class DirectDebitController extends BaseController {
 		data.put("bankNumber", "");//TODO
 		data.put("bankNameEN", "");//TODO
 		data.put("bankNameTH", "");//TODO
-		data.put("sourceOfFundID", quote.getSourceOfFund().getSourceOfFundID());//TODO
-		data.put("accessToken", quote.getAccessTokenID());//TODO
 		data.put("urlLogo", "");//TODO
+		data.put("sourceOfFundID", quote.getSourceOfFund().getSourceOfFundID());
+		data.put("accessToken", quote.getAccessTokenID());
 		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
@@ -164,6 +169,7 @@ public class DirectDebitController extends BaseController {
 			@PathVariable String accessToken) {
 		
 		TopUpOrder order = this.topupService.getTopUpOrderDetails(topupOrderID, accessToken);
+		BigDecimal balance = this.profileService.getEwalletBalance(accessToken);
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("transactionID", order.getConfirmationInfo().getTransactionID());
 		data.put("transactionDate", order.getConfirmationInfo().getTransactionDate());
@@ -171,9 +177,9 @@ public class DirectDebitController extends BaseController {
 		data.put("bankNumber", "");//TODO
 		data.put("bankNameEN", "");//TODO
 		data.put("bankNameTH", "");//TODO
-		data.put("fee", order.getTopUpFee());
 		data.put("urlLogo", "");//TODO
-		data.put("currentBalance", "");//TODO
+		data.put("fee", order.getTopUpFee());
+		data.put("currentBalance", balance);
 		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}

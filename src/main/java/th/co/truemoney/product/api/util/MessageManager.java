@@ -25,15 +25,15 @@ public class MessageManager implements MessageSourceAware {
 		this.messageSource = messageSource;
 	}
 	
-	public String getHeaderTh(String key, Object[] params) {
-		return getHeader(key, params, TH);
+	public String getTitleTh(String namespace, String code, Object[] params) {
+		return getTitle("ttl." + namespace + "." + code, params, TH);
 	}
 	
-	public String getHeaderEn(String key, Object[] params) {
-		return getHeader(key, params, EN);
+	public String getTitleEn(String namespace, String code, Object[] params) {
+		return getTitle("ttl." + namespace + "." + code, params, EN);
 	}
 	
-	private String getHeader(String key, Object[] params, Locale loc) {
+	private String getTitle(String key, Object[] params, Locale loc) {
 		try {
 			return messageSource.getMessage(key, params, loc);
 		} catch (NoSuchMessageException e) {
@@ -42,11 +42,11 @@ public class MessageManager implements MessageSourceAware {
 	}
 	
 	public String getMessageTh(String namespace, String code){
-		return getMessage(namespace + "." + code, TH);
+		return getMessage("msg." + namespace + "." + code, TH);
 	}
 	
 	public String getMessageEn(String namespace, String code){
-		return getMessage(namespace + "." + code, EN);
+		return getMessage("msg." + namespace + "." + code, EN);
 	}
 	
 	private String getMessage(String key, Locale loc) {

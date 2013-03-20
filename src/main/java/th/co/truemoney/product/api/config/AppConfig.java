@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Configuration;
 
 import th.co.truemoney.serviceinventory.ewallet.SourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
-import th.co.truemoney.serviceinventory.ewallet.client.SourceOfFundServiceClient;
 import th.co.truemoney.serviceinventory.ewallet.client.TmnProfileServiceClient;
+import th.co.truemoney.serviceinventory.ewallet.client.TmnSourceOfFundServiceClient;
 
 @Configuration
 public class AppConfig {
@@ -18,7 +18,7 @@ public class AppConfig {
 
 	@Bean
 	public SourceOfFundService sourceOfFundService() {
-		return new SourceOfFundServiceClient();
+		return new TmnSourceOfFundServiceClient();
 	}
 
 }

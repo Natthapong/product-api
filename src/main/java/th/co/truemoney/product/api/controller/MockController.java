@@ -163,7 +163,7 @@ public class MockController {
 
 	}
 	
-	@RequestMapping(value = "/mock/directdebit/order/{topupOrderID}/status/{accessToken}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/mock/directdebit/order/{topupOrderID}/status/{accessToken}", method = RequestMethod.GET)
 	public @ResponseBody
 	Map<String, Object> checkStatus(@PathVariable String topupOrderID, 
 			@PathVariable String accessToken) {
@@ -179,7 +179,7 @@ public class MockController {
 
 	}
 
-	@RequestMapping(value = "/mock/directdebit/order/{topupOrderID}/details/{accessToken}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/mock/directdebit/order/{topupOrderID}/details/{accessToken}", method = RequestMethod.GET)
 	public @ResponseBody
 	Map<String, Object> getOrderDetail(@PathVariable String topupOrderID, 
 			@PathVariable String accessToken) {

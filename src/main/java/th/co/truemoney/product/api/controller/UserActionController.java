@@ -59,7 +59,7 @@ public class UserActionController extends BaseController {
 		return result;
 	}
 
-	@RequestMapping(value = "/signout/{accessToken}", method = RequestMethod.GET)
+	@RequestMapping(value = "/signout/{accessToken}", method = RequestMethod.POST)
 	public Map<String, Object> signout(
 			@PathVariable(value = "accessToken") String token) {
 		doSignout(token);

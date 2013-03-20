@@ -29,7 +29,6 @@ import th.co.truemoney.serviceinventory.ewallet.domain.TopUpOrder;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpQuote;
 
 @Controller
-@RequestMapping(value = "/add-money/ewallet")
 public class DirectDebitController extends BaseController {
 	
 	@Autowired
@@ -38,7 +37,7 @@ public class DirectDebitController extends BaseController {
 	@Autowired
 	TopUpService topupService;
 	
-	@RequestMapping(value = "/banks/{username}/{accessToken}", method = RequestMethod.GET)
+	@RequestMapping(value = "/add-money/ewallet/banks/{username}/{accessToken}", method = RequestMethod.GET)
 	@ResponseBody
 	public ProductResponse getUserDirectDebitSources(
 			@PathVariable String username,
@@ -79,7 +78,7 @@ public class DirectDebitController extends BaseController {
 		data.put("bankNameTH", "");//TODO
 		data.put("sourceOfFundID", quote.getSourceOfFund().getSourceOfFundID());//TODO
 		data.put("accessToken", quote.getAccessTokenID());//TODO
-		data.put("urlLogo", "");//TODO
+		data.put("urlLogo", getUrlLogo(quote.getBankCode()));
 		
 		return responseFactory.createSuccessProductResonse(data);
 	}
@@ -162,27 +161,25 @@ public class DirectDebitController extends BaseController {
 			returnData.put("minAmount", debit.getMinAmount());
 			returnData.put("maxAmount", debit.getMaxAmount());
 			returnData.put("sourceOfFundID", debit.getSourceOfFundID());
-
-			if (debit.getBankCode().equals("SCB")) {
-				returnData
-						.put("urlLogo",
-								"https://secure.truemoney-dev.com/m/tmn_webview/images/normal/Bank-SCB-2.png");
-			} else if (debit.getBankCode().equals("KTB")) {
-				returnData
-						.put("urlLogo",
-								"https://secure.truemoney-dev.com/m/tmn_webview/images/normal/Bank-ktb-2.png");
-			} else if (debit.getBankCode().equals("BBL")) {
-				returnData
-						.put("urlLogo",
-								"https://secure.truemoney-dev.com/m/tmn_webview/images/normal/Bank-bk-2.png");
-			} else if (debit.getBankCode().equals("BAY")) {
-				returnData
-						.put("urlLogo",
-								"https://secure.truemoney-dev.com/m/tmn_webview/images/normal/Bank-ks-2.png");
-			}
+			returnData.put("urlLogo", getUrlLogo(debit.getBankCode()));
 			realData.add(returnData);
 		}
 		return realData;
+	}
+	
+	private String getUrlLogo(String bankCode){
+		String returnData = new String();
+		if (bankCode.equals("SCB")) {
+			returnData="https://secure.truemoney-dev.com/m/tmn_webview/images/normal/Bank-SCB-2.png";
+		} else if (bankCode.equals("KTB")) {
+			returnData="https://secure.truemoney-dev.com/m/tmn_webview/images/normal/Bank-ktb-2.png";
+		} else if (bankCode.equals("BBL")) {
+			returnData="https://secure.truemoney-dev.com/m/tmn_webview/images/normal/Bank-bk-2.png";
+		} else if (bankCode.equals("BAY")) {
+			returnData="https://secure.truemoney-dev.com/m/tmn_webview/images/normal/Bank-ks-2.png";
+		}
+		
+		return returnData;
 	}
 
 }

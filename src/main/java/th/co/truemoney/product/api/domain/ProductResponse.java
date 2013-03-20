@@ -1,34 +1,35 @@
 package th.co.truemoney.product.api.domain;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ProductResponse {
 	
 	private String code;
 	private String namespace;
-	private String headerTh;
-	private String headerEn;
+	private String titleTh;
+	private String titleEn;
 	private String messageTh;
 	private String messageEn;
+	private String originalMessage;
 	private Map<String, Object> data;
+	
+	public ProductResponse() {
+		this.code      = "";
+		this.namespace = "";
+		this.titleTh   = "";
+		this.titleEn   = "";
+		this.messageTh = "";
+		this.messageEn = "";
+		this.originalMessage = "";
+		this.data = new HashMap<String, Object>();
+	}
 	
 	public String getCode() {
 		return code;
 	}
 	public void setCode(String code) {
 		this.code = code;
-	}
-	public String getHeaderTh() {
-		return headerTh;
-	}
-	public void setHeaderTh(String headerTh) {
-		this.headerTh = headerTh;
-	}
-	public String getHeaderEn() {
-		return headerEn;
-	}
-	public void setHeaderEn(String headerEn) {
-		this.headerEn = headerEn;
 	}
 	public String getMessageTh() {
 		return messageTh;
@@ -53,6 +54,24 @@ public class ProductResponse {
 	}
 	public void setData(Map<String, Object> data) {
 		this.data = data;
+	}
+	public String getTitleTh() {
+		return titleTh;
+	}
+	public void setTitleTh(String titleTh) {
+		this.titleTh = titleTh;
+	}
+	public String getTitleEn() {
+		return titleEn;
+	}
+	public void setTitleEn(String titleEn) {
+		this.titleEn = titleEn;
+	}
+	public String getOriginalMessage() {
+		return originalMessage;
+	}
+	public void setOriginalMessage(String originalMessage) {
+		this.originalMessage = originalMessage;
 	}
 
 }

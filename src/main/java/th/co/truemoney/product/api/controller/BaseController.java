@@ -17,6 +17,8 @@ public class BaseController {
 	@Autowired
 	ProductResponseFactory responseFactory;
 	
+	public static final String EMPTY_DESCRIPTION = "";
+	
 	@ExceptionHandler(InvalidParameterException.class)
 	public @ResponseBody
 	ProductResponse handleInvalidParameterExceptions(
@@ -26,7 +28,8 @@ public class BaseController {
 		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		return responseFactory.createErrorProductResponse(
 				exception.getMessage(), 
-				ProductResponseFactory.PRODUCT_NAMESPACE);
+				ProductResponseFactory.PRODUCT_NAMESPACE,
+				EMPTY_DESCRIPTION);
 	}
 	
 	@ExceptionHandler(ServiceInventoryException.class)
@@ -38,7 +41,8 @@ public class BaseController {
 		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		return responseFactory.createErrorProductResponse(
 				exception.getErrorCode(), 
-				exception.getErrorNamespace());
+				exception.getErrorNamespace(),
+				exception.getErrorDescription());
 		
 	}
 	

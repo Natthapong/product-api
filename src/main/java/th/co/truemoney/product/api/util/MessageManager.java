@@ -16,7 +16,7 @@ public class MessageManager implements MessageSourceAware {
 	
 	public static final String UNKNOWN_MESSAGE = "Unknown Message";
 	
-	public static final String UNKNOWN_HEADER  = "Unknown Header";
+	public static final String UNKNOWN_TITLE  = "Unknown Title";
 	
 	private static final Locale EN = new Locale("en", "US");
 	private static final Locale TH = new Locale("th", "TH");
@@ -25,28 +25,28 @@ public class MessageManager implements MessageSourceAware {
 		this.messageSource = messageSource;
 	}
 	
-	public String getHeaderTh(String key, Object[] params) {
-		return getHeader(key, params, TH);
+	public String getTitleTh(String namespace, String code, Object[] params) {
+		return getTitle("ttl." + namespace + "." + code, params, TH);
 	}
 	
-	public String getHeaderEn(String key, Object[] params) {
-		return getHeader(key, params, EN);
+	public String getTitleEn(String namespace, String code, Object[] params) {
+		return getTitle("ttl." + namespace + "." + code, params, EN);
 	}
 	
-	private String getHeader(String key, Object[] params, Locale loc) {
+	private String getTitle(String key, Object[] params, Locale loc) {
 		try {
 			return messageSource.getMessage(key, params, loc);
 		} catch (NoSuchMessageException e) {
-			return UNKNOWN_HEADER;
+			return UNKNOWN_TITLE;
 		}
 	}
 	
 	public String getMessageTh(String namespace, String code){
-		return getMessage(namespace + "." + code, TH);
+		return getMessage("msg." + namespace + "." + code, TH);
 	}
 	
 	public String getMessageEn(String namespace, String code){
-		return getMessage(namespace + "." + code, EN);
+		return getMessage("msg." + namespace + "." + code, EN);
 	}
 	
 	private String getMessage(String key, Locale loc) {

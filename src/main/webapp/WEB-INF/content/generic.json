@@ -17,6 +17,14 @@
 
 "ewallet.addmoney.directdebit.verify.url" : "https://secure.truemoney-dev.com/api/v1/directdebit/quote/create/%@?",
 
+"ewallet.addmoney.directdebit.otp.url" : "https://secure.truemoney-dev.com/api/v1/directdebit/order/create/%@?",
+
+"ewallet.addmoney.directdebit.confirm.url" : "https://secure.truemoney-dev.com/api/v1directdebit/order/confirm/%@?",
+
+"ewallet.addmoney.directdebit.status.url" : "https://secure.truemoney-dev.com/api/v1/directdebit/order/%@/status/%@?",
+
+"ewallet.addmoney.directdebit.confirm.detail.url" : "https://secure.truemoney-dev.com/api/v1/directdebit/order/%@/details/%@?",
+
 "ewallet.addmoney.directdebit.soflist.mock" : "https://secure.truemoney-dev.com/api/v1/mock/add-money/ewallet/banks/%@/%@?",
 
 "ewallet.addmoney.directdebit.verify.mock" : "https://secure.truemoney-dev.com/api/v1/mock/add-money/verify/ewallet/%@?",

@@ -24,9 +24,11 @@ import th.co.truemoney.product.api.domain.TopupQuotableRequest;
 import th.co.truemoney.serviceinventory.ewallet.SourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
 import th.co.truemoney.serviceinventory.ewallet.domain.DirectDebit;
+import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.ewallet.domain.QuoteRequest;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpOrder;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpQuote;
+import th.co.truemoney.serviceinventory.ewallet.domain.TopUpStatus;
 
 @Controller
 @RequestMapping(value = "/add-money/ewallet")
@@ -81,7 +83,7 @@ public class DirectDebitController extends BaseController {
 		data.put("accessToken", quote.getAccessTokenID());//TODO
 		data.put("urlLogo", "");//TODO
 		
-		return responseFactory.createSuccessProductResonse(data);
+		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	
 	/**
@@ -92,7 +94,7 @@ public class DirectDebitController extends BaseController {
 	@ResponseBody ProductResponse getDirectDebitTopupQuoteDetials(
 			@RequestBody TopupQuotableRequest request, 
 			@PathVariable String accessToken) {
-		//TODO
+		//TODO To be implement
 		return null;
 	}
 	
@@ -113,7 +115,7 @@ public class DirectDebitController extends BaseController {
 		data.put("amount", order.getAmount());
 		data.put("otpRefCode", order.getOtpReferenceCode());
 		
-		return responseFactory.createSuccessProductResonse(data);
+		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	
 	/**
@@ -126,7 +128,15 @@ public class DirectDebitController extends BaseController {
 	@ResponseBody ProductResponse confirmDirectDebitTopuOrder(
 			@RequestBody TopupOrderConfirmRequest request, 
 			@PathVariable String accessToken) {
-		return null;
+		OTP otp = new OTP();
+		otp.setChecksum(request.getChecksum());
+		otp.setOtpString(request.getOtpString());
+		
+		TopUpOrder order = this.topupService.confirmPlaceOrder(request.getTopupOrderID(), otp, accessToken);
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("topupStatus", order.getStatus());
+		
+		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	
 	/**
@@ -137,7 +147,12 @@ public class DirectDebitController extends BaseController {
 	@ResponseBody ProductResponse getDirectDebitTopupStatus(
 			@PathVariable String topupOrderID, 
 			@PathVariable String accessToken) {
-		return null;
+		
+		TopUpStatus status = this.topupService.getTopUpOrderStatus(topupOrderID, accessToken);
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("topupStatus", status.getTopUpStatus());
+		
+		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	
 	/**
@@ -147,7 +162,20 @@ public class DirectDebitController extends BaseController {
 	public ProductResponse getDirectDebitTopupDetails(
 			@PathVariable String topupOrderID, 
 			@PathVariable String accessToken) {
-		return null;
+		
+		TopUpOrder order = this.topupService.getTopUpOrderDetails(topupOrderID, accessToken);
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("transactionID", order.getConfirmationInfo().getTransactionID());
+		data.put("transactionDate", order.getConfirmationInfo().getTransactionDate());
+		data.put("amount", order.getAmount());
+		data.put("bankNumber", "");//TODO
+		data.put("bankNameEN", "");//TODO
+		data.put("bankNameTH", "");//TODO
+		data.put("fee", order.getTopUpFee());
+		data.put("urlLogo", "");//TODO
+		data.put("currentBalance", "");//TODO
+		
+		return this.responseFactory.createSuccessProductResonse(data);
 	}
 
 	private List<JSONObject> prepareData(List<DirectDebit> listBank) {

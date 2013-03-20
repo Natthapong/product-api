@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -59,7 +58,7 @@ public class UserActionController extends BaseController {
 	@RequestMapping(value = "/signout/{accessToken}", method = RequestMethod.POST)
 	public ProductResponse signout(@PathVariable(value = "accessToken") String token) {
 		
-		doSignout(token);
+		this.profileService.logout(token);
 		
 		return this.responseFactory.createSuccessProductResonse(new HashMap<String, Object>());
 	}
@@ -68,7 +67,7 @@ public class UserActionController extends BaseController {
 		return null;
 	}
 
-	private TmnProfile getUserProfile(String accesstoken, String checksum) {
+	public TmnProfile getUserProfile(String accesstoken, String checksum) {
 		return profileService.getTruemoneyProfile(accesstoken);
 	}
 
@@ -85,9 +84,9 @@ public class UserActionController extends BaseController {
 		}
 	}
 
-	@Async
-	private void doSignout(String token) {
-		profileService.logout(token);
-	}
+//	@Async
+//	private void doSignout(String token) {
+//		profileService.logout(token);
+//	}
 
 }

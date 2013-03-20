@@ -84,7 +84,7 @@ public class DirectDebitController extends BaseController {
 		data.put("bankNumber", db.getBankAccountNumber());
 		data.put("bankNameEN", db.getBankNameEn());
 		data.put("bankNameTH", db.getBankNameTh());
-		data.put("urlLogo", "");//TODO
+		data.put("urlLogo", getUrlLogo(db.getBankCode()));
 		data.put("sourceOfFundID", quote.getSourceOfFund().getSourceOfFundID());
 		data.put("accessToken", quote.getAccessTokenID());
 		
@@ -109,7 +109,7 @@ public class DirectDebitController extends BaseController {
 		data.put("bankNumber", db.getBankAccountNumber());
 		data.put("bankNameEN", db.getBankNameEn());
 		data.put("bankNameTH", db.getBankNameTh());
-		data.put("urlLogo", "");//TODO
+		data.put("urlLogo", getUrlLogo(db.getBankCode()));
 		data.put("sourceOfFundID", quote.getSourceOfFund().getSourceOfFundID());
 		data.put("accessToken", quote.getAccessTokenID());
 		
@@ -191,7 +191,7 @@ public class DirectDebitController extends BaseController {
 		data.put("bankNumber", db.getBankAccountNumber());
 		data.put("bankNameEN", db.getBankNameEn());
 		data.put("bankNameTH", db.getBankNameTh());
-		data.put("urlLogo", "");//TODO
+		data.put("urlLogo", getUrlLogo(db.getBankCode()));
 		data.put("fee", order.getTopUpFee());
 		data.put("currentBalance", balance);
 		

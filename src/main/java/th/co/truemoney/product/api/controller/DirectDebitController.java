@@ -131,6 +131,7 @@ public class DirectDebitController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("topupOrderID", order.getID());
 		data.put("amount", order.getAmount());
+		data.put("fee", order.getTopUpFee());
 		data.put("otpRefCode", order.getOtpReferenceCode());
 		
 		return this.responseFactory.createSuccessProductResonse(data);

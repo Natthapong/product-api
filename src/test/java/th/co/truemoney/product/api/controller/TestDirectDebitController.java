@@ -5,7 +5,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,8 +34,12 @@ import th.co.truemoney.product.api.domain.TopupQuotableRequest;
 import th.co.truemoney.serviceinventory.ewallet.SourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
 import th.co.truemoney.serviceinventory.ewallet.domain.DirectDebit;
+import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.ewallet.domain.QuoteRequest;
+import th.co.truemoney.serviceinventory.ewallet.domain.TopUpConfirmationInfo;
+import th.co.truemoney.serviceinventory.ewallet.domain.TopUpOrder;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpQuote;
+import th.co.truemoney.serviceinventory.ewallet.domain.TopUpStatus;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -69,20 +73,29 @@ public class TestDirectDebitController {
 
 	String testUsername = "customer@truemoney.co.th";
 	String fakeAccessToken = "0000000000000000000000000";
+	String fakeBankAccountNumber = "1111111111111";
+	String fakeSourceOfFundId = "B00001";
+	String fakeSourceOfFundType = "DDB"; // suppose to be direct debit
+
 	String getBankURL = String.format("/add-money/ewallet/banks/%s/%s",
 			testUsername, fakeAccessToken);
 	String createQuoteURL = String.format("/directdebit/quote/create/%s",
 			fakeAccessToken);
 	String getQuoteURL = String.format("/directdebit/quote/details/%s",
 			fakeAccessToken);
+	String sendOTPURL = String.format("/directdebit/order/create/%s",
+			fakeAccessToken);
+	String confirmTransactionURL = String.format(
+			"/directdebit/order/confirm/%s", fakeAccessToken);
+	String checkStatusURL = String.format("directdebit/order/%s/status/%s",
+			"1234", fakeAccessToken);
+	String getTransactionURL = String.format("/directdebit/order/%s/details/%s",
+			"1234", fakeAccessToken);
+	
+	
 
 	@Test
 	public void listUserRegisteredBankAccountSuccess() throws Exception {
-
-		String fakeBankAccountNumber = "XXXX XXXX XXXX 1234";
-		String fakeSourceOfFundId = "B00001";
-		String fakeSourceOfFundType = "DDB"; // suppose to be direct debit
-
 		DirectDebit scb = new DirectDebit();
 		scb.setBankCode("SCB");
 		scb.setBankAccountNumber(fakeBankAccountNumber);
@@ -157,10 +170,6 @@ public class TestDirectDebitController {
 
 	@Test
 	public void createDirectdebitQuoteSuccess() throws Exception {
-		String fakeBankAccountNumber = "1111111111111";
-		String fakeSourceOfFundId = "B00001";
-		String fakeSourceOfFundType = "DDB"; // suppose to be direct debit
-
 		ObjectMapper mapper = new ObjectMapper();
 
 		DirectDebit fakeSourceOfFund = new DirectDebit();
@@ -213,7 +222,7 @@ public class TestDirectDebitController {
 	}
 
 	@Test
-	public void getDirectdebitQuoteFailed() throws Exception {
+	public void createDirectdebitQuoteFailed() throws Exception {
 		String failedCode = "20000";
 		String failedMessage = "Source of fund is null or empty";
 		String failedNamespace = "TMN-SERVICE-INVENTORY";
@@ -222,7 +231,6 @@ public class TestDirectDebitController {
 		TopupDirectDebitRequest request = new TopupDirectDebitRequest();
 		request.setAmount(new BigDecimal(100.00));
 		request.setChecksum("00000000000000");
-		request.setSourceOfFundID("1");
 
 		when(
 				this.topupServiceMock.createTopUpQuoteFromDirectDebit(
@@ -245,10 +253,6 @@ public class TestDirectDebitController {
 
 	@Test
 	public void getDirectdebitQuoteSuccess() throws Exception {
-		String fakeBankAccountNumber = "1111111111111";
-		String fakeSourceOfFundId = "B00001";
-		String fakeSourceOfFundType = "DDB"; // suppose to be direct debit
-
 		ObjectMapper mapper = new ObjectMapper();
 
 		DirectDebit fakeSourceOfFund = new DirectDebit();
@@ -262,7 +266,7 @@ public class TestDirectDebitController {
 
 		TopupQuotableRequest request = new TopupQuotableRequest();
 		request.setQuoteID("1234");
-		
+
 		TopUpQuote quote = new TopUpQuote();
 		quote.setAccessTokenID(fakeAccessToken);
 		quote.setAmount(new BigDecimal(100.00));
@@ -270,16 +274,16 @@ public class TestDirectDebitController {
 		quote.setTopUpFee(new BigDecimal(100.00));
 		quote.setUsername("sfsdf");
 		quote.setSourceOfFund(fakeSourceOfFund);
-		
+
 		when(
 				this.topupServiceMock.getTopUpQuoteDetails(any(String.class),
 						any(String.class))).thenReturn(quote);
 
 		this.mockMvc
 				.perform(
-						get(getQuoteURL).contentType(
-								MediaType.APPLICATION_JSON).content(
-								mapper.writeValueAsBytes(request)))
+						get(getQuoteURL)
+								.contentType(MediaType.APPLICATION_JSON)
+								.content(mapper.writeValueAsBytes(request)))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.code").value("20000"))
 				.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
@@ -297,31 +301,231 @@ public class TestDirectDebitController {
 				.andExpect(jsonPath("$..urlLogo").exists());
 	}
 
-	@Test@Ignore
-	public void createDirectdebitQuoteFailed() throws Exception {
+	@Test
+	public void getDirectdebitQuoteFailed() throws Exception {
 		String failedCode = "20000";
 		String failedMessage = "Source of fund is null or empty";
 		String failedNamespace = "TMN-SERVICE-INVENTORY";
 
 		ObjectMapper mapper = new ObjectMapper();
-		TopupDirectDebitRequest request = new TopupDirectDebitRequest();
-		request.setAmount(new BigDecimal(100.00));
-		request.setChecksum("00000000000000");
-		request.setSourceOfFundID("1");
+		TopupQuotableRequest request = new TopupQuotableRequest();
+		request.setQuoteID("1");
 
 		when(
-				this.topupServiceMock.getTopUpQuoteDetails(
-						any(String.class),
+				this.topupServiceMock.getTopUpQuoteDetails(any(String.class),
 						any(String.class))).thenThrow(
 				new ServiceInventoryException(failedCode, failedMessage,
 						failedNamespace));
 
 		this.mockMvc
 				.perform(
-						get(getQuoteURL).contentType(
+						get(getQuoteURL)
+								.contentType(MediaType.APPLICATION_JSON)
+								.content(mapper.writeValueAsBytes(request)))
+				.andExpect(status().isInternalServerError())
+				.andExpect(jsonPath("$.code").value(failedCode))
+				.andExpect(jsonPath("$.namespace").value(failedNamespace))
+				.andExpect(jsonPath("$.messageEn").exists())
+				.andExpect(jsonPath("$.messageTh").exists());
+	}
+
+	@Test
+	public void sendOTPSuccess() throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+
+		DirectDebit fakeSourceOfFund = new DirectDebit();
+
+		fakeSourceOfFund.setSourceOfFundID(fakeSourceOfFundId);
+		fakeSourceOfFund.setSourceOfFundType(fakeSourceOfFundType);
+		fakeSourceOfFund.setBankCode("SCB");
+		fakeSourceOfFund.setBankAccountNumber(fakeBankAccountNumber);
+		fakeSourceOfFund.setBankNameEn("Siam Commercial Bank");
+		fakeSourceOfFund.setBankNameTh("ธนาคารไทยพานิชย์");
+
+		TopupQuotableRequest request = new TopupQuotableRequest();
+		request.setQuoteID("1234");
+
+		TopUpConfirmationInfo confirmationInfo = new TopUpConfirmationInfo();
+		confirmationInfo.setTransactionDate("");
+		confirmationInfo.setTransactionID("10101010");
+
+		TopUpOrder order = new TopUpOrder();
+		order.setAccessTokenID(fakeAccessToken);
+		order.setAmount(new BigDecimal(100.00));
+		order.setID("1111");
+		order.setConfirmationInfo(confirmationInfo);
+		order.setOtpReferenceCode("FJFJ");
+		order.setSourceOfFund(fakeSourceOfFund);
+		order.setStatus(TopUpStatus.CONFIRMED);
+		order.setTopUpFee(new BigDecimal(10.00));
+		order.setUsername("username");
+
+		when(
+				this.topupServiceMock.requestPlaceOrder(any(String.class),
+						any(String.class))).thenReturn(order);
+
+		this.mockMvc
+				.perform(
+						post(sendOTPURL)
+								.contentType(MediaType.APPLICATION_JSON)
+								.content(mapper.writeValueAsBytes(request)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.code").value("20000"))
+				.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
+				.andExpect(jsonPath("$.messageEn").exists())
+				.andExpect(jsonPath("$.messageTh").exists())
+				.andExpect(jsonPath("$.data").exists())
+				.andExpect(jsonPath("$..topupOrderID").exists())
+				.andExpect(jsonPath("$..amount").exists())
+				.andExpect(jsonPath("$..otpRefCode").exists());
+	}
+
+	@Test
+	public void sendOTPFailed() throws Exception {
+		String failedCode = "20000";
+		String failedMessage = "Source of fund is null or empty";
+		String failedNamespace = "TMN-SERVICE-INVENTORY";
+
+		ObjectMapper mapper = new ObjectMapper();
+		TopupQuotableRequest request = new TopupQuotableRequest();
+		request.setQuoteID("1");
+
+		when(
+				this.topupServiceMock.requestPlaceOrder(any(String.class),
+						any(String.class))).thenThrow(
+				new ServiceInventoryException(failedCode, failedMessage,
+						failedNamespace));
+
+		this.mockMvc
+				.perform(
+						post(sendOTPURL)
+								.contentType(MediaType.APPLICATION_JSON)
+								.content(mapper.writeValueAsBytes(request)))
+				.andExpect(status().isInternalServerError())
+				.andExpect(jsonPath("$.code").value(failedCode))
+				.andExpect(jsonPath("$.namespace").value(failedNamespace))
+				.andExpect(jsonPath("$.messageEn").exists())
+				.andExpect(jsonPath("$.messageTh").exists());
+	}
+
+	@Test
+	public void confirmTransactionSuccess() throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+
+		OTP request = new OTP();
+		request.setChecksum("erte");
+		request.setOtpString("495959");
+
+		TopUpConfirmationInfo confirmationInfo = new TopUpConfirmationInfo();
+		confirmationInfo.setTransactionDate("");
+		confirmationInfo.setTransactionID("10101010");
+
+		TopUpOrder order = new TopUpOrder();
+		order.setStatus(TopUpStatus.CONFIRMED);
+
+		when(
+				this.topupServiceMock.confirmPlaceOrder(any(String.class),
+						any(OTP.class), any(String.class))).thenReturn(order);
+
+		this.mockMvc
+				.perform(
+						put(confirmTransactionURL).contentType(
 								MediaType.APPLICATION_JSON).content(
 								mapper.writeValueAsBytes(request)))
-				.andExpect(status().isBadRequest())
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.code").value("20000"))
+				.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
+				.andExpect(jsonPath("$.messageEn").exists())
+				.andExpect(jsonPath("$.messageTh").exists())
+				.andExpect(jsonPath("$.data").exists())
+				.andExpect(jsonPath("$..topupStatus").value("CONFIRMED"));
+	}
+
+	@Test
+	public void pollingTransactionFailed() throws Exception {
+		String failedCode = "20000";
+		String failedMessage = "Source of fund is null or empty";
+		String failedNamespace = "TMN-SERVICE-INVENTORY";
+
+		ObjectMapper mapper = new ObjectMapper();
+		OTP request = new OTP();
+		request.setChecksum("erte");
+		request.setOtpString("495959");
+
+		when(
+				this.topupServiceMock.confirmPlaceOrder(any(String.class),
+						any(OTP.class), any(String.class))).thenThrow(
+				new ServiceInventoryException(failedCode, failedMessage,
+						failedNamespace));
+
+		this.mockMvc
+				.perform(
+						put(confirmTransactionURL).contentType(
+								MediaType.APPLICATION_JSON).content(
+								mapper.writeValueAsBytes(request)))
+				.andExpect(status().isInternalServerError())
+				.andExpect(jsonPath("$.code").value(failedCode))
+				.andExpect(jsonPath("$.namespace").value(failedNamespace))
+				.andExpect(jsonPath("$.messageEn").exists())
+				.andExpect(jsonPath("$.messageTh").exists());
+	}
+	
+	@Test
+	public void checkStatusSuccess() throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+
+		OTP request = new OTP();
+		request.setChecksum("erte");
+		request.setOtpString("495959");
+
+		TopUpConfirmationInfo confirmationInfo = new TopUpConfirmationInfo();
+		confirmationInfo.setTransactionDate("");
+		confirmationInfo.setTransactionID("10101010");
+
+		TopUpOrder order = new TopUpOrder();
+		order.setStatus(TopUpStatus.CONFIRMED);
+
+		when(
+				this.topupServiceMock.confirmPlaceOrder(any(String.class),
+						any(OTP.class), any(String.class))).thenReturn(order);
+
+		this.mockMvc
+				.perform(
+						put(confirmTransactionURL).contentType(
+								MediaType.APPLICATION_JSON).content(
+								mapper.writeValueAsBytes(request)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.code").value("20000"))
+				.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
+				.andExpect(jsonPath("$.messageEn").exists())
+				.andExpect(jsonPath("$.messageTh").exists())
+				.andExpect(jsonPath("$.data").exists())
+				.andExpect(jsonPath("$..topupStatus").value("CONFIRMED"));
+	}
+
+	@Test
+	public void checkStatusFailed() throws Exception {
+		String failedCode = "20000";
+		String failedMessage = "Source of fund is null or empty";
+		String failedNamespace = "TMN-SERVICE-INVENTORY";
+
+		ObjectMapper mapper = new ObjectMapper();
+		OTP request = new OTP();
+		request.setChecksum("erte");
+		request.setOtpString("495959");
+
+		when(
+				this.topupServiceMock.confirmPlaceOrder(any(String.class),
+						any(OTP.class), any(String.class))).thenThrow(
+				new ServiceInventoryException(failedCode, failedMessage,
+						failedNamespace));
+
+		this.mockMvc
+				.perform(
+						put(confirmTransactionURL).contentType(
+								MediaType.APPLICATION_JSON).content(
+								mapper.writeValueAsBytes(request)))
+				.andExpect(status().isInternalServerError())
 				.andExpect(jsonPath("$.code").value(failedCode))
 				.andExpect(jsonPath("$.namespace").value(failedNamespace))
 				.andExpect(jsonPath("$.messageEn").exists())

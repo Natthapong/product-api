@@ -129,7 +129,7 @@ public class DirectDebitController extends BaseController {
 		
 		TopUpOrder order = this.topupService.requestPlaceOrder(request.getQuoteID(), accessToken);
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("topupOrderID", order.getConfirmationInfo().getTransactionID());
+		data.put("topupOrderID", order.getID());
 		data.put("amount", order.getAmount());
 		data.put("otpRefCode", order.getOtpReferenceCode());
 		

@@ -46,9 +46,18 @@ public class UserActionController extends BaseController {
 		try {
 			token = profileService.login(CHANNEL_ID, login);
 		} catch (ServiceInventoryException e) {
-			if ("mobile".equals(request.getType())) {
-				System.out.println("Mobile error");
-				throw new ServiceInventoryException("50001", "Invalid mobile or pin","TMN-PRODUCT");
+			String errorcode = String.format("%s.%s", e.getErrorNamespace(),
+					e.getErrorCode());
+			if (errorcode.equals("core.1011") || errorcode.equals("core.1013")
+					|| errorcode.equals("core.1014")
+					|| errorcode.equals("umarket.3")
+					|| errorcode.equals("umarket.4")
+					|| errorcode.equals("umarket.5")) {
+				if ("mobile".equals(request.getType())) {
+					System.out.println("Mobile error");
+					throw new ServiceInventoryException("50001",
+							"Invalid mobile or pin", "TMN-PRODUCT");
+				}
 			}
 			throw e;
 		}
@@ -65,11 +74,13 @@ public class UserActionController extends BaseController {
 	}
 
 	@RequestMapping(value = "/signout/{accessToken}", method = RequestMethod.POST)
-	public ProductResponse signout(@PathVariable(value = "accessToken") String token) {
-		
+	public ProductResponse signout(
+			@PathVariable(value = "accessToken") String token) {
+
 		this.profileService.logout(token);
-		
-		return this.responseFactory.createSuccessProductResonse(new HashMap<String, Object>());
+
+		return this.responseFactory
+				.createSuccessProductResonse(new HashMap<String, Object>());
 	}
 
 	public Map<String, String> extendSession(String sessionID) {
@@ -97,6 +108,5 @@ public class UserActionController extends BaseController {
 			}
 		}
 	}
-
 
 }

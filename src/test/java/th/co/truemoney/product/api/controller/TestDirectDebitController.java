@@ -605,11 +605,10 @@ public class TestDirectDebitController {
 		final BigDecimal maximumAmount = new BigDecimal(999);
 		
 		ServiceInventoryException lessThanMinimumException = new ServiceInventoryException("20001", "Amount less than minimum", "TMN-SERVICE-INVENTORY");
-		ServiceInventoryException moreThanMaximumExcepiion = new ServiceInventoryException("20002", "Amount more than maximum", "TMN-SERVICE-INVENTORY");
 		
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("minimumAmount", minimumAmount);
-		data.put("maximumAmount", maximumAmount);
+		data.put("minAmount", minimumAmount);
+		data.put("maxAmount", maximumAmount);
 		data.put("bankNameEn", bankNameEn);
 		data.put("bankNameTh", bankNameTh);
 		lessThanMinimumException.setData(data);
@@ -652,8 +651,8 @@ public class TestDirectDebitController {
 		ServiceInventoryException moreThanMaximumExcepiion = new ServiceInventoryException("20002", "Amount more than maximum", "TMN-SERVICE-INVENTORY");
 		
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("minimumAmount", minimumAmount);
-		data.put("maximumAmount", maximumAmount);
+		data.put("minAmount", minimumAmount);
+		data.put("maxAmount", maximumAmount);
 		data.put("bankNameEn", bankNameEn);
 		data.put("bankNameTh", bankNameTh);
 		moreThanMaximumExcepiion.setData(data);

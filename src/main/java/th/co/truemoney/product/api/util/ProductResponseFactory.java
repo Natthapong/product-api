@@ -66,12 +66,12 @@ public class ProductResponseFactory {
 					messageManager.getMessageEn(
 							exception.getErrorNamespace(), 
 							exception.getErrorCode(), 
-							new Object[] { data.get("minimumAmount"), data.get("maximumAmount") }));
+							new Object[] { data.get("minAmount"), data.get("maxAmount") }));
 			error.setMessageTh(
 					messageManager.getMessageTh(
 							exception.getErrorNamespace(), 
 							exception.getErrorCode(), 
-							new Object[] { data.get("minimumAmount"), data.get("maximumAmount") }));
+							new Object[] { data.get("minAmount"), data.get("maxAmount") }));
 		} else {
 			error.setMessageEn(
 					messageManager.getMessageEn(

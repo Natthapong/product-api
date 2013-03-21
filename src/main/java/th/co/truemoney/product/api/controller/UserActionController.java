@@ -47,8 +47,8 @@ public class UserActionController extends BaseController {
 			token = profileService.login(CHANNEL_ID, login);
 		} catch (ServiceInventoryException e) {
 			if ("mobile".equals(request.getType())) {
-				return this.responseFactory.createErrorProductResponse("50001",
-						"TMN-PRODUCT", "Invalid mobile or pin");
+				System.out.println("Mobile error");
+				throw new ServiceInventoryException("50001", "Invalid mobile or pin","TMN-PRODUCT");
 			}
 			throw e;
 		}
@@ -88,6 +88,7 @@ public class UserActionController extends BaseController {
 				}
 			} else if ("mobile".equals(type)) {
 				if (!ValidateUtil.checkMobileNumber(username)) {
+					System.out.println("Mobile error");
 					throw new InvalidParameterException("50001");
 				}
 				if (ValidateUtil.isEmpty(password)) {

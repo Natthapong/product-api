@@ -177,7 +177,8 @@ public class DirectDebitController extends BaseController {
 	 * Get transaction detail after transaction done successfully
 	 */
 	@RequestMapping(value = "/directdebit/order/{topupOrderID}/details/{accessToken}", method = RequestMethod.GET)
-	public ProductResponse getDirectDebitTopupDetails(
+	public 
+	@ResponseBody ProductResponse getDirectDebitTopupDetails(
 			@PathVariable String topupOrderID, 
 			@PathVariable String accessToken) {
 		

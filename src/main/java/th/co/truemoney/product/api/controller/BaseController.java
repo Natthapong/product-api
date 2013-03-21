@@ -29,7 +29,7 @@ public class BaseController {
 		return responseFactory.createErrorProductResponse(
 				exception.getMessage(), 
 				ProductResponseFactory.PRODUCT_NAMESPACE,
-				EMPTY_DESCRIPTION);
+				EMPTY_DESCRIPTION, null);
 	}
 	
 	@ExceptionHandler(ServiceInventoryException.class)
@@ -39,11 +39,7 @@ public class BaseController {
 			HttpServletResponse response) {
 		
 		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		return responseFactory.createErrorProductResponse(
-				exception.getErrorCode(), 
-				exception.getErrorNamespace(),
-				exception.getErrorDescription());
-		
+		return responseFactory.createErrorProductResponse(exception);
 	}
 	
 }

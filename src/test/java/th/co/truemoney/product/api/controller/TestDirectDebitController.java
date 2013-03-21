@@ -1,5 +1,6 @@
 package th.co.truemoney.product.api.controller;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -11,7 +12,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
@@ -327,5 +330,93 @@ public class TestDirectDebitController {
 				.andExpect(jsonPath("$.messageEn").exists())
 				.andExpect(jsonPath("$.messageTh").exists());
 	}
-
+	
+	@Test
+	public void createDirectDebitTopupQuoteReturnInvalidAmountExcepiton20001() throws Exception {
+		final String bankNameEn = "Siam Commerical Bank";
+		final String bankNameTh = "ธนาคารไทยพานิชย์";
+		final BigDecimal minimumAmount = new BigDecimal(300);
+		final BigDecimal maximumAmount = new BigDecimal(999);
+		
+		ServiceInventoryException lessThanMinimumException = new ServiceInventoryException("20001", "Amount less than minimum", "TMN-SERVICE-INVENTORY");
+		ServiceInventoryException moreThanMaximumExcepiion = new ServiceInventoryException("20002", "Amount more than maximum", "TMN-SERVICE-INVENTORY");
+		
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("minimumAmount", minimumAmount);
+		data.put("maximumAmount", maximumAmount);
+		data.put("bankNameEn", bankNameEn);
+		data.put("bankNameTh", bankNameTh);
+		lessThanMinimumException.setData(data);
+		
+		when(
+			this.topupServiceMock.createTopUpQuoteFromDirectDebit(
+				any(String.class), 
+				any(QuoteRequest.class), 
+				any(String.class))
+		).thenThrow(lessThanMinimumException);
+		
+		TopupDirectDebitRequest request = new TopupDirectDebitRequest();
+		request.setAmount(new BigDecimal(100));
+		request.setSourceOfFundID("source-of-fund-id");
+		request.setChecksum("-checksum-string-");
+		
+		ObjectMapper mapper = new ObjectMapper();
+		this.mockMvc.perform(
+				post("/directdebit/quote/create/_token_string_").contentType(
+						MediaType.APPLICATION_JSON).content(
+						mapper.writeValueAsBytes(request)))
+		.andExpect(status().isInternalServerError())
+		.andExpect(jsonPath("$.code").value("20001"))
+		.andExpect(jsonPath("$.namespace").value("TMN-SERVICE-INVENTORY"))
+		.andExpect(jsonPath("$.titleEn").value(containsString(bankNameEn)))
+		.andExpect(jsonPath("$.titleTh").value(containsString(bankNameTh)))
+		.andExpect(jsonPath("$.messageEn").value(containsString(minimumAmount.toString())))
+		.andExpect(jsonPath("$.messageEn").value(containsString(maximumAmount.toString())))
+		.andExpect(jsonPath("$.messageTh").value(containsString(minimumAmount.toString())))
+		.andExpect(jsonPath("$.messageTh").value(containsString(maximumAmount.toString())));
+	}
+	
+	@Test
+	public void createDirectDebitTopupQuoteReturnInvalidAmountExcepiton20002() throws Exception {
+		final String bankNameEn = "Siam Commerical Bank";
+		final String bankNameTh = "ธนาคารไทยพานิชย์";
+		final BigDecimal minimumAmount = new BigDecimal(100);
+		final BigDecimal maximumAmount = new BigDecimal(777);
+		
+		ServiceInventoryException moreThanMaximumExcepiion = new ServiceInventoryException("20002", "Amount more than maximum", "TMN-SERVICE-INVENTORY");
+		
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("minimumAmount", minimumAmount);
+		data.put("maximumAmount", maximumAmount);
+		data.put("bankNameEn", bankNameEn);
+		data.put("bankNameTh", bankNameTh);
+		moreThanMaximumExcepiion.setData(data);
+		
+		when(
+			this.topupServiceMock.createTopUpQuoteFromDirectDebit(
+				any(String.class), 
+				any(QuoteRequest.class), 
+				any(String.class))
+		).thenThrow(moreThanMaximumExcepiion);
+		
+		TopupDirectDebitRequest request = new TopupDirectDebitRequest();
+		request.setAmount(new BigDecimal(100));
+		request.setSourceOfFundID("source-of-fund-id");
+		request.setChecksum("-checksum-string-");
+		
+		ObjectMapper mapper = new ObjectMapper();
+		this.mockMvc.perform(
+				post("/directdebit/quote/create/_token_string_").contentType(
+						MediaType.APPLICATION_JSON).content(
+						mapper.writeValueAsBytes(request)))
+		.andExpect(status().isInternalServerError())
+		.andExpect(jsonPath("$.code").value("20002"))
+		.andExpect(jsonPath("$.namespace").value("TMN-SERVICE-INVENTORY"))
+		.andExpect(jsonPath("$.titleEn").value(containsString(bankNameEn)))
+		.andExpect(jsonPath("$.titleTh").value(containsString(bankNameTh)))
+		.andExpect(jsonPath("$.messageEn").value(containsString(minimumAmount.toString())))
+		.andExpect(jsonPath("$.messageEn").value(containsString(maximumAmount.toString())))
+		.andExpect(jsonPath("$.messageTh").value(containsString(minimumAmount.toString())))
+		.andExpect(jsonPath("$.messageTh").value(containsString(maximumAmount.toString())));
+	}
 }

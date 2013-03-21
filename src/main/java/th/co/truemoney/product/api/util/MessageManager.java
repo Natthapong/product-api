@@ -26,32 +26,24 @@ public class MessageManager implements MessageSourceAware {
 	}
 	
 	public String getTitleTh(String namespace, String code, Object[] params) {
-		return getTitle("ttl." + namespace + "." + code, params, TH);
+		return getMessage("ttl." + namespace + "." + code, params, TH);
 	}
 	
 	public String getTitleEn(String namespace, String code, Object[] params) {
-		return getTitle("ttl." + namespace + "." + code, params, EN);
+		return getMessage("ttl." + namespace + "." + code, params, EN);
 	}
 	
-	private String getTitle(String key, Object[] params, Locale loc) {
+	public String getMessageTh(String namespace, String code, Object[] params){
+		return getMessage("msg." + namespace + "." + code, params, TH);
+	}
+	
+	public String getMessageEn(String namespace, String code, Object[] params){
+		return getMessage("msg." + namespace + "." + code, params, EN);
+	}
+	
+	private String getMessage(String key, Object[] params, Locale loc) {
 		try {
 			return messageSource.getMessage(key, params, loc);
-		} catch (NoSuchMessageException e) {
-			return UNKNOWN_TITLE;
-		}
-	}
-	
-	public String getMessageTh(String namespace, String code){
-		return getMessage("msg." + namespace + "." + code, TH);
-	}
-	
-	public String getMessageEn(String namespace, String code){
-		return getMessage("msg." + namespace + "." + code, EN);
-	}
-	
-	private String getMessage(String key, Locale loc) {
-		try {
-			return messageSource.getMessage(key, null, loc);
 		} catch (NoSuchMessageException e) {
 			return UNKNOWN_MESSAGE;
 		}

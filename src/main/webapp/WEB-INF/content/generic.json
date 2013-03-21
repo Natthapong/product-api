@@ -19,7 +19,7 @@
 
 "ewallet.addmoney.directdebit.otp.url" : "https://secure.truemoney-dev.com/api/v1/directdebit/order/create/%@?",
 
-"ewallet.addmoney.directdebit.confirm.url" : "https://secure.truemoney-dev.com/api/v1directdebit/order/confirm/%@?",
+"ewallet.addmoney.directdebit.confirm.url" : "https://secure.truemoney-dev.com/api/v1/directdebit/order/confirm/%@?",
 
 "ewallet.addmoney.directdebit.status.url" : "https://secure.truemoney-dev.com/api/v1/directdebit/order/%@/status/%@?",
 

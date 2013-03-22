@@ -7,9 +7,9 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -20,7 +20,6 @@ import java.util.Map;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,9 +139,9 @@ public class TestDirectDebitController {
 	}
 
 	@Test
-	public void listUserRegisteredBankAccountFailed() throws Exception {
-		String failedCode = "20000";
-		String failedMessage = "Source of fund is null or empty";
+	public void listUserRegisteredBankAccountInvalidAccessTokenFailed() throws Exception {
+		String failedCode = "10001";
+		String failedMessage = "AccessToken is expired";
 		String failedNamespace = "TMN-SERVICE-INVENTORY";
 		when(
 				this.sourceOfFundServiceMock.getUserDirectDebitSources(
@@ -234,8 +233,8 @@ public class TestDirectDebitController {
 
 	@Test
 	public void createDirectdebitQuoteFailed() throws Exception {
-		String failedCode = "20000";
-		String failedMessage = "Source of fund is null or empty";
+		String failedCode = "404";
+		String failedMessage = "source of fund not found : 827b4639d1a74fdbae0201cc3b5fb3d";
 		String failedNamespace = "TMN-SERVICE-INVENTORY";
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -393,8 +392,8 @@ public class TestDirectDebitController {
 
 	@Test
 	public void sendOTPFailed() throws Exception {
-		String failedCode = "20000";
-		String failedMessage = "Source of fund is null or empty";
+		String failedCode = "1004";
+		String failedMessage = "quote not found";
 		String failedNamespace = "TMN-SERVICE-INVENTORY";
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -522,7 +521,7 @@ public class TestDirectDebitController {
 				.andExpect(jsonPath("$.messageTh").exists());
 	}
 
-	@Test@Ignore
+	@Test
 	public void getTransactionDetailSuccess() throws Exception {
 		DirectDebit fakeSourceOfFund = new DirectDebit();
 
@@ -564,19 +563,18 @@ public class TestDirectDebitController {
 				.andExpect(jsonPath("$.messageEn").exists())
 				.andExpect(jsonPath("$.messageTh").exists())
 				.andExpect(jsonPath("$.data").exists())
+				.andExpect(jsonPath("$..transactionID").exists())
 				.andExpect(jsonPath("$..transactionDate").exists())
 				.andExpect(jsonPath("$..amount").exists())
 				.andExpect(jsonPath("$..currentBalance").exists())
 				.andExpect(jsonPath("$..fee").exists())
 				.andExpect(jsonPath("$..bankNumber").exists())
-				.andExpect(jsonPath("$..bankNameEN").exists())
-				.andExpect(jsonPath("$..bankNameTH").exists())
-				.andExpect(jsonPath("$..transactionID").exists())
-				.andExpect(jsonPath("$..accessToken").value(fakeAccessToken))
+				.andExpect(jsonPath("$..bankNameEn").exists())
+				.andExpect(jsonPath("$..bankNameTh").exists())
 				.andExpect(jsonPath("$..urlLogo").exists());
 	}
 
-	@Test@Ignore
+	@Test
 	public void getTransactionDetailFailed() throws Exception {
 		String failedCode = "20000";
 		String failedMessage = "Source of fund is null or empty";
@@ -591,7 +589,7 @@ public class TestDirectDebitController {
 
 		this.mockMvc
 				.perform(
-						get(checkStatusURL).contentType(
+						get(getTransactionURL).contentType(
 								MediaType.APPLICATION_JSON))
 				.andExpect(status().isInternalServerError())
 				.andExpect(jsonPath("$.code").value(failedCode))

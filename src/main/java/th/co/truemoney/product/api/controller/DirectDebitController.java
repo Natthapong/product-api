@@ -82,8 +82,8 @@ public class DirectDebitController extends BaseController {
 		data.put("fee", quote.getTopUpFee());
 		DirectDebit db = (DirectDebit)quote.getSourceOfFund();
 		data.put("bankNumber", db.getBankAccountNumber());
-		data.put("bankNameEN", db.getBankNameEn());
-		data.put("bankNameTH", db.getBankNameTh());
+		data.put("bankNameEn", db.getBankNameEn());
+		data.put("bankNameTh", db.getBankNameTh());
 		data.put("urlLogo", getUrlLogo(db.getBankCode()));
 		data.put("sourceOfFundID", quote.getSourceOfFund().getSourceOfFundID());
 		data.put("accessToken", quote.getAccessTokenID());
@@ -107,8 +107,8 @@ public class DirectDebitController extends BaseController {
 		data.put("fee", quote.getTopUpFee());
 		DirectDebit db = (DirectDebit)quote.getSourceOfFund();
 		data.put("bankNumber", db.getBankAccountNumber());
-		data.put("bankNameEN", db.getBankNameEn());
-		data.put("bankNameTH", db.getBankNameTh());
+		data.put("bankNameEn", db.getBankNameEn());
+		data.put("bankNameTh", db.getBankNameTh());
 		data.put("urlLogo", getUrlLogo(db.getBankCode()));
 		data.put("sourceOfFundID", quote.getSourceOfFund().getSourceOfFundID());
 		data.put("accessToken", quote.getAccessTokenID());
@@ -178,7 +178,8 @@ public class DirectDebitController extends BaseController {
 	 * Get transaction detail after transaction done successfully
 	 */
 	@RequestMapping(value = "/directdebit/order/{topupOrderID}/details/{accessToken}", method = RequestMethod.GET)
-	public ProductResponse getDirectDebitTopupDetails(
+	public 
+	@ResponseBody ProductResponse getDirectDebitTopupDetails(
 			@PathVariable String topupOrderID, 
 			@PathVariable String accessToken) {
 		
@@ -190,8 +191,8 @@ public class DirectDebitController extends BaseController {
 		data.put("amount", order.getAmount());
 		DirectDebit db = (DirectDebit)order.getSourceOfFund();
 		data.put("bankNumber", db.getBankAccountNumber());
-		data.put("bankNameEN", db.getBankNameEn());
-		data.put("bankNameTH", db.getBankNameTh());
+		data.put("bankNameEn", db.getBankNameEn());
+		data.put("bankNameTh", db.getBankNameTh());
 		data.put("urlLogo", getUrlLogo(db.getBankCode()));
 		data.put("fee", order.getTopUpFee());
 		data.put("currentBalance", balance);
@@ -206,8 +207,8 @@ public class DirectDebitController extends BaseController {
 			JSONObject returnData = new JSONObject();
 			returnData.put("bankCode", debit.getBankCode());
 			returnData.put("bankNumber", debit.getBankAccountNumber());
-			returnData.put("bankNameTH", debit.getBankNameTh());
-			returnData.put("bankNameEN", debit.getBankNameEn());
+			returnData.put("bankNameTh", debit.getBankNameTh());
+			returnData.put("bankNameEn", debit.getBankNameEn());
 			returnData.put("minAmount", debit.getMinAmount());
 			returnData.put("maxAmount", debit.getMaxAmount());
 			returnData.put("sourceOfFundID", debit.getSourceOfFundID());

@@ -119,9 +119,11 @@ public class TestDirectDebitController {
 		returnedDirectDebitList.add(scb);
 
 		when(
-				this.sourceOfFundServiceMock.getUserDirectDebitSources(
-						any(String.class), any(String.class))).thenReturn(
-				returnedDirectDebitList);
+			this.sourceOfFundServiceMock.getUserDirectDebitSources(
+				any(String.class), 
+				any(String.class))
+			)
+		.thenReturn(returnedDirectDebitList);
 
 		this.mockMvc
 				.perform(get(getBankURL).accept(MediaType.APPLICATION_JSON))
@@ -132,9 +134,8 @@ public class TestDirectDebitController {
 				.andExpect(jsonPath("$.messageTh").exists())
 				.andExpect(jsonPath("$.data").exists())
 				.andExpect(jsonPath("$..listOfBank").isArray())
-				.andExpect(
-						jsonPath("$..listOfBank[0].bankNameEN").value(
-								"Siam Commercial Bank"));
+				.andExpect(jsonPath("$..listOfBank[0].bankNameEn").value("Siam Commercial Bank"))
+				.andDo(print());
 	}
 
 	@Test
@@ -223,8 +224,8 @@ public class TestDirectDebitController {
 				.andExpect(jsonPath("$..amount").exists())
 				.andExpect(jsonPath("$..fee").exists())
 				.andExpect(jsonPath("$..bankNumber").exists())
-				.andExpect(jsonPath("$..bankNameEN").exists())
-				.andExpect(jsonPath("$..bankNameTH").exists())
+				.andExpect(jsonPath("$..bankNameEn").exists())
+				.andExpect(jsonPath("$..bankNameTh").exists())
 				.andExpect(jsonPath("$..sourceOfFundID").exists())
 				.andExpect(jsonPath("$..accessToken").value(fakeAccessToken))
 				.andExpect(jsonPath("$..urlLogo").exists());
@@ -303,8 +304,8 @@ public class TestDirectDebitController {
 				.andExpect(jsonPath("$..amount").exists())
 				.andExpect(jsonPath("$..fee").exists())
 				.andExpect(jsonPath("$..bankNumber").exists())
-				.andExpect(jsonPath("$..bankNameEN").exists())
-				.andExpect(jsonPath("$..bankNameTH").exists())
+				.andExpect(jsonPath("$..bankNameEn").exists())
+				.andExpect(jsonPath("$..bankNameTh").exists())
 				.andExpect(jsonPath("$..sourceOfFundID").exists())
 				.andExpect(jsonPath("$..accessToken").value(fakeAccessToken))
 				.andExpect(jsonPath("$..urlLogo").exists());

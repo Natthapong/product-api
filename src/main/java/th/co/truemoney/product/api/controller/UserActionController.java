@@ -26,7 +26,7 @@ public class UserActionController extends BaseController {
 	@Autowired
 	TmnProfileService profileService;
 
-	private static final int CHANNEL_ID = 40;
+	private static final int MOBILE_APP_CHANNEL_ID = 40;
 
 	public void setProfileService(TmnProfileService profileService) {
 		this.profileService = profileService;
@@ -44,17 +44,15 @@ public class UserActionController extends BaseController {
 		Login login = new Login(request.getUsername(), request.getPassword());
 		String token = "";
 		try {
-			token = profileService.login(CHANNEL_ID, login);
+			token = profileService.login(MOBILE_APP_CHANNEL_ID, login);
 		} catch (ServiceInventoryException e) {
-			String errorcode = String.format("%s.%s", e.getErrorNamespace(),
-					e.getErrorCode());
+			String errorcode = String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode());
 			if (errorcode.equals("core.1011") || errorcode.equals("core.1013")
 					|| errorcode.equals("core.1014")
 					|| errorcode.equals("umarket.3")
 					|| errorcode.equals("umarket.4")
 					|| errorcode.equals("umarket.5")) {
 				if ("mobile".equals(request.getType())) {
-					System.out.println("Mobile error");
 					throw new ServiceInventoryException("50001",
 							"Invalid mobile or pin", "TMN-PRODUCT");
 				}
@@ -63,6 +61,7 @@ public class UserActionController extends BaseController {
 		}
 
 		TmnProfile profile = profileService.getTruemoneyProfile(token);
+		
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("fullname", profile.getFullname());
 		data.put("currentBalance", profile.getBalance());

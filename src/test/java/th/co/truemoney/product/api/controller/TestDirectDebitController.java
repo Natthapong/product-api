@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +29,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import th.co.truemoney.product.api.config.TestWebConfig;
 import th.co.truemoney.product.api.domain.TopupDirectDebitRequest;
@@ -61,7 +62,7 @@ public class TestDirectDebitController {
 
 	@Autowired
 	TopUpService topupServiceMock;
-	
+
 	@Autowired
 	TmnProfileService profileServiceMock;
 
@@ -100,8 +101,8 @@ public class TestDirectDebitController {
 			"1234", fakeAccessToken);
 	String getTransactionURL = String.format("/directdebit/order/%s/details/%s",
 			"1234", fakeAccessToken);
-	
-	
+
+
 
 	@Test
 	public void listUserRegisteredBankAccountSuccess() throws Exception {
@@ -120,7 +121,7 @@ public class TestDirectDebitController {
 
 		when(
 			this.sourceOfFundServiceMock.getUserDirectDebitSources(
-				any(String.class), 
+				any(String.class),
 				any(String.class))
 			)
 		.thenReturn(returnedDirectDebitList);
@@ -479,7 +480,7 @@ public class TestDirectDebitController {
 				.andExpect(jsonPath("$.messageEn").exists())
 				.andExpect(jsonPath("$.messageTh").exists());
 	}
-	
+
 	@Test
 	public void checkStatusSuccess() throws Exception {
 		when(
@@ -504,7 +505,7 @@ public class TestDirectDebitController {
 		String failedCode = "20000";
 		String failedMessage = "Source of fund is null or empty";
 		String failedNamespace = "TMN-SERVICE-INVENTORY";
-		
+
 		when(
 				this.topupServiceMock.getTopUpOrderStatus(any(String.class), any(String.class))).thenThrow(
 				new ServiceInventoryException(failedCode, failedMessage,
@@ -546,11 +547,11 @@ public class TestDirectDebitController {
 		order.setStatus(TopUpStatus.CONFIRMED);
 		order.setTopUpFee(new BigDecimal(10.00));
 		order.setUsername("username");
-		
+
 		when(
 				this.topupServiceMock.getTopUpOrderDetails(any(String.class),
 						 any(String.class))).thenReturn(order);
-		
+
 		when(this.profileServiceMock.getEwalletBalance(any(String.class))).thenReturn(new BigDecimal(10000.00));
 
 		this.mockMvc
@@ -579,12 +580,12 @@ public class TestDirectDebitController {
 		String failedCode = "20000";
 		String failedMessage = "Source of fund is null or empty";
 		String failedNamespace = "TMN-SERVICE-INVENTORY";
-		
+
 		when(
 				this.topupServiceMock.getTopUpOrderDetails(any(String.class), any(String.class))).thenThrow(
 				new ServiceInventoryException(failedCode, failedMessage,
 						failedNamespace));
-		
+
 		when(this.profileServiceMock.getEwalletBalance(any(String.class))).thenReturn(new BigDecimal(10000.00));
 
 		this.mockMvc
@@ -603,28 +604,28 @@ public class TestDirectDebitController {
 		final String bankNameTh = "ธนาคารไทยพานิชย์";
 		final BigDecimal minimumAmount = new BigDecimal(300);
 		final BigDecimal maximumAmount = new BigDecimal(999);
-		
+
 		ServiceInventoryException lessThanMinimumException = new ServiceInventoryException("20001", "Amount less than minimum", "TMN-SERVICE-INVENTORY");
-		
+
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("minAmount", minimumAmount);
 		data.put("maxAmount", maximumAmount);
 		data.put("bankNameEn", bankNameEn);
 		data.put("bankNameTh", bankNameTh);
 		lessThanMinimumException.setData(data);
-		
+
 		when(
 			this.topupServiceMock.createTopUpQuoteFromDirectDebit(
-				any(String.class), 
-				any(QuoteRequest.class), 
+				any(String.class),
+				any(QuoteRequest.class),
 				any(String.class))
 		).thenThrow(lessThanMinimumException);
-		
+
 		TopupDirectDebitRequest request = new TopupDirectDebitRequest();
 		request.setAmount(new BigDecimal(100));
 		request.setSourceOfFundID("source-of-fund-id");
 		request.setChecksum("-checksum-string-");
-		
+
 		ObjectMapper mapper = new ObjectMapper();
 		this.mockMvc.perform(
 				post("/directdebit/quote/create/_token_string_").contentType(
@@ -640,35 +641,35 @@ public class TestDirectDebitController {
 		.andExpect(jsonPath("$.messageTh").value(containsString(minimumAmount.toString())))
 		.andExpect(jsonPath("$.messageTh").value(containsString(maximumAmount.toString())));
 	}
-	
+
 	@Test
 	public void createDirectDebitTopupQuoteReturnInvalidAmountExcepiton20002() throws Exception {
 		final String bankNameEn = "Siam Commerical Bank";
 		final String bankNameTh = "ธนาคารไทยพานิชย์";
 		final BigDecimal minimumAmount = new BigDecimal(100);
 		final BigDecimal maximumAmount = new BigDecimal(777);
-		
+
 		ServiceInventoryException moreThanMaximumExcepiion = new ServiceInventoryException("20002", "Amount more than maximum", "TMN-SERVICE-INVENTORY");
-		
+
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("minAmount", minimumAmount);
 		data.put("maxAmount", maximumAmount);
 		data.put("bankNameEn", bankNameEn);
 		data.put("bankNameTh", bankNameTh);
 		moreThanMaximumExcepiion.setData(data);
-		
+
 		when(
 			this.topupServiceMock.createTopUpQuoteFromDirectDebit(
-				any(String.class), 
-				any(QuoteRequest.class), 
+				any(String.class),
+				any(QuoteRequest.class),
 				any(String.class))
 		).thenThrow(moreThanMaximumExcepiion);
-		
+
 		TopupDirectDebitRequest request = new TopupDirectDebitRequest();
 		request.setAmount(new BigDecimal(100));
 		request.setSourceOfFundID("source-of-fund-id");
 		request.setChecksum("-checksum-string-");
-		
+
 		ObjectMapper mapper = new ObjectMapper();
 		this.mockMvc.perform(
 				post("/directdebit/quote/create/_token_string_").contentType(

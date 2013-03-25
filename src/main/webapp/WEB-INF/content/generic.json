@@ -1,4 +1,8 @@
 {
+"p2p.amount.min":"10",
+
+"p2p.amount.max":"10000",
+
 "instruction.addmoney.atm" : "https://secure.truemoney-dev.com/m/tmn_webview/atm/index.html",
 
 "instruction.addmoney.direct.debit" : "https://secure.truemoney-dev.com/m/tmn_webview/direct_debit/index.html",

@@ -1,7 +1,6 @@
 package th.co.truemoney.product.api.controller;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -10,60 +9,25 @@ import java.math.BigDecimal;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import th.co.truemoney.product.api.config.TestWebConfig;
 import th.co.truemoney.product.api.domain.LoginBean;
-import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.Login;
 import th.co.truemoney.serviceinventory.ewallet.domain.TmnProfile;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
-@ContextConfiguration(classes = { TestWebConfig.class })
-public class TestLoginController {
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-	private MockMvc mockMvc;
-
-	@Autowired
-	private WebApplicationContext wac;
-
-	@Autowired
-	private TmnProfileService tmnProfileServiceMock;
-
-	@Before
-	public void setup() {
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-		this.tmnProfileServiceMock = wac.getBean(TmnProfileService.class);
-	}
-
-	@After
-	public void tierDown() {
-		reset(this.tmnProfileServiceMock);
-	}
+public class TestLoginController extends BaseTestController {
 
 	@Test
 	public void loginInputValidationFailed() throws Exception {
 		when(
-				this.tmnProfileServiceMock.login(any(Integer.class),
+				this.profileServiceMock.login(any(Integer.class),
 						any(Login.class))).thenReturn("token-string");
-		TmnProfile tmnProfile = new TmnProfile("Jonh Doe", new BigDecimal(
-				100.00));
-		when(this.tmnProfileServiceMock.getTruemoneyProfile(any(String.class)))
+		TmnProfile tmnProfile = new TmnProfile("Jonh Doe", new BigDecimal(100.00));
+		when(this.profileServiceMock.getTruemoneyProfile(any(String.class)))
 				.thenReturn(tmnProfile);
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -78,7 +42,7 @@ public class TestLoginController {
 	@Test
 	public void loginSuccess() throws Exception {
 		when(
-				this.tmnProfileServiceMock.login(any(Integer.class),
+				this.profileServiceMock.login(any(Integer.class),
 						any(Login.class))).thenReturn("token-string");
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -92,7 +56,7 @@ public class TestLoginController {
 	@Test
 	public void loginNotSuccess() throws Exception {
 		when(
-				this.tmnProfileServiceMock.login(any(Integer.class),
+				this.profileServiceMock.login(any(Integer.class),
 						any(Login.class))).thenThrow(
 				new ServiceInventoryException("4",
 						"Invalid Username or Password", "umarket"));

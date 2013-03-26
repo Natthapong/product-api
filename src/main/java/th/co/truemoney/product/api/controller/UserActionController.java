@@ -73,7 +73,7 @@ public class UserActionController extends BaseController {
 	}
 
 	@RequestMapping(value = "/signout/{accessToken}", method = RequestMethod.POST)
-	public ProductResponse signout(
+	public @ResponseBody ProductResponse signout(
 			@PathVariable(value = "accessToken") String token) {
 
 		this.profileService.logout(token);

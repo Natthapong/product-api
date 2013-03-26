@@ -27,55 +27,51 @@ import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
 import th.co.truemoney.serviceinventory.ewallet.domain.DirectDebit;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
-import th.co.truemoney.serviceinventory.ewallet.domain.QuoteRequest;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpOrder;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpQuote;
-import th.co.truemoney.serviceinventory.ewallet.domain.TopUpStatus;
+import th.co.truemoney.serviceinventory.ewallet.domain.TopUpOrderStatus;
+import th.co.truemoney.serviceinventory.ewallet.domain.TopUpQuoteStatus;
 
 @Controller
 public class DirectDebitController extends BaseController {
-	
+
 	@Autowired
 	SourceOfFundService sourceOfFundService;
-	
+
 	@Autowired
 	TopUpService topupService;
-	
+
 	@Autowired
 	TmnProfileService profileService;
-	
+
 	@RequestMapping(value = "/add-money/ewallet/banks/{username}/{accessToken}", method = RequestMethod.GET)
 	@ResponseBody
 	public ProductResponse getUserDirectDebitSources(
 			@PathVariable String username,
 			@PathVariable String accessToken,
 			HttpServletResponse response) {
-		
+
 		List<DirectDebit> listBank = sourceOfFundService.getUserDirectDebitSources(username, accessToken);
-		
+
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("listOfBank", prepareData(listBank));
-		
+
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
-	
+
 	/**
-	 * Create direct debit quotation 
+	 * Create direct debit quotation
 	 * Verify amount
 	 */
 	@RequestMapping(value = "/directdebit/quote/create/{accessToken}", method = RequestMethod.POST)
-	public 
+	public
 	@ResponseBody ProductResponse createDirectDebitTopupQuote(
-			@RequestBody TopupDirectDebitRequest request, 
+			@RequestBody TopupDirectDebitRequest request,
 			@PathVariable String accessToken,
 			HttpServletResponse response) {
-		
-		QuoteRequest quoteRequest = new QuoteRequest();
-		quoteRequest.setAmount(request.getAmount());
-		quoteRequest.setChecksum(request.getChecksum());
-		
+
 		TopUpQuote quote = this.topupService.createTopUpQuoteFromDirectDebit(
-				request.getSourceOfFundID(), quoteRequest, accessToken);
+				request.getSourceOfFundID(), request.getAmount(), accessToken);
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("quoteID", quote.getID());
 		data.put("amount", quote.getAmount());
@@ -87,19 +83,19 @@ public class DirectDebitController extends BaseController {
 		data.put("urlLogo", getUrlLogo(db.getBankCode()));
 		data.put("sourceOfFundID", quote.getSourceOfFund().getSourceOfFundID());
 		data.put("accessToken", quote.getAccessTokenID());
-		
+
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
-	
+
 	/**
 	 * Get direct debit quotation details
 	 */
 	@RequestMapping(value = "/directdebit/quote/details/{accessToken}", method = RequestMethod.GET)
-	public 
+	public
 	@ResponseBody ProductResponse getDirectDebitTopupQuoteDetials(
-			@RequestBody TopupQuotableRequest request, 
+			@RequestBody TopupQuotableRequest request,
 			@PathVariable String accessToken) {
-		
+
 		TopUpQuote quote = this.topupService.getTopUpQuoteDetails(request.getQuoteID(), accessToken);
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("quoteID", quote.getID());
@@ -112,78 +108,80 @@ public class DirectDebitController extends BaseController {
 		data.put("urlLogo", getUrlLogo(db.getBankCode()));
 		data.put("sourceOfFundID", quote.getSourceOfFund().getSourceOfFundID());
 		data.put("accessToken", quote.getAccessTokenID());
-		
+
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
-	
+
 	/**
 	 * Send OTP
 	 * service-inventory-api : requestPlaceOrder(String quoteId, String accessToken)
 	 * return TopUpOrder;
 	 */
 	@RequestMapping(value = "/directdebit/order/create/{accessToken}", method = RequestMethod.POST)
-	public 
+	public
 	@ResponseBody ProductResponse placeDirectDebitTopupOrder(
-			@RequestBody TopupQuotableRequest request, 
+			@RequestBody TopupQuotableRequest request,
 			@PathVariable String accessToken) {
-		
-		TopUpOrder order = this.topupService.requestPlaceOrder(request.getQuoteID(), accessToken);
+
+		OTP otp = this.topupService.sendOTPConfirm(request.getQuoteID(), accessToken);
+		TopUpQuote quote = this.topupService.getTopUpQuoteDetails(request.getQuoteID(), accessToken);
+
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("topupOrderID", order.getID());
-		data.put("amount", order.getAmount());
-		data.put("fee", order.getTopUpFee());
-		data.put("otpRefCode", order.getOtpReferenceCode());
-		
+		data.put("topupOrderID", quote.getID());
+		data.put("amount", quote.getAmount());
+		data.put("fee", quote.getTopUpFee());
+		data.put("otpRefCode", otp.getReferenceCode());
+
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
-	
+
 	/**
 	 * Confirm transaction
 	 * confirmPlaceOrder(String topUpOrderId, OTP otp, String accessToken
 	 * return TopUpOrder;
 	 */
 	@RequestMapping(value = "/directdebit/order/confirm/{accessToken}", method = RequestMethod.PUT)
-	public 
+	public
 	@ResponseBody ProductResponse confirmDirectDebitTopuOrder(
-			@RequestBody TopupOrderConfirmRequest request, 
+			@RequestBody TopupOrderConfirmRequest request,
 			@PathVariable String accessToken) {
 		OTP otp = new OTP();
-		otp.setChecksum(request.getChecksum());
+		otp.setReferenceCode(request.getOtpRefCode());
 		otp.setOtpString(request.getOtpString());
-		
-		TopUpOrder order = this.topupService.confirmPlaceOrder(request.getTopupOrderID(), otp, accessToken);
+
+		TopUpQuoteStatus quoteStatus = this.topupService.confirmOTP(request.getTopupOrderID(), otp, accessToken);
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("topupStatus", order.getStatus());
-		
+		data.put("topupStatus", quoteStatus.getStatus());
+
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
-	
+
 	/**
 	 * Polling for transaction status
 	 */
 	@RequestMapping(value = "/directdebit/order/{topupOrderID}/status/{accessToken}", method = RequestMethod.GET)
-	public 
+	public
 	@ResponseBody ProductResponse getDirectDebitTopupStatus(
-			@PathVariable String topupOrderID, 
+			@PathVariable String topupOrderID,
 			@PathVariable String accessToken) {
-		
-		TopUpStatus status = this.topupService.getTopUpOrderStatus(topupOrderID, accessToken);
+
+		TopUpOrderStatus status = this.topupService.getTopUpProcessingStatus(topupOrderID, accessToken);
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("topupStatus", status.getTopUpStatus());
-		
+
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
-	
+
 	/**
 	 * Get transaction detail after transaction done successfully
 	 */
 	@RequestMapping(value = "/directdebit/order/{topupOrderID}/details/{accessToken}", method = RequestMethod.GET)
-	public 
+	public
 	@ResponseBody ProductResponse getDirectDebitTopupDetails(
-			@PathVariable String topupOrderID, 
+			@PathVariable String topupOrderID,
 			@PathVariable String accessToken) {
-		
-		TopUpOrder order = this.topupService.getTopUpOrderDetails(topupOrderID, accessToken);
+
+		TopUpOrder order = this.topupService.getTopUpOrderResults(topupOrderID, accessToken);
 		BigDecimal balance = this.profileService.getEwalletBalance(accessToken);
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("transactionID", order.getConfirmationInfo().getTransactionID());
@@ -196,7 +194,7 @@ public class DirectDebitController extends BaseController {
 		data.put("urlLogo", getUrlLogo(db.getBankCode()));
 		data.put("fee", order.getTopUpFee());
 		data.put("currentBalance", balance);
-		
+
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 
@@ -217,7 +215,7 @@ public class DirectDebitController extends BaseController {
 		}
 		return realData;
 	}
-	
+
 	private String getUrlLogo(String bankCode){
 		String returnData = new String();
 		if (bankCode.equals("SCB")) {
@@ -229,7 +227,7 @@ public class DirectDebitController extends BaseController {
 		} else if (bankCode.equals("BAY")) {
 			returnData="https://secure.truemoney-dev.com/m/tmn_webview/images/normal/Bank-ks-2.png";
 		}
-		
+
 		return returnData;
 	}
 

@@ -23,11 +23,11 @@ import th.co.truemoney.product.api.domain.TopupDirectDebitRequest;
 import th.co.truemoney.product.api.domain.TopupQuotableRequest;
 import th.co.truemoney.serviceinventory.ewallet.domain.DirectDebit;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
-import th.co.truemoney.serviceinventory.ewallet.domain.QuoteRequest;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpConfirmationInfo;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpOrder;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpQuote;
-import th.co.truemoney.serviceinventory.ewallet.domain.TopUpStatus;
+import th.co.truemoney.serviceinventory.ewallet.domain.TopUpOrderStatus;
+import th.co.truemoney.serviceinventory.ewallet.domain.TopUpQuoteStatus;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -160,7 +160,7 @@ public class TestDirectDebitController extends BaseTestController {
 
 		when(
 				this.topupServiceMock.createTopUpQuoteFromDirectDebit(
-						any(String.class), any(QuoteRequest.class),
+						any(String.class), any(BigDecimal.class),
 						any(String.class))).thenReturn(topUpQuote);
 
 		this.mockMvc
@@ -198,7 +198,7 @@ public class TestDirectDebitController extends BaseTestController {
 
 		when(
 				this.topupServiceMock.createTopUpQuoteFromDirectDebit(
-						any(String.class), any(QuoteRequest.class),
+						any(String.class), any(BigDecimal.class),
 						any(String.class))).thenThrow(
 				new ServiceInventoryException(failedCode, failedMessage,
 						failedNamespace));
@@ -313,24 +313,21 @@ public class TestDirectDebitController extends BaseTestController {
 		confirmationInfo.setTransactionDate("");
 		confirmationInfo.setTransactionID("10101010");
 
-		TopUpOrder order = new TopUpOrder();
-		order.setAccessTokenID(fakeAccessToken);
-		order.setAmount(new BigDecimal(100.00));
-		order.setID("1111");
-		order.setConfirmationInfo(confirmationInfo);
-		order.setOtpReferenceCode("FJFJ");
-		order.setSourceOfFund(fakeSourceOfFund);
-		order.setStatus(TopUpStatus.CONFIRMED);
-		order.setTopUpFee(new BigDecimal(10.00));
-		order.setUsername("username");
+		OTP otp = new OTP();
+		otp.setMobileNo("0861234567");
+		otp.setReferenceCode("abcd");
+		otp.setOtpString("xxxxxx");
 
-		when(
-				this.topupServiceMock.requestPlaceOrder(any(String.class),
-						any(String.class))).thenReturn(order);
+		when(this.topupServiceMock.sendOTPConfirm(any(String.class),
+						any(String.class))).thenReturn(otp);
+
+		TopUpQuote quote = new TopUpQuote();
+
+		when(this.topupServiceMock.getTopUpQuoteDetails(any(String.class),
+						any(String.class))).thenReturn(quote);
 
 		this.mockMvc
-				.perform(
-						post(sendOTPURL)
+				.perform(post(sendOTPURL)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(mapper.writeValueAsBytes(request)))
 				.andExpect(status().isOk())
@@ -355,7 +352,7 @@ public class TestDirectDebitController extends BaseTestController {
 		request.setQuoteID("1");
 
 		when(
-				this.topupServiceMock.requestPlaceOrder(any(String.class),
+				this.topupServiceMock.sendOTPConfirm(any(String.class),
 						any(String.class))).thenThrow(
 				new ServiceInventoryException(failedCode, failedMessage,
 						failedNamespace));
@@ -377,19 +374,16 @@ public class TestDirectDebitController extends BaseTestController {
 		ObjectMapper mapper = new ObjectMapper();
 
 		OTP request = new OTP();
-		request.setChecksum("erte");
 		request.setOtpString("495959");
 
 		TopUpConfirmationInfo confirmationInfo = new TopUpConfirmationInfo();
 		confirmationInfo.setTransactionDate("");
 		confirmationInfo.setTransactionID("10101010");
 
-		TopUpOrder order = new TopUpOrder();
-		order.setStatus(TopUpStatus.CONFIRMED);
 
 		when(
-				this.topupServiceMock.confirmPlaceOrder(any(String.class),
-						any(OTP.class), any(String.class))).thenReturn(order);
+				this.topupServiceMock.confirmOTP(any(String.class),
+						any(OTP.class), any(String.class))).thenReturn(TopUpQuoteStatus.OTP_CONFIRMED);
 
 		this.mockMvc
 				.perform(
@@ -413,11 +407,10 @@ public class TestDirectDebitController extends BaseTestController {
 
 		ObjectMapper mapper = new ObjectMapper();
 		OTP request = new OTP();
-		request.setChecksum("erte");
 		request.setOtpString("495959");
 
 		when(
-				this.topupServiceMock.confirmPlaceOrder(any(String.class),
+				this.topupServiceMock.confirmOTP(any(String.class),
 						any(OTP.class), any(String.class))).thenThrow(
 				new ServiceInventoryException(failedCode, failedMessage,
 						failedNamespace));
@@ -437,8 +430,8 @@ public class TestDirectDebitController extends BaseTestController {
 	@Test
 	public void checkStatusSuccess() throws Exception {
 		when(
-				this.topupServiceMock.getTopUpOrderStatus(any(String.class),
-						 any(String.class))).thenReturn(TopUpStatus.CONFIRMED);
+				this.topupServiceMock.getTopUpProcessingStatus(any(String.class),
+						 any(String.class))).thenReturn(TopUpOrderStatus.SUCCESS);
 
 		this.mockMvc
 				.perform(
@@ -450,7 +443,7 @@ public class TestDirectDebitController extends BaseTestController {
 				.andExpect(jsonPath("$.messageEn").exists())
 				.andExpect(jsonPath("$.messageTh").exists())
 				.andExpect(jsonPath("$.data").exists())
-				.andExpect(jsonPath("$..topupStatus").value("CONFIRMED"));
+				.andExpect(jsonPath("$..topupStatus").value("SUCCESS"));
 	}
 
 	@Test
@@ -460,7 +453,7 @@ public class TestDirectDebitController extends BaseTestController {
 		String failedNamespace = "TMN-SERVICE-INVENTORY";
 
 		when(
-				this.topupServiceMock.getTopUpOrderStatus(any(String.class), any(String.class))).thenThrow(
+				this.topupServiceMock.getTopUpProcessingStatus(any(String.class), any(String.class))).thenThrow(
 				new ServiceInventoryException(failedCode, failedMessage,
 						failedNamespace));
 
@@ -495,14 +488,13 @@ public class TestDirectDebitController extends BaseTestController {
 		order.setAmount(new BigDecimal(100.00));
 		order.setID("1111");
 		order.setConfirmationInfo(confirmationInfo);
-		order.setOtpReferenceCode("FJFJ");
 		order.setSourceOfFund(fakeSourceOfFund);
-		order.setStatus(TopUpStatus.CONFIRMED);
+		order.setStatus(TopUpOrderStatus.SUCCESS);
 		order.setTopUpFee(new BigDecimal(10.00));
 		order.setUsername("username");
 
 		when(
-				this.topupServiceMock.getTopUpOrderDetails(any(String.class),
+				this.topupServiceMock.getTopUpOrderResults(any(String.class),
 						 any(String.class))).thenReturn(order);
 
 		when(this.profileServiceMock.getEwalletBalance(any(String.class))).thenReturn(new BigDecimal(10000.00));
@@ -535,7 +527,7 @@ public class TestDirectDebitController extends BaseTestController {
 		String failedNamespace = "TMN-SERVICE-INVENTORY";
 
 		when(
-				this.topupServiceMock.getTopUpOrderDetails(any(String.class), any(String.class))).thenThrow(
+				this.topupServiceMock.getTopUpOrderResults(any(String.class), any(String.class))).thenThrow(
 				new ServiceInventoryException(failedCode, failedMessage,
 						failedNamespace));
 
@@ -570,7 +562,7 @@ public class TestDirectDebitController extends BaseTestController {
 		when(
 			this.topupServiceMock.createTopUpQuoteFromDirectDebit(
 				any(String.class),
-				any(QuoteRequest.class),
+				any(BigDecimal.class),
 				any(String.class))
 		).thenThrow(lessThanMinimumException);
 
@@ -614,7 +606,7 @@ public class TestDirectDebitController extends BaseTestController {
 		when(
 			this.topupServiceMock.createTopUpQuoteFromDirectDebit(
 				any(String.class),
-				any(QuoteRequest.class),
+				any(BigDecimal.class),
 				any(String.class))
 		).thenThrow(moreThanMaximumExcepiion);
 

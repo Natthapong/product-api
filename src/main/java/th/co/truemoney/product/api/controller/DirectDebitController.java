@@ -186,13 +186,15 @@ public class DirectDebitController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("transactionID", order.getConfirmationInfo().getTransactionID());
 		data.put("transactionDate", order.getConfirmationInfo().getTransactionDate());
-		data.put("amount", order.getAmount());
-		DirectDebit db = (DirectDebit)order.getSourceOfFund();
+
+		TopUpQuote quote = order.getQuote();
+		data.put("amount", quote.getAmount());
+		DirectDebit db = (DirectDebit) quote.getSourceOfFund();
 		data.put("bankNumber", db.getBankAccountNumber());
 		data.put("bankNameEn", db.getBankNameEn());
 		data.put("bankNameTh", db.getBankNameTh());
 		data.put("urlLogo", getUrlLogo(db.getBankCode()));
-		data.put("fee", order.getTopUpFee());
+		data.put("fee", quote.getTopUpFee());
 		data.put("currentBalance", balance);
 
 		return this.responseFactory.createSuccessProductResonse(data);

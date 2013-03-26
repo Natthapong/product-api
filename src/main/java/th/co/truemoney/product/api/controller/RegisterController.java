@@ -25,7 +25,7 @@ public class RegisterController extends BaseController {
 
 	@Autowired
 	TmnProfileService profileService;
-	
+
 	@Autowired
 	UserActionController userActionController;
 
@@ -40,7 +40,7 @@ public class RegisterController extends BaseController {
 			throw new InvalidParameterException("40000");
 		}
 
-		String returnData = profileService.validateEmail(email);
+		String returnData = profileService.validateEmail(41, email);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("email", returnData);
@@ -65,14 +65,14 @@ public class RegisterController extends BaseController {
 		tmnProfile.setMobileno(request.get("mobileNumber"));
 		tmnProfile.setPassword(request.get("password"));
 
-		String returnData = profileService.createProfile(tmnProfile);
+		String returnData = profileService.createProfile(41, tmnProfile);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("otpRefCode", returnData);
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
-	
+
 	@RequestMapping(value = "/profiles/verify-otp", method = RequestMethod.POST)
 	@ResponseBody
 	public ProductResponse confirmCreateProfile(
@@ -82,10 +82,10 @@ public class RegisterController extends BaseController {
 		OTP otp = new OTP();
 		otp.setOtpString(request.get("otpString"));
 
-		TmnProfile returnData = profileService.confirmCreateProfile(
+		TmnProfile returnData = profileService.confirmCreateProfile(41,
 				request.get("mobileNumber"), otp);
 		LoginBean login = new LoginBean(returnData.getEmail(),returnData.getPassword(),"email");
-		
+
 		ProductResponse response = userActionController.signin(login);
 
 		return this.responseFactory.createSuccessProductResonse(response.getData());

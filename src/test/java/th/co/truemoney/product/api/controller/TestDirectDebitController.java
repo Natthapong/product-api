@@ -483,15 +483,19 @@ public class TestDirectDebitController extends BaseTestController {
 		confirmationInfo.setTransactionDate("");
 		confirmationInfo.setTransactionID("10101010");
 
-		TopUpOrder order = new TopUpOrder();
-		order.setAccessTokenID(fakeAccessToken);
-		order.setAmount(new BigDecimal(100.00));
-		order.setID("1111");
+		TopUpQuote quote = new TopUpQuote();
+		quote.setAccessTokenID(fakeAccessToken);
+		quote.setAmount(new BigDecimal(100.00));
+		quote.setID("1111");
+		quote.setTopUpFee(new BigDecimal(10.00));
+		quote.setUsername("username");
+		quote.setSourceOfFund(fakeSourceOfFund);
+
+		TopUpOrder order = new TopUpOrder(quote);
+
 		order.setConfirmationInfo(confirmationInfo);
-		order.setSourceOfFund(fakeSourceOfFund);
 		order.setStatus(TopUpOrderStatus.SUCCESS);
-		order.setTopUpFee(new BigDecimal(10.00));
-		order.setUsername("username");
+
 
 		when(
 				this.topupServiceMock.getTopUpOrderResults(any(String.class),

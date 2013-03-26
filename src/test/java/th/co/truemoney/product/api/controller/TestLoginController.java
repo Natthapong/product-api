@@ -2,71 +2,67 @@ package th.co.truemoney.product.api.controller;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.math.BigDecimal;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.junit.Test;
-import org.springframework.http.MediaType;
 
 import th.co.truemoney.product.api.domain.LoginBean;
 import th.co.truemoney.serviceinventory.ewallet.domain.Login;
 import th.co.truemoney.serviceinventory.ewallet.domain.TmnProfile;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 public class TestLoginController extends BaseTestController {
-
+	
 	@Test
 	public void loginInputValidationFailed() throws Exception {
 		when(
-				this.profileServiceMock.login(any(Integer.class),
-						any(Login.class))).thenReturn("token-string");
-		TmnProfile tmnProfile = new TmnProfile("Jonh Doe", new BigDecimal(100.00));
-		when(this.profileServiceMock.getTruemoneyProfile(any(String.class)))
-				.thenReturn(tmnProfile);
+			this.profileServiceMock.login(
+				any(Integer.class),
+				any(Login.class)
+			)
+		).thenReturn("token-string");
+		
+		when(
+			this.profileServiceMock.getTruemoneyProfile(
+				any(String.class)
+			)
+		).thenReturn(new TmnProfile("Jonh Doe", new BigDecimal(100.00)));
 
-		ObjectMapper mapper = new ObjectMapper();
-		LoginBean login = new LoginBean("customer@truemoney.co.th", "password",
-				"email");
-		this.mockMvc.perform(
-				post("/signin").contentType(MediaType.APPLICATION_JSON)
-						.content(mapper.writeValueAsBytes(login))).andExpect(
-				status().isOk());
+		this.verifySuccess(
+				this.doPOST("/signin", 
+						new LoginBean("customer@truemoney.co.th", "password", "email")));
 	}
 
 	@Test
 	public void loginSuccess() throws Exception {
 		when(
-				this.profileServiceMock.login(any(Integer.class),
-						any(Login.class))).thenReturn("token-string");
-
-		ObjectMapper mapper = new ObjectMapper();
-		LoginBean login = new LoginBean("wrong@email", "password", "email");
-		this.mockMvc.perform(
-				post("/signin").contentType(MediaType.APPLICATION_JSON)
-						.content(mapper.writeValueAsBytes(login))).andExpect(
-				status().is(HttpServletResponse.SC_BAD_REQUEST));
+			this.profileServiceMock.login(
+				any(Integer.class),
+				any(Login.class)
+			)
+		).thenReturn("token-string");
+		
+		this.verifyBadRequest(
+				this.doPOST("/signin", 
+						new LoginBean("wrong@email", "password", "email")));
 	}
 
 	@Test
 	public void loginNotSuccess() throws Exception {
 		when(
-				this.profileServiceMock.login(any(Integer.class),
-						any(Login.class))).thenThrow(
-				new ServiceInventoryException("4",
-						"Invalid Username or Password", "umarket"));
-
-		ObjectMapper mapper = new ObjectMapper();
-		LoginBean login = new LoginBean("customer@truemoney.co.th", "password",
-				"email");
-		this.mockMvc.perform(
-				post("/signin").contentType(MediaType.APPLICATION_JSON)
-						.content(mapper.writeValueAsBytes(login))).andExpect(
-				status().is(HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
+			this.profileServiceMock.login(
+				any(Integer.class),
+				any(Login.class)
+			)
+		).thenThrow(
+				new ServiceInventoryException("4", "Invalid Username or Password", "umarket"));
+		this.verifyFailed(
+				this.doPOST("/signin", 
+						new LoginBean("customer@truemoney.co.th", "password","email"))
+		).andExpect(jsonPath("$.code").value("4")
+		).andExpect(jsonPath("$.messageEn").value("Invalid Email or Password")
+		).andExpect(jsonPath("$.namespace").value("umarket"));
 	}
 }

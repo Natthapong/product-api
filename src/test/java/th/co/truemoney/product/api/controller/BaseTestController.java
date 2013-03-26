@@ -74,5 +74,20 @@ public class BaseTestController {
 		  	   .andExpect(jsonPath("$.messageEn").value("Success"))
 		  	   .andExpect(jsonPath("$.messageTh").exists()); //TODO check the exact message sent out
 	}
-
+	
+	protected void verifyBadRequest(ResultActions actions) throws Exception {
+		actions.andExpect(status().isBadRequest())
+		  	   .andExpect(jsonPath("$.code").exists())
+		  	   .andExpect(jsonPath("$.namespace").exists())
+		  	   .andExpect(jsonPath("$.messageEn").exists())
+		  	   .andExpect(jsonPath("$.messageTh").exists()); //TODO check the exact message sent out
+	}
+	
+	protected ResultActions verifyFailed(ResultActions actions) throws Exception {
+		return actions.andExpect(status().isInternalServerError())
+		  	   .andExpect(jsonPath("$.code").exists())
+		  	   .andExpect(jsonPath("$.namespace").exists())
+		  	   .andExpect(jsonPath("$.messageEn").exists())
+		  	   .andExpect(jsonPath("$.messageTh").exists()); //TODO check the exact message sent out
+	}
 }

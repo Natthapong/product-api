@@ -39,5 +39,10 @@
 
 "ewallet.addmoney.directdebit.status.mock" : "https://secure.truemoney-dev.com/api/v1/mock/directdebit/order/%@/status/%@?",
 
-"ewallet.addmoney.directdebit.confirm.detail.mock" : "https://secure.truemoney-dev.com/api/v1/mock/directdebit/order/%@/details/%@?"
+"ewallet.addmoney.directdebit.confirm.detail.mock" : "https://secure.truemoney-dev.com/api/v1/mock/directdebit/order/%@/details/%@?",
+
+"register.webview.termofservice.url" : "http://www.google.com",
+
+"register.webview.policy.url" : "http://www.youtube.com"
+
 }

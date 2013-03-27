@@ -29,21 +29,9 @@
 
 "ewallet.addmoney.directdebit.confirm.detail.url" : "https://secure.truemoney-dev.com/api/v1/directdebit/order/%@/details/%@?",
 
-"ewallet.addmoney.directdebit.soflist.mock" : "https://secure.truemoney-dev.com/api/v1/mock/add-money/ewallet/banks/%@/%@?",
+"register.webview.termofservice.url" : "https://secure.truemoney-dev.com/m/tmn_webview/register/term_of_service.html",
 
-"ewallet.addmoney.directdebit.verify.mock" : "https://secure.truemoney-dev.com/api/v1/mock/add-money/verify/ewallet/%@?",
-
-"ewallet.addmoney.directdebit.otp.mock" : "https://secure.truemoney-dev.com/api/v1/mock/add-money/send/otp/%@?",
-
-"ewallet.addmoney.directdebit.confirm.mock" : "https://secure.truemoney-dev.com/api/v1/mock/add-money/confirm/ewallet/%@?",
-
-"ewallet.addmoney.directdebit.status.mock" : "https://secure.truemoney-dev.com/api/v1/mock/directdebit/order/%@/status/%@?",
-
-"ewallet.addmoney.directdebit.confirm.detail.mock" : "https://secure.truemoney-dev.com/api/v1/mock/directdebit/order/%@/details/%@?",
-
-"register.webview.termofservice.url" : "http://www.google.com",
-
-"register.webview.policy.url" : "http://www.youtube.com",
+"register.webview.policy.url" : "https://secure.truemoney-dev.com/m/tmn_webview/register/policy.html",
 
 "register.verify.email.url" : "https://secure.truemoney-dev.com/api/v1/ewallet/profiles/validate-email?",
 

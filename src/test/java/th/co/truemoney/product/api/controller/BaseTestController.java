@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import th.co.truemoney.product.api.config.TestWebConfig;
+import th.co.truemoney.serviceinventory.ewallet.P2PTransferService;
 import th.co.truemoney.serviceinventory.ewallet.SourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
@@ -44,6 +45,9 @@ public class BaseTestController {
 
 	@Autowired
 	protected TmnProfileService profileServiceMock;
+	
+	@Autowired
+	protected P2PTransferService p2pTransferServiceMock; 
 
 	@Before
 	public void setup() {
@@ -51,6 +55,8 @@ public class BaseTestController {
 		this.sourceOfFundServiceMock = wac.getBean(SourceOfFundService.class);
 		this.topupServiceMock = wac.getBean(TopUpService.class);
 		this.profileServiceMock = wac.getBean(TmnProfileService.class);
+		this.p2pTransferServiceMock = wac.getBean(P2PTransferService.class);
+		
 	}
 	
 	@After

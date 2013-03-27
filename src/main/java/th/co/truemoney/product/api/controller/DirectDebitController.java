@@ -127,7 +127,7 @@ public class DirectDebitController extends BaseController {
 		TopUpQuote quote = this.topupService.getTopUpQuoteDetails(request.getQuoteID(), accessToken);
 
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("topupOrderID", quote.getID());
+		data.put("quoteID", quote.getID());
 		data.put("amount", quote.getAmount());
 		data.put("fee", quote.getTopUpFee());
 		data.put("otpRefCode", otp.getReferenceCode());
@@ -159,7 +159,7 @@ public class DirectDebitController extends BaseController {
 	/**
 	 * Polling for transaction status
 	 */
-	@RequestMapping(value = "/directdebit/order/{topupOrderID}/status/{accessToken}", method = RequestMethod.GET)
+	@RequestMapping(value = "/directdebit/order/{quoteID}/status/{accessToken}", method = RequestMethod.GET)
 	public
 	@ResponseBody ProductResponse getDirectDebitTopupStatus(
 			@PathVariable String topupOrderID,
@@ -175,7 +175,7 @@ public class DirectDebitController extends BaseController {
 	/**
 	 * Get transaction detail after transaction done successfully
 	 */
-	@RequestMapping(value = "/directdebit/order/{topupOrderID}/details/{accessToken}", method = RequestMethod.GET)
+	@RequestMapping(value = "/directdebit/order/{quoteID}/details/{accessToken}", method = RequestMethod.GET)
 	public
 	@ResponseBody ProductResponse getDirectDebitTopupDetails(
 			@PathVariable String topupOrderID,

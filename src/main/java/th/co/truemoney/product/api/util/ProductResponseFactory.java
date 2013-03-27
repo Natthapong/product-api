@@ -1,5 +1,6 @@
 package th.co.truemoney.product.api.util;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +73,25 @@ public class ProductResponseFactory {
 							exception.getErrorNamespace(), 
 							exception.getErrorCode(), 
 							new Object[] { data.get("minAmount"), data.get("maxAmount") }));
+		} else if (isCallCenterEnabled(exception)) {
+			error.setTitleEn(
+					messageManager.getTitleEn(
+							exception.getErrorNamespace(), 
+							exception.getErrorCode(), EMPTY_PARAMS));
+				error.setTitleTh(
+						messageManager.getTitleTh(
+								exception.getErrorNamespace(), 
+								exception.getErrorCode(), EMPTY_PARAMS));
+				error.setMessageEn(
+						messageManager.getMessageEn(
+								exception.getErrorNamespace(), 
+								exception.getErrorCode(), 
+								new Object[] { messageManager.getMessageEn("call_center_no") }));
+				error.setMessageTh(
+						messageManager.getMessageTh(
+								exception.getErrorNamespace(), 
+								exception.getErrorCode(), 
+								new Object[] { messageManager.getMessageTh("call_center_no") }));
 		} else {
 			error.setMessageEn(
 					messageManager.getMessageEn(
@@ -93,11 +113,25 @@ public class ProductResponseFactory {
 		return error;
 	}
 	
-	private static final String LESS_THAN_MINIMUM_AMOUNT = "20001";
+	private final String LESS_THAN_MINIMUM_AMOUNT = "TMN-SERVICE-INVENTORY.20001";
 	
-	private static final String MORE_THAN_MINIMUM_AMOUNT = "20002";
+	private final String MORE_THAN_MINIMUM_AMOUNT = "TMN-SERVICE-INVENTORY.20002";
+	
+	private final String[] CALL_CENTER_ENABLED = new String[]{"TMN-SERVICE-INVENTORY.1006", 
+															"TMN-SERVICE-INVENTORY.10002",
+															"umarket.6",
+															"umarket.7",
+															"umarket.19",
+															"umarket.27",
+															"umarket.38",
+															"umarket.71"};
 	
 	private boolean isInvalidAmountException(ServiceInventoryException e) {
-		return LESS_THAN_MINIMUM_AMOUNT.equals(e.getErrorCode()) || MORE_THAN_MINIMUM_AMOUNT.equals(e.getErrorCode());
+		return LESS_THAN_MINIMUM_AMOUNT.equals(e.getErrorNamespace() + "." + e.getErrorCode()) 
+				|| MORE_THAN_MINIMUM_AMOUNT.equals(e.getErrorNamespace() + "." + e.getErrorCode());
+	}
+	
+	private boolean isCallCenterEnabled(ServiceInventoryException e) {
+		return Arrays.asList(CALL_CENTER_ENABLED).contains(e.getErrorNamespace() + "." + e.getErrorCode());
 	}
 }

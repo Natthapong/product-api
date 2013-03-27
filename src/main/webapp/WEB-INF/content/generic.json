@@ -43,6 +43,14 @@
 
 "register.webview.termofservice.url" : "http://www.google.com",
 
-"register.webview.policy.url" : "http://www.youtube.com"
+"register.webview.policy.url" : "http://www.youtube.com",
+
+"register.verify.email.url" : "https://secure.truemoney-dev.com/api/v1/ewallet/profiles/validate-email?",
+
+"register.prepare.url" : "https://secure.truemoney-dev.com/api/v1/ewallet/profiles?",
+
+"register.cofirm.url" : "https://secure.truemoney-dev.com/api/v1/ewallet/profiles/verify-otp?"
+
+
 
 }

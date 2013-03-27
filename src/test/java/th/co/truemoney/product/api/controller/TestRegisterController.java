@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,8 +33,6 @@ import th.co.truemoney.serviceinventory.ewallet.domain.Login;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.ewallet.domain.TmnProfile;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -123,10 +122,15 @@ public class TestRegisterController {
 		tmnProfile.put("password","werw2345");
 		tmnProfile.put("mobileNumber","0899999999");
 		tmnProfile.put("fullname","Apinya Ukachoke");
+		
+		OTP otp = new OTP();
+		otp.setMobileNo("0899999999");
+		otp.setOtpString("123456");
+		otp.setReferenceCode("wert");
 
 		when(
 				this.tmnProfileServiceMock.createProfile(anyInt(), any(TmnProfile.class)) )
-			.thenReturn("wert");
+			.thenReturn(otp);
 
 			this.mockMvc
 					.perform(post(createProfileURL).content(mapper.writeValueAsBytes(tmnProfile)).contentType(MediaType.APPLICATION_JSON))
@@ -189,7 +193,7 @@ public class TestRegisterController {
 		mockData.put("checksum", "111111111111");
 
 		when(
-				this.tmnProfileServiceMock.confirmCreateProfile(anyInt(), any(String.class), any(OTP.class)) )
+				this.tmnProfileServiceMock.confirmCreateProfile(anyInt(), any(OTP.class)) )
 			.thenReturn(profileMock);
 
 		when(
@@ -234,7 +238,7 @@ public class TestRegisterController {
 		profileMock.setPassword("werw2345");
 
 		when(
-				this.tmnProfileServiceMock.confirmCreateProfile(anyInt(), any(String.class), any(OTP.class)) )
+				this.tmnProfileServiceMock.confirmCreateProfile(anyInt(), any(OTP.class)) )
 			.thenThrow(new ServiceInventoryException(failedCode, failedMessage,
 					failedNamespace));
 		when(
@@ -275,7 +279,7 @@ public class TestRegisterController {
 		profileMock.setPassword("werw2345");
 
 		when(
-				this.tmnProfileServiceMock.confirmCreateProfile(anyInt(), any(String.class), any(OTP.class)) )
+				this.tmnProfileServiceMock.confirmCreateProfile(anyInt(), any(OTP.class)) )
 			.thenReturn(profileMock);
 
 		when(

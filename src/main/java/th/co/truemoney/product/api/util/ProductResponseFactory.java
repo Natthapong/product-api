@@ -1,7 +1,6 @@
 package th.co.truemoney.product.api.util;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,20 +31,6 @@ public class ProductResponseFactory {
 		return success;
 	}
 	
-	public ProductResponse createErrorProductResponse(String code, String namespace, String description, Object[] params) {
-		if (params == null) 
-			params = EMPTY_PARAMS;
-		ProductResponse error = new ProductResponse();
-		error.setCode(code);
-		error.setNamespace(namespace);
-		error.setMessageEn(messageManager.getMessageEn(namespace, code, params));
-		error.setMessageTh(messageManager.getMessageTh(namespace, code, params));
-		error.setTitleEn(messageManager.getTitleEn(namespace, code, params));
-		error.setTitleTh(messageManager.getTitleTh(namespace, code, params));
-		error.setOriginalMessage(description);
-		return error;
-	}
-	
 	public ProductResponse createErrorProductResponse(ServiceInventoryException exception) {
 		ProductResponse error = new ProductResponse();
 		error.setCode(exception.getErrorCode());
@@ -64,49 +49,7 @@ public class ProductResponseFactory {
 		} else {
 			parameters = EMPTY_PARAMS;
 		}
-		/*
-		if (isInvalidAmountException(exception)) {
-			Map<String, Object> data = exception.getData();
-			error.setTitleEn(
-				messageManager.getTitleEn(
-						exception.getErrorNamespace(), 
-						exception.getErrorCode(), 
-						new Object[] { data.get("bankNameEn") }));
-			error.setTitleTh(
-					messageManager.getTitleTh(
-							exception.getErrorNamespace(), 
-							exception.getErrorCode(), 
-							new Object[] { data.get("bankNameTh") }));
-			error.setMessageEn(
-					messageManager.getMessageEn(
-							exception.getErrorNamespace(), 
-							exception.getErrorCode(), 
-							new Object[] { data.get("minAmount"), data.get("maxAmount") }));
-			error.setMessageTh(
-					messageManager.getMessageTh(
-							exception.getErrorNamespace(), 
-							exception.getErrorCode(), 
-							new Object[] { data.get("minAmount"), data.get("maxAmount") }));
-		} else if (isCallCenterEnabled(exception)) {
-			error.setTitleEn(
-					messageManager.getTitleEn(
-							exception.getErrorNamespace(), 
-							exception.getErrorCode(), EMPTY_PARAMS));
-				error.setTitleTh(
-						messageManager.getTitleTh(
-								exception.getErrorNamespace(), 
-								exception.getErrorCode(), EMPTY_PARAMS));
-				error.setMessageEn(
-						messageManager.getMessageEn(
-								exception.getErrorNamespace(), 
-								exception.getErrorCode(), 
-								new Object[] { messageManager.getMessageEn("call_center_no") }));
-				error.setMessageTh(
-						messageManager.getMessageTh(
-								exception.getErrorNamespace(), 
-								exception.getErrorCode(), 
-								new Object[] { messageManager.getMessageTh("call_center_no") }));
-		} else {*/
+		
 		error.setMessageEn(
 				messageManager.getMessageEn(
 						exception.getErrorNamespace(), 

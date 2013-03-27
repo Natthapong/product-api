@@ -1,6 +1,7 @@
 package th.co.truemoney.product.api.util;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,19 @@ public class ProductResponseFactory {
 		error.setNamespace(exception.getErrorNamespace());
 		error.setOriginalMessage(exception.getErrorDescription());
 		
+		Object[] parameters = null;
+		if (isInvalidAmountException(exception)) {
+			Map<String, Object> data = exception.getData();
+			parameters = new Object[]{ data.get("bankNameEn"), 
+								 	   data.get("bankNameTh"), 
+								 	   data.get("minAmount"), 
+								 	   data.get("maxAmount") };
+		} else if (isCallCenterEnabled(exception)) {
+			parameters = new Object[]{ messageManager.getMessageEn("call_center_no") };
+		} else {
+			parameters = EMPTY_PARAMS;
+		}
+		/*
 		if (isInvalidAmountException(exception)) {
 			Map<String, Object> data = exception.getData();
 			error.setTitleEn(
@@ -92,24 +106,23 @@ public class ProductResponseFactory {
 								exception.getErrorNamespace(), 
 								exception.getErrorCode(), 
 								new Object[] { messageManager.getMessageTh("call_center_no") }));
-		} else {
-			error.setMessageEn(
-					messageManager.getMessageEn(
-							exception.getErrorNamespace(), 
-							exception.getErrorCode(), EMPTY_PARAMS));
-			error.setMessageTh(
-					messageManager.getMessageTh(
-							exception.getErrorNamespace(), 
-							exception.getErrorCode(), EMPTY_PARAMS));
-			error.setTitleEn(
-					messageManager.getTitleEn(
-							exception.getErrorNamespace(), 
-							exception.getErrorCode(), EMPTY_PARAMS));
-			error.setTitleTh(
-					messageManager.getTitleTh(
-							exception.getErrorNamespace(), 
-							exception.getErrorCode(), EMPTY_PARAMS));
-		}
+		} else {*/
+		error.setMessageEn(
+				messageManager.getMessageEn(
+						exception.getErrorNamespace(), 
+						exception.getErrorCode(), parameters));
+		error.setMessageTh(
+				messageManager.getMessageTh(
+						exception.getErrorNamespace(), 
+						exception.getErrorCode(), parameters));
+		error.setTitleEn(
+				messageManager.getTitleEn(
+						exception.getErrorNamespace(), 
+						exception.getErrorCode(), parameters));
+		error.setTitleTh(
+				messageManager.getTitleTh(
+						exception.getErrorNamespace(), 
+						exception.getErrorCode(), parameters));
 		return error;
 	}
 	

@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -75,21 +74,14 @@ public class TestDirectDebitController extends BaseTestController {
 			this.sourceOfFundServiceMock.getUserDirectDebitSources(
 				any(String.class),
 				any(String.class))
-			)
-		.thenReturn(returnedDirectDebitList);
-
-		this.mockMvc
-				.perform(get(getBankURL).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.code").value("20000"))
-				.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
-				.andExpect(jsonPath("$.messageEn").exists())
-				.andExpect(jsonPath("$.messageTh").exists())
-				.andExpect(jsonPath("$.data").exists())
-				.andExpect(jsonPath("$..listOfBank").isArray())
-				.andExpect(jsonPath("$..listOfBank[0].bankNameEn").value("Siam Commercial Bank"))
-				.andDo(print());
-	}
+		).thenReturn(returnedDirectDebitList);
+		
+		this.verifySuccess(
+			this.doGET(getBankURL)
+		).andExpect(jsonPath("$.data").exists()
+		).andExpect(jsonPath("$..listOfBank").isArray()
+		).andExpect(jsonPath("$..listOfBank[0].bankNameEn").value("Siam Commercial Bank"));
+}
 
 	@Test
 	public void listUserRegisteredBankAccountInvalidAccessTokenFailed() throws Exception {
@@ -483,6 +475,7 @@ public class TestDirectDebitController extends BaseTestController {
 		confirmationInfo.setTransactionID("10101010");
 
 		TopUpQuote quote = new TopUpQuote();
+		quote.setStatus(TopUpQuoteStatus.OTP_CONFIRMED);
 		quote.setAccessTokenID(fakeAccessToken);
 		quote.setAmount(new BigDecimal(100.00));
 		quote.setID("1111");

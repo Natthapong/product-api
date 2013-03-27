@@ -1,11 +1,11 @@
 package th.co.truemoney.product.api.controller;
 
 import static org.mockito.Mockito.reset;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
@@ -53,21 +53,25 @@ public class BaseTestController {
 	}
 	
 	@After
-	public void tierDown() {
+	public void tearDown() {
 		reset(this.sourceOfFundServiceMock);
 		reset(this.topupServiceMock);
 		reset(this.profileServiceMock);
 	}
 	
-	protected ResultActions doPOST(String url, Object reqBody) throws JsonProcessingException, Exception {
+	protected ResultActions doPOST(String url, Object reqBody) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		return this.mockMvc.perform(
 				post(url).contentType(MediaType.APPLICATION_JSON)
 						 .content(mapper.writeValueAsBytes(reqBody)));
 	}
 	
-	protected void verifySuccess(ResultActions actions) throws Exception {
-		actions.andExpect(status().isOk())
+	protected ResultActions doGET(String url) throws Exception {
+		return this.mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON));
+	}
+	
+	protected ResultActions verifySuccess(ResultActions actions) throws Exception {
+		return actions.andExpect(status().isOk())
 		  	   .andExpect(jsonPath("$.code").value("20000"))
 		  	   .andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
 		  	   .andExpect(jsonPath("$.messageEn").value("Success"))

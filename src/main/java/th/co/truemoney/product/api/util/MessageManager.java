@@ -41,6 +41,14 @@ public class MessageManager implements MessageSourceAware {
 		return getMessage("msg." + namespace + "." + code, params, EN);
 	}
 	
+	public String getMessageEn(String key) {
+		return messageSource.getMessage(key, null, EN);
+	}
+	
+	public String getMessageTh(String key) {
+		return messageSource.getMessage(key, null, TH);
+	}
+	
 	private String getMessage(String key, Object[] params, Locale loc) {
 		try {
 			return messageSource.getMessage(key, params, loc);

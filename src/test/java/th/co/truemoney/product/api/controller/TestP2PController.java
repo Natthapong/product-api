@@ -66,7 +66,7 @@ public class TestP2PController extends BaseTestController {
 
 		this.verifyFailed(this.doPOST(transferMoneyURL, data))
 				.andExpect(jsonPath("$.code").value(""))
-				.andExpect(jsonPath("$.messageEn").value(""))
+				.andExpect(jsonPath("$.messageEn").value("Unknown Message"))
 				.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
 				.andExpect(jsonPath("$.messageTh").value(containsString("")));
 		;

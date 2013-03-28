@@ -1,5 +1,6 @@
 package th.co.truemoney.product.api.controller;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.reset;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -20,7 +21,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import th.co.truemoney.product.api.config.TestWebConfig;
-import th.co.truemoney.serviceinventory.ewallet.P2PTransferService;
 import th.co.truemoney.serviceinventory.ewallet.SourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
@@ -87,8 +87,8 @@ public class BaseTestController {
 	
 	protected void verifyBadRequest(ResultActions actions) throws Exception {
 		actions.andExpect(status().isBadRequest())
-		  	   .andExpect(jsonPath("$.code").exists())
-		  	   .andExpect(jsonPath("$.namespace").exists())
+		  	   .andExpect(jsonPath("$.code").value(containsString("5000")))
+		  	   .andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
 		  	   .andExpect(jsonPath("$.messageEn").exists())
 		  	   .andExpect(jsonPath("$.messageTh").exists()); //TODO check the exact message sent out
 	}

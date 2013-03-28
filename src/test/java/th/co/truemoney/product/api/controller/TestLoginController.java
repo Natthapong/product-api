@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.math.BigDecimal;
 
 import org.junit.Test;
-import org.junit.internal.matchers.StringContains;
 
 import th.co.truemoney.product.api.domain.LoginBean;
 import th.co.truemoney.serviceinventory.ewallet.domain.Login;
@@ -18,7 +17,7 @@ import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 public class TestLoginController extends BaseTestController {
 	
 	@Test
-	public void loginInputValidationFailed() throws Exception {
+	public void loginSuccess() throws Exception {
 		when(
 			this.profileServiceMock.login(
 				any(Integer.class),
@@ -38,7 +37,7 @@ public class TestLoginController extends BaseTestController {
 	}
 
 	@Test
-	public void loginSuccess() throws Exception {
+	public void loginInputValidationFailed() throws Exception {
 		when(
 			this.profileServiceMock.login(
 				any(Integer.class),

@@ -26,8 +26,6 @@ public class UserActionController extends BaseController {
 	@Autowired
 	TmnProfileService profileService;
 
-	private static final int MOBILE_APP_CHANNEL_ID = 40;
-
 	public void setProfileService(TmnProfileService profileService) {
 		this.profileService = profileService;
 	}

@@ -29,8 +29,6 @@ public class RegisterController extends BaseController {
 	@Autowired
 	UserActionController userActionController;
 	
-	private static final int MOBILE_APP_CHANNEL_ID = 40;
-
 	@RequestMapping(value = "/profiles/validate-email", method = RequestMethod.POST)
 	@ResponseBody
 	public ProductResponse validateEmail(

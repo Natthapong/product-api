@@ -17,6 +17,8 @@ public class BaseController {
 	@Autowired
 	ProductResponseFactory responseFactory;
 	
+	public static final int MOBILE_APP_CHANNEL_ID = 40;
+	
 	@ExceptionHandler(InvalidParameterException.class)
 	public @ResponseBody
 	ProductResponse handleInvalidParameterExceptions(

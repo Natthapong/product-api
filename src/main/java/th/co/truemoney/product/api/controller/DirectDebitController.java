@@ -137,7 +137,7 @@ public class DirectDebitController extends BaseController {
 
 	/**
 	 * Confirm transaction
-	 * confirmPlaceOrder(String topUpOrderId, OTP otp, String accessToken
+	 * confirmPlaceOrder(String quoteID, OTP otp, String accessToken
 	 * return TopUpOrder;
 	 */
 	@RequestMapping(value = "/directdebit/order/confirm/{accessToken}", method = RequestMethod.PUT)
@@ -162,10 +162,10 @@ public class DirectDebitController extends BaseController {
 	@RequestMapping(value = "/directdebit/order/{quoteID}/status/{accessToken}", method = RequestMethod.GET)
 	public
 	@ResponseBody ProductResponse getDirectDebitTopupStatus(
-			@PathVariable String topupOrderID,
+			@PathVariable String quoteID,
 			@PathVariable String accessToken) {
 
-		TopUpOrderStatus status = this.topupService.getTopUpProcessingStatus(topupOrderID, accessToken);
+		TopUpOrderStatus status = this.topupService.getTopUpProcessingStatus(quoteID, accessToken);
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("topupStatus", status.getTopUpStatus());
 
@@ -178,10 +178,10 @@ public class DirectDebitController extends BaseController {
 	@RequestMapping(value = "/directdebit/order/{quoteID}/details/{accessToken}", method = RequestMethod.GET)
 	public
 	@ResponseBody ProductResponse getDirectDebitTopupDetails(
-			@PathVariable String topupOrderID,
+			@PathVariable String quoteID,
 			@PathVariable String accessToken) {
 
-		TopUpOrder order = this.topupService.getTopUpOrderResults(topupOrderID, accessToken);
+		TopUpOrder order = this.topupService.getTopUpOrderResults(quoteID, accessToken);
 		BigDecimal balance = this.profileService.getEwalletBalance(accessToken);
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("transactionID", order.getConfirmationInfo().getTransactionID());

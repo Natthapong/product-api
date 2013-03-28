@@ -47,6 +47,8 @@ public class P2PController extends BaseController {
 		data.put("mobileNumber", transaction.getMobileNumber());
 		data.put("recipientName", transaction.getFullname());
 		data.put("amount", transaction.getAmount());
+		data.put("draftTransactionID", transaction.getID());
+		
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
@@ -60,6 +62,7 @@ public class P2PController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("otpRefCode", transaction.getOtpReferenceCode());
 		data.put("amount", transaction.getAmount());
+		data.put("draftTransactionID", transaction.getID());
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
@@ -75,6 +78,7 @@ public class P2PController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("otpRefCode", transaction.getOtpReferenceCode());
 		data.put("amount", transaction.getAmount());
+		data.put("transactionID", transaction.getID());
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
@@ -86,7 +90,7 @@ public class P2PController extends BaseController {
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("transferStatus", status.getP2pTransferStatus());
-
+		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	

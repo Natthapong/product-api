@@ -81,7 +81,7 @@ public class BaseTestController {
 	
 	protected ResultActions doPUT(String url) throws Exception {
 		return this.mockMvc.perform(
-				post(url).contentType(MediaType.APPLICATION_JSON));
+				put(url).contentType(MediaType.APPLICATION_JSON));
 	}
 	
 	protected ResultActions verifySuccess(ResultActions actions) throws Exception {

@@ -57,10 +57,11 @@ public class P2PController extends BaseController {
 	@ResponseBody
 	public ProductResponse verifyTransfer(@PathVariable String draftTransactionID, @PathVariable String accessToken)throws ServiceInventoryException {
 		
-		P2PDraftTransaction transaction = p2pTransferService.sendOTP(draftTransactionID, accessToken);
+		OTP otp = p2pTransferService.sendOTP(draftTransactionID, accessToken);
+		P2PDraftTransaction transaction = p2pTransferService.getDraftTransactionDetails(draftTransactionID, accessToken);
 
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("otpRefCode", transaction.getOtpReferenceCode());
+		data.put("otpRefCode", otp.getReferenceCode());
 		data.put("amount", transaction.getAmount());
 		data.put("draftTransactionID", transaction.getID());
 
@@ -73,12 +74,11 @@ public class P2PController extends BaseController {
 		OTP otp = new OTP();
 		otp.setOtpString(request.get("otpString"));
 		otp.setMobileNumber(request.get("mobileNumber"));
-		P2PTransaction transaction = p2pTransferService.createTransaction(draftTransactionID, otp, accessToken);
+		P2PTransactionStatus transaction = p2pTransferService.createTransaction(draftTransactionID, otp, accessToken);
 
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("otpRefCode", transaction.getOtpReferenceCode());
-		data.put("amount", transaction.getAmount());
-		data.put("transactionID", transaction.getID());
+		data.put("transferStatus", transaction.getP2pTransferStatus());
+		//data.put("transactionID", transaction.get);
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
@@ -97,7 +97,7 @@ public class P2PController extends BaseController {
 	@RequestMapping(value = "/transaction/{transactionID}/{accessToken}", method = RequestMethod.GET)
 	@ResponseBody
 	public ProductResponse getTransferDetail(@PathVariable String transactionID, @PathVariable String accessToken, @RequestBody Map<String, String> request)throws ServiceInventoryException {
-		P2PTransaction transaction = p2pTransferService.getTransactionDetail(transactionID, accessToken);
+		P2PTransaction transaction = p2pTransferService.getTransactionResult(transactionID, accessToken);
 
 		P2PTransactionConfirmationInfo info = transaction.getConfirmationInfo();
 	

@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import th.co.truemoney.product.api.config.TestWebConfig;
+import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.ewallet.domain.P2PDraftRequest;
 import th.co.truemoney.serviceinventory.ewallet.domain.P2PDraftTransaction;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
@@ -75,6 +76,11 @@ public class TestP2PController extends BaseTestController {
 	
 	@Test
 	public void verifyTransferSuccess() throws Exception {
+		OTP otp = new OTP();
+		otp.setOtpString("123456");
+		otp.setMobileNumber("0899999999");
+		otp.setReferenceCode("qwer");
+		
 		P2PDraftTransaction draftTransaction = new P2PDraftTransaction();
 		draftTransaction.setAccessTokenID(fakeAccessToken);
 		draftTransaction.setAmount(new BigDecimal(100.00));
@@ -85,16 +91,32 @@ public class TestP2PController extends BaseTestController {
 
 		when(
 				p2pTransferServiceMock.sendOTP(any(String.class), any(String.class)))
-				.thenReturn(draftTransaction);
-
+				.thenReturn(otp);
+		
+		when(
+				p2pTransferServiceMock.getDraftTransactionDetails(any(String.class), 
+						any(String.class))).thenReturn(draftTransaction);
+		
 		this.verifySuccess(this.doPUT(verifyTransferURL));
 	}
 
 	@Test
 	public void verifyTransferFail() throws Exception {
+		P2PDraftTransaction draftTransaction = new P2PDraftTransaction();
+		draftTransaction.setAccessTokenID(fakeAccessToken);
+		draftTransaction.setAmount(new BigDecimal(100.00));
+		draftTransaction.setFullname("Apinya Ukachoke");
+		draftTransaction.setID("11111");
+		draftTransaction.setMobileNumber("0899999999");
+		draftTransaction.setOtpReferenceCode("qwer");
+		
 		when(
 				p2pTransferServiceMock.sendOTP(any(String.class), any(String.class)))
 				.thenThrow(new ServiceInventoryException("", "", "TMN-PRODUCT"));
+		
+		when(
+				p2pTransferServiceMock.getDraftTransactionDetails(any(String.class), 
+						any(String.class))).thenReturn(draftTransaction);
 
 		this.verifyFailed(this.doPUT(verifyTransferURL))
 				.andExpect(jsonPath("$.code").value(""))

@@ -64,14 +64,14 @@ public class RegisterController extends BaseController {
 		TmnProfile tmnProfile = new TmnProfile();
 		tmnProfile.setEmail(email);
 		tmnProfile.setFullname(request.get("fullname"));
-		tmnProfile.setMobileno(request.get("mobileNumber"));
+		tmnProfile.setMobileNumber(request.get("mobileNumber"));
 		tmnProfile.setPassword(request.get("password"));
 
 		OTP returnData = profileService.createProfile(MOBILE_APP_CHANNEL_ID, tmnProfile);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("otpRefCode", returnData.getReferenceCode());
-		data.put("mobileNumber", returnData.getMobileNo());
+		data.put("mobileNumber", returnData.getMobileNumber());
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
@@ -84,7 +84,7 @@ public class RegisterController extends BaseController {
 
 		OTP otp = new OTP();
 		otp.setOtpString(request.get("otpString"));
-		otp.setMobileNo(request.get("mobileNumber"));
+		otp.setMobileNumber(request.get("mobileNumber"));
 
 		TmnProfile returnData = profileService.confirmCreateProfile(MOBILE_APP_CHANNEL_ID, otp);
 		LoginBean login = new LoginBean(returnData.getEmail(),returnData.getPassword(),"email");

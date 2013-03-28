@@ -46,8 +46,8 @@ public class BaseTestController {
 	@Autowired
 	protected TmnProfileService profileServiceMock;
 	
-	//@Autowired
-	//protected P2PTransferService p2pTransferServiceMock; 
+	@Autowired
+	protected P2PTransferService p2pTransferServiceMock; 
 
 	@Before
 	public void setup() {
@@ -55,7 +55,7 @@ public class BaseTestController {
 		this.sourceOfFundServiceMock = wac.getBean(SourceOfFundService.class);
 		this.topupServiceMock = wac.getBean(TopUpService.class);
 		this.profileServiceMock = wac.getBean(TmnProfileService.class);
-		//this.p2pTransferServiceMock = wac.getBean(P2PTransferService.class);
+		this.p2pTransferServiceMock = wac.getBean(P2PTransferService.class);
 		
 	}
 	

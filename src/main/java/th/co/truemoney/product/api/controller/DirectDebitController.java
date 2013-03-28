@@ -26,11 +26,11 @@ import th.co.truemoney.serviceinventory.ewallet.DirectDebitSourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
 import th.co.truemoney.serviceinventory.ewallet.domain.DirectDebit;
+import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpOrder;
-import th.co.truemoney.serviceinventory.ewallet.domain.TopUpQuote;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpOrderStatus;
-import th.co.truemoney.serviceinventory.ewallet.domain.TopUpQuoteStatus;
+import th.co.truemoney.serviceinventory.ewallet.domain.TopUpQuote;
 
 @Controller
 public class DirectDebitController extends BaseController {
@@ -149,7 +149,7 @@ public class DirectDebitController extends BaseController {
 		otp.setReferenceCode(request.getOtpRefCode());
 		otp.setOtpString(request.getOtpString());
 
-		TopUpQuoteStatus quoteStatus = this.topupService.confirmOTP(request.getTopupOrderID(), otp, accessToken);
+		DraftTransaction.Status quoteStatus = this.topupService.confirmOTP(request.getTopupOrderID(), otp, accessToken);
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("topupStatus", quoteStatus.getStatus());
 

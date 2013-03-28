@@ -1,7 +1,8 @@
 package th.co.truemoney.product.api.controller;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -15,20 +16,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 
 import th.co.truemoney.product.api.domain.TopupDirectDebitRequest;
 import th.co.truemoney.product.api.domain.TopupQuotableRequest;
 import th.co.truemoney.serviceinventory.ewallet.domain.DirectDebit;
+import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpConfirmationInfo;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpOrder;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpOrderStatus;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpQuote;
-import th.co.truemoney.serviceinventory.ewallet.domain.TopUpQuoteStatus;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class TestDirectDebitController extends BaseTestController {
 
@@ -370,7 +372,7 @@ public class TestDirectDebitController extends BaseTestController {
 
 		when(
 				this.topupServiceMock.confirmOTP(any(String.class),
-						any(OTP.class), any(String.class))).thenReturn(TopUpQuoteStatus.OTP_CONFIRMED);
+						any(OTP.class), any(String.class))).thenReturn(DraftTransaction.Status.OTP_CONFIRMED);
 
 		this.mockMvc
 				.perform(
@@ -471,7 +473,7 @@ public class TestDirectDebitController extends BaseTestController {
 		confirmationInfo.setTransactionID("10101010");
 
 		TopUpQuote quote = new TopUpQuote();
-		quote.setStatus(TopUpQuoteStatus.OTP_CONFIRMED);
+		quote.setStatus(DraftTransaction.Status.OTP_CONFIRMED);
 		quote.setAccessTokenID(fakeAccessToken);
 		quote.setAmount(new BigDecimal(100.00));
 		quote.setID("1111");

@@ -27,7 +27,7 @@ import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 @RequestMapping(value = "/transfer")
 public class P2PController extends BaseController {
 
-	//@Autowired
+	@Autowired
 	private P2PTransferService p2pTransferService;
 	
 	@Autowired

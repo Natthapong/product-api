@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.math.BigDecimal;
 
 import org.junit.Test;
-import org.junit.internal.matchers.StringContains;
 
 import th.co.truemoney.product.api.domain.LoginBean;
 import th.co.truemoney.serviceinventory.ewallet.domain.Login;

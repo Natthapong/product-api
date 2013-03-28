@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -29,6 +28,8 @@ public class TestP2PController extends BaseTestController {
 	String fakeAccessToken = "111111111111";
 	String transferMoneyURL = String.format("/transfer/draft-transaction/%s",
 			fakeAccessToken);
+	String verifyTransferURL = String.format("/transfer/draft-transaction/%s/%s",
+			"1111111111111", fakeAccessToken);
 
 	@Test
 	public void createDraftTransactionSuccess() throws Exception {
@@ -71,4 +72,36 @@ public class TestP2PController extends BaseTestController {
 				.andExpect(jsonPath("$.messageTh").value(containsString("")));
 		;
 	}
+	
+	@Test
+	public void verifyTransferSuccess() throws Exception {
+		P2PDraftTransaction draftTransaction = new P2PDraftTransaction();
+		draftTransaction.setAccessTokenID(fakeAccessToken);
+		draftTransaction.setAmount(new BigDecimal(100.00));
+		draftTransaction.setFullname("Apinya Ukachoke");
+		draftTransaction.setID("11111");
+		draftTransaction.setMobileNumber("0899999999");
+		draftTransaction.setOtpReferenceCode("qwer");
+
+		when(
+				p2pTransferServiceMock.sendOTP(any(String.class), any(String.class)))
+				.thenReturn(draftTransaction);
+
+		this.verifySuccess(this.doPUT(verifyTransferURL));
+	}
+
+	@Test
+	public void verifyTransferFail() throws Exception {
+		when(
+				p2pTransferServiceMock.sendOTP(any(String.class), any(String.class)))
+				.thenThrow(new ServiceInventoryException("", "", "TMN-PRODUCT"));
+
+		this.verifyFailed(this.doPUT(verifyTransferURL))
+				.andExpect(jsonPath("$.code").value(""))
+				.andExpect(jsonPath("$.messageEn").value("Unknown Message"))
+				.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
+				.andExpect(jsonPath("$.messageTh").value(containsString("")));
+		;
+	}
+	
 }

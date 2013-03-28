@@ -41,7 +41,8 @@ public class P2PController extends BaseController {
 		p2pDraftRequest.setAmount(new BigDecimal(request.get("amount").replace(",", "")));
 		p2pDraftRequest.setMobileNumber(request.get("mobileNumber"));
 
-		P2PDraftTransaction transaction = p2pTransferService.createDraftTransaction(p2pDraftRequest, accessToken);
+		P2PDraftTransaction transaction = p2pTransferService.createDraftTransaction
+				(p2pDraftRequest, accessToken);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("mobileNumber", transaction.getMobileNumber());
@@ -78,7 +79,7 @@ public class P2PController extends BaseController {
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("transferStatus", transaction.getP2pTransferStatus());
-		//data.put("transactionID", transaction.get);
+		data.put("transactionID", draftTransactionID);
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}

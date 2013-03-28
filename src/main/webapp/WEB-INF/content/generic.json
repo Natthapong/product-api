@@ -37,8 +37,15 @@
 
 "register.prepare.url" : "https://secure.truemoney-dev.com/api/v1/ewallet/profiles?",
 
-"register.cofirm.url" : "https://secure.truemoney-dev.com/api/v1/ewallet/profiles/verify-otp?"
+"register.cofirm.url" : "https://secure.truemoney-dev.com/api/v1/ewallet/profiles/verify-otp?",
 
+"ewallet.p2p.transfer.url" : "https://secure.truemoney-dev.com/api/v1/transfer/draft-transaction/%@?",
 
+"ewallet.p2p.verify.url" : "https://secure.truemoney-dev.com/api/v1/transfer/draft-transaction/%@/send-otp/%@?",
 
+"ewallet.p2p.confirm.otp.url" : "https://secure.truemoney-dev.com/api/v1/transfer/transaction/%@/%@?",
+
+"ewallet.p2p.checkstatus.url" : "https://secure.truemoney-dev.com/api/v1/transfer/transaction/%@/status/%@?",
+
+"ewallet.p2p.transfer.detail.url" : "https://secure.truemoney-dev.com/api/v1/transfer/transaction/%@/%@?"
 }

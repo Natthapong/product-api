@@ -28,7 +28,7 @@ public class RegisterController extends BaseController {
 
 	@Autowired
 	UserActionController userActionController;
-	
+
 	@RequestMapping(value = "/profiles/validate-email", method = RequestMethod.POST)
 	@ResponseBody
 	public ProductResponse validateEmail(
@@ -39,8 +39,19 @@ public class RegisterController extends BaseController {
 		if (!ValidateUtil.checkEmail(email)) {
 			throw new InvalidParameterException("40000");
 		}
-
-		String returnData = profileService.validateEmail(MOBILE_APP_CHANNEL_ID, email);
+		String returnData = "";
+		try {
+			returnData = profileService.validateEmail(MOBILE_APP_CHANNEL_ID,
+					email);
+		} catch (ServiceInventoryException e) {
+			String errorcode = String.format("%s.%s", e.getErrorNamespace(),
+					e.getErrorCode());
+			if (errorcode.equals("umarket.18")) {
+				throw new ServiceInventoryException("10000",
+						"Email is already in used.", "TMN-PRODUCT");
+			}
+			throw e;
+		}
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("email", returnData);
@@ -65,7 +76,20 @@ public class RegisterController extends BaseController {
 		tmnProfile.setMobileNumber(request.get("mobileNumber"));
 		tmnProfile.setPassword(request.get("password"));
 
-		OTP returnData = profileService.createProfile(MOBILE_APP_CHANNEL_ID, tmnProfile);
+		OTP returnData = new OTP();
+
+		try {
+			returnData = profileService.createProfile(MOBILE_APP_CHANNEL_ID,
+					tmnProfile);
+		} catch (ServiceInventoryException e) {
+			String errorcode = String.format("%s.%s", e.getErrorNamespace(),
+					e.getErrorCode());
+			if (errorcode.equals("umarket.18")) {
+				throw new ServiceInventoryException("10001",
+						"Mobile number is already in used.", "TMN-PRODUCT");
+			}
+			throw e;
+		}
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("otpRefCode", returnData.getReferenceCode());
@@ -84,12 +108,15 @@ public class RegisterController extends BaseController {
 		otp.setOtpString(request.get("otpString"));
 		otp.setMobileNumber(request.get("mobileNumber"));
 
-		TmnProfile returnData = profileService.confirmCreateProfile(MOBILE_APP_CHANNEL_ID, otp);
-		LoginBean login = new LoginBean(returnData.getEmail(),returnData.getPassword(),"email");
+		TmnProfile returnData = profileService.confirmCreateProfile(
+				MOBILE_APP_CHANNEL_ID, otp);
+		LoginBean login = new LoginBean(returnData.getEmail(),
+				returnData.getPassword(), "email");
 
 		ProductResponse response = userActionController.signin(login);
 
-		return this.responseFactory.createSuccessProductResonse(response.getData());
+		return this.responseFactory.createSuccessProductResonse(response
+				.getData());
 	}
 
 }

@@ -36,10 +36,10 @@ public class UserActionController extends BaseController {
 			throws ServiceInventoryException {
 
 		// validate
-		validateSignin(request.getUsername(), request.getPassword(),
-				request.getType());
+		validateSignin(request.getUsername().trim(), request.getPassword().trim(),
+				request.getType().trim());
 
-		Login login = new Login(request.getUsername(), request.getPassword());
+		Login login = new Login(request.getUsername().trim(), request.getPassword().trim());
 		String token = "";
 		try {
 			token = profileService.login(MOBILE_APP_CHANNEL_ID, login);

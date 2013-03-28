@@ -1,7 +1,7 @@
 package th.co.truemoney.product.api.controller;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -71,11 +71,9 @@ public class TestDirectDebitController extends BaseTestController {
 		returnedDirectDebitList.add(scb);
 
 		when(
-			this.sourceOfFundServiceMock.getUserDirectDebitSources(
-				any(String.class),
-				any(String.class))
+			this.sourceOfFundServiceMock.getUserDirectDebitSources(anyString(), anyString())
 		).thenReturn(returnedDirectDebitList);
-		
+
 		this.verifySuccess(
 			this.doGET(getBankURL)
 		).andExpect(jsonPath("$.data").exists()
@@ -89,8 +87,7 @@ public class TestDirectDebitController extends BaseTestController {
 		String failedMessage = "AccessToken is expired";
 		String failedNamespace = "TMN-SERVICE-INVENTORY";
 		when(
-				this.sourceOfFundServiceMock.getUserDirectDebitSources(
-						any(String.class), any(String.class))).thenThrow(
+				this.sourceOfFundServiceMock.getUserDirectDebitSources(anyString(), anyString())).thenThrow(
 				new ServiceInventoryException(failedCode, failedMessage,
 						failedNamespace));
 
@@ -109,8 +106,7 @@ public class TestDirectDebitController extends BaseTestController {
 		String failedMessage = "Username is invalid format";
 		String failedNamespace = "TMN-PRODUCT";
 		when(
-				this.sourceOfFundServiceMock.getUserDirectDebitSources(
-						any(String.class), any(String.class))).thenThrow(
+				this.sourceOfFundServiceMock.getUserDirectDebitSources(anyString(), anyString())).thenThrow(
 				new ServiceInventoryException(failedCode, failedMessage,
 						failedNamespace));
 

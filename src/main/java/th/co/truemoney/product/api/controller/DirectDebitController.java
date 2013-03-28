@@ -22,7 +22,7 @@ import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.domain.TopupDirectDebitRequest;
 import th.co.truemoney.product.api.domain.TopupOrderConfirmRequest;
 import th.co.truemoney.product.api.domain.TopupQuotableRequest;
-import th.co.truemoney.serviceinventory.ewallet.SourceOfFundService;
+import th.co.truemoney.serviceinventory.ewallet.DirectDebitSourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
 import th.co.truemoney.serviceinventory.ewallet.domain.DirectDebit;
@@ -36,7 +36,7 @@ import th.co.truemoney.serviceinventory.ewallet.domain.TopUpQuoteStatus;
 public class DirectDebitController extends BaseController {
 
 	@Autowired
-	SourceOfFundService sourceOfFundService;
+	DirectDebitSourceOfFundService sourceOfFundService;
 
 	@Autowired
 	TopUpService topupService;

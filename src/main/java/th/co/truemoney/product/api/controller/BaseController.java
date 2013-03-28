@@ -26,9 +26,9 @@ public class BaseController {
 		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		return responseFactory.createErrorProductResponse(
 				new ServiceInventoryException(
-						exception.getMessage(), 
-						ProductResponseFactory.PRODUCT_NAMESPACE,
-						""));
+						exception.getMessage(),
+						"",
+						ProductResponseFactory.PRODUCT_NAMESPACE));
 	}
 	
 	@ExceptionHandler(ServiceInventoryException.class)

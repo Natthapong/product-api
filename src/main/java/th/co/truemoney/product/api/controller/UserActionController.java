@@ -65,7 +65,7 @@ public class UserActionController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("fullname", profile.getFullname());
 		data.put("currentBalance", profile.getBalance());
-		data.put("mobileNumber", profile.getMobileno());
+		data.put("mobileNumber", profile.getMobileNumber());
 		data.put("email", profile.getEmail());
 		data.put("accessToken", token);
 

@@ -124,7 +124,7 @@ public class TestRegisterController {
 		tmnProfile.put("fullname","Apinya Ukachoke");
 		
 		OTP otp = new OTP();
-		otp.setMobileNo("0899999999");
+		otp.setMobileNumber("0899999999");
 		otp.setOtpString("123456");
 		otp.setReferenceCode("wert");
 
@@ -180,7 +180,7 @@ public class TestRegisterController {
 		TmnProfile profileMock = new TmnProfile();
 		profileMock.setEmail("apinya@gmail.com");
 		profileMock.setFullname("Apinya Ukachoke");
-		profileMock.setMobileno("0899999999");
+		profileMock.setMobileNumber("0899999999");
 		profileMock.setPassword("werw2345");
 		profileMock.setBalance(new BigDecimal(0.00));
 		profileMock.setStatus(0);
@@ -234,7 +234,7 @@ public class TestRegisterController {
 		TmnProfile profileMock = new TmnProfile();
 		profileMock.setEmail("apinya@gmail.com");
 		profileMock.setFullname("Apinya Ukachoke");
-		profileMock.setMobileno("0899999999");
+		profileMock.setMobileNumber("0899999999");
 		profileMock.setPassword("werw2345");
 
 		when(
@@ -275,7 +275,7 @@ public class TestRegisterController {
 		TmnProfile profileMock = new TmnProfile();
 		profileMock.setEmail("apinya@gmail.com");
 		profileMock.setFullname("Apinya Ukachoke");
-		profileMock.setMobileno("0899999999");
+		profileMock.setMobileNumber("0899999999");
 		profileMock.setPassword("werw2345");
 
 		when(

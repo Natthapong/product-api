@@ -39,12 +39,12 @@ public class P2PController extends BaseController {
 			@RequestBody Map<String, String> request)throws ServiceInventoryException {
 		P2PDraftRequest p2pDraftRequest = new P2PDraftRequest();
 		p2pDraftRequest.setAmount(new BigDecimal(request.get("amount").replace(",", "")));
-		p2pDraftRequest.setMobileno(request.get("mobileNumber"));
+		p2pDraftRequest.setMobileNumber(request.get("mobileNumber"));
 
 		P2PDraftTransaction transaction = p2pTransferService.createDraftTransaction(p2pDraftRequest, accessToken);
 
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("mobileNumber", transaction.getMobileno());
+		data.put("mobileNumber", transaction.getMobileNumber());
 		data.put("recipientName", transaction.getFullname());
 		data.put("amount", transaction.getAmount());
 
@@ -69,7 +69,7 @@ public class P2PController extends BaseController {
 	public ProductResponse confirmTransferOTP(@PathVariable String draftTransactionID, @PathVariable String accessToken, @RequestBody Map<String, String> request)throws ServiceInventoryException {
 		OTP otp = new OTP();
 		otp.setOtpString(request.get("otpString"));
-		otp.setMobileNo(request.get("mobileNumber"));
+		otp.setMobileNumber(request.get("mobileNumber"));
 		P2PTransaction transaction = p2pTransferService.createTransaction(draftTransactionID, otp, accessToken);
 
 		Map<String, Object> data = new HashMap<String, Object>();
@@ -100,7 +100,7 @@ public class P2PController extends BaseController {
 		BigDecimal balance = this.profileService.getEwalletBalance(accessToken);
 		
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("mobileNumber", transaction.getMobileno());
+		data.put("mobileNumber", transaction.getMobileNumber());
 		data.put("amount", transaction.getAmount());
 		data.put("recipientName", transaction.getFullname());
 		data.put("transactionID", info.getTransactionDate());

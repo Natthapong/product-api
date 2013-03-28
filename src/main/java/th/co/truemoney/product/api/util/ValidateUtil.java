@@ -9,11 +9,11 @@ public class ValidateUtil {
 			.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 					+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 
-	public static boolean checkMobileNumber(String mobileNo) {
-		if (isEmpty(mobileNo)) {
+	public static boolean checkMobileNumber(String mobileNumber) {
+		if (isEmpty(mobileNumber)) {
 			return false;
 		} else {
-			return MOBILE_PATTERN.matcher(mobileNo).matches();
+			return MOBILE_PATTERN.matcher(mobileNumber).matches();
 		}
 	}
 

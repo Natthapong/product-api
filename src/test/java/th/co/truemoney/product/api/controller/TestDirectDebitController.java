@@ -305,7 +305,7 @@ public class TestDirectDebitController extends BaseTestController {
 		confirmationInfo.setTransactionID("10101010");
 
 		OTP otp = new OTP();
-		otp.setMobileNo("0861234567");
+		otp.setMobileNumber("0861234567");
 		otp.setReferenceCode("abcd");
 		otp.setOtpString("xxxxxx");
 

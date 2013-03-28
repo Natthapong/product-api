@@ -16,7 +16,6 @@ import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.serviceinventory.ewallet.P2PTransferService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
-import th.co.truemoney.serviceinventory.ewallet.domain.P2PDraftRequest;
 import th.co.truemoney.serviceinventory.ewallet.domain.P2PDraftTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.P2PTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.P2PTransactionConfirmationInfo;
@@ -29,34 +28,34 @@ public class P2PController extends BaseController {
 
 	@Autowired
 	private P2PTransferService p2pTransferService;
-	
+
 	@Autowired
 	private TmnProfileService profileService;
-	
+
 	@RequestMapping(value = "/draft-transaction/{accessToken}", method = RequestMethod.POST)
 	@ResponseBody
-	public ProductResponse createDraftTransaction(@PathVariable String accessToken, 
+	public ProductResponse createDraftTransaction(@PathVariable String accessToken,
 			@RequestBody Map<String, String> request)throws ServiceInventoryException {
-		P2PDraftRequest p2pDraftRequest = new P2PDraftRequest();
-		p2pDraftRequest.setAmount(new BigDecimal(request.get("amount").replace(",", "")));
-		p2pDraftRequest.setMobileNumber(request.get("mobileNumber"));
 
-		P2PDraftTransaction transaction = p2pTransferService.createDraftTransaction(p2pDraftRequest, accessToken);
+		BigDecimal amount = new BigDecimal(request.get("amount").replace(",", ""));
+		String mobileNumber = request.get("mobileNumber");
+
+		P2PDraftTransaction transaction = p2pTransferService.createDraftTransaction(mobileNumber, amount, accessToken);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("mobileNumber", transaction.getMobileNumber());
 		data.put("recipientName", transaction.getFullname());
 		data.put("amount", transaction.getAmount());
 		data.put("draftTransactionID", transaction.getID());
-		
+
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
-	
+
 	@RequestMapping(value = "/draft-transaction/{draftTransactionID}/{accessToken}", method = RequestMethod.PUT)
 	@ResponseBody
 	public ProductResponse verifyTransfer(@PathVariable String draftTransactionID, @PathVariable String accessToken)throws ServiceInventoryException {
-		
+
 		OTP otp = p2pTransferService.sendOTP(draftTransactionID, accessToken);
 		P2PDraftTransaction transaction = p2pTransferService.getDraftTransactionDetails(draftTransactionID, accessToken);
 
@@ -67,7 +66,7 @@ public class P2PController extends BaseController {
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
-	
+
 	@RequestMapping(value = "/transaction/{draftTransactionID}/{accessToken}", method = RequestMethod.POST)
 	@ResponseBody
 	public ProductResponse confirmTransferOTP(@PathVariable String draftTransactionID, @PathVariable String accessToken, @RequestBody Map<String, String> request)throws ServiceInventoryException {
@@ -82,7 +81,7 @@ public class P2PController extends BaseController {
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
-	
+
 	@RequestMapping(value = "/transaction/{transactionID}/status/{accessToken}", method = RequestMethod.GET)
 	@ResponseBody
 	public ProductResponse checkStatus(@PathVariable String transactionID, @PathVariable String accessToken)throws ServiceInventoryException {
@@ -90,19 +89,19 @@ public class P2PController extends BaseController {
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("transferStatus", status.getP2pTransferStatus());
-		
+
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
-	
+
 	@RequestMapping(value = "/transaction/{transactionID}/{accessToken}", method = RequestMethod.GET)
 	@ResponseBody
 	public ProductResponse getTransferDetail(@PathVariable String transactionID, @PathVariable String accessToken, @RequestBody Map<String, String> request)throws ServiceInventoryException {
 		P2PTransaction transaction = p2pTransferService.getTransactionResult(transactionID, accessToken);
 
 		P2PTransactionConfirmationInfo info = transaction.getConfirmationInfo();
-	
+
 		BigDecimal balance = this.profileService.getEwalletBalance(accessToken);
-		
+
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("mobileNumber", transaction.getMobileNumber());
 		data.put("amount", transaction.getAmount());
@@ -113,5 +112,5 @@ public class P2PController extends BaseController {
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
-	
+
 }

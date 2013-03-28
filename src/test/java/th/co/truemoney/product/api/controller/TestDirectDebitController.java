@@ -327,7 +327,7 @@ public class TestDirectDebitController extends BaseTestController {
 				.andExpect(jsonPath("$.messageEn").exists())
 				.andExpect(jsonPath("$.messageTh").exists())
 				.andExpect(jsonPath("$.data").exists())
-				.andExpect(jsonPath("$..topupOrderID").exists())
+				.andExpect(jsonPath("$..quoteID").exists())
 				.andExpect(jsonPath("$..amount").exists())
 				.andExpect(jsonPath("$..otpRefCode").exists());
 	}

@@ -76,7 +76,7 @@ public class BaseTestController {
 	}
 	
 	protected ResultActions doGET(String url) throws Exception {
-		return this.mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON));
+		return this.mockMvc.perform(get(url).contentType(MediaType.APPLICATION_JSON));
 	}
 	
 	protected ResultActions doPUT(String url) throws Exception {

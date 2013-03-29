@@ -22,12 +22,11 @@ import org.springframework.http.MediaType;
 import th.co.truemoney.product.api.domain.TopupDirectDebitRequest;
 import th.co.truemoney.product.api.domain.TopupQuotableRequest;
 import th.co.truemoney.serviceinventory.ewallet.domain.DirectDebit;
-import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
+import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpConfirmationInfo;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpOrder;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpQuote;
-import th.co.truemoney.serviceinventory.ewallet.domain.Transaction;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -372,7 +371,7 @@ public class TestDirectDebitController extends BaseTestController {
 
 		when(
 				this.topupServiceMock.confirmOTP(any(String.class),
-						any(OTP.class), any(String.class))).thenReturn(DraftTransaction.Status.OTP_CONFIRMED);
+						any(OTP.class), any(String.class))).thenReturn(Status.OTP_CONFIRMED);
 
 		this.mockMvc
 				.perform(
@@ -420,7 +419,7 @@ public class TestDirectDebitController extends BaseTestController {
 	public void checkStatusSuccess() throws Exception {
 		when(
 				this.topupServiceMock.getTopUpProcessingStatus(any(String.class),
-						 any(String.class))).thenReturn(Transaction.Status.SUCCESS);
+						 any(String.class))).thenReturn(th.co.truemoney.serviceinventory.ewallet.domain.Transaction.Status.SUCCESS);
 
 		this.mockMvc
 				.perform(
@@ -473,7 +472,7 @@ public class TestDirectDebitController extends BaseTestController {
 		confirmationInfo.setTransactionID("10101010");
 
 		TopUpQuote quote = new TopUpQuote();
-		quote.setStatus(DraftTransaction.Status.OTP_CONFIRMED);
+		quote.setStatus(Status.OTP_CONFIRMED);
 		quote.setAccessTokenID(fakeAccessToken);
 		quote.setAmount(new BigDecimal(100.00));
 		quote.setID("1111");
@@ -484,7 +483,7 @@ public class TestDirectDebitController extends BaseTestController {
 		TopUpOrder order = new TopUpOrder(quote);
 
 		order.setConfirmationInfo(confirmationInfo);
-		order.setStatus(Transaction.Status.SUCCESS);
+		order.setStatus(th.co.truemoney.serviceinventory.ewallet.domain.Transaction.Status.SUCCESS);
 
 
 		when(

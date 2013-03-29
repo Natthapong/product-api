@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
+<%@ page language="java" contentType="application/json; charset=UTF-8" pageEncoding="UTF-8"%>
 {
 "p2p.amount.min":"10",
 
@@ -39,5 +39,15 @@
 
 "register.prepare.url" : "${apiHost}/api/v1/ewallet/profiles?",
 
-"register.cofirm.url" : "${apiHost}/api/v1/ewallet/profiles/verify-otp?"
+"register.confirm.url" : "${apiHost}/api/v1/ewallet/profiles/verify-otp?",
+
+"ewallet.p2p.transfer.url" : "https://secure.truemoney-dev.com/api/v1/transfer/draft-transaction/%@?",
+
+"ewallet.p2p.verify.url" : "https://secure.truemoney-dev.com/api/v1/transfer/draft-transaction/%@/send-otp/%@?",
+
+"ewallet.p2p.confirm.otp.url" : "https://secure.truemoney-dev.com/api/v1/transfer/transaction/%@/%@?",
+
+"ewallet.p2p.checkstatus.url" : "https://secure.truemoney-dev.com/api/v1/transfer/transaction/%@/status/%@?",
+
+"ewallet.p2p.transfer.detail.url" : "https://secure.truemoney-dev.com/api/v1/transfer/transaction/%@/%@?"
 }

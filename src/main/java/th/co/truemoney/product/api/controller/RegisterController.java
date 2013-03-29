@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import th.co.truemoney.product.api.domain.LoginBean;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
@@ -46,7 +45,7 @@ public class RegisterController extends BaseController {
 		} catch (ServiceInventoryException e) {
 			String errorcode = String.format("%s.%s", e.getErrorNamespace(),
 					e.getErrorCode());
-			if (errorcode.equals("umarket.18")) {
+			if (errorcode.equals("next.18")) {
 				throw new ServiceInventoryException("10000",
 						"Email is already in used.", "TMN-PRODUCT");
 			}
@@ -69,7 +68,7 @@ public class RegisterController extends BaseController {
 		if (!ValidateUtil.checkEmail(email)) {
 			throw new InvalidParameterException("40000");
 		}
-		if(!ValidateUtil.checkMobileNumber(request.get("mobileNumber"))){
+		if (!ValidateUtil.checkMobileNumber(request.get("mobileNumber"))) {
 			throw new InvalidParameterException("40001");
 		}
 
@@ -78,6 +77,7 @@ public class RegisterController extends BaseController {
 		tmnProfile.setFullname(request.get("fullname"));
 		tmnProfile.setMobileNumber(request.get("mobileNumber"));
 		tmnProfile.setPassword(request.get("password"));
+		tmnProfile.setThaiID(request.get("thaiID"));
 
 		OTP returnData = new OTP();
 
@@ -87,7 +87,7 @@ public class RegisterController extends BaseController {
 		} catch (ServiceInventoryException e) {
 			String errorcode = String.format("%s.%s", e.getErrorNamespace(),
 					e.getErrorCode());
-			if (errorcode.equals("umarket.18")) {
+			if (errorcode.equals("next.18")) {
 				throw new ServiceInventoryException("10001",
 						"Mobile number is already in used.", "TMN-PRODUCT");
 			}
@@ -109,17 +109,22 @@ public class RegisterController extends BaseController {
 
 		OTP otp = new OTP();
 		otp.setOtpString(request.get("otpString"));
+		otp.setReferenceCode(request.get("otpRefCode"));
 		otp.setMobileNumber(request.get("mobileNumber"));
 
-		TmnProfile returnData = profileService.confirmCreateProfile(
-				MOBILE_APP_CHANNEL_ID, otp);
-		LoginBean login = new LoginBean(returnData.getEmail(),
-				returnData.getPassword(), "email");
+		try {
+			profileService.confirmCreateProfile(MOBILE_APP_CHANNEL_ID, otp);
+		} catch (ServiceInventoryException e) {
+			String errorcode = String.format("%s.%s", e.getErrorNamespace(),
+					e.getErrorCode());
+			if (!errorcode.equals("next.18")) {
+				throw e;
+			}
 
-		ProductResponse response = userActionController.signin(login);
+		}
+		Map<String, Object> data = new HashMap<String, Object>();
 
-		return this.responseFactory.createSuccessProductResonse(response
-				.getData());
+		return this.responseFactory.createSuccessProductResonse(data);
 	}
 
 }

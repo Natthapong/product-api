@@ -189,8 +189,9 @@ public class TestRegisterController {
 
 		Map<String,String> mockData = new HashMap<String, String>();
 		mockData.put("mobileNumber", "0899999999");
-		mockData.put("otpString", "qwer");
-		mockData.put("checksum", "111111111111");
+		mockData.put("otpString", "111111");
+		mockData.put("otpRefCode", "qwer");
+		mockData.put("hashPassword", "111111111111");
 
 		when(
 				this.tmnProfileServiceMock.confirmCreateProfile(anyInt(), any(OTP.class)) )
@@ -212,11 +213,6 @@ public class TestRegisterController {
 					.andExpect(jsonPath("$.messageEn").exists())
 					.andExpect(jsonPath("$.messageTh").exists())
 					.andExpect(jsonPath("$.data").exists())
-					.andExpect(jsonPath("$..fullname").value("Apinya Ukachoke"))
-					.andExpect(jsonPath("$..email").value("apinya@gmail.com"))
-					.andExpect(jsonPath("$..currentBalance").exists())
-					.andExpect(jsonPath("$..accessToken").exists())
-					.andExpect(jsonPath("$..mobileNumber").value("0899999999"))
 					.andDo(print());
 	}
 
@@ -229,7 +225,9 @@ public class TestRegisterController {
 
 		Map<String,String> mockData = new HashMap<String, String>();
 		mockData.put("mobileNumber", "0899999999");
-		mockData.put("otpString", "qwer");
+		mockData.put("otpString", "111111");
+		mockData.put("otpRefCode", "qwer");
+		mockData.put("hashPassword", "111111111111");
 
 		TmnProfile profileMock = new TmnProfile();
 		profileMock.setEmail("apinya@gmail.com");
@@ -261,26 +259,30 @@ public class TestRegisterController {
 	}
 
 	@Test
-	public void confirmCreateProfileCannotLogin() throws Exception {
+	public void confirmCreateProfileOTPNotFound() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
-		String failedCode = "40000";
-		String failedMessage = "confirm umarket failed.";
-		String failedNamespace = "TMN-PRODUCT";
+		String failedCode = "1000";
+		String failedMessage = "send OTP failed.";
+		String failedNamespace = "TMN-SERVICE-INVENTORY";
 
 		Map<String,String> mockData = new HashMap<String, String>();
 		mockData.put("mobileNumber", "0899999999");
+		mockData.put("otpString", "123456");
 		mockData.put("otpString", "qwer");
-		mockData.put("checksum", "111111111111");
+		mockData.put("hashPassword", "1111111");
 
 		TmnProfile profileMock = new TmnProfile();
 		profileMock.setEmail("apinya@gmail.com");
 		profileMock.setFullname("Apinya Ukachoke");
 		profileMock.setMobileNumber("0899999999");
 		profileMock.setPassword("werw2345");
+		profileMock.setThaiID("1212121212121");
 
 		when(
 				this.tmnProfileServiceMock.confirmCreateProfile(anyInt(), any(OTP.class)) )
-			.thenReturn(profileMock);
+			.thenThrow(
+					new ServiceInventoryException(failedCode,
+							failedMessage, failedNamespace));
 
 		when(
 				this.tmnProfileServiceMock.login(any(Integer.class),
@@ -288,9 +290,52 @@ public class TestRegisterController {
 
 		when(
 				this.tmnProfileServiceMock.login(any(Integer.class),
-						any(Login.class))).thenThrow(
-				new ServiceInventoryException(failedCode,
-						failedMessage, failedNamespace));
+						any(Login.class))).thenReturn("");
+
+			this.mockMvc
+					.perform(post(confirmCreateProfileURL).content(mapper.writeValueAsBytes(mockData)).contentType(MediaType.APPLICATION_JSON))
+					.andExpect(status().isInternalServerError())
+					.andExpect(jsonPath("$.code").value(failedCode))
+					.andExpect(jsonPath("$.namespace").value(failedNamespace))
+					.andExpect(jsonPath("$.messageEn").exists())
+					.andExpect(jsonPath("$.messageTh").exists())
+					.andExpect(jsonPath("$.data").exists())
+					.andDo(print());
+	}
+	
+	@Test
+	public void confirmCreateProfileInvalidMobileFormat() throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		String failedCode = "1000";
+		String failedMessage = "send OTP failed.";
+		String failedNamespace = "TMN-SERVICE-INVENTORY";
+
+		Map<String,String> mockData = new HashMap<String, String>();
+		mockData.put("mobileNumber", "0899999999");
+		mockData.put("otpString", "123456");
+		mockData.put("otpString", "qwer");
+		mockData.put("hashPassword", "1111111");
+
+		TmnProfile profileMock = new TmnProfile();
+		profileMock.setEmail("apinya@gmail.com");
+		profileMock.setFullname("Apinya Ukachoke");
+		profileMock.setMobileNumber("0899999999");
+		profileMock.setPassword("werw2345");
+		profileMock.setThaiID("1212121212121");
+
+		when(
+				this.tmnProfileServiceMock.confirmCreateProfile(anyInt(), any(OTP.class)) )
+			.thenThrow(
+					new ServiceInventoryException(failedCode,
+							failedMessage, failedNamespace));
+
+		when(
+				this.tmnProfileServiceMock.login(any(Integer.class),
+						any(Login.class))).thenReturn("token-string");
+
+		when(
+				this.tmnProfileServiceMock.login(any(Integer.class),
+						any(Login.class))).thenReturn("");
 
 			this.mockMvc
 					.perform(post(confirmCreateProfileURL).content(mapper.writeValueAsBytes(mockData)).contentType(MediaType.APPLICATION_JSON))

@@ -22,21 +22,21 @@ import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.domain.TopupDirectDebitRequest;
 import th.co.truemoney.product.api.domain.TopupOrderConfirmRequest;
 import th.co.truemoney.product.api.domain.TopupQuotableRequest;
-import th.co.truemoney.serviceinventory.ewallet.SourceOfFundService;
+import th.co.truemoney.serviceinventory.ewallet.DirectDebitSourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
 import th.co.truemoney.serviceinventory.ewallet.domain.DirectDebit;
+import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpOrder;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpQuote;
-import th.co.truemoney.serviceinventory.ewallet.domain.TopUpOrderStatus;
-import th.co.truemoney.serviceinventory.ewallet.domain.TopUpQuoteStatus;
+import th.co.truemoney.serviceinventory.ewallet.domain.Transaction;
 
 @Controller
 public class DirectDebitController extends BaseController {
 
 	@Autowired
-	SourceOfFundService sourceOfFundService;
+	DirectDebitSourceOfFundService sourceOfFundService;
 
 	@Autowired
 	TopUpService topupService;
@@ -149,7 +149,7 @@ public class DirectDebitController extends BaseController {
 		otp.setReferenceCode(request.getOtpRefCode());
 		otp.setOtpString(request.getOtpString());
 
-		TopUpQuoteStatus quoteStatus = this.topupService.confirmOTP(request.getTopupOrderID(), otp, accessToken);
+		DraftTransaction.Status quoteStatus = this.topupService.confirmOTP(request.getTopupOrderID(), otp, accessToken);
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("topupStatus", quoteStatus.getStatus());
 
@@ -165,9 +165,9 @@ public class DirectDebitController extends BaseController {
 			@PathVariable String quoteID,
 			@PathVariable String accessToken) {
 
-		TopUpOrderStatus status = this.topupService.getTopUpProcessingStatus(quoteID, accessToken);
+		Transaction.Status status = this.topupService.getTopUpProcessingStatus(quoteID, accessToken);
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("topupStatus", status.getTopUpStatus());
+		data.put("topupStatus", status.getStatus());
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}

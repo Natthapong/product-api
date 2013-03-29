@@ -1,7 +1,7 @@
 package th.co.truemoney.product.api.controller;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -17,7 +17,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import th.co.truemoney.product.api.config.TestWebConfig;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
-import th.co.truemoney.serviceinventory.ewallet.domain.P2PDraftRequest;
 import th.co.truemoney.serviceinventory.ewallet.domain.P2PDraftTransaction;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
@@ -48,7 +47,7 @@ public class TestP2PController extends BaseTestController {
 
 		when(
 				p2pTransferServiceMock.createDraftTransaction(
-						any(P2PDraftRequest.class), any(String.class)))
+						anyString(), any(BigDecimal.class), anyString()))
 				.thenReturn(draftTransaction);
 
 		this.verifySuccess(this.doPOST(transferMoneyURL, data));
@@ -63,7 +62,7 @@ public class TestP2PController extends BaseTestController {
 
 		when(
 				p2pTransferServiceMock.createDraftTransaction(
-						any(P2PDraftRequest.class), any(String.class)))
+						anyString(), any(BigDecimal.class), anyString()))
 				.thenThrow(new ServiceInventoryException("", "", "TMN-PRODUCT"));
 
 		this.verifyFailed(this.doPOST(transferMoneyURL, data))
@@ -73,14 +72,14 @@ public class TestP2PController extends BaseTestController {
 				.andExpect(jsonPath("$.messageTh").value(containsString("")));
 		;
 	}
-	
+
 	@Test
 	public void verifyTransferSuccess() throws Exception {
 		OTP otp = new OTP();
 		otp.setOtpString("123456");
 		otp.setMobileNumber("0899999999");
 		otp.setReferenceCode("qwer");
-		
+
 		P2PDraftTransaction draftTransaction = new P2PDraftTransaction();
 		draftTransaction.setAccessTokenID(fakeAccessToken);
 		draftTransaction.setAmount(new BigDecimal(100.00));
@@ -92,11 +91,11 @@ public class TestP2PController extends BaseTestController {
 		when(
 				p2pTransferServiceMock.sendOTP(any(String.class), any(String.class)))
 				.thenReturn(otp);
-		
+
 		when(
-				p2pTransferServiceMock.getDraftTransactionDetails(any(String.class), 
+				p2pTransferServiceMock.getDraftTransactionDetails(any(String.class),
 						any(String.class))).thenReturn(draftTransaction);
-		
+
 		this.verifySuccess(this.doPUT(verifyTransferURL));
 	}
 
@@ -109,13 +108,13 @@ public class TestP2PController extends BaseTestController {
 		draftTransaction.setID("11111");
 		draftTransaction.setMobileNumber("0899999999");
 		draftTransaction.setOtpReferenceCode("qwer");
-		
+
 		when(
 				p2pTransferServiceMock.sendOTP(any(String.class), any(String.class)))
 				.thenThrow(new ServiceInventoryException("", "", "TMN-PRODUCT"));
-		
+
 		when(
-				p2pTransferServiceMock.getDraftTransactionDetails(any(String.class), 
+				p2pTransferServiceMock.getDraftTransactionDetails(any(String.class),
 						any(String.class))).thenReturn(draftTransaction);
 
 		this.verifyFailed(this.doPUT(verifyTransferURL))
@@ -125,5 +124,5 @@ public class TestP2PController extends BaseTestController {
 				.andExpect(jsonPath("$.messageTh").value(containsString("")));
 		;
 	}
-	
+
 }

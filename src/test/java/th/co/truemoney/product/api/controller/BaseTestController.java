@@ -23,7 +23,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import th.co.truemoney.product.api.config.TestWebConfig;
 import th.co.truemoney.serviceinventory.ewallet.P2PTransferService;
-import th.co.truemoney.serviceinventory.ewallet.SourceOfFundService;
+import th.co.truemoney.serviceinventory.ewallet.DirectDebitSourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
 
@@ -40,7 +40,7 @@ public class BaseTestController {
 	protected WebApplicationContext wac;
 	
 	@Autowired
-	protected SourceOfFundService sourceOfFundServiceMock;
+	protected DirectDebitSourceOfFundService sourceOfFundServiceMock;
 
 	@Autowired
 	protected TopUpService topupServiceMock;
@@ -54,7 +54,7 @@ public class BaseTestController {
 	@Before
 	public void setup() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-		this.sourceOfFundServiceMock = wac.getBean(SourceOfFundService.class);
+		this.sourceOfFundServiceMock = wac.getBean(DirectDebitSourceOfFundService.class);
 		this.topupServiceMock = wac.getBean(TopUpService.class);
 		this.profileServiceMock = wac.getBean(TmnProfileService.class);
 		this.p2pTransferServiceMock = wac.getBean(P2PTransferService.class);

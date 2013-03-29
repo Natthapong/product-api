@@ -69,6 +69,9 @@ public class RegisterController extends BaseController {
 		if (!ValidateUtil.checkEmail(email)) {
 			throw new InvalidParameterException("40000");
 		}
+		if(!ValidateUtil.checkMobileNumber(request.get("mobileNumber"))){
+			throw new InvalidParameterException("40001");
+		}
 
 		TmnProfile tmnProfile = new TmnProfile();
 		tmnProfile.setEmail(email);

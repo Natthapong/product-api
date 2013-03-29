@@ -29,8 +29,8 @@ import th.co.truemoney.serviceinventory.ewallet.domain.DirectDebit;
 import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpOrder;
-import th.co.truemoney.serviceinventory.ewallet.domain.TopUpOrderStatus;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpQuote;
+import th.co.truemoney.serviceinventory.ewallet.domain.Transaction;
 
 @Controller
 public class DirectDebitController extends BaseController {
@@ -165,9 +165,9 @@ public class DirectDebitController extends BaseController {
 			@PathVariable String quoteID,
 			@PathVariable String accessToken) {
 
-		TopUpOrderStatus status = this.topupService.getTopUpProcessingStatus(quoteID, accessToken);
+		Transaction.Status status = this.topupService.getTopUpProcessingStatus(quoteID, accessToken);
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("topupStatus", status.getTopUpStatus());
+		data.put("topupStatus", status.getStatus());
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}

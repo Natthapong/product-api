@@ -104,9 +104,7 @@ public class P2PController extends BaseController {
 
 	@RequestMapping(value = "/transaction/{transactionID}/{accessToken}", method = RequestMethod.GET)
 	@ResponseBody
-	public ProductResponse getTransferDetail(@PathVariable String transactionID, @PathVariable String accessToken, @RequestBody Map<String, String> request)throws ServiceInventoryException {
-		System.out.println("ProductResponse getTransferDetail");
-		
+	public ProductResponse getTransferDetail(@PathVariable String transactionID, @PathVariable String accessToken)throws ServiceInventoryException {
 		P2PTransaction transaction = p2pTransferService.getTransactionResult(transactionID, accessToken);
 
 		P2PTransactionConfirmationInfo info = transaction.getConfirmationInfo();

@@ -5,15 +5,15 @@
 
 "p2p.amount.max":"10000",
 
-"instruction.addmoney.atm" : "${apiHost}/m/tmn_webview/atm/index.html",
+"instruction.addmoney.atm" : "${apiHost}/m/tmn_webview/addmoney/instruction/atm/index.html",
 
-"instruction.addmoney.direct.debit" : "${apiHost}/m/tmn_webview/direct_debit/index.html",
+"instruction.addmoney.direct.debit" : "${apiHost}/m/tmn_webview/addmoney/instruction/direct_debit/index.html",
 
-"instruction.addmoney.kiosk" : "${apiHost}/m/tmn_webview/kiosk/kiosk.html",
+"instruction.addmoney.kiosk" : "${apiHost}/m/tmn_webview/addmoney/instruction/kiosk/kiosk.html",
 
-"instruction.addmoney.trm" : "${apiHost}/m/tmn_webview/trm/trueshop.html",
+"instruction.addmoney.trm" : "${apiHost}/m/tmn_webview/addmoney/instruction/trm/trueshop.html",
 
-"instruction.addmoney.tmx" : "${apiHost}/m/tmn_webview/tmx/cp_freshmart.html",
+"instruction.addmoney.tmx" : "${apiHost}/m/tmn_webview/addmoney/instruction/tmx/cp_freshmart.html",
 
 "signin.url" : "${apiHost}/api/v1/signin?",
 

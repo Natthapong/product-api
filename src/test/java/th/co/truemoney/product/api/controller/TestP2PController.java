@@ -4,8 +4,6 @@ import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.math.BigDecimal;
@@ -15,7 +13,6 @@ import java.util.Map;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -231,11 +228,16 @@ public class TestP2PController extends BaseTestController {
 				profileServiceMock.getEwalletBalance(any(String.class))).thenReturn(new BigDecimal(100.00));
 
 		
-		//verifySuccess(this.doGET(getTransferDetailURL));
-		this.mockMvc.perform(get(getTransferDetailURL).contentType(MediaType.APPLICATION_JSON)).andDo(print());
+		this.verifySuccess(this.doGET(getTransferDetailURL))
+				.andExpect(jsonPath("$..mobileNumber").exists())
+				.andExpect(jsonPath("$..amount").exists())
+				.andExpect(jsonPath("$..recipientName").exists())
+				.andExpect(jsonPath("$..transactionID").exists())
+				.andExpect(jsonPath("$..transactionDate").exists())
+				.andExpect(jsonPath("$..currentBalance").exists());
 	}
 
-	@Test@Ignore
+	@Test
 	public void getTransferDetailFail() throws Exception {
 		when(
 				p2pTransferServiceMock.getTransactionResult(any(String.class),

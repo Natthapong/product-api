@@ -83,8 +83,6 @@ public class P2PController extends BaseController {
 		otp.setMobileNumber(request.get("mobileNumber"));
 		P2PTransactionStatus transaction = p2pTransferService.createTransaction(transactionID, otp, accessToken);
 
-		System.out.println("ProductResponse confirmTransferOTP");
-		
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("transferStatus", transaction.getP2pTransferStatus());
 

@@ -147,9 +147,11 @@ public class TestP2PController extends BaseTestController {
 		data.put("otpRefCode", "qwer");
 
 		when(
-				p2pTransferServiceMock.createTransaction(any(String.class),
-						any(OTP.class), any(String.class))).thenReturn(
-				P2PTransactionStatus.PROCESSING);
+				p2pTransferServiceMock.createTransaction(
+						any(String.class),
+						any(OTP.class), 
+						any(String.class))
+		).thenReturn(P2PTransactionStatus.PROCESSING);
 
 		this.verifySuccess(this.doPOST(confirmTransferURL, data)).andExpect(
 				jsonPath("$..transferStatus").exists());

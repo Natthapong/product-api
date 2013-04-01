@@ -17,11 +17,12 @@ import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.ewallet.P2PTransferService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
+import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.ewallet.domain.P2PDraftTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.P2PTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.P2PTransactionConfirmationInfo;
-import th.co.truemoney.serviceinventory.ewallet.domain.P2PTransactionStatus;
+import th.co.truemoney.serviceinventory.ewallet.domain.Transaction;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 @Controller
@@ -81,10 +82,10 @@ public class P2PController extends BaseController {
 		otp.setOtpString(request.get("otpString"));
 		otp.setReferenceCode(request.get("otpRefCode"));
 		otp.setMobileNumber(request.get("mobileNumber"));
-		P2PTransactionStatus transaction = p2pTransferService.createTransaction(transactionID, otp, accessToken);
+		DraftTransaction.Status transaction = p2pTransferService.confirmDraftTransaction(transactionID, otp, accessToken);
 
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("transferStatus", transaction.getP2pTransferStatus());
+		data.put("transferStatus", transaction.getStatus());
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
@@ -92,10 +93,10 @@ public class P2PController extends BaseController {
 	@RequestMapping(value = "/transaction/{transactionID}/status/{accessToken}", method = RequestMethod.GET)
 	@ResponseBody
 	public ProductResponse checkStatus(@PathVariable String transactionID, @PathVariable String accessToken)throws ServiceInventoryException {
-		P2PTransactionStatus status = p2pTransferService.getTransactionStatus(transactionID, accessToken);
+		Transaction.Status status = p2pTransferService.getTransactionStatus(transactionID, accessToken);
 
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("transferStatus", status.getP2pTransferStatus());
+		data.put("transferStatus", status.getStatus());
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
@@ -106,13 +107,14 @@ public class P2PController extends BaseController {
 		P2PTransaction transaction = p2pTransferService.getTransactionResult(transactionID, accessToken);
 
 		P2PTransactionConfirmationInfo info = transaction.getConfirmationInfo();
-
+		P2PDraftTransaction draftTxn = transaction.getDraftTransaction();
+		
 		BigDecimal balance = this.profileService.getEwalletBalance(accessToken);
 
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("mobileNumber", transaction.getMobileNumber());
-		data.put("amount", transaction.getAmount());
-		data.put("recipientName", transaction.getFullname());
+		data.put("mobileNumber", draftTxn.getMobileNumber());
+		data.put("amount", draftTxn.getAmount());
+		data.put("recipientName", draftTxn.getFullname());
 		data.put("transactionID", info.getTransactionDate());
 		data.put("transactionDate", info.getTransactionDate());
 		data.put("currentBalance", balance);

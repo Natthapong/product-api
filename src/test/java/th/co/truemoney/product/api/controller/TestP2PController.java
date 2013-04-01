@@ -18,11 +18,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import th.co.truemoney.product.api.config.TestWebConfig;
+import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.ewallet.domain.P2PDraftTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.P2PDraftTransactionStatus;
 import th.co.truemoney.serviceinventory.ewallet.domain.P2PTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.P2PTransactionStatus;
+import th.co.truemoney.serviceinventory.ewallet.domain.Transaction;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -147,11 +149,11 @@ public class TestP2PController extends BaseTestController {
 		data.put("otpRefCode", "qwer");
 
 		when(
-				p2pTransferServiceMock.createTransaction(
+				p2pTransferServiceMock.confirmDraftTransaction(
 						any(String.class),
 						any(OTP.class), 
 						any(String.class))
-		).thenReturn(P2PTransactionStatus.PROCESSING);
+		).thenReturn(DraftTransaction.Status.OTP_CONFIRMED);
 
 		this.verifySuccess(this.doPOST(confirmTransferURL, data)).andExpect(
 				jsonPath("$..transferStatus").exists());
@@ -165,7 +167,7 @@ public class TestP2PController extends BaseTestController {
 		data.put("otpRefCode", "qwer");
 
 		when(
-				p2pTransferServiceMock.createTransaction(any(String.class),
+				p2pTransferServiceMock.confirmDraftTransaction(any(String.class),
 						any(OTP.class), any(String.class))).thenThrow(
 				new ServiceInventoryException("", "", "TMN-PRODUCT"));
 
@@ -181,7 +183,7 @@ public class TestP2PController extends BaseTestController {
 		when(
 				p2pTransferServiceMock.getTransactionStatus(any(String.class),
 						any(String.class))).thenReturn(
-				P2PTransactionStatus.PROCESSING);
+				Transaction.Status.PROCESSING);
 
 		this.verifySuccess(this.doGET(statusTransferURL)).andExpect(
 				jsonPath("$..transferStatus").exists());
@@ -210,16 +212,10 @@ public class TestP2PController extends BaseTestController {
 		draftTransaction.setID("1111");
 		draftTransaction.setMobileNumber("0899999999");
 		draftTransaction.setOtpReferenceCode("qwer");
-		draftTransaction.setStatus(P2PDraftTransactionStatus.OTP_CONFIRMED);
+		draftTransaction.setStatus(DraftTransaction.Status.OTP_CONFIRMED);
 		
 		P2PTransaction transaction = new P2PTransaction(draftTransaction);
-		transaction.setAccessTokenID(fakeAccessToken);
-		transaction.setAmount(new BigDecimal(100.00));
-		transaction.setFullname("Apinya Ukachoke");
-		transaction.setID("1111");
-		transaction.setMobileNumber("0899999999");
-		transaction.setOtpReferenceCode("qwer");
-		transaction.setStatus(P2PTransactionStatus.CONFIRMED);
+		transaction.setStatus(Transaction.Status.SUCCESS);
 		
 		//set requestbody for doGET
 		when(

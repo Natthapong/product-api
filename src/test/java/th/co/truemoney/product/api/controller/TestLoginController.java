@@ -58,7 +58,7 @@ public class TestLoginController extends BaseTestController {
 				any(Login.class)
 			)
 		).thenThrow(
-				new ServiceInventoryException("4", "Invalid Username or Password", "umarket"));
+				new ServiceInventoryException(400, "4", "Invalid Username or Password", "umarket"));
 		this.verifyFailed(
 				this.doPOST("/signin", 
 						new LoginBean("customer@truemoney.co.th", "password","email"))
@@ -75,7 +75,7 @@ public class TestLoginController extends BaseTestController {
 				any(Login.class)
 			)
 		).thenThrow(
-				new ServiceInventoryException("1006", "confirm umarket failed.", "TMN-SERVICE-INVENTORY")
+				new ServiceInventoryException(400, "1006", "confirm umarket failed.", "TMN-SERVICE-INVENTORY")
 		);
 		this.verifyFailed(
 				this.doPOST("/signin", 

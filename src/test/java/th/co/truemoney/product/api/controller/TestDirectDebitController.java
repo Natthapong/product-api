@@ -89,7 +89,7 @@ public class TestDirectDebitController extends BaseTestController {
 		String failedNamespace = "TMN-SERVICE-INVENTORY";
 		when(
 				this.sourceOfFundServiceMock.getUserDirectDebitSources(anyString(), anyString())).thenThrow(
-				new ServiceInventoryException(failedCode, failedMessage,
+				new ServiceInventoryException(400, failedCode, failedMessage,
 						failedNamespace));
 
 		this.mockMvc
@@ -108,7 +108,7 @@ public class TestDirectDebitController extends BaseTestController {
 		String failedNamespace = "TMN-PRODUCT";
 		when(
 				this.sourceOfFundServiceMock.getUserDirectDebitSources(anyString(), anyString())).thenThrow(
-				new ServiceInventoryException(failedCode, failedMessage,
+				new ServiceInventoryException(400, failedCode, failedMessage,
 						failedNamespace));
 
 		this.mockMvc
@@ -188,7 +188,7 @@ public class TestDirectDebitController extends BaseTestController {
 				this.topupServiceMock.createTopUpQuoteFromDirectDebit(
 						any(String.class), any(BigDecimal.class),
 						any(String.class))).thenThrow(
-				new ServiceInventoryException(failedCode, failedMessage,
+				new ServiceInventoryException(400, failedCode, failedMessage,
 						failedNamespace));
 
 		this.mockMvc
@@ -266,7 +266,7 @@ public class TestDirectDebitController extends BaseTestController {
 		when(
 				this.topupServiceMock.getTopUpQuoteDetails(any(String.class),
 						any(String.class))).thenThrow(
-				new ServiceInventoryException(failedCode, failedMessage,
+				new ServiceInventoryException(400, failedCode, failedMessage,
 						failedNamespace));
 
 		this.mockMvc
@@ -342,7 +342,7 @@ public class TestDirectDebitController extends BaseTestController {
 		when(
 				this.topupServiceMock.sendOTPConfirm(any(String.class),
 						any(String.class))).thenThrow(
-				new ServiceInventoryException(failedCode, failedMessage,
+				new ServiceInventoryException(400, failedCode, failedMessage,
 						failedNamespace));
 
 		this.mockMvc
@@ -400,7 +400,7 @@ public class TestDirectDebitController extends BaseTestController {
 		when(
 				this.topupServiceMock.confirmOTP(any(String.class),
 						any(OTP.class), any(String.class))).thenThrow(
-				new ServiceInventoryException(failedCode, failedMessage,
+				new ServiceInventoryException(400, failedCode, failedMessage,
 						failedNamespace));
 
 		this.mockMvc
@@ -442,7 +442,7 @@ public class TestDirectDebitController extends BaseTestController {
 
 		when(
 				this.topupServiceMock.getTopUpProcessingStatus(any(String.class), any(String.class))).thenThrow(
-				new ServiceInventoryException(failedCode, failedMessage,
+				new ServiceInventoryException(400, failedCode, failedMessage,
 						failedNamespace));
 
 		this.mockMvc
@@ -521,7 +521,7 @@ public class TestDirectDebitController extends BaseTestController {
 
 		when(
 				this.topupServiceMock.getTopUpOrderResults(any(String.class), any(String.class))).thenThrow(
-				new ServiceInventoryException(failedCode, failedMessage,
+				new ServiceInventoryException(400, failedCode, failedMessage,
 						failedNamespace));
 
 		when(this.profileServiceMock.getEwalletBalance(any(String.class))).thenReturn(new BigDecimal(10000.00));
@@ -543,7 +543,7 @@ public class TestDirectDebitController extends BaseTestController {
 		final BigDecimal minimumAmount = new BigDecimal(300);
 		final BigDecimal maximumAmount = new BigDecimal(999);
 
-		ServiceInventoryException lessThanMinimumException = new ServiceInventoryException("20001", "Amount less than minimum", "TMN-SERVICE-INVENTORY");
+		ServiceInventoryException lessThanMinimumException = new ServiceInventoryException(400, "20001", "Amount less than minimum", "TMN-SERVICE-INVENTORY");
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("minAmount", minimumAmount);
@@ -587,7 +587,7 @@ public class TestDirectDebitController extends BaseTestController {
 		final BigDecimal minimumAmount = new BigDecimal(100);
 		final BigDecimal maximumAmount = new BigDecimal(777);
 
-		ServiceInventoryException moreThanMaximumExcepiion = new ServiceInventoryException("20002", "Amount more than maximum", "TMN-SERVICE-INVENTORY");
+		ServiceInventoryException moreThanMaximumExcepiion = new ServiceInventoryException(400, "20002", "Amount more than maximum", "TMN-SERVICE-INVENTORY");
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("minAmount", minimumAmount);

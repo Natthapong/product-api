@@ -133,6 +133,7 @@ public class DirectDebitController extends BaseController {
 		data.put("amount", quote.getAmount());
 		data.put("fee", quote.getTopUpFee());
 		data.put("otpRefCode", otp.getReferenceCode());
+		data.put("mobileNumber", otp.getMobileNumber());
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
@@ -149,9 +150,10 @@ public class DirectDebitController extends BaseController {
 		OTP otp = new OTP();
 		otp.setReferenceCode(request.getOtpRefCode());
 		otp.setOtpString(request.getOtpString());
+		otp.setMobileNumber(request.getMobileNumber());
 
 		DraftTransaction.Status quoteStatus = this.topupService.confirmOTP(
-				request.getTopupOrderID(), otp, accessToken);
+				request.getQuoteID(), otp, accessToken);
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("topupStatus", quoteStatus.getStatus());
 

@@ -80,7 +80,19 @@ public class ProductResponseFactory {
 															"umarket.19",
 															"umarket.27",
 															"umarket.38",
-															"umarket.71"};
+															"umarket.71",
+															"next.6",
+															"next.7",
+															"next.19",
+															"next.27",
+															"next.38",
+															"next.71",
+															"core.6",
+															"core.7",
+															"core.19",
+															"core.27",
+															"core.38",
+															"core.71"};
 	
 	private boolean isInvalidAmountException(ServiceInventoryException e) {
 		return LESS_THAN_MINIMUM_AMOUNT.equals(e.getErrorNamespace() + "." + e.getErrorCode()) 

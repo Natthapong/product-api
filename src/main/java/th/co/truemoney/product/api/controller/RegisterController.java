@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.domain.ProductResponse;
+import th.co.truemoney.product.api.util.SecurityManager;
 import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
@@ -71,12 +72,15 @@ public class RegisterController extends BaseController {
 		if (!ValidateUtil.checkMobileNumber(request.get("mobileNumber"))) {
 			throw new InvalidParameterException("40001");
 		}
+		
+		SecurityManager manager = new SecurityManager();
 
 		TmnProfile tmnProfile = new TmnProfile();
 		tmnProfile.setEmail(email);
 		tmnProfile.setFullname(request.get("fullname"));
 		tmnProfile.setMobileNumber(request.get("mobileNumber"));
-		tmnProfile.setPassword(request.get("password"));
+		String password = manager.encryptRSA(request.get("password"));
+		tmnProfile.setPassword(password);
 		tmnProfile.setThaiID(request.get("thaiID"));
 
 		OTP returnData = new OTP();

@@ -68,6 +68,7 @@ public class P2PController extends BaseController {
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("otpRefCode", otp.getReferenceCode());
+		data.put("mobileNumber", otp.getMobileNumber());
 		data.put("amount", transaction.getAmount());
 		data.put("draftTransactionID", transaction.getID());
 

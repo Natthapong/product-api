@@ -175,6 +175,12 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.9.0</version>
 		</dependency>
+		<!-- RSA -->
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15on</artifactId>
+			<version>1.48</version>
+		</dependency>
             
 	</dependencies>
 

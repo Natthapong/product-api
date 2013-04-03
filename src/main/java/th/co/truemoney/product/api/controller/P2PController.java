@@ -59,7 +59,7 @@ public class P2PController extends BaseController {
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 
-	@RequestMapping(value = "/draft-transaction/{draftTransactionID}/{accessToken}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/draft-transaction/{draftTransactionID}/send-otp/{accessToken}", method = RequestMethod.PUT)
 	@ResponseBody
 	public ProductResponse verifyTransfer(@PathVariable String draftTransactionID, @PathVariable String accessToken)throws ServiceInventoryException {
 
@@ -115,7 +115,7 @@ public class P2PController extends BaseController {
 		data.put("mobileNumber", draftTxn.getMobileNumber());
 		data.put("amount", draftTxn.getAmount());
 		data.put("recipientName", draftTxn.getFullname());
-		data.put("transactionID", info.getTransactionDate());
+		data.put("transactionID", info.getTransactionID());
 		data.put("transactionDate", info.getTransactionDate());
 		data.put("currentBalance", balance);
 		

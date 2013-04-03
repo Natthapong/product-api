@@ -21,9 +21,7 @@ import th.co.truemoney.product.api.config.TestWebConfig;
 import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.ewallet.domain.P2PDraftTransaction;
-import th.co.truemoney.serviceinventory.ewallet.domain.P2PDraftTransactionStatus;
 import th.co.truemoney.serviceinventory.ewallet.domain.P2PTransaction;
-import th.co.truemoney.serviceinventory.ewallet.domain.P2PTransactionStatus;
 import th.co.truemoney.serviceinventory.ewallet.domain.Transaction;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
@@ -36,7 +34,7 @@ public class TestP2PController extends BaseTestController {
 	String transferMoneyURL = String.format("/transfer/draft-transaction/%s",
 			fakeAccessToken);
 	String verifyTransferURL = String.format(
-			"/transfer/draft-transaction/%s/%s", "1111111111111",
+			"/transfer/draft-transaction/%s/send-otp/%s", "1111111111111",
 			fakeAccessToken);
 	String confirmTransferURL = String.format("/transfer/transaction/%s/%s",
 			"1111111111111", fakeAccessToken);

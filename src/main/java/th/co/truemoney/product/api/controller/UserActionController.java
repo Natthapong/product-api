@@ -51,7 +51,7 @@ public class UserActionController extends BaseController {
 					|| errorcode.equals("umarket.4")
 					|| errorcode.equals("umarket.5")) {
 				if ("mobile".equals(request.getType())) {
-					throw new ServiceInventoryException("50001",
+					throw new ServiceInventoryException(400, "50001",
 							"Invalid mobile or pin", "TMN-PRODUCT");
 				}
 			}

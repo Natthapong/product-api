@@ -76,7 +76,7 @@ public class TestP2PController extends BaseTestController {
 		when(
 				p2pTransferServiceMock.createDraftTransaction(anyString(),
 						any(BigDecimal.class), anyString())).thenThrow(
-				new ServiceInventoryException("", "", "TMN-PRODUCT"));
+				new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
 
 		this.verifyFailed(this.doPOST(transferMoneyURL, data))
 				.andExpect(jsonPath("$.code").value(""))
@@ -125,7 +125,7 @@ public class TestP2PController extends BaseTestController {
 		when(
 				p2pTransferServiceMock.sendOTP(any(String.class),
 						any(String.class))).thenThrow(
-				new ServiceInventoryException("", "", "TMN-PRODUCT"));
+				new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
 
 		when(
 				p2pTransferServiceMock.getDraftTransactionDetails(
@@ -167,7 +167,7 @@ public class TestP2PController extends BaseTestController {
 		when(
 				p2pTransferServiceMock.confirmDraftTransaction(any(String.class),
 						any(OTP.class), any(String.class))).thenThrow(
-				new ServiceInventoryException("", "", "TMN-PRODUCT"));
+				new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
 
 		this.verifyFailed(this.doPOST(confirmTransferURL, data))
 				.andExpect(jsonPath("$.code").value(""))
@@ -192,7 +192,7 @@ public class TestP2PController extends BaseTestController {
 		when(
 				p2pTransferServiceMock.getTransactionStatus(any(String.class),
 						any(String.class))).thenThrow(
-				new ServiceInventoryException("", "", "TMN-PRODUCT"));
+				new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
 
 		this.verifyFailed(this.doGET(statusTransferURL))
 				.andExpect(jsonPath("$.code").value(""))
@@ -238,7 +238,7 @@ public class TestP2PController extends BaseTestController {
 		when(
 				p2pTransferServiceMock.getTransactionResult(any(String.class),
 						any(String.class))).thenThrow(
-				new ServiceInventoryException("", "", "TMN-PRODUCT"));
+				new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
 
 		this.verifyFailed(this.doGET(getTransferDetailURL))
 				.andExpect(jsonPath("$.code").value(""))

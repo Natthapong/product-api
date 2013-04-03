@@ -46,7 +46,7 @@ public class RegisterController extends BaseController {
 			String errorcode = String.format("%s.%s", e.getErrorNamespace(),
 					e.getErrorCode());
 			if (errorcode.equals("next.18")) {
-				throw new ServiceInventoryException("10000",
+				throw new ServiceInventoryException(400, "10000",
 						"Email is already in used.", "TMN-PRODUCT");
 			}
 			throw e;
@@ -88,7 +88,7 @@ public class RegisterController extends BaseController {
 			String errorcode = String.format("%s.%s", e.getErrorNamespace(),
 					e.getErrorCode());
 			if (errorcode.equals("next.18")) {
-				throw new ServiceInventoryException("10001",
+				throw new ServiceInventoryException(400, "10001",
 						"Mobile number is already in used.", "TMN-PRODUCT");
 			}
 			throw e;

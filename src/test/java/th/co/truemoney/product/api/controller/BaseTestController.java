@@ -32,7 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(classes = { TestWebConfig.class })
-public class BaseTestController {
+public abstract class BaseTestController {
 	
 	protected MockMvc mockMvc;
 

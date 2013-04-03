@@ -99,7 +99,7 @@ public class TestRegisterController {
 
 		when(
 				this.tmnProfileServiceMock.validateEmail(anyInt(), any(String.class)) )
-			.thenThrow(new ServiceInventoryException(failedCode, failedMessage,
+			.thenThrow(new ServiceInventoryException(400, failedCode, failedMessage,
 					failedNamespace));
 
 			this.mockMvc
@@ -159,7 +159,7 @@ public class TestRegisterController {
 
 		when(
 				this.tmnProfileServiceMock.createProfile(anyInt(), any(TmnProfile.class)) )
-			.thenThrow(new ServiceInventoryException(failedCode, failedMessage,
+			.thenThrow(new ServiceInventoryException(400, failedCode, failedMessage,
 					failedNamespace));
 
 			this.mockMvc
@@ -237,7 +237,7 @@ public class TestRegisterController {
 
 		when(
 				this.tmnProfileServiceMock.confirmCreateProfile(anyInt(), any(OTP.class)) )
-			.thenThrow(new ServiceInventoryException(failedCode, failedMessage,
+			.thenThrow(new ServiceInventoryException(400, failedCode, failedMessage,
 					failedNamespace));
 		when(
 				this.tmnProfileServiceMock.login(any(Integer.class),
@@ -281,7 +281,7 @@ public class TestRegisterController {
 		when(
 				this.tmnProfileServiceMock.confirmCreateProfile(anyInt(), any(OTP.class)) )
 			.thenThrow(
-					new ServiceInventoryException(failedCode,
+					new ServiceInventoryException(400, failedCode,
 							failedMessage, failedNamespace));
 
 		when(
@@ -326,7 +326,7 @@ public class TestRegisterController {
 		when(
 				this.tmnProfileServiceMock.confirmCreateProfile(anyInt(), any(OTP.class)) )
 			.thenThrow(
-					new ServiceInventoryException(failedCode,
+					new ServiceInventoryException(400, failedCode,
 							failedMessage, failedNamespace));
 
 		when(

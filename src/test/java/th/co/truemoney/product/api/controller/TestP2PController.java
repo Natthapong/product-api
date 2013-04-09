@@ -3,6 +3,7 @@ package th.co.truemoney.product.api.controller;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,6 +46,11 @@ public class TestP2PController extends BaseTestController {
 	String getTransferDetailURL = String.format("/transfer/transaction/%s/%s",
 			"1111111111111", fakeAccessToken);
 
+	@After
+	public void tierDown() {
+		reset(this.p2pTransferServiceMock);
+	}
+	
 	@Test
 	public void createDraftTransactionSuccess() throws Exception {
 		P2PDraftTransaction draftTransaction = new P2PDraftTransaction();

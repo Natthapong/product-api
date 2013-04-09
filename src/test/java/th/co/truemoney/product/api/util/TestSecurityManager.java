@@ -20,9 +20,16 @@ public class TestSecurityManager {
 	SecurityManager securityManager;
 	
 	@Test
-	public void encryptRSASuccess() {
-		//SecurityManager securityManager = new SecurityManager();
+	public void getPublicKey() {
 		assertNotNull(securityManager.getPublicKey());
+	}
+	
+	@Test
+	public void encryptText() {
+		assertNotNull(securityManager.encryptRSA("password"));
+		assertNotNull(securityManager.encryptRSA("12345"));
+		assertNotNull(securityManager.encryptRSA("!@#$%^&*"));
+		assertNotNull(securityManager.encryptRSA("     "));
 	}
 
 }

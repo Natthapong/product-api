@@ -1,11 +1,20 @@
 package th.co.truemoney.product.api.util;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
 import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.PublicKey;
 import java.security.Security;
-import java.security.interfaces.RSAPublicKey;
+import java.security.spec.EncodedKeySpec;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -23,26 +32,35 @@ public class SecurityManager implements MessageSourceAware {
 	}
 	
 	public String encryptRSA(String password) {
-		try {
 			Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-
+		try {
 			byte[] input = password.getBytes("UTF-8");
 
 			KeyFactory keyFactory = KeyFactory.getInstance("RSA", "BC");
 
-			X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
-					hex2Byte(getPublicKey()));
-			RSAPublicKey pubKey = (RSAPublicKey) keyFactory
-					.generatePublic(publicKeySpec);
+			EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(hex2Byte(getPublicKey()));
+			PublicKey pubKey = keyFactory.generatePublic(publicKeySpec);
 
 			Cipher cipher = Cipher.getInstance("RSA/None/PKCS1Padding", "BC");
 
 			cipher.init(Cipher.ENCRYPT_MODE, pubKey);
 			byte[] cipherText = cipher.doFinal(input);
-			// System.out.println("encrypted: " + byte2Hex(cipherText)); //
-			// 48a29d8f292cc466a077acc712d9581b757143357e5d5b91628143629e9d3ff1fa62a14f8b86bcd49545c115f89b7e4e64973b0b2389a97213f1ea2f80d132af2d30c1d0d038b91d2dcdc654a6abcbbb6a6335647d1014d5a06ebf2505227c1f546ed8f9471a9ea74b046711068a46501698bd04adac3b72c3c62a973eaee28e
 			return byte2Hex(cipherText);
-		} catch (Throwable e) {
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (NoSuchProviderException e) {
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			e.printStackTrace();
+		} catch (InvalidKeyException e) {
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			e.printStackTrace();
+		} catch (BadPaddingException e) {
 			e.printStackTrace();
 		}
 		return null;

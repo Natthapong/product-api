@@ -10,6 +10,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import th.co.truemoney.product.api.util.MessageManager;
+import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.ewallet.DirectDebitSourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
@@ -49,6 +50,11 @@ public class TestWebConfig {
 	@Bean
 	public P2PTransferService p2pTransferService() {
 		return Mockito.mock(P2PTransferService.class);
+	}
+	
+	@Bean
+	public BillPaymentService billPayService(){
+		return Mockito.mock(BillPaymentService.class);
 	}
 
 	@Bean @Qualifier("apiHost")

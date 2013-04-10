@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import th.co.truemoney.product.api.config.TestWebConfig;
+import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.ewallet.DirectDebitSourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
@@ -51,6 +52,9 @@ public abstract class BaseTestController {
 	@Autowired
 	protected P2PTransferService p2pTransferServiceMock; 
 
+	@Autowired
+	protected BillPaymentService billPaymentServiceMock;
+	
 	@Before
 	public void setup() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
@@ -58,7 +62,7 @@ public abstract class BaseTestController {
 		this.topupServiceMock = wac.getBean(TopUpService.class);
 		this.profileServiceMock = wac.getBean(TmnProfileService.class);
 		this.p2pTransferServiceMock = wac.getBean(P2PTransferService.class);
-		
+		this.billPaymentServiceMock = wac.getBean(BillPaymentService.class);
 	}
 	
 	@After
@@ -66,6 +70,7 @@ public abstract class BaseTestController {
 		reset(this.sourceOfFundServiceMock);
 		reset(this.topupServiceMock);
 		reset(this.profileServiceMock);
+		reset(this.billPaymentServiceMock);
 	}
 	
 	protected ResultActions doPOST(String url, Object reqBody) throws Exception {

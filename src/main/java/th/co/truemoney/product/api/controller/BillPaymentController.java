@@ -26,6 +26,35 @@ public class BillPaymentController extends BaseController {
 	@Autowired
 	public BillPaymentService billPaymentService;
 
+	@RequestMapping(value = "/barcode/{barcode}/{accessTokenID}", method = RequestMethod.GET)
+	public @ResponseBody 
+	ProductResponse getBillInformation(@PathVariable String barcode, @PathVariable String accessTokenID) {
+		
+		BillPaymentInfo billPaymentInfo = billPaymentService.getBillInformation(barcode, accessTokenID);  
+		
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("target", billPaymentInfo.getTarget());
+		data.put("logoURL", billPaymentInfo.getLogoURL());
+		data.put("titleTH", billPaymentInfo.getTitleTH());		
+		data.put("titleEN", billPaymentInfo.getTitleEN());
+		
+		data.put("ref1TitleTH", billPaymentInfo.getRef1TitleTH());
+		data.put("ref1TitleEN", billPaymentInfo.getRef1TitleEN());
+		data.put("ref1", billPaymentInfo.getRef1());
+		
+		data.put("ref2TitleTH", billPaymentInfo.getRef2TitleTH());
+		data.put("ref2TitleEN", billPaymentInfo.getRef2TitleEN());
+		data.put("ref2", billPaymentInfo.getRef2());
+		
+		data.put("amount", billPaymentInfo.getAmount());
+		data.put("serviceFee", billPaymentInfo.getServiceFee());
+		data.put("serviceFeeType", billPaymentInfo.getServiceFeeType());
+		data.put("sourceOfFundFee", billPaymentInfo.getSourceOfFundFee());
+
+		return this.responseFactory.createSuccessProductResonse(data);
+		
+	}
+	
 	@RequestMapping(value = "/invoice", method = RequestMethod.POST)
 	public @ResponseBody
 	ProductResponse createBillInvoice(
@@ -76,34 +105,4 @@ public class BillPaymentController extends BaseController {
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	
-	@RequestMapping(value = "/barcode/{barcode}/{accessTokenID}", method = RequestMethod.GET)
-	public @ResponseBody 
-	ProductResponse getBarcodeInformation(@PathVariable String barcode,	@PathVariable String accessTokenID) {
-		
-		BillPaymentInfo billPaymentInfo = billPaymentService.getBillInformation(barcode, accessTokenID);  
-		
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("target", billPaymentInfo.getTarget());
-		data.put("logoURL", billPaymentInfo.getLogoURL());
-		data.put("titleTH", billPaymentInfo.getTitleTH());		
-		data.put("titleEN", billPaymentInfo.getTitleEN());
-		
-		data.put("ref1TitleTH", billPaymentInfo.getRef1TitleTH());
-		data.put("ref1TitleEN", billPaymentInfo.getRef1TitleEN());
-		data.put("ref1", billPaymentInfo.getRef1());
-		
-		data.put("ref2TitleTH", billPaymentInfo.getRef2TitleTH());
-		data.put("ref2TitleEN", billPaymentInfo.getRef2TitleEN());
-		data.put("ref2", billPaymentInfo.getRef2());
-		
-		data.put("amount", billPaymentInfo.getAmount());
-		data.put("serviceFee", billPaymentInfo.getServiceFee());
-		data.put("serviceFeeType", billPaymentInfo.getServiceFeeType());
-		data.put("sourceOfFundFee", billPaymentInfo.getSourceOfFundFee());
-
-		return this.responseFactory.createSuccessProductResonse(data);
-		
-	}
-	
-
 }

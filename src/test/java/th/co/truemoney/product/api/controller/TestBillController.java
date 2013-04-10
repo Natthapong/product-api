@@ -8,6 +8,8 @@ import org.junit.Test;
 
 import th.co.truemoney.serviceinventory.bill.domain.BillInvoice;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentInfo;
+import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
+import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
 public class TestBillController extends BaseTestController {
 
@@ -23,6 +25,14 @@ public class TestBillController extends BaseTestController {
 				new BillInvoice());
 		this.verifySuccess(this
 				.doPOST(verifyTransferURL, new BillPaymentInfo()));
+	}
+
+	
+	@Test
+	public void confirmBillPayOtp() throws Exception {
+		String confirmOtpUrl = String.format("/billpay/invoice/%s/confirm-otp/%s", "transaction_id", "access_token");
+		when(this.billPaymentServiceMock.confirmBillInvoice(anyString(), any(OTP.class), anyString())).thenReturn(Status.OTP_CONFIRMED);
+		this.verifySuccess(this.doPOST(confirmOtpUrl, new OTP()));
 	}
 
 }

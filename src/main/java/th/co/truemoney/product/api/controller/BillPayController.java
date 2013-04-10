@@ -15,6 +15,8 @@ import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.bill.domain.BillInvoice;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentInfo;
+import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
+import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
 @Controller
 @RequestMapping(value = "/billpay")
@@ -33,6 +35,25 @@ public class BillPayController extends BaseController {
 				.createBillInvoice(billPaymentInfo, accessToken);
 		
 		Map<String, Object> data = new HashMap<String, Object>();
+
+		return this.responseFactory.createSuccessProductResonse(data);
+	}
+	
+	@RequestMapping(value = "/invoice/{invoiceID}/confirm-otp/{accessTokenID}", method = RequestMethod.POST)
+	public @ResponseBody
+	ProductResponse confirmBillPayOtp(@PathVariable String invoiceID,
+			@PathVariable String accessTokenID,
+			@RequestBody Map<String, String> request) {
+		
+		OTP otp = new OTP();
+		otp.setOtpString(request.get("otpString"));
+		otp.setReferenceCode(request.get("otpRefCode"));
+		otp.setMobileNumber(request.get("mobileNumber"));
+		
+		Status invoiceStatus = billPaymentService.confirmBillInvoice(invoiceID, otp, accessTokenID);
+		
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("invoiceStatus", invoiceStatus.getStatus());
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}

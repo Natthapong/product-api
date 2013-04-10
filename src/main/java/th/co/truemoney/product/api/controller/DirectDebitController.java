@@ -144,7 +144,7 @@ public class DirectDebitController extends BaseController {
 	 */
 	@RequestMapping(value = "/directdebit/order/confirm/{accessToken}", method = RequestMethod.PUT)
 	public @ResponseBody
-	ProductResponse confirmDirectDebitTopuOrder(
+	ProductResponse confirmDirectDebitTopupOrder(
 			@RequestBody TopupOrderConfirmRequest request,
 			@PathVariable String accessToken) {
 		OTP otp = new OTP();

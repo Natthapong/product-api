@@ -147,7 +147,7 @@ public class TestDirectDebitController extends BaseTestController {
 		request.setSourceOfFundID("B00001");
 
 		when(
-				this.topupServiceMock.createTopUpQuoteFromDirectDebit(
+				this.topupServiceMock.verifyAndCreateTopUpQuote(
 						any(String.class), any(BigDecimal.class),
 						any(String.class))).thenReturn(topUpQuote);
 
@@ -185,7 +185,7 @@ public class TestDirectDebitController extends BaseTestController {
 		request.setChecksum("00000000000000");
 
 		when(
-				this.topupServiceMock.createTopUpQuoteFromDirectDebit(
+				this.topupServiceMock.verifyAndCreateTopUpQuote(
 						any(String.class), any(BigDecimal.class),
 						any(String.class))).thenThrow(
 				new ServiceInventoryException(400, failedCode, failedMessage,
@@ -553,7 +553,7 @@ public class TestDirectDebitController extends BaseTestController {
 		lessThanMinimumException.setData(data);
 
 		when(
-			this.topupServiceMock.createTopUpQuoteFromDirectDebit(
+			this.topupServiceMock.verifyAndCreateTopUpQuote(
 				any(String.class),
 				any(BigDecimal.class),
 				any(String.class))
@@ -597,7 +597,7 @@ public class TestDirectDebitController extends BaseTestController {
 		moreThanMaximumExcepiion.setData(data);
 
 		when(
-			this.topupServiceMock.createTopUpQuoteFromDirectDebit(
+			this.topupServiceMock.verifyAndCreateTopUpQuote(
 				any(String.class),
 				any(BigDecimal.class),
 				any(String.class))

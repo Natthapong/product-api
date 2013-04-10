@@ -70,7 +70,7 @@ public class DirectDebitController extends BaseController {
 			@RequestBody TopupDirectDebitRequest request,
 			@PathVariable String accessToken, HttpServletResponse response) {
 
-		TopUpQuote quote = this.topupService.createTopUpQuoteFromDirectDebit(
+		TopUpQuote quote = this.topupService.verifyAndCreateTopUpQuote(
 				request.getSourceOfFundID(), request.getAmount(), accessToken);
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("quoteID", quote.getID());

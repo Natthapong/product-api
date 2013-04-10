@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.domain.ProductResponse;
@@ -25,10 +26,10 @@ public class BillPaymentController extends BaseController {
 	@Autowired
 	public BillPaymentService billPaymentService;
 
-	@RequestMapping(value = "/invoice/{draftTransactionID}/send-otp/{accessToken}", method = RequestMethod.POST)
+	@RequestMapping(value = "/invoice", method = RequestMethod.POST)
 	public @ResponseBody
-	ProductResponse createBillInvoice(@PathVariable String draftTransactionID,
-			@PathVariable String accessToken,
+	ProductResponse createBillInvoice(
+			@RequestParam String accessToken,
 			@RequestBody BillPaymentInfo billPaymentInfo) {
 
 		BillInvoice billInvoice = this.billPaymentService

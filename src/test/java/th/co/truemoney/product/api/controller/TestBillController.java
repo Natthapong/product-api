@@ -14,8 +14,7 @@ import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 public class TestBillController extends BaseTestController {
 
 	String verifyTransferURL = String.format(
-			"/bill-payment/invoice/%s/send-otp/%s", "1111111111111",
-			"1111111111111");
+			"/bill-payment/invoice?accessToken=%s", "1111111111111");
 
 	@Test
 	public void urlCreateBillInvoice() throws Exception {

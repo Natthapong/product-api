@@ -27,7 +27,7 @@ public class BillPayController extends BaseController {
 
 	@RequestMapping(value = "/invoice/{draftTransactionID}/send-otp/{accessToken}", method = RequestMethod.POST)
 	public @ResponseBody
-	ProductResponse verifyBill(@PathVariable String draftTransactionID,
+	ProductResponse createBillInvoice(@PathVariable String draftTransactionID,
 			@PathVariable String accessToken,
 			@RequestBody BillPaymentInfo billPaymentInfo) {
 
@@ -35,7 +35,7 @@ public class BillPayController extends BaseController {
 				.createBillInvoice(billPaymentInfo, accessToken);
 		
 		Map<String, Object> data = new HashMap<String, Object>();
-
+		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	

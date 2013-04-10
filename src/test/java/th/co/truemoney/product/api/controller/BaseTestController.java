@@ -51,7 +51,7 @@ public abstract class BaseTestController {
 	
 	@Autowired
 	protected P2PTransferService p2pTransferServiceMock; 
-
+	
 	@Autowired
 	protected BillPaymentService billPaymentServiceMock;
 	
@@ -70,6 +70,7 @@ public abstract class BaseTestController {
 		reset(this.sourceOfFundServiceMock);
 		reset(this.topupServiceMock);
 		reset(this.profileServiceMock);
+		reset(this.p2pTransferServiceMock);
 		reset(this.billPaymentServiceMock);
 	}
 	

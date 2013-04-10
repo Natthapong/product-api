@@ -3,7 +3,6 @@ package th.co.truemoney.product.api.controller;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -11,15 +10,9 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 
-import th.co.truemoney.product.api.config.TestWebConfig;
 import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.ewallet.domain.Transaction;
@@ -27,9 +20,6 @@ import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 import th.co.truemoney.serviceinventory.transfer.domain.P2PDraftTransaction;
 import th.co.truemoney.serviceinventory.transfer.domain.P2PTransaction;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
-@ContextConfiguration(classes = { TestWebConfig.class })
 public class TestP2PController extends BaseTestController {
 
 	String fakeAccessToken = "111111111111";
@@ -46,11 +36,6 @@ public class TestP2PController extends BaseTestController {
 	String getTransferDetailURL = String.format("/transfer/transaction/%s/%s",
 			"1111111111111", fakeAccessToken);
 
-	@After
-	public void tierDown() {
-		reset(this.p2pTransferServiceMock);
-	}
-	
 	@Test
 	public void createDraftTransactionSuccess() throws Exception {
 		P2PDraftTransaction draftTransaction = new P2PDraftTransaction();

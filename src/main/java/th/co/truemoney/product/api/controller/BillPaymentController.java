@@ -20,7 +20,7 @@ import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
 @Controller
 @RequestMapping(value = "/billpay")
-public class BillPayController extends BaseController {
+public class BillPaymentController extends BaseController {
 
 	@Autowired
 	public BillPaymentService billPaymentService;

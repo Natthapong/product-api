@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +32,9 @@ import th.co.truemoney.serviceinventory.ewallet.domain.Login;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.ewallet.domain.TmnProfile;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration

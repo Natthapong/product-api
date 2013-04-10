@@ -52,8 +52,7 @@ public class TestWebConfig {
 		return Mockito.mock(P2PTransferService.class);
 	}
 	
-	@Bean
-	public BillPaymentService billPayService(){
+	@Bean BillPaymentService billPaymentService() {
 		return Mockito.mock(BillPaymentService.class);
 	}
 

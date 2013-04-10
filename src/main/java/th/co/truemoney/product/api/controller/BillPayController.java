@@ -25,7 +25,7 @@ public class BillPayController extends BaseController {
 	@Autowired
 	public BillPaymentService billPaymentService;
 
-	@RequestMapping(value = "/draft-transaction/{draftTransactionID}/send-otp/{accessToken}", method = RequestMethod.POST)
+	@RequestMapping(value = "/invoice/{draftTransactionID}/send-otp/{accessToken}", method = RequestMethod.POST)
 	public @ResponseBody
 	ProductResponse verifyBill(@PathVariable String draftTransactionID,
 			@PathVariable String accessToken,

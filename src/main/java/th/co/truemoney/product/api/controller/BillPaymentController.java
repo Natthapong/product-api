@@ -19,7 +19,7 @@ import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
 @Controller
-@RequestMapping(value = "/billpay")
+@RequestMapping(value = "/bill-payment")
 public class BillPaymentController extends BaseController {
 
 	@Autowired
@@ -57,5 +57,16 @@ public class BillPaymentController extends BaseController {
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
+	
+	@RequestMapping(value = "/barcode/{barcode}/{accessTokenID}", method = RequestMethod.GET)
+	public @ResponseBody 
+	ProductResponse getBarcodeInformation(@PathVariable String barcode,	@PathVariable String accessTokenID) {
+		
+		Map<String, Object> data = new HashMap<String, Object>();
+
+		return this.responseFactory.createSuccessProductResonse(data);
+		
+	}
+	
 
 }

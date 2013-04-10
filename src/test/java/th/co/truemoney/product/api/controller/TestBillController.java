@@ -14,7 +14,7 @@ import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 public class TestBillController extends BaseTestController {
 
 	String verifyTransferURL = String.format(
-			"/billpay/invoice/%s/send-otp/%s", "1111111111111",
+			"/bill-payment/invoice/%s/send-otp/%s", "1111111111111",
 			"1111111111111");
 
 	@Test
@@ -31,7 +31,7 @@ public class TestBillController extends BaseTestController {
 	
 	@Test
 	public void confirmBillPayOtp() throws Exception {
-		String confirmOtpUrl = String.format("/billpay/invoice/%s/confirm-otp/%s", "transaction_id", "access_token");
+		String confirmOtpUrl = String.format("/bill-payment/invoice/%s/confirm-otp/%s", "transaction_id", "access_token");
 		when(this.billPaymentServiceMock.confirmBillInvoice(anyString(), any(OTP.class), anyString())).thenReturn(Status.OTP_CONFIRMED);
 		this.verifySuccess(this.doPOST(confirmOtpUrl, new OTP()));
 	}

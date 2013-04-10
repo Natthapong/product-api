@@ -10,7 +10,7 @@ import th.co.truemoney.serviceinventory.bill.domain.BillPaymentInfo;
 public class TestBillPaymentController extends BaseTestController {
 
 	String fakeAccessToken = "111111111111";
-	String barcode = "";
+	String barcode = "|01234567890";
 	String getBillInformationURL = String.format("/bill-payment/barcode/%s/%s", barcode, fakeAccessToken);
 	
 	@Test

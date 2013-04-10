@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import org.junit.Test;
 
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentInfo;
+import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 public class TestBillPaymentController extends BaseTestController {
 
@@ -26,8 +27,15 @@ public class TestBillPaymentController extends BaseTestController {
 	}
 	
 	@Test
-	public void getBillInformationFail() {
+	public void getBillInformationFail() throws Exception {
+		//given 
+		ServiceInventoryException s = new ServiceInventoryException(400, "", "", "TMN-PRODUCT");
 		
+		//when
+		when(billPaymentServiceMock.getBillInformation(anyString(), anyString())).thenThrow(s);
+		
+		//then
+		this.verifyFailed(this.doGET(getBillInformationURL));	
 	}
 	
 }

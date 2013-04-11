@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
-import th.co.truemoney.serviceinventory.bill.domain.BillInvoice;
-import th.co.truemoney.serviceinventory.bill.domain.BillPaymentInfo;
+import th.co.truemoney.serviceinventory.bill.domain.Bill;
+import th.co.truemoney.serviceinventory.bill.domain.BillInfo;
 import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
@@ -30,7 +30,7 @@ public class BillPaymentController extends BaseController {
 	public @ResponseBody 
 	ProductResponse getBillInformation(@PathVariable String barcode, @PathVariable String accessTokenID) {
 		
-		BillPaymentInfo billPaymentInfo = billPaymentService.getBillInformation(barcode, accessTokenID);  
+		BillInfo billPaymentInfo = billPaymentService.getBillInformation(barcode, accessTokenID);  
 		
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("target", billPaymentInfo.getTarget());
@@ -58,29 +58,29 @@ public class BillPaymentController extends BaseController {
 	public @ResponseBody
 	ProductResponse createBillInvoice(
 			@RequestParam String accessToken,
-			@RequestBody BillPaymentInfo billPaymentInfo) {
+			@RequestBody BillInfo billPaymentInfo) {
 
-		BillInvoice billInvoice = this.billPaymentService
-				.createBillInvoice(billPaymentInfo, accessToken);
+		Bill billInvoice = this.billPaymentService
+				.createBill(billPaymentInfo, accessToken);
 		
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("target", billInvoice.getBillPaymentInfo().getTarget());
-		data.put("logoURL", billInvoice.getBillPaymentInfo().getLogoURL());
-		data.put("titleTH", billInvoice.getBillPaymentInfo().getTitleTH());		
-		data.put("titleEN", billInvoice.getBillPaymentInfo().getTitleEN());
+		data.put("target", billInvoice.getBillInfo().getTarget());
+		data.put("logoURL", billInvoice.getBillInfo().getLogoURL());
+		data.put("titleTH", billInvoice.getBillInfo().getTitleTH());		
+		data.put("titleEN", billInvoice.getBillInfo().getTitleEN());
 		
-		data.put("ref1TitleTH", billInvoice.getBillPaymentInfo().getRef1TitleTH());
-		data.put("ref1TitleEN", billInvoice.getBillPaymentInfo().getRef1TitleEN());
-		data.put("ref1", billInvoice.getBillPaymentInfo().getRef1());
+		data.put("ref1TitleTH", billInvoice.getBillInfo().getRef1TitleTH());
+		data.put("ref1TitleEN", billInvoice.getBillInfo().getRef1TitleEN());
+		data.put("ref1", billInvoice.getBillInfo().getRef1());
 		
-		data.put("ref2TitleTH", billInvoice.getBillPaymentInfo().getRef2TitleTH());
-		data.put("ref2TitleEN", billInvoice.getBillPaymentInfo().getRef2TitleEN());
-		data.put("ref2", billInvoice.getBillPaymentInfo().getRef2());
+		data.put("ref2TitleTH", billInvoice.getBillInfo().getRef2TitleTH());
+		data.put("ref2TitleEN", billInvoice.getBillInfo().getRef2TitleEN());
+		data.put("ref2", billInvoice.getBillInfo().getRef2());
 		
-		data.put("amount", billInvoice.getBillPaymentInfo().getAmount());
-		data.put("serviceFee", billInvoice.getBillPaymentInfo().getServiceFee());
-		data.put("serviceFeeType", billInvoice.getBillPaymentInfo().getServiceFee().getFeeType());
-		data.put("sourceOfFundFee", billInvoice.getBillPaymentInfo().getSourceOfFundFees()[0]);
+		data.put("amount", billInvoice.getBillInfo().getAmount());
+		data.put("serviceFee", billInvoice.getBillInfo().getServiceFee());
+		data.put("serviceFeeType", billInvoice.getBillInfo().getServiceFee().getFeeType());
+		data.put("sourceOfFundFee", billInvoice.getBillInfo().getSourceOfFundFees()[0]);
 		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
@@ -96,7 +96,7 @@ public class BillPaymentController extends BaseController {
 		otp.setReferenceCode(request.get("otpRefCode"));
 		otp.setMobileNumber(request.get("mobileNumber"));
 		
-		Status invoiceStatus = billPaymentService.confirmBillInvoice(invoiceID, otp, accessTokenID);
+		Status invoiceStatus = billPaymentService.confirmBill(invoiceID, otp, accessTokenID);
 		
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("invoiceStatus", invoiceStatus.getStatus());

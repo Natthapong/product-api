@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
-import th.co.truemoney.serviceinventory.bill.domain.Bill;
-import th.co.truemoney.serviceinventory.bill.domain.BillInfo;
+import th.co.truemoney.serviceinventory.bill.domain.BillInvoice;
+import th.co.truemoney.serviceinventory.bill.domain.BillPaymentInfo;
 import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
@@ -27,81 +27,81 @@ public class BillPaymentController extends BaseController {
 	public BillPaymentService billPaymentService;
 
 	@RequestMapping(value = "/barcode/{barcode}/{accessTokenID}", method = RequestMethod.GET)
-	public @ResponseBody 
+	public @ResponseBody
 	ProductResponse getBillInformation(@PathVariable String barcode, @PathVariable String accessTokenID) {
-		
-		BillInfo billPaymentInfo = billPaymentService.getBillInformation(barcode, accessTokenID);  
-		
+
+		BillPaymentInfo billPaymentInfo = billPaymentService.getBillInformation(barcode, accessTokenID);
+
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("target", billPaymentInfo.getTarget());
 		data.put("logoURL", billPaymentInfo.getLogoURL());
-		data.put("titleTH", billPaymentInfo.getTitleTH());		
+		data.put("titleTH", billPaymentInfo.getTitleTH());
 		data.put("titleEN", billPaymentInfo.getTitleEN());
-		
+
 		data.put("ref1TitleTH", billPaymentInfo.getRef1TitleTH());
 		data.put("ref1TitleEN", billPaymentInfo.getRef1TitleEN());
 		data.put("ref1", billPaymentInfo.getRef1());
-		
+
 		data.put("ref2TitleTH", billPaymentInfo.getRef2TitleTH());
 		data.put("ref2TitleEN", billPaymentInfo.getRef2TitleEN());
 		data.put("ref2", billPaymentInfo.getRef2());
-		
+
 		data.put("amount", billPaymentInfo.getAmount());
 		data.put("serviceFee", billPaymentInfo.getServiceFee());
 		data.put("sourceOfFundFee", billPaymentInfo.getSourceOfFundFees()[0]);
 
 		return this.responseFactory.createSuccessProductResonse(data);
-		
+
 	}
-	
+
 	@RequestMapping(value = "/invoice", method = RequestMethod.POST)
 	public @ResponseBody
 	ProductResponse createBillInvoice(
 			@RequestParam String accessToken,
-			@RequestBody BillInfo billPaymentInfo) {
+			@RequestBody BillPaymentInfo billPaymentInfo) {
 
-		Bill billInvoice = this.billPaymentService
-				.createBill(billPaymentInfo, accessToken);
-		
+		BillInvoice billInvoice = this.billPaymentService
+				.createBillInvoice(billPaymentInfo, accessToken);
+
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("target", billInvoice.getBillInfo().getTarget());
-		data.put("logoURL", billInvoice.getBillInfo().getLogoURL());
-		data.put("titleTH", billInvoice.getBillInfo().getTitleTH());		
-		data.put("titleEN", billInvoice.getBillInfo().getTitleEN());
-		
-		data.put("ref1TitleTH", billInvoice.getBillInfo().getRef1TitleTH());
-		data.put("ref1TitleEN", billInvoice.getBillInfo().getRef1TitleEN());
-		data.put("ref1", billInvoice.getBillInfo().getRef1());
-		
-		data.put("ref2TitleTH", billInvoice.getBillInfo().getRef2TitleTH());
-		data.put("ref2TitleEN", billInvoice.getBillInfo().getRef2TitleEN());
-		data.put("ref2", billInvoice.getBillInfo().getRef2());
-		
-		data.put("amount", billInvoice.getBillInfo().getAmount());
-		data.put("serviceFee", billInvoice.getBillInfo().getServiceFee());
-		data.put("serviceFeeType", billInvoice.getBillInfo().getServiceFee().getFeeType());
-		data.put("sourceOfFundFee", billInvoice.getBillInfo().getSourceOfFundFees()[0]);
-		
+		data.put("target", billInvoice.getBillPaymentInfo().getTarget());
+		data.put("logoURL", billInvoice.getBillPaymentInfo().getLogoURL());
+		data.put("titleTH", billInvoice.getBillPaymentInfo().getTitleTH());
+		data.put("titleEN", billInvoice.getBillPaymentInfo().getTitleEN());
+
+		data.put("ref1TitleTH", billInvoice.getBillPaymentInfo().getRef1TitleTH());
+		data.put("ref1TitleEN", billInvoice.getBillPaymentInfo().getRef1TitleEN());
+		data.put("ref1", billInvoice.getBillPaymentInfo().getRef1());
+
+		data.put("ref2TitleTH", billInvoice.getBillPaymentInfo().getRef2TitleTH());
+		data.put("ref2TitleEN", billInvoice.getBillPaymentInfo().getRef2TitleEN());
+		data.put("ref2", billInvoice.getBillPaymentInfo().getRef2());
+
+		data.put("amount", billInvoice.getBillPaymentInfo().getAmount());
+		data.put("serviceFee", billInvoice.getBillPaymentInfo().getServiceFee());
+		data.put("serviceFeeType", billInvoice.getBillPaymentInfo().getServiceFee().getFeeType());
+		data.put("sourceOfFundFee", billInvoice.getBillPaymentInfo().getSourceOfFundFees()[0]);
+
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
-	
+
 	@RequestMapping(value = "/invoice/{invoiceID}/confirm-otp/{accessTokenID}", method = RequestMethod.POST)
 	public @ResponseBody
 	ProductResponse confirmBillPayOtp(@PathVariable String invoiceID,
 			@PathVariable String accessTokenID,
 			@RequestBody Map<String, String> request) {
-		
+
 		OTP otp = new OTP();
 		otp.setOtpString(request.get("otpString"));
 		otp.setReferenceCode(request.get("otpRefCode"));
 		otp.setMobileNumber(request.get("mobileNumber"));
-		
-		Status invoiceStatus = billPaymentService.confirmBill(invoiceID, otp, accessTokenID);
-		
+
+		Status invoiceStatus = billPaymentService.confirmBillInvoice(invoiceID, otp, accessTokenID);
+
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("invoiceStatus", invoiceStatus.getStatus());
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
-	
+
 }

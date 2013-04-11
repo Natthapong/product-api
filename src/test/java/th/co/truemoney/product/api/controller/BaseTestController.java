@@ -34,12 +34,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @WebAppConfiguration
 @ContextConfiguration(classes = { TestWebConfig.class })
 public abstract class BaseTestController {
-	
+
 	protected MockMvc mockMvc;
 
 	@Autowired
 	protected WebApplicationContext wac;
-	
+
 	@Autowired
 	protected DirectDebitSourceOfFundService sourceOfFundServiceMock;
 
@@ -48,13 +48,13 @@ public abstract class BaseTestController {
 
 	@Autowired
 	protected TmnProfileService profileServiceMock;
-	
+
 	@Autowired
-	protected P2PTransferService p2pTransferServiceMock; 
-	
+	protected P2PTransferService p2pTransferServiceMock;
+
 	@Autowired
 	protected BillPaymentService billPaymentServiceMock;
-	
+
 	@Before
 	public void setup() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
@@ -64,7 +64,7 @@ public abstract class BaseTestController {
 		this.p2pTransferServiceMock = wac.getBean(P2PTransferService.class);
 		this.billPaymentServiceMock = wac.getBean(BillPaymentService.class);
 	}
-	
+
 	@After
 	public void tearDown() {
 		reset(this.sourceOfFundServiceMock);
@@ -73,23 +73,23 @@ public abstract class BaseTestController {
 		reset(this.p2pTransferServiceMock);
 		reset(this.billPaymentServiceMock);
 	}
-	
+
 	protected ResultActions doPOST(String url, Object reqBody) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		return this.mockMvc.perform(
 				post(url).contentType(MediaType.APPLICATION_JSON)
 						 .content(mapper.writeValueAsBytes(reqBody)));
 	}
-	
+
 	protected ResultActions doGET(String url) throws Exception {
 		return this.mockMvc.perform(get(url).contentType(MediaType.APPLICATION_JSON));
 	}
-	
+
 	protected ResultActions doPUT(String url) throws Exception {
 		return this.mockMvc.perform(
 				put(url).contentType(MediaType.APPLICATION_JSON));
 	}
-	
+
 	protected ResultActions verifySuccess(ResultActions actions) throws Exception {
 		return actions.andExpect(status().isOk())
 		  	   .andExpect(jsonPath("$.code").value("20000"))
@@ -97,7 +97,7 @@ public abstract class BaseTestController {
 		  	   .andExpect(jsonPath("$.messageEn").value("Success"))
 		  	   .andExpect(jsonPath("$.messageTh").exists()); //TODO check the exact message sent out
 	}
-	
+
 	protected void verifyBadRequest(ResultActions actions) throws Exception {
 		actions.andExpect(status().isBadRequest())
 		  	   .andExpect(jsonPath("$.code").value(containsString("5000")))
@@ -105,7 +105,7 @@ public abstract class BaseTestController {
 		  	   .andExpect(jsonPath("$.messageEn").exists())
 		  	   .andExpect(jsonPath("$.messageTh").exists()); //TODO check the exact message sent out
 	}
-	
+
 	protected ResultActions verifyFailed(ResultActions actions) throws Exception {
 		return actions.andExpect(status().isInternalServerError())
 		  	   .andExpect(jsonPath("$.code").exists())

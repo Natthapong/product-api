@@ -42,12 +42,12 @@ public class P2PController extends BaseController {
 
 		BigDecimal amount = new BigDecimal(request.get("amount").replace(",", ""));
 		String mobileNumber = request.get("mobileNumber");
-		
+
 		if(!ValidateUtil.checkMobileNumber(mobileNumber)){
 			throw new InvalidParameterException("40001");
 		}
 
-		P2PDraftTransaction transaction = p2pTransferService.createDraftTransaction(mobileNumber, amount, accessToken);
+		P2PDraftTransaction transaction = p2pTransferService.verifyAndCreateTransferDraft(mobileNumber, amount, accessToken);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("mobileNumber", transaction.getMobileNumber());
@@ -63,8 +63,8 @@ public class P2PController extends BaseController {
 	@ResponseBody
 	public ProductResponse verifyTransfer(@PathVariable String draftTransactionID, @PathVariable String accessToken)throws ServiceInventoryException {
 
-		OTP otp = p2pTransferService.sendOTP(draftTransactionID, accessToken);
-		P2PDraftTransaction transaction = p2pTransferService.getDraftTransactionDetails(draftTransactionID, accessToken);
+		OTP otp = p2pTransferService.submitTransferral(draftTransactionID, accessToken);
+		P2PDraftTransaction transaction = p2pTransferService.getTransferDraftDetails(draftTransactionID, accessToken);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("otpRefCode", otp.getReferenceCode());
@@ -83,7 +83,7 @@ public class P2PController extends BaseController {
 		otp.setOtpString(request.get("otpString"));
 		otp.setReferenceCode(request.get("otpRefCode"));
 		otp.setMobileNumber(request.get("mobileNumber"));
-		DraftTransaction.Status transaction = p2pTransferService.confirmDraftTransaction(transactionID, otp, accessToken);
+		DraftTransaction.Status transaction = p2pTransferService.verifyOTPAndPerformTransferring(transactionID, otp, accessToken);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("transferStatus", transaction.getStatus());
@@ -94,7 +94,7 @@ public class P2PController extends BaseController {
 	@RequestMapping(value = "/transaction/{transactionID}/status/{accessToken}", method = RequestMethod.GET)
 	@ResponseBody
 	public ProductResponse checkStatus(@PathVariable String transactionID, @PathVariable String accessToken)throws ServiceInventoryException {
-		Transaction.Status status = p2pTransferService.getTransactionStatus(transactionID, accessToken);
+		Transaction.Status status = p2pTransferService.getTransferingStatus(transactionID, accessToken);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("transferStatus", status.getStatus());
@@ -109,7 +109,7 @@ public class P2PController extends BaseController {
 
 		P2PTransactionConfirmationInfo info = transaction.getConfirmationInfo();
 		P2PDraftTransaction draftTxn = transaction.getDraftTransaction();
-		
+
 		BigDecimal balance = this.profileService.getEwalletBalance(accessToken);
 
 		Map<String, Object> data = new HashMap<String, Object>();
@@ -119,7 +119,7 @@ public class P2PController extends BaseController {
 		data.put("transactionID", info.getTransactionID());
 		data.put("transactionDate", info.getTransactionDate());
 		data.put("currentBalance", balance);
-		
+
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 

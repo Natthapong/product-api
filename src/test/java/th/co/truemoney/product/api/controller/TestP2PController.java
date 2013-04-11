@@ -50,10 +50,11 @@ public class TestP2PController extends BaseTestController {
 		data.put("mobileNumber", "0898888888");
 		data.put("amount", "100.00");
 
-		when(
-				p2pTransferServiceMock.createDraftTransaction(anyString(),
-						any(BigDecimal.class), anyString())).thenReturn(
-				draftTransaction);
+		when(p2pTransferServiceMock.verifyAndCreateTransferDraft(
+				anyString(),
+				any(BigDecimal.class),
+				anyString())
+			).thenReturn(draftTransaction);
 
 		this.verifySuccess(this.doPOST(transferMoneyURL, data));
 	}
@@ -65,10 +66,11 @@ public class TestP2PController extends BaseTestController {
 		data.put("mobileNumber", "0898888888");
 		data.put("amount", "100.00");
 
-		when(
-				p2pTransferServiceMock.createDraftTransaction(anyString(),
-						any(BigDecimal.class), anyString())).thenThrow(
-				new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
+		when(p2pTransferServiceMock.verifyAndCreateTransferDraft(
+				anyString(),
+				any(BigDecimal.class),
+				anyString())
+			).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
 
 		this.verifyFailed(this.doPOST(transferMoneyURL, data))
 				.andExpect(jsonPath("$.code").value(""))
@@ -92,14 +94,15 @@ public class TestP2PController extends BaseTestController {
 		draftTransaction.setMobileNumber("0899999999");
 		draftTransaction.setOtpReferenceCode("qwer");
 
-		when(
-				p2pTransferServiceMock.sendOTP(any(String.class),
-						any(String.class))).thenReturn(otp);
+		when(p2pTransferServiceMock.submitTransferral(
+				any(String.class),
+				any(String.class))
+			).thenReturn(otp);
 
-		when(
-				p2pTransferServiceMock.getDraftTransactionDetails(
-						any(String.class), any(String.class))).thenReturn(
-				draftTransaction);
+		when(p2pTransferServiceMock.getTransferDraftDetails(
+				any(String.class),
+				any(String.class))
+			).thenReturn(draftTransaction);
 
 		this.verifySuccess(this.doPUT(verifyTransferURL));
 	}
@@ -114,15 +117,15 @@ public class TestP2PController extends BaseTestController {
 		draftTransaction.setMobileNumber("0899999999");
 		draftTransaction.setOtpReferenceCode("qwer");
 
-		when(
-				p2pTransferServiceMock.sendOTP(any(String.class),
-						any(String.class))).thenThrow(
-				new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
+		when(p2pTransferServiceMock.submitTransferral(
+				any(String.class),
+				any(String.class))
+			).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
 
-		when(
-				p2pTransferServiceMock.getDraftTransactionDetails(
-						any(String.class), any(String.class))).thenReturn(
-				draftTransaction);
+		when(p2pTransferServiceMock.getTransferDraftDetails(
+				any(String.class),
+				any(String.class))
+			).thenReturn(draftTransaction);
 
 		this.verifyFailed(this.doPUT(verifyTransferURL))
 				.andExpect(jsonPath("$.code").value(""))
@@ -138,11 +141,10 @@ public class TestP2PController extends BaseTestController {
 		data.put("otpString", "123456");
 		data.put("otpRefCode", "qwer");
 
-		when(
-				p2pTransferServiceMock.confirmDraftTransaction(
-						any(String.class),
-						any(OTP.class), 
-						any(String.class))
+		when(p2pTransferServiceMock.verifyOTPAndPerformTransferring(
+					any(String.class),
+					any(OTP.class),
+					any(String.class))
 		).thenReturn(DraftTransaction.Status.OTP_CONFIRMED);
 
 		this.verifySuccess(this.doPOST(confirmTransferURL, data)).andExpect(
@@ -156,10 +158,11 @@ public class TestP2PController extends BaseTestController {
 		data.put("otpString", "123456");
 		data.put("otpRefCode", "qwer");
 
-		when(
-				p2pTransferServiceMock.confirmDraftTransaction(any(String.class),
-						any(OTP.class), any(String.class))).thenThrow(
-				new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
+		when(p2pTransferServiceMock.verifyOTPAndPerformTransferring(
+				any(String.class),
+				any(OTP.class),
+				any(String.class)))
+			.thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
 
 		this.verifyFailed(this.doPOST(confirmTransferURL, data))
 				.andExpect(jsonPath("$.code").value(""))
@@ -170,10 +173,9 @@ public class TestP2PController extends BaseTestController {
 
 	@Test
 	public void checkStatusSuccess() throws Exception {
-		when(
-				p2pTransferServiceMock.getTransactionStatus(any(String.class),
-						any(String.class))).thenReturn(
-				Transaction.Status.PROCESSING);
+
+		when(p2pTransferServiceMock.getTransferingStatus(any(String.class), any(String.class)))
+				.thenReturn(Transaction.Status.PROCESSING);
 
 		this.verifySuccess(this.doGET(statusTransferURL)).andExpect(
 				jsonPath("$..transferStatus").exists());
@@ -181,10 +183,8 @@ public class TestP2PController extends BaseTestController {
 
 	@Test
 	public void checkStatusFail() throws Exception {
-		when(
-				p2pTransferServiceMock.getTransactionStatus(any(String.class),
-						any(String.class))).thenThrow(
-				new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
+		when(p2pTransferServiceMock.getTransferingStatus(any(String.class),any(String.class)))
+				.thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
 
 		this.verifyFailed(this.doGET(statusTransferURL))
 				.andExpect(jsonPath("$.code").value(""))
@@ -203,19 +203,20 @@ public class TestP2PController extends BaseTestController {
 		draftTransaction.setMobileNumber("0899999999");
 		draftTransaction.setOtpReferenceCode("qwer");
 		draftTransaction.setStatus(DraftTransaction.Status.OTP_CONFIRMED);
-		
+
 		P2PTransaction transaction = new P2PTransaction(draftTransaction);
 		transaction.setStatus(Transaction.Status.SUCCESS);
-		
-		//set requestbody for doGET
-		when(
-				p2pTransferServiceMock.getTransactionResult(any(String.class),
-						any(String.class))).thenReturn(transaction);
-		
-		when(
-				profileServiceMock.getEwalletBalance(any(String.class))).thenReturn(new BigDecimal(100.00));
 
-		
+		//set requestbody for doGET
+		when(p2pTransferServiceMock.getTransactionResult(
+				any(String.class),
+				any(String.class))
+			).thenReturn(transaction);
+
+		when(profileServiceMock.getEwalletBalance(any(String.class)))
+			.thenReturn(new BigDecimal(100.00));
+
+
 		this.verifySuccess(this.doGET(getTransferDetailURL))
 				.andExpect(jsonPath("$..mobileNumber").exists())
 				.andExpect(jsonPath("$..amount").exists())
@@ -227,10 +228,11 @@ public class TestP2PController extends BaseTestController {
 
 	@Test
 	public void getTransferDetailFail() throws Exception {
-		when(
-				p2pTransferServiceMock.getTransactionResult(any(String.class),
-						any(String.class))).thenThrow(
-				new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
+
+		when(p2pTransferServiceMock.getTransactionResult(
+				any(String.class),
+				any(String.class))
+			).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
 
 		this.verifyFailed(this.doGET(getTransferDetailURL))
 				.andExpect(jsonPath("$.code").value(""))

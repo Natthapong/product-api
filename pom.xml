@@ -192,8 +192,10 @@
 				<artifactId>tomcat-maven-plugin</artifactId>
 				<version>1.1</version>
 				<configuration>
-				     <path>/api</path>
-					<port>8080</port>
+				    <path>/api</path>
+					<url>${tomcat.manager}</url>
+					<username>${tomcat.manager.username}</username>
+					<password>${tomcat.manager.password}</password>
 					<systemProperties>
 						<spring.profiles.active>${spring.profiles.active}</spring.profiles.active>
 					</systemProperties>
@@ -228,9 +230,31 @@
 	<profiles>
 		<profile>
 			<id>local</id>
+			<activation>
+      			<activeByDefault>true</activeByDefault>
+    		</activation>
 			<properties>
 				<spring.profiles.active>local</spring.profiles.active>
+				<tomcat.manager>http://localhost:8080/manager</tomcat.manager>
+	            <tomcat.manager.username>tomcat</tomcat.manager.username>
+	            <tomcat.manager.password>tomcat</tomcat.manager.password>
 			</properties>
 		</profile>
+		<profile>
+	        <id>dev1</id>
+	        <properties>
+	            <tomcat.manager>http://10.217.202.11:8080/manager</tomcat.manager>
+	            <tomcat.manager.username>tomcat</tomcat.manager.username>
+	            <tomcat.manager.password>tomcat</tomcat.manager.password>
+	        </properties>
+	    </profile>
+	    <profile>
+	        <id>dev2</id>
+	        <properties>
+	            <tomcat.manager>http://10.217.202.12:8080/manager</tomcat.manager>
+	            <tomcat.manager.username>tomcat</tomcat.manager.username>
+	            <tomcat.manager.password>tomcat</tomcat.manager.password>
+	        </properties>
+	    </profile>
 	</profiles>
 </project>

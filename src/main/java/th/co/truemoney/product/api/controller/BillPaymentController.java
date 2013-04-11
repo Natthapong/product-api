@@ -36,8 +36,23 @@ public class BillPaymentController extends BaseController {
 				.createBillInvoice(billPaymentInfo, accessToken);
 		
 		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("target", billInvoice.getBillPaymentInfo().getTarget());
+		data.put("logoURL", billInvoice.getBillPaymentInfo().getLogoURL());
+		data.put("titleTH", billInvoice.getBillPaymentInfo().getTitleTH());		
+		data.put("titleEN", billInvoice.getBillPaymentInfo().getTitleEN());
+		
+		data.put("ref1TitleTH", billInvoice.getBillPaymentInfo().getRef1TitleTH());
+		data.put("ref1TitleEN", billInvoice.getBillPaymentInfo().getRef1TitleEN());
+		data.put("ref1", billInvoice.getBillPaymentInfo().getRef1());
+		
+		data.put("ref2TitleTH", billInvoice.getBillPaymentInfo().getRef2TitleTH());
+		data.put("ref2TitleEN", billInvoice.getBillPaymentInfo().getRef2TitleEN());
+		data.put("ref2", billInvoice.getBillPaymentInfo().getRef2());
+		
 		data.put("amount", billInvoice.getBillPaymentInfo().getAmount());
-		data.put("invoiceID", billInvoice.getID());
+		data.put("serviceFee", billInvoice.getBillPaymentInfo().getServiceFee());
+		data.put("serviceFeeType", billInvoice.getBillPaymentInfo().getServiceFeeType());
+		data.put("sourceOfFundFee", billInvoice.getBillPaymentInfo().getSourceOfFundFee());
 		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}

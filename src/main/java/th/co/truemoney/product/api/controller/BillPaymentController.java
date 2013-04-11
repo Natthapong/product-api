@@ -36,6 +36,8 @@ public class BillPaymentController extends BaseController {
 				.createBillInvoice(billPaymentInfo, accessToken);
 		
 		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("amount", billInvoice.getBillPaymentInfo().getAmount());
+		data.put("invoiceID", billInvoice.getID());
 		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}

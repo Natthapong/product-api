@@ -3,6 +3,10 @@ package th.co.truemoney.product.api.controller;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
+import java.math.BigDecimal;
 
 import org.junit.Test;
 
@@ -15,16 +19,20 @@ public class TestBillController extends BaseTestController {
 
 	String verifyTransferURL = String.format(
 			"/bill-payment/invoice?accessToken=%s", "1111111111111");
-
+	
 	@Test
 	public void urlCreateBillInvoice() throws Exception {
+		BillInvoice billInvoice = new BillInvoice("123",Status.CREATED,new BillPaymentInfo("12345", "6666", "7777", new BigDecimal(5000)));
+		billInvoice.setID("9999");
 		when(
 				this.billPaymentServiceMock.createBillInvoice(
 						any(BillPaymentInfo.class), anyString())).thenReturn(
-				new BillInvoice());
+								billInvoice);
 		
 		this.verifySuccess(this
-				.doPOST(verifyTransferURL, new BillPaymentInfo()));
+				.doPOST(verifyTransferURL, new BillPaymentInfo())).andDo(print())
+				.andExpect(jsonPath("$.data.amount").value(5000))
+				.andExpect(jsonPath("$.data.invoiceID").value("9999"));
 	}
 
 	

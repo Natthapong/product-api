@@ -79,8 +79,8 @@ public class BillPaymentController extends BaseController {
 		
 		data.put("amount", billInvoice.getBillPaymentInfo().getAmount());
 		data.put("serviceFee", billInvoice.getBillPaymentInfo().getServiceFee());
-		data.put("serviceFeeType", billInvoice.getBillPaymentInfo().getServiceFeeType());
-		data.put("sourceOfFundFee", billInvoice.getBillPaymentInfo().getSourceOfFundFee());
+		data.put("serviceFeeType", billInvoice.getBillPaymentInfo().getServiceFee().getFeeType());
+		data.put("sourceOfFundFee", billInvoice.getBillPaymentInfo().getSourceOfFundFees()[0]);
 		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}

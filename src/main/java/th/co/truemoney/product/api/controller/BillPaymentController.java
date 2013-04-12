@@ -16,7 +16,6 @@ import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
 import th.co.truemoney.serviceinventory.bill.domain.BillInfo;
-import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
 @Controller
@@ -96,7 +95,7 @@ public class BillPaymentController extends BaseController {
 		otp.setReferenceCode(request.get("otpRefCode"));
 		otp.setMobileNumber(request.get("mobileNumber"));
 
-		Status invoiceStatus = billPaymentService.confirmBill(invoiceID, otp, accessTokenID);
+		Bill.Status invoiceStatus = billPaymentService.confirmBill(invoiceID, otp, accessTokenID);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("invoiceStatus", invoiceStatus.getStatus());

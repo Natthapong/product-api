@@ -13,12 +13,11 @@ import java.util.Map;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.ewallet.domain.Transaction;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
-import th.co.truemoney.serviceinventory.transfer.domain.P2PDraftTransaction;
-import th.co.truemoney.serviceinventory.transfer.domain.P2PTransaction;
+import th.co.truemoney.serviceinventory.transfer.domain.P2PTransferDraft;
+import th.co.truemoney.serviceinventory.transfer.domain.P2PTransferTransaction;
 
 public class TestP2PController extends BaseTestController {
 
@@ -37,14 +36,14 @@ public class TestP2PController extends BaseTestController {
 			"1111111111111", fakeAccessToken);
 
 	@Test
-	public void createDraftTransactionSuccess() throws Exception {
-		P2PDraftTransaction draftTransaction = new P2PDraftTransaction();
-		draftTransaction.setAccessTokenID(fakeAccessToken);
-		draftTransaction.setAmount(new BigDecimal(100.00));
-		draftTransaction.setFullname("Apinya Ukachoke");
-		draftTransaction.setID("11111");
-		draftTransaction.setMobileNumber("0899999999");
-		draftTransaction.setOtpReferenceCode("qwer");
+	public void createTransferDraftSuccess() throws Exception {
+		P2PTransferDraft transferDraft = new P2PTransferDraft();
+		transferDraft.setAccessTokenID(fakeAccessToken);
+		transferDraft.setAmount(new BigDecimal(100.00));
+		transferDraft.setFullname("Apinya Ukachoke");
+		transferDraft.setID("11111");
+		transferDraft.setMobileNumber("0899999999");
+		transferDraft.setOtpReferenceCode("qwer");
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("mobileNumber", "0898888888");
@@ -54,13 +53,13 @@ public class TestP2PController extends BaseTestController {
 				anyString(),
 				any(BigDecimal.class),
 				anyString())
-			).thenReturn(draftTransaction);
+			).thenReturn(transferDraft);
 
 		this.verifySuccess(this.doPOST(transferMoneyURL, data));
 	}
 
 	@Test
-	public void createDraftTransactionFail() throws Exception {
+	public void createTransferDraftFail() throws Exception {
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("mobileNumber", "0898888888");
@@ -86,15 +85,15 @@ public class TestP2PController extends BaseTestController {
 		otp.setMobileNumber("0899999999");
 		otp.setReferenceCode("qwer");
 
-		P2PDraftTransaction draftTransaction = new P2PDraftTransaction();
-		draftTransaction.setAccessTokenID(fakeAccessToken);
-		draftTransaction.setAmount(new BigDecimal(100.00));
-		draftTransaction.setFullname("Apinya Ukachoke");
-		draftTransaction.setID("11111");
-		draftTransaction.setMobileNumber("0899999999");
-		draftTransaction.setOtpReferenceCode("qwer");
+		P2PTransferDraft transferDraft = new P2PTransferDraft();
+		transferDraft.setAccessTokenID(fakeAccessToken);
+		transferDraft.setAmount(new BigDecimal(100.00));
+		transferDraft.setFullname("Apinya Ukachoke");
+		transferDraft.setID("11111");
+		transferDraft.setMobileNumber("0899999999");
+		transferDraft.setOtpReferenceCode("qwer");
 
-		when(p2pTransferServiceMock.submitTransferral(
+		when(p2pTransferServiceMock.submitTransferRequest(
 				any(String.class),
 				any(String.class))
 			).thenReturn(otp);
@@ -102,22 +101,22 @@ public class TestP2PController extends BaseTestController {
 		when(p2pTransferServiceMock.getTransferDraftDetails(
 				any(String.class),
 				any(String.class))
-			).thenReturn(draftTransaction);
+			).thenReturn(transferDraft);
 
 		this.verifySuccess(this.doPUT(verifyTransferURL));
 	}
 
 	@Test
 	public void verifyTransferFail() throws Exception {
-		P2PDraftTransaction draftTransaction = new P2PDraftTransaction();
-		draftTransaction.setAccessTokenID(fakeAccessToken);
-		draftTransaction.setAmount(new BigDecimal(100.00));
-		draftTransaction.setFullname("Apinya Ukachoke");
-		draftTransaction.setID("11111");
-		draftTransaction.setMobileNumber("0899999999");
-		draftTransaction.setOtpReferenceCode("qwer");
+		P2PTransferDraft transferDraft = new P2PTransferDraft();
+		transferDraft.setAccessTokenID(fakeAccessToken);
+		transferDraft.setAmount(new BigDecimal(100.00));
+		transferDraft.setFullname("Apinya Ukachoke");
+		transferDraft.setID("11111");
+		transferDraft.setMobileNumber("0899999999");
+		transferDraft.setOtpReferenceCode("qwer");
 
-		when(p2pTransferServiceMock.submitTransferral(
+		when(p2pTransferServiceMock.submitTransferRequest(
 				any(String.class),
 				any(String.class))
 			).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
@@ -125,7 +124,7 @@ public class TestP2PController extends BaseTestController {
 		when(p2pTransferServiceMock.getTransferDraftDetails(
 				any(String.class),
 				any(String.class))
-			).thenReturn(draftTransaction);
+			).thenReturn(transferDraft);
 
 		this.verifyFailed(this.doPUT(verifyTransferURL))
 				.andExpect(jsonPath("$.code").value(""))
@@ -145,7 +144,7 @@ public class TestP2PController extends BaseTestController {
 					any(String.class),
 					any(OTP.class),
 					any(String.class))
-		).thenReturn(DraftTransaction.Status.OTP_CONFIRMED);
+		).thenReturn(P2PTransferDraft.Status.OTP_CONFIRMED);
 
 		this.verifySuccess(this.doPOST(confirmTransferURL, data)).andExpect(
 				jsonPath("$..transferStatus").exists());
@@ -174,7 +173,7 @@ public class TestP2PController extends BaseTestController {
 	@Test
 	public void checkStatusSuccess() throws Exception {
 
-		when(p2pTransferServiceMock.getTransferingStatus(any(String.class), any(String.class)))
+		when(p2pTransferServiceMock.getTransferringStatus(any(String.class), any(String.class)))
 				.thenReturn(Transaction.Status.PROCESSING);
 
 		this.verifySuccess(this.doGET(statusTransferURL)).andExpect(
@@ -183,7 +182,7 @@ public class TestP2PController extends BaseTestController {
 
 	@Test
 	public void checkStatusFail() throws Exception {
-		when(p2pTransferServiceMock.getTransferingStatus(any(String.class),any(String.class)))
+		when(p2pTransferServiceMock.getTransferringStatus(any(String.class),any(String.class)))
 				.thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
 
 		this.verifyFailed(this.doGET(statusTransferURL))
@@ -195,16 +194,16 @@ public class TestP2PController extends BaseTestController {
 
 	@Test@Ignore
 	public void getTransferDetailSuccess() throws Exception {
-		P2PDraftTransaction draftTransaction = new P2PDraftTransaction();
-		draftTransaction.setAccessTokenID(fakeAccessToken);
-		draftTransaction.setAmount(new BigDecimal(100.00));
-		draftTransaction.setFullname("Apinya Ukachoke");
-		draftTransaction.setID("1111");
-		draftTransaction.setMobileNumber("0899999999");
-		draftTransaction.setOtpReferenceCode("qwer");
-		draftTransaction.setStatus(DraftTransaction.Status.OTP_CONFIRMED);
+		P2PTransferDraft transferDraft = new P2PTransferDraft();
+		transferDraft.setAccessTokenID(fakeAccessToken);
+		transferDraft.setAmount(new BigDecimal(100.00));
+		transferDraft.setFullname("Apinya Ukachoke");
+		transferDraft.setID("1111");
+		transferDraft.setMobileNumber("0899999999");
+		transferDraft.setOtpReferenceCode("qwer");
+		transferDraft.setStatus(P2PTransferDraft.Status.OTP_CONFIRMED);
 
-		P2PTransaction transaction = new P2PTransaction(draftTransaction);
+		P2PTransferTransaction transaction = new P2PTransferTransaction(transferDraft);
 		transaction.setStatus(Transaction.Status.SUCCESS);
 
 		//set requestbody for doGET

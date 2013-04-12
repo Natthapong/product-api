@@ -22,7 +22,6 @@ import org.springframework.http.MediaType;
 import th.co.truemoney.product.api.domain.TopupDirectDebitRequest;
 import th.co.truemoney.product.api.domain.TopupQuotableRequest;
 import th.co.truemoney.serviceinventory.ewallet.domain.DirectDebit;
-import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpConfirmationInfo;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpOrder;
@@ -306,7 +305,7 @@ public class TestDirectDebitController extends BaseTestController {
 		otp.setReferenceCode("abcd");
 		otp.setOtpString("xxxxxx");
 
-		when(this.topupServiceMock.sendOTPConfirm(any(String.class),
+		when(this.topupServiceMock.submitTopUpRequest(any(String.class),
 						any(String.class))).thenReturn(otp);
 
 		TopUpQuote quote = new TopUpQuote();
@@ -340,7 +339,7 @@ public class TestDirectDebitController extends BaseTestController {
 		request.setQuoteID("1");
 
 		when(
-				this.topupServiceMock.sendOTPConfirm(any(String.class),
+				this.topupServiceMock.submitTopUpRequest(any(String.class),
 						any(String.class))).thenThrow(
 				new ServiceInventoryException(400, failedCode, failedMessage,
 						failedNamespace));
@@ -370,8 +369,8 @@ public class TestDirectDebitController extends BaseTestController {
 
 
 		when(
-				this.topupServiceMock.confirmOTP(any(String.class),
-						any(OTP.class), any(String.class))).thenReturn(Status.OTP_CONFIRMED);
+				this.topupServiceMock.verifyOTPAndPerformTopUp(any(String.class),
+						any(OTP.class), any(String.class))).thenReturn(TopUpQuote.Status.OTP_CONFIRMED);
 
 		this.mockMvc
 				.perform(
@@ -398,7 +397,7 @@ public class TestDirectDebitController extends BaseTestController {
 		request.setOtpString("495959");
 
 		when(
-				this.topupServiceMock.confirmOTP(any(String.class),
+				this.topupServiceMock.verifyOTPAndPerformTopUp(any(String.class),
 						any(OTP.class), any(String.class))).thenThrow(
 				new ServiceInventoryException(400, failedCode, failedMessage,
 						failedNamespace));
@@ -472,7 +471,7 @@ public class TestDirectDebitController extends BaseTestController {
 		confirmationInfo.setTransactionID("10101010");
 
 		TopUpQuote quote = new TopUpQuote();
-		quote.setStatus(Status.OTP_CONFIRMED);
+		quote.setStatus(TopUpQuote.Status.OTP_CONFIRMED);
 		quote.setAccessTokenID(fakeAccessToken);
 		quote.setAmount(new BigDecimal(100.00));
 		quote.setID("1111");

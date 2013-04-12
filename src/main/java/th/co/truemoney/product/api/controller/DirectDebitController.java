@@ -26,7 +26,6 @@ import th.co.truemoney.serviceinventory.ewallet.DirectDebitSourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
 import th.co.truemoney.serviceinventory.ewallet.domain.DirectDebit;
-import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpOrder;
 import th.co.truemoney.serviceinventory.ewallet.domain.TopUpQuote;
@@ -123,7 +122,7 @@ public class DirectDebitController extends BaseController {
 			@RequestBody TopupQuotableRequest request,
 			@PathVariable String accessToken) {
 
-		OTP otp = this.topupService.sendOTPConfirm(request.getQuoteID(),
+		OTP otp = this.topupService.submitTopUpRequest(request.getQuoteID(),
 				accessToken);
 		TopUpQuote quote = this.topupService.getTopUpQuoteDetails(
 				request.getQuoteID(), accessToken);
@@ -152,7 +151,7 @@ public class DirectDebitController extends BaseController {
 		otp.setOtpString(request.getOtpString());
 		otp.setMobileNumber(request.getMobileNumber());
 
-		DraftTransaction.Status quoteStatus = this.topupService.confirmOTP(
+		TopUpQuote.Status quoteStatus = this.topupService.verifyOTPAndPerformTopUp(
 				request.getQuoteID(), otp, accessToken);
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("topupStatus", quoteStatus.getStatus());

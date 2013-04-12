@@ -45,9 +45,19 @@
 
 "ewallet.p2p.verify.url" : "${apiHost}/api/v1/transfer/draft-transaction/%@/send-otp/%@?",
 
-"ewallet.p2p.confirm.otp.url" : "${apiHost}/api/v1/transfer/transaction/%@/%@?",
+"ewallet.p2p.confirm.otp.url" : "${apiHost}/api/v1/transfer/transaction/%invoice@/%@?",
 
 "ewallet.p2p.checkstatus.url" : "${apiHost}/api/v1/transfer/transaction/%@/status/%@?",
 
-"ewallet.p2p.transfer.detail.url" : "${apiHost}/api/v1/transfer/transaction/%@/%@?"
+"ewallet.p2p.transfer.detail.url" : "${apiHost}/api/v1/transfer/transaction/%@/%@?",
+
+"payment.barcode.detail.url" : "${apiHost}/api/v1/payment/bill/barcode/%@/%@?",
+
+"payment.bill.create.url" : "${apiHost}/api/v1/payment/bill/create/%@?",
+
+"payment.bill.confirm.url" : "${apiHost}/api/v1/payment/bill/%@/confirm/%@?",
+
+"payment.bill.status.url" : "${apiHost}/api/v1/payment/bill/%@/status/%@?",
+
+"payment.bill.detail.url" : ""${apiHost}/api/v1/payment/bill/%@/detail/%@?
 }

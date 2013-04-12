@@ -19,13 +19,13 @@ import th.co.truemoney.serviceinventory.bill.domain.BillInfo;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
 @Controller
-@RequestMapping(value = "/bill-payment")
+@RequestMapping(value = "/payment")
 public class BillPaymentController extends BaseController {
 
 	@Autowired
 	public BillPaymentService billPaymentService;
 
-	@RequestMapping(value = "/barcode/{barcode}/{accessTokenID}", method = RequestMethod.GET)
+	@RequestMapping(value = "/bill/barcode/{barcode}/{accessTokenID}", method = RequestMethod.GET)
 	public @ResponseBody
 	ProductResponse getBillInformation(@PathVariable String barcode, @PathVariable String accessTokenID) {
 
@@ -53,9 +53,9 @@ public class BillPaymentController extends BaseController {
 
 	}
 
-	@RequestMapping(value = "/invoice", method = RequestMethod.POST)
+	@RequestMapping(value = "/bill/create/{accessTokenID}", method = RequestMethod.POST)
 	public @ResponseBody
-	ProductResponse createBillInvoice(
+	ProductResponse createBillmentInvoice(
 			@RequestParam String accessToken,
 			@RequestBody BillInfo billPaymentInfo) {
 
@@ -84,9 +84,9 @@ public class BillPaymentController extends BaseController {
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 
-	@RequestMapping(value = "/invoice/{invoiceID}/confirm-otp/{accessTokenID}", method = RequestMethod.POST)
+	@RequestMapping(value = "/bill/{billID}/confirm/{accessTokenID}", method = RequestMethod.PUT)
 	public @ResponseBody
-	ProductResponse confirmBillPayOtp(@PathVariable String invoiceID,
+	ProductResponse confirmBillPaymentOtp(@PathVariable String billID,
 			@PathVariable String accessTokenID,
 			@RequestBody Map<String, String> request) {
 
@@ -95,12 +95,31 @@ public class BillPaymentController extends BaseController {
 		otp.setReferenceCode(request.get("otpRefCode"));
 		otp.setMobileNumber(request.get("mobileNumber"));
 
-		Bill.Status invoiceStatus = billPaymentService.confirmBill(invoiceID, otp, accessTokenID);
+		Bill.Status invoiceStatus = billPaymentService.confirmBill(billID, otp, accessTokenID);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("invoiceStatus", invoiceStatus.getStatus());
+		data.put("billPaymentID", billID);
 
 		return this.responseFactory.createSuccessProductResonse(data);
+	}
+	
+	@RequestMapping(value = "/bill/{billPaymentID}/status/{accessTokenID}", method = RequestMethod.GET)
+	public @ResponseBody
+	ProductResponse getBillPaymentStatus(@PathVariable String billPaymentID,
+			@PathVariable String accessTokenID,
+			@RequestBody Map<String, String> request) {
+		//TODO
+		return null;
+	}
+	
+	@RequestMapping(value = "/bill/{billPaymentID}/detail/{accessTokenID}", method = RequestMethod.GET)
+	public @ResponseBody
+	ProductResponse getBillPaymentDetail(@PathVariable String billPaymentID,
+			@PathVariable String accessTokenID,
+			@RequestBody Map<String, String> request) {
+		//TODO
+		return null;
 	}
 
 }

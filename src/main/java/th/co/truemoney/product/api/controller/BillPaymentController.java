@@ -1,5 +1,6 @@
 package th.co.truemoney.product.api.controller;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,9 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.domain.ProductResponse;
+import th.co.truemoney.product.api.util.MessageManager;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
 import th.co.truemoney.serviceinventory.bill.domain.BillInfo;
+import th.co.truemoney.serviceinventory.bill.domain.BillPayment;
+import th.co.truemoney.serviceinventory.bill.domain.BillPaymentConfirmationInfo;
+import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
 @Controller
@@ -24,7 +29,13 @@ public class BillPaymentController extends BaseController {
 
 	@Autowired
 	public BillPaymentService billPaymentService;
-
+	
+	@Autowired
+	TmnProfileService profileService;
+	
+	@Autowired
+	MessageManager messageManager;
+	
 	@RequestMapping(value = "/bill/barcode/{barcode}/{accessTokenID}", method = RequestMethod.GET)
 	public @ResponseBody
 	ProductResponse getBillInformation(@PathVariable String barcode, @PathVariable String accessTokenID) {
@@ -55,32 +66,19 @@ public class BillPaymentController extends BaseController {
 
 	@RequestMapping(value = "/bill/create/{accessTokenID}", method = RequestMethod.POST)
 	public @ResponseBody
-	ProductResponse createBillmentInvoice(
+	ProductResponse createBillPayment(
 			@RequestParam String accessToken,
 			@RequestBody BillInfo billPaymentInfo) {
 
-		Bill billInvoice = this.billPaymentService
-				.createBill(billPaymentInfo, accessToken);
-
+		Bill bill = this.billPaymentService.createBill(billPaymentInfo, accessToken);
+		
+		OTP otp = this.billPaymentService.sendOTP(bill.getID(), accessToken);
+		
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("target", billInvoice.getBillInfo().getTarget());
-		data.put("logoURL", billInvoice.getBillInfo().getLogoURL());
-		data.put("titleTH", billInvoice.getBillInfo().getTitleTH());
-		data.put("titleEN", billInvoice.getBillInfo().getTitleEN());
-
-		data.put("ref1TitleTH", billInvoice.getBillInfo().getRef1TitleTH());
-		data.put("ref1TitleEN", billInvoice.getBillInfo().getRef1TitleEN());
-		data.put("ref1", billInvoice.getBillInfo().getRef1());
-
-		data.put("ref2TitleTH", billInvoice.getBillInfo().getRef2TitleTH());
-		data.put("ref2TitleEN", billInvoice.getBillInfo().getRef2TitleEN());
-		data.put("ref2", billInvoice.getBillInfo().getRef2());
-
-		data.put("amount", billInvoice.getBillInfo().getAmount());
-		data.put("serviceFee", billInvoice.getBillInfo().getServiceFee());
-		data.put("serviceFeeType", billInvoice.getBillInfo().getServiceFee().getFeeType());
-		data.put("sourceOfFundFee", billInvoice.getBillInfo().getSourceOfFundFees()[0]);
-
+		data.put("otpRefCode", otp.getReferenceCode());
+		data.put("mobileNumber", otp.getMobileNumber());
+		data.put("billID", bill.getID());
+		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 
@@ -95,11 +93,11 @@ public class BillPaymentController extends BaseController {
 		otp.setReferenceCode(request.get("otpRefCode"));
 		otp.setMobileNumber(request.get("mobileNumber"));
 
-		Bill.Status invoiceStatus = billPaymentService.confirmBill(billID, otp, accessTokenID);
+		Bill.Status sts = billPaymentService.confirmBill(billID, otp, accessTokenID);
 
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("invoiceStatus", invoiceStatus.getStatus());
-		data.put("billPaymentID", billID);
+		data.put("billPaymentStatus", sts.getStatus());
+		data.put("billPaymentID", billID); //billPaymentID has the same value as billID
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
@@ -109,8 +107,13 @@ public class BillPaymentController extends BaseController {
 	ProductResponse getBillPaymentStatus(@PathVariable String billPaymentID,
 			@PathVariable String accessTokenID,
 			@RequestBody Map<String, String> request) {
-		//TODO
-		return null;
+		
+		BillPayment.Status sts = this.billPaymentService.getBillPaymentStatus(billPaymentID, accessTokenID);
+		
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("billPaymentStatus", sts.getStatus());
+		
+		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	
 	@RequestMapping(value = "/bill/{billPaymentID}/detail/{accessTokenID}", method = RequestMethod.GET)
@@ -118,8 +121,42 @@ public class BillPaymentController extends BaseController {
 	ProductResponse getBillPaymentDetail(@PathVariable String billPaymentID,
 			@PathVariable String accessTokenID,
 			@RequestBody Map<String, String> request) {
-		//TODO
-		return null;
-	}
+		
+		BillPayment payment = this.billPaymentService.getBillPaymentResult(billPaymentID, accessTokenID);
+		
+		BillPaymentConfirmationInfo paymentInfo = payment.getConfirmationInfo();
+		
+		BillInfo billInfo = payment.getDraftTransaction().getBillInfo();
+		
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("target", billInfo.getTarget());
+		data.put("logoURL", billInfo.getLogoURL());
+		data.put("titleTH", billInfo.getTitleTH());
+		data.put("titleEN", billInfo.getTitleEN());
 
+		data.put("ref1TitleTH", billInfo.getRef1TitleTH());
+		data.put("ref1TitleEN", billInfo.getRef1TitleEN());
+		data.put("ref1", billInfo.getRef1());
+
+		data.put("ref2TitleTH", billInfo.getRef2TitleTH());
+		data.put("ref2TitleEN", billInfo.getRef2TitleEN());
+		data.put("ref2", billInfo.getRef2());
+
+		data.put("amount", billInfo.getAmount());
+		data.put("totalFee", billInfo.getTotalFee());
+		data.put("totalAmount", billInfo.getAmount().add(billInfo.getTotalFee()));
+		data.put("sourceOfFund", "eWallet"); //TODO warning hard code!!!
+		
+		data.put("transactionID", paymentInfo.getTransactionID());
+		data.put("transactionDate", paymentInfo.getTransactionDate());
+		
+		data.put("remarkEN", messageManager.getMessageEn("payment.bill.remark"));
+		data.put("remarkTH", messageManager.getMessageTh("payment.bill.remark"));
+		
+		BigDecimal currentBalance = this.profileService.getEwalletBalance(accessTokenID);
+		data.put("currentEwalletBalance", currentBalance);
+		
+		return this.responseFactory.createSuccessProductResonse(data);
+	}
+	
 }

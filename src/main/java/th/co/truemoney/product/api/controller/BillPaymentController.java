@@ -161,8 +161,8 @@ public class BillPaymentController extends BaseController {
 		data.put("ref2", billInfo.getRef2());
 
 		data.put("amount", billInfo.getAmount());
-		data.put("totalFee", billInfo.getTotalFee());
-		data.put("totalAmount", billInfo.getAmount().add(billInfo.getTotalFee()));
+		data.put("totalFee", BigDecimal.ZERO); //TODO fix this
+		data.put("totalAmount", BigDecimal.ZERO); //TODO fix this
 		data.put("sourceOfFund", "eWallet"); //TODO warning hard code!!!
 		
 		data.put("transactionID", paymentInfo.getTransactionID());

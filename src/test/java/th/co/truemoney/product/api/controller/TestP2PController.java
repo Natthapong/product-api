@@ -103,7 +103,7 @@ public class TestP2PController extends BaseTestController {
 				any(String.class))
 			).thenReturn(transferDraft);
 
-		this.verifySuccess(this.doPUT(verifyTransferURL));
+		this.verifySuccess(this.doPUT(verifyTransferURL, new HashMap<String, Object>()));
 	}
 
 	@Test
@@ -126,7 +126,7 @@ public class TestP2PController extends BaseTestController {
 				any(String.class))
 			).thenReturn(transferDraft);
 
-		this.verifyFailed(this.doPUT(verifyTransferURL))
+		this.verifyFailed(this.doPUT(verifyTransferURL, new HashMap<String, Object>()))
 				.andExpect(jsonPath("$.code").value(""))
 				.andExpect(jsonPath("$.messageEn").value("Unknown Message"))
 				.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))

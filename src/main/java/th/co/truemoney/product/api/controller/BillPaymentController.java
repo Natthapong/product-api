@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.domain.ProductResponse;
@@ -20,6 +19,7 @@ import th.co.truemoney.serviceinventory.bill.domain.Bill;
 import th.co.truemoney.serviceinventory.bill.domain.BillInfo;
 import th.co.truemoney.serviceinventory.bill.domain.BillPayment;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentConfirmationInfo;
+import th.co.truemoney.serviceinventory.bill.domain.ServiceFee;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
@@ -38,7 +38,9 @@ public class BillPaymentController extends BaseController {
 	
 	@RequestMapping(value = "/bill/barcode/{barcode}/{accessTokenID}", method = RequestMethod.GET)
 	public @ResponseBody
-	ProductResponse getBillInformation(@PathVariable String barcode, @PathVariable String accessTokenID) {
+	ProductResponse getBillInformation(
+			@PathVariable String barcode, 
+			@PathVariable String accessTokenID) {
 
 		BillInfo billPaymentInfo = billPaymentService.getBillInformation(barcode, accessTokenID);
 
@@ -67,12 +69,28 @@ public class BillPaymentController extends BaseController {
 	@RequestMapping(value = "/bill/create/{accessTokenID}", method = RequestMethod.POST)
 	public @ResponseBody
 	ProductResponse createBillPayment(
-			@RequestParam String accessToken,
-			@RequestBody BillInfo billPaymentInfo) {
-
-		Bill bill = this.billPaymentService.createBill(billPaymentInfo, accessToken);
+			@PathVariable String accessTokenID,
+			@RequestBody Map<String, Object> request) {
 		
-		OTP otp = this.billPaymentService.sendOTP(bill.getID(), accessToken);
+		String target = (String)request.get("target");
+		String ref1 = (String)request.get("ref1");
+		String ref2 = (String)request.get("ref2");
+		Double amount = (Double)request.get("amount");
+		Double serviceFee = (Double)request.get("serviceFeeAmount");
+		
+		ServiceFee sFee = new ServiceFee();
+		sFee.setFee(new BigDecimal(serviceFee));
+		
+		BillInfo billInfo = new BillInfo();
+		billInfo.setTarget(target);
+		billInfo.setRef1(ref1);
+		billInfo.setRef2(ref2);
+		billInfo.setAmount(new BigDecimal(amount));
+		billInfo.setServiceFee(sFee);
+		
+		Bill bill = this.billPaymentService.createBill(billInfo, accessTokenID);
+		
+		OTP otp = this.billPaymentService.sendOTP(bill.getID(), accessTokenID);
 		
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("otpRefCode", otp.getReferenceCode());
@@ -84,7 +102,7 @@ public class BillPaymentController extends BaseController {
 
 	@RequestMapping(value = "/bill/{billID}/confirm/{accessTokenID}", method = RequestMethod.PUT)
 	public @ResponseBody
-	ProductResponse confirmBillPaymentOtp(@PathVariable String billID,
+	ProductResponse confirmBillPayment(@PathVariable String billID,
 			@PathVariable String accessTokenID,
 			@RequestBody Map<String, String> request) {
 
@@ -104,9 +122,9 @@ public class BillPaymentController extends BaseController {
 	
 	@RequestMapping(value = "/bill/{billPaymentID}/status/{accessTokenID}", method = RequestMethod.GET)
 	public @ResponseBody
-	ProductResponse getBillPaymentStatus(@PathVariable String billPaymentID,
-			@PathVariable String accessTokenID,
-			@RequestBody Map<String, String> request) {
+	ProductResponse getBillPaymentStatus(
+			@PathVariable String billPaymentID,
+			@PathVariable String accessTokenID) {
 		
 		BillPayment.Status sts = this.billPaymentService.getBillPaymentStatus(billPaymentID, accessTokenID);
 		
@@ -118,9 +136,9 @@ public class BillPaymentController extends BaseController {
 	
 	@RequestMapping(value = "/bill/{billPaymentID}/detail/{accessTokenID}", method = RequestMethod.GET)
 	public @ResponseBody
-	ProductResponse getBillPaymentDetail(@PathVariable String billPaymentID,
-			@PathVariable String accessTokenID,
-			@RequestBody Map<String, String> request) {
+	ProductResponse getBillPaymentDetail(
+			@PathVariable String billPaymentID,
+			@PathVariable String accessTokenID) {
 		
 		BillPayment payment = this.billPaymentService.getBillPaymentResult(billPaymentID, accessTokenID);
 		

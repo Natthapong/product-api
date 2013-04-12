@@ -73,9 +73,10 @@ public abstract class BaseTestController {
 		reset(this.p2pTransferServiceMock);
 		reset(this.billPaymentServiceMock);
 	}
-
+	
+	ObjectMapper mapper = new ObjectMapper();
+	
 	protected ResultActions doPOST(String url, Object reqBody) throws Exception {
-		ObjectMapper mapper = new ObjectMapper();
 		return this.mockMvc.perform(
 				post(url).contentType(MediaType.APPLICATION_JSON)
 						 .content(mapper.writeValueAsBytes(reqBody)));
@@ -85,9 +86,10 @@ public abstract class BaseTestController {
 		return this.mockMvc.perform(get(url).contentType(MediaType.APPLICATION_JSON));
 	}
 
-	protected ResultActions doPUT(String url) throws Exception {
+	protected ResultActions doPUT(String url, Object reqBody) throws Exception {
 		return this.mockMvc.perform(
-				put(url).contentType(MediaType.APPLICATION_JSON));
+				put(url).contentType(MediaType.APPLICATION_JSON)
+						.content(mapper.writeValueAsBytes(reqBody)));
 	}
 
 	protected ResultActions verifySuccess(ResultActions actions) throws Exception {

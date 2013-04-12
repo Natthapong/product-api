@@ -3,75 +3,202 @@ package th.co.truemoney.product.api.controller;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Test;
 
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
 import th.co.truemoney.serviceinventory.bill.domain.BillInfo;
+import th.co.truemoney.serviceinventory.bill.domain.BillPayment;
+import th.co.truemoney.serviceinventory.bill.domain.BillPaymentConfirmationInfo;
 import th.co.truemoney.serviceinventory.bill.domain.ServiceFee;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFundFee;
-import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 public class TestBillPaymentController extends BaseTestController {
+	
+	private static final String fakeAccessToken = "111111111111";
+	
+	private static final String fakeBarcode = "|01234567890";
+	
+	private static final String fakeBillID = "99999999999";
+	
+	private static final String fakeBillPaymentID = fakeAccessToken;
+	
+	private static final String getBarcodeDetailURL = String.format("/payment/bill/barcode/%s/%s", fakeBarcode, fakeAccessToken);
 
-	String fakeAccessToken = "111111111111";
-	String barcode = "|01234567890";
-	String getBillInformationURL = String.format("/bill-payment/barcode/%s/%s", barcode, fakeAccessToken);
-	String verifyTransferURL = String.format(
-			"/bill-payment/invoice?accessToken=%s", "1111111111111");
+	private static final String createBillPaymentURL = String.format("/payment/bill/create/%s", fakeAccessToken);
 
-	@Test
-	public void urlCreateBill() throws Exception {
-		Bill Bill = new Bill("123",Status.CREATED, createStubbedBillPaymentInfo());
-		Bill.setID("9999");
-		when(
-				this.billPaymentServiceMock.createBill(any(BillInfo.class), anyString())).thenReturn(
-								Bill);
+	private static final String confirmBillPaymentURL = String.format("/payment/bill/%s/confirm/%s", fakeBillID, fakeAccessToken);
 
-		this.verifySuccess(this
-				.doPOST(verifyTransferURL, createStubbedBillPaymentInfo())).andDo(print())
-				.andExpect(jsonPath("$.data.amount").value(10000.0));
-	}
+	private static final String getBillPaymentStatusURL = String.format("/payment/bill/%s/status/%s", fakeBillPaymentID, fakeAccessToken);
 
-	@Test
-	public void confirmBillPayOtp() throws Exception {
-		String confirmOtpUrl = String.format("/bill-payment/invoice/%s/confirm-otp/%s", "transaction_id", "access_token");
-		when(this.billPaymentServiceMock.confirmBill(anyString(), any(OTP.class), anyString())).thenReturn(Status.OTP_CONFIRMED);
-		this.verifySuccess(this.doPOST(confirmOtpUrl, new OTP()));
-	}
-
-
-
+	private static final String getBillPaymentDetailURL = String.format("/payment/bill/%s/detail/%s", fakeBillPaymentID, fakeAccessToken);
+	
+	BillInfo testBillInfo = createStubbedBillPaymentInfo();
+	
 	@Test
 	public void getBillInformationSuccess() throws Exception {
-		//given
-		BillInfo stubbedBillPaymentInfo = createStubbedBillPaymentInfo();
+		when(
+			billPaymentServiceMock.getBillInformation(
+				anyString(),
+				anyString()
+			)
+		).thenReturn(testBillInfo);
 
-		//when
-		when(billPaymentServiceMock.getBillInformation(anyString(), anyString())).thenReturn(stubbedBillPaymentInfo);
-
-		//then
-		this.verifySuccess(this.doGET(getBillInformationURL));
+		this.verifySuccess(this.doGET(getBarcodeDetailURL));
 	}
 
 	@Test
 	public void getBillInformationFail() throws Exception {
-		//given
-		ServiceInventoryException s = new ServiceInventoryException(400, "", "", "TMN-PRODUCT");
+		when(
+			billPaymentServiceMock.getBillInformation(
+				anyString(), 
+				anyString()
+			)
+		).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
 
-		//when
-		when(billPaymentServiceMock.getBillInformation(anyString(), anyString())).thenThrow(s);
+		this.verifyFailed(this.doGET(getBarcodeDetailURL));
+	}
+	
+	@Test
+	public void createBillPaymentSuccess() throws Exception {
+		Bill bill = new Bill();
 
-		//then
-		this.verifyFailed(this.doGET(getBillInformationURL));
+		when(
+			billPaymentServiceMock.createBill(
+				any(BillInfo.class), 
+				anyString()
+			)
+		).thenReturn(bill);
+		
+		when(
+			billPaymentServiceMock.sendOTP(
+				anyString(), 
+				anyString()
+			)
+		).thenReturn(new OTP());
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("target", "tmvh");
+		params.put("amount", new Double(1000.00));
+		params.put("ref1", "");
+		params.put("ref2", "");
+		params.put("serviceFeeAmount", new Double(10.00));
+		
+		this.verifySuccess(this.doPOST(createBillPaymentURL, params));
 	}
 
+	@Test
+	public void createBillPaymentFail() throws Exception {
+		when(
+			billPaymentServiceMock.createBill(
+				any(BillInfo.class), 
+				anyString()
+			)
+		).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("target", "tmvh");
+		params.put("amount", new Double(1000.00));
+		params.put("ref1", "");
+		params.put("ref2", "");
+		params.put("serviceFeeAmount", new Double(10.00));
+		
+		this.verifyFailed(this.doPOST(createBillPaymentURL, params));
+	}
+	
+	@Test
+	public void confirmBillPaymentSuccess() throws Exception {
+		when(
+			billPaymentServiceMock.confirmBill(
+				anyString(), 
+				any(OTP.class), 
+				anyString()
+			)
+		).thenReturn(Bill.Status.CREATED);
+		
+		this.verifySuccess(this.doPUT(confirmBillPaymentURL, new HashMap<String, Object>()));
+	}
+	
+	@Test
+	public void confirmBillPaymentFail() throws Exception {
+		when(
+			billPaymentServiceMock.confirmBill(
+				anyString(), 
+				any(OTP.class), 
+				anyString()
+			)
+		).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
+		
+		this.verifyFailed(this.doPUT(confirmBillPaymentURL, new HashMap<String, Object>()));
+	}
+	
+	@Test
+	public void getBillPaymentStatusSuccess() throws Exception {
+		when(
+			billPaymentServiceMock.getBillPaymentStatus(
+				anyString(), 
+				anyString()
+			)
+		).thenReturn(BillPayment.Status.PROCESSING);
+		
+		this.verifySuccess(this.doGET(getBillPaymentStatusURL));
+	}
+
+	@Test
+	public void getBillPaymentStatusFail() throws Exception {
+		when(
+			billPaymentServiceMock.getBillPaymentStatus(
+				anyString(), 
+				anyString()
+			)
+		).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
+		
+		this.verifyFailed(this.doGET(getBillPaymentStatusURL));
+	}
+	
+	@Test
+	public void getBillPaymentDetailSuccess() throws Exception {
+		ServiceFee sFee = new ServiceFee();
+		sFee.setFee(new BigDecimal(1000.00));
+		
+		BillInfo billInfo = new BillInfo();
+		billInfo.setServiceFee(sFee);
+		
+		Bill bill = new Bill();
+		bill.setBillInfo(billInfo);
+		
+		BillPayment bpay = new BillPayment();
+		bpay.setConfirmationInfo(new BillPaymentConfirmationInfo());
+		bpay.setDraftTransaction(bill);
+		
+		when(
+			billPaymentServiceMock.getBillPaymentResult(
+				anyString(), 
+				anyString()
+			)
+		).thenReturn(bpay);
+		
+		this.verifySuccess(this.doGET(getBillPaymentDetailURL));
+	}
+	
+	@Test
+	public void getBillPaymentDetailFail() throws Exception {
+		when(
+			billPaymentServiceMock.getBillPaymentResult(
+				anyString(), 
+				anyString()
+			)
+		).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
+		
+		this.verifyFailed(this.doGET(getBillPaymentDetailURL));
+	}
+	
 	private BillInfo createStubbedBillPaymentInfo() {
 		BillInfo billPaymentInfo = new BillInfo();
 		billPaymentInfo.setTarget("tcg");

@@ -1,8 +1,12 @@
 package th.co.truemoney.product.api.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import net.minidev.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +21,7 @@ import th.co.truemoney.product.api.util.BillUtil;
 import th.co.truemoney.product.api.util.MessageManager;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
+import th.co.truemoney.serviceinventory.bill.domain.BillPaySourceOfFund;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentConfirmationInfo;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
@@ -62,9 +67,15 @@ public class BillPaymentController extends BaseController {
 		data.put("amount", billPaymentInfo.getAmount());
 		data.put("serviceFee", billPaymentInfo.getServiceFee());
 		data.put("sourceOfFund", billPaymentInfo.getEwalletSourceOfFund());
-		
 		data.put("isTrueCorpBill", BillUtil.isTrueCorpBill(billPaymentInfo.getTarget()));
+
+		data.put("min_amount", billPaymentInfo.getMinAmount());
+		data.put("max_amount", billPaymentInfo.getMaxAmount());
 		
+		data.put("serviceFeeType", billPaymentInfo.getServiceFee().getFeeRateType());
+		data.put("serviceFee", billPaymentInfo.getServiceFee().getFeeRate());
+		data.put("sourceOfFundFee", prepareData(billPaymentInfo.getSourceOfFundFees()));
+
 		return this.responseFactory.createSuccessProductResonse(data);
 
 	}
@@ -170,6 +181,24 @@ public class BillPaymentController extends BaseController {
 		data.put("currentEwalletBalance", currentBalance);
 
 		return this.responseFactory.createSuccessProductResonse(data);
+	}
+	
+	private List<JSONObject> prepareData(BillPaySourceOfFund[] sourceOfFundFees) {
+		List<JSONObject> realData = new ArrayList<JSONObject>();
+
+		for (BillPaySourceOfFund billPaySourceOfFund : sourceOfFundFees) {
+			JSONObject returnData = new JSONObject();
+			//TODO warning hard code response eWallet only
+			if ("EW".equals(billPaySourceOfFund.getSourceType())) {
+				returnData.put("sourceType", billPaySourceOfFund.getSourceType());
+				returnData.put("sourceFee", billPaySourceOfFund.getFeeRate());
+				returnData.put("sourceFeeType", billPaySourceOfFund.getFeeRateType());
+				returnData.put("minSourceFeeAmount", billPaySourceOfFund.getMinFeeAmount());
+				returnData.put("maxSourceFeeAmount", billPaySourceOfFund.getMaxFeeAmount());
+				realData.add(returnData);
+			}
+		}
+		return realData;
 	}
 
 }

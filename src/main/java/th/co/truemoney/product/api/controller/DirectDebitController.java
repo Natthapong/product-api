@@ -69,7 +69,7 @@ public class DirectDebitController extends BaseController {
 			@RequestBody TopupDirectDebitRequest request,
 			@PathVariable String accessToken, HttpServletResponse response) {
 
-		TopUpQuote quote = this.topupService.verifyAndCreateTopUpQuote(
+		TopUpQuote quote = this.topupService.createAndVerifyTopUpQuote(
 				request.getSourceOfFundID(), request.getAmount(), accessToken);
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("quoteID", quote.getID());
@@ -151,7 +151,7 @@ public class DirectDebitController extends BaseController {
 		otp.setOtpString(request.getOtpString());
 		otp.setMobileNumber(request.getMobileNumber());
 
-		TopUpQuote.Status quoteStatus = this.topupService.verifyOTPAndPerformTopUp(
+		TopUpQuote.Status quoteStatus = this.topupService.authorizeAndPerformTopUp(
 				request.getQuoteID(), otp, accessToken);
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("topupStatus", quoteStatus.getStatus());

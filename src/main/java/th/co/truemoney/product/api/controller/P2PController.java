@@ -45,7 +45,7 @@ public class P2PController extends BaseController {
 			throw new InvalidParameterException("40001");
 		}
 
-		P2PTransferDraft transaction = p2pTransferService.verifyAndCreateTransferDraft(mobileNumber, amount, accessToken);
+		P2PTransferDraft transaction = p2pTransferService.createAndVerifyTransferDraft(mobileNumber, amount, accessToken);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("mobileNumber", transaction.getMobileNumber());
@@ -81,7 +81,7 @@ public class P2PController extends BaseController {
 		otp.setOtpString(request.get("otpString"));
 		otp.setReferenceCode(request.get("otpRefCode"));
 		otp.setMobileNumber(request.get("mobileNumber"));
-		P2PTransferDraft.Status transaction = p2pTransferService.verifyOTPAndPerformTransferring(transactionID, otp, accessToken);
+		P2PTransferDraft.Status transaction = p2pTransferService.authorizeAndPerformTransfer(transactionID, otp, accessToken);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("transferStatus", transaction.getStatus());

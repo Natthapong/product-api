@@ -146,7 +146,7 @@ public class TestDirectDebitController extends BaseTestController {
 		request.setSourceOfFundID("B00001");
 
 		when(
-				this.topupServiceMock.verifyAndCreateTopUpQuote(
+				this.topupServiceMock.createAndVerifyTopUpQuote(
 						any(String.class), any(BigDecimal.class),
 						any(String.class))).thenReturn(topUpQuote);
 
@@ -184,7 +184,7 @@ public class TestDirectDebitController extends BaseTestController {
 		request.setChecksum("00000000000000");
 
 		when(
-				this.topupServiceMock.verifyAndCreateTopUpQuote(
+				this.topupServiceMock.createAndVerifyTopUpQuote(
 						any(String.class), any(BigDecimal.class),
 						any(String.class))).thenThrow(
 				new ServiceInventoryException(400, failedCode, failedMessage,
@@ -369,7 +369,7 @@ public class TestDirectDebitController extends BaseTestController {
 
 
 		when(
-				this.topupServiceMock.verifyOTPAndPerformTopUp(any(String.class),
+				this.topupServiceMock.authorizeAndPerformTopUp(any(String.class),
 						any(OTP.class), any(String.class))).thenReturn(TopUpQuote.Status.OTP_CONFIRMED);
 
 		this.mockMvc
@@ -397,7 +397,7 @@ public class TestDirectDebitController extends BaseTestController {
 		request.setOtpString("495959");
 
 		when(
-				this.topupServiceMock.verifyOTPAndPerformTopUp(any(String.class),
+				this.topupServiceMock.authorizeAndPerformTopUp(any(String.class),
 						any(OTP.class), any(String.class))).thenThrow(
 				new ServiceInventoryException(400, failedCode, failedMessage,
 						failedNamespace));
@@ -552,7 +552,7 @@ public class TestDirectDebitController extends BaseTestController {
 		lessThanMinimumException.setData(data);
 
 		when(
-			this.topupServiceMock.verifyAndCreateTopUpQuote(
+			this.topupServiceMock.createAndVerifyTopUpQuote(
 				any(String.class),
 				any(BigDecimal.class),
 				any(String.class))
@@ -596,7 +596,7 @@ public class TestDirectDebitController extends BaseTestController {
 		moreThanMaximumExcepiion.setData(data);
 
 		when(
-			this.topupServiceMock.verifyAndCreateTopUpQuote(
+			this.topupServiceMock.createAndVerifyTopUpQuote(
 				any(String.class),
 				any(BigDecimal.class),
 				any(String.class))

@@ -49,7 +49,7 @@ public class TestP2PController extends BaseTestController {
 		data.put("mobileNumber", "0898888888");
 		data.put("amount", "100.00");
 
-		when(p2pTransferServiceMock.verifyAndCreateTransferDraft(
+		when(p2pTransferServiceMock.createAndVerifyTransferDraft(
 				anyString(),
 				any(BigDecimal.class),
 				anyString())
@@ -65,7 +65,7 @@ public class TestP2PController extends BaseTestController {
 		data.put("mobileNumber", "0898888888");
 		data.put("amount", "100.00");
 
-		when(p2pTransferServiceMock.verifyAndCreateTransferDraft(
+		when(p2pTransferServiceMock.createAndVerifyTransferDraft(
 				anyString(),
 				any(BigDecimal.class),
 				anyString())
@@ -140,7 +140,7 @@ public class TestP2PController extends BaseTestController {
 		data.put("otpString", "123456");
 		data.put("otpRefCode", "qwer");
 
-		when(p2pTransferServiceMock.verifyOTPAndPerformTransferring(
+		when(p2pTransferServiceMock.authorizeAndPerformTransfer(
 					any(String.class),
 					any(OTP.class),
 					any(String.class))
@@ -157,7 +157,7 @@ public class TestP2PController extends BaseTestController {
 		data.put("otpString", "123456");
 		data.put("otpRefCode", "qwer");
 
-		when(p2pTransferServiceMock.verifyOTPAndPerformTransferring(
+		when(p2pTransferServiceMock.authorizeAndPerformTransfer(
 				any(String.class),
 				any(OTP.class),
 				any(String.class)))

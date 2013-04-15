@@ -10,10 +10,10 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
-import th.co.truemoney.serviceinventory.bill.domain.BillInfo;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaySourceOfFund;
-import th.co.truemoney.serviceinventory.bill.domain.BillPayment;
+import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentConfirmationInfo;
 import th.co.truemoney.serviceinventory.bill.domain.ServiceFee;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
@@ -39,7 +39,7 @@ public class TestBillPaymentController extends BaseTestController {
 
 	private static final String getBillPaymentDetailURL = String.format("/payment/bill/%s/detail/%s", fakeBillPaymentID, fakeAccessToken);
 
-	BillInfo testBillInfo = createStubbedBillPaymentInfo();
+	Bill testBillInfo = createStubbedBillPaymentInfo();
 
 	@Test
 	public void getBillInformationSuccess() throws Exception {
@@ -67,11 +67,11 @@ public class TestBillPaymentController extends BaseTestController {
 
 	@Test
 	public void createBillPaymentSuccess() throws Exception {
-		Bill bill = new Bill();
+		BillPaymentDraft bill = new BillPaymentDraft();
 
 		when(
 			billPaymentServiceMock.createBill(
-				any(BillInfo.class),
+				any(Bill.class),
 				anyString()
 			)
 		).thenReturn(bill);
@@ -97,7 +97,7 @@ public class TestBillPaymentController extends BaseTestController {
 	public void createBillPaymentFail() throws Exception {
 		when(
 			billPaymentServiceMock.createBill(
-				any(BillInfo.class),
+				any(Bill.class),
 				anyString()
 			)
 		).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
@@ -120,7 +120,7 @@ public class TestBillPaymentController extends BaseTestController {
 				any(OTP.class),
 				anyString()
 			)
-		).thenReturn(Bill.Status.CREATED);
+		).thenReturn(BillPaymentDraft.Status.CREATED);
 
 		this.verifySuccess(this.doPUT(confirmBillPaymentURL, new HashMap<String, Object>()));
 	}
@@ -145,7 +145,7 @@ public class TestBillPaymentController extends BaseTestController {
 				anyString(),
 				anyString()
 			)
-		).thenReturn(BillPayment.Status.PROCESSING);
+		).thenReturn(BillPaymentTransaction.Status.PROCESSING);
 
 		this.verifySuccess(this.doGET(getBillPaymentStatusURL));
 	}
@@ -167,13 +167,13 @@ public class TestBillPaymentController extends BaseTestController {
 		ServiceFee sFee = new ServiceFee();
 		sFee.setFee(new BigDecimal(1000.00));
 
-		BillInfo billInfo = new BillInfo();
+		Bill billInfo = new Bill();
 		billInfo.setServiceFee(sFee);
 
-		Bill bill = new Bill();
+		BillPaymentDraft bill = new BillPaymentDraft();
 		bill.setBillInfo(billInfo);
 
-		BillPayment bpay = new BillPayment();
+		BillPaymentTransaction bpay = new BillPaymentTransaction();
 		bpay.setConfirmationInfo(new BillPaymentConfirmationInfo());
 		bpay.setDraftTransaction(bill);
 
@@ -199,8 +199,8 @@ public class TestBillPaymentController extends BaseTestController {
 		this.verifyFailed(this.doGET(getBillPaymentDetailURL));
 	}
 
-	private BillInfo createStubbedBillPaymentInfo() {
-		BillInfo billPaymentInfo = new BillInfo();
+	private Bill createStubbedBillPaymentInfo() {
+		Bill billPaymentInfo = new Bill();
 		billPaymentInfo.setTarget("tcg");
 		billPaymentInfo.setLogoURL("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png");
 		billPaymentInfo.setTitleTH("ค่าใช้บริการบริษัทในกลุ่มทรู");

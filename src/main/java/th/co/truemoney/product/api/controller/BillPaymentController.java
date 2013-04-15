@@ -15,11 +15,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.util.MessageManager;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
-import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
-import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentConfirmationInfo;
-import th.co.truemoney.serviceinventory.bill.domain.ServiceFee;
+import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
+import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
@@ -42,9 +41,10 @@ public class BillPaymentController extends BaseController {
 			@PathVariable String barcode,
 			@PathVariable String accessTokenID) {
 
-		Bill billPaymentInfo = billPaymentService.getBillInformation(barcode, accessTokenID);
+		Bill billPaymentInfo = billPaymentService.retrieveBillInformation(barcode, accessTokenID);
 
 		Map<String, Object> data = new HashMap<String, Object>();
+
 		data.put("target", billPaymentInfo.getTarget());
 		data.put("logoURL", billPaymentInfo.getLogoURL());
 		data.put("titleTH", billPaymentInfo.getTitleTH());
@@ -72,23 +72,10 @@ public class BillPaymentController extends BaseController {
 			@PathVariable String accessTokenID,
 			@RequestBody Map<String, Object> request) {
 
-		String target = (String)request.get("target");
-		String ref1 = (String)request.get("ref1");
-		String ref2 = (String)request.get("ref2");
+		String billID = (String)request.get("billID");
 		Double amount = (Double)request.get("amount");
-		Double serviceFee = (Double)request.get("serviceFeeAmount");
 
-		ServiceFee sFee = new ServiceFee();
-		sFee.setFee(new BigDecimal(serviceFee));
-
-		Bill billInfo = new Bill();
-		billInfo.setTarget(target);
-		billInfo.setRef1(ref1);
-		billInfo.setRef2(ref2);
-		billInfo.setAmount(new BigDecimal(amount));
-		billInfo.setServiceFee(sFee);
-
-		BillPaymentDraft bill = this.billPaymentService.createBill(billInfo, accessTokenID);
+		BillPaymentDraft bill = this.billPaymentService.verifyPaymentAbility(billID, new BigDecimal(amount), accessTokenID);
 
 		OTP otp = this.billPaymentService.sendOTP(bill.getID(), accessTokenID);
 

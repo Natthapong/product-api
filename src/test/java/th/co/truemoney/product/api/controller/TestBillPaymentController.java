@@ -39,12 +39,12 @@ public class TestBillPaymentController extends BaseTestController {
 
 	private static final String getBillPaymentDetailURL = String.format("/payment/bill/%s/detail/%s", fakeBillPaymentID, fakeAccessToken);
 
-	Bill testBillInfo = createStubbedBillPaymentInfo();
+	Bill testBillInfo = createStubbedBillInfo();
 
 	@Test
 	public void getBillInformationSuccess() throws Exception {
 		when(
-			billPaymentServiceMock.getBillInformation(
+			billPaymentServiceMock.retrieveBillInformation(
 				anyString(),
 				anyString()
 			)
@@ -56,7 +56,7 @@ public class TestBillPaymentController extends BaseTestController {
 	@Test
 	public void getBillInformationFail() throws Exception {
 		when(
-			billPaymentServiceMock.getBillInformation(
+			billPaymentServiceMock.retrieveBillInformation(
 				anyString(),
 				anyString()
 			)
@@ -70,8 +70,9 @@ public class TestBillPaymentController extends BaseTestController {
 		BillPaymentDraft bill = new BillPaymentDraft();
 
 		when(
-			billPaymentServiceMock.createBill(
-				any(Bill.class),
+			billPaymentServiceMock.verifyPaymentAbility(
+				anyString(),
+				any(BigDecimal.class),
 				anyString()
 			)
 		).thenReturn(bill);
@@ -96,8 +97,9 @@ public class TestBillPaymentController extends BaseTestController {
 	@Test
 	public void createBillPaymentFail() throws Exception {
 		when(
-			billPaymentServiceMock.createBill(
-				any(Bill.class),
+			billPaymentServiceMock.verifyPaymentAbility(
+				anyString(),
+				any(BigDecimal.class),
 				anyString()
 			)
 		).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
@@ -199,7 +201,7 @@ public class TestBillPaymentController extends BaseTestController {
 		this.verifyFailed(this.doGET(getBillPaymentDetailURL));
 	}
 
-	private Bill createStubbedBillPaymentInfo() {
+	private Bill createStubbedBillInfo() {
 		Bill billPaymentInfo = new Bill();
 		billPaymentInfo.setTarget("tcg");
 		billPaymentInfo.setLogoURL("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png");
@@ -237,5 +239,6 @@ public class TestBillPaymentController extends BaseTestController {
 
 		return billPaymentInfo;
 	}
+
 
 }

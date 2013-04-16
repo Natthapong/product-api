@@ -60,7 +60,7 @@ public class BillPaymentController extends BaseController {
 
 		data.put("amount", billPaymentInfo.getAmount());
 		data.put("serviceFee", billPaymentInfo.getServiceFee());
-		data.put("sourceOfFundFee", billPaymentInfo.getSourceOfFundFees()[0]);
+		data.put("sourceOfFund", billPaymentInfo.getEwalletSourceOfFund());
 
 		return this.responseFactory.createSuccessProductResonse(data);
 

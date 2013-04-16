@@ -15,7 +15,7 @@ import th.co.truemoney.serviceinventory.bill.domain.Bill;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaySourceOfFund;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentConfirmationInfo;
-import th.co.truemoney.serviceinventory.bill.domain.ServiceFee;
+import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
@@ -166,8 +166,8 @@ public class TestBillPaymentController extends BaseTestController {
 
 	@Test
 	public void getBillPaymentDetailSuccess() throws Exception {
-		ServiceFee sFee = new ServiceFee();
-		sFee.setFee(new BigDecimal(1000.00));
+		ServiceFeeInfo sFee = new ServiceFeeInfo();
+		sFee.setFeeRate(new BigDecimal(1000.00));
 
 		Bill billInfo = new Bill();
 		billInfo.setServiceFee(sFee);
@@ -202,42 +202,38 @@ public class TestBillPaymentController extends BaseTestController {
 	}
 
 	private Bill createStubbedBillInfo() {
-		Bill billPaymentInfo = new Bill();
-		billPaymentInfo.setTarget("tcg");
-		billPaymentInfo.setLogoURL("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png");
-		billPaymentInfo.setTitleTH("ค่าใช้บริการบริษัทในกลุ่มทรู");
-		billPaymentInfo.setTitleEN("Convergence Postpay");
+		Bill billInfo = new Bill();
+		billInfo.setTarget("tcg");
+		billInfo.setLogoURL("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png");
+		billInfo.setTitleTH("ค่าใช้บริการบริษัทในกลุ่มทรู");
+		billInfo.setTitleEN("Convergence Postpay");
 
-		billPaymentInfo.setRef1TitleTH("โทรศัพท์พื้นฐาน");
-		billPaymentInfo.setRef1TitleEN("Fix Line");
-		billPaymentInfo.setRef1("010004552");
+		billInfo.setRef1TitleTH("โทรศัพท์พื้นฐาน");
+		billInfo.setRef1TitleEN("Fix Line");
+		billInfo.setRef1("010004552");
 
-		billPaymentInfo.setRef2TitleTH("รหัสลูกค้า");
-		billPaymentInfo.setRef2TitleEN("Customer ID");
-		billPaymentInfo.setRef2("010520120200015601");
+		billInfo.setRef2TitleTH("รหัสลูกค้า");
+		billInfo.setRef2TitleEN("Customer ID");
+		billInfo.setRef2("010520120200015601");
 
-		billPaymentInfo.setAmount(new BigDecimal("10000"));
+		billInfo.setAmount(new BigDecimal("10000"));
 
-		ServiceFee serviceFee = new ServiceFee();
-		serviceFee.setFee(new BigDecimal("1000"));
-		serviceFee.setFeeType("THB");
-		serviceFee.setTotalFee(new BigDecimal("1000"));
-		serviceFee.setMinFeeAmount(new BigDecimal("100"));
-		serviceFee.setMaxFeeAmount(new BigDecimal("2500"));
-		billPaymentInfo.setServiceFee(serviceFee);
+		ServiceFeeInfo serviceFee = new ServiceFeeInfo();
+		serviceFee.setFeeRate(new BigDecimal("1000"));
+		serviceFee.setFeeRateType("THB");
+		billInfo.setServiceFee(serviceFee);
 
 		BillPaySourceOfFund[] sourceOfFundFees = new BillPaySourceOfFund[1];
 		BillPaySourceOfFund sourceOfFundFee = new BillPaySourceOfFund();
 		sourceOfFundFee.setSourceType("EW");
-		sourceOfFundFee.setFee(new BigDecimal("1000"));
-		sourceOfFundFee.setFeeType("THB");
-		sourceOfFundFee.setTotalFee(new BigDecimal("1000"));
+		sourceOfFundFee.setFeeRate(new BigDecimal("1000"));
+		sourceOfFundFee.setFeeRateType("THB");
 		sourceOfFundFee.setMinFeeAmount(new BigDecimal("100"));
 		sourceOfFundFee.setMaxFeeAmount(new BigDecimal("2500"));
 		sourceOfFundFees[0] = sourceOfFundFee;
-		billPaymentInfo.setSourceOfFundFees(sourceOfFundFees);
+		billInfo.setSourceOfFundFees(sourceOfFundFees);
 
-		return billPaymentInfo;
+		return billInfo;
 	}
 
 

@@ -63,6 +63,7 @@ public class BillPaymentController extends BaseController {
 		data.put("serviceFee", billPaymentInfo.getServiceFee());
 		data.put("sourceOfFund", billPaymentInfo.getEwalletSourceOfFund());
 		
+		data.put("partialPaymentAllow", false); //TODO fix this
 		data.put("isTrueCorpBill", BillUtil.isTrueCorpBill(billPaymentInfo.getTarget()));
 		
 		return this.responseFactory.createSuccessProductResonse(data);

@@ -53,11 +53,11 @@
 
 "payment.barcode.detail.url" : "${apiHost}/api/v1/payment/bill/barcode/%@/%@?",
 
-"payment.bill.create.url" : "${apiHost}/api/v1/payment/bill/create/%@?",
+"payment.bill.create.url" : "${apiHost}/api/v1/bill-payment/create/%@?",
 
-"payment.bill.confirm.url" : "${apiHost}/api/v1/payment/bill/%@/confirm/%@?",
+"payment.bill.confirm.url" : "${apiHost}/api/v1/bill-payment/%@/confirm/%@?",
 
-"payment.bill.status.url" : "${apiHost}/api/v1/payment/bill/%@/status/%@?",
+"payment.bill.status.url" : "${apiHost}/api/v1/bill-payment/%@/status/%@?",
 
-"payment.bill.detail.url" : ""${apiHost}/api/v1/payment/bill/%@/detail/%@?
+"payment.bill.detail.url" : ""${apiHost}/api/v1/bill-payment/%@/details/%@?
 }

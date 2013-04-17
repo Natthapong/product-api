@@ -4,6 +4,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,15 +31,15 @@ public class TestBillPaymentController extends BaseTestController {
 
         private static final String fakeBillPaymentID = fakeAccessToken;
 
-        private static final String getBarcodeDetailURL = String.format("/payment/bill/barcode/%s/%s", fakeBarcode, fakeAccessToken);
+        private static final String getBarcodeDetailURL = String.format("/bill-payment/barcode/%s/%s", fakeBarcode, fakeAccessToken);
 
-        private static final String createBillPaymentURL = String.format("/payment/bill/create/%s", fakeAccessToken);
+        private static final String createBillPaymentURL = String.format("/bill-payment/create/%s", fakeAccessToken);
 
-        private static final String confirmBillPaymentURL = String.format("/payment/bill/%s/confirm/%s", fakeBillID, fakeAccessToken);
+        private static final String confirmBillPaymentURL = String.format("/bill-payment/%s/confirm/%s", fakeBillID, fakeAccessToken);
 
-        private static final String getBillPaymentStatusURL = String.format("/payment/bill/%s/status/%s", fakeBillPaymentID, fakeAccessToken);
+        private static final String getBillPaymentStatusURL = String.format("/bill-payment/%s/status/%s", fakeBillPaymentID, fakeAccessToken);
 
-        private static final String getBillPaymentDetailURL = String.format("/payment/bill/%s/detail/%s", fakeBillPaymentID, fakeAccessToken);
+        private static final String getBillPaymentDetailURL = String.format("/bill-payment/%s/details/%s", fakeBillPaymentID, fakeAccessToken);
 
         Bill testBillInfo = createStubbedBillInfo();
 
@@ -168,6 +170,7 @@ public class TestBillPaymentController extends BaseTestController {
         public void getBillPaymentDetailSuccess() throws Exception {
                 ServiceFeeInfo sFee = new ServiceFeeInfo();
                 sFee.setFeeRate(new BigDecimal(1000.00));
+                sFee.setFeeRateType("THB");
 
                 Bill billInfo = new Bill();
                 billInfo.setServiceFee(sFee);
@@ -185,8 +188,13 @@ public class TestBillPaymentController extends BaseTestController {
                                 anyString()
                         )
                 ).thenReturn(bpay);
-
-                this.verifySuccess(this.doGET(getBillPaymentDetailURL));
+                when(
+                		profileServiceMock.getEwalletBalance(
+                				anyString()
+                		)
+                ).thenReturn(new BigDecimal(100.00));
+                
+                this.verifySuccess(this.doGET(getBillPaymentDetailURL)).andDo(print());
         }
 
         @Test
@@ -197,7 +205,7 @@ public class TestBillPaymentController extends BaseTestController {
                                 anyString()
                         )
                 ).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
-
+                
                 this.verifyFailed(this.doGET(getBillPaymentDetailURL));
         }
 

@@ -52,7 +52,7 @@ public class DirectDebitController extends BaseController {
 			HttpServletResponse response) {
 
 		List<DirectDebit> listBank = sourceOfFundService
-				.getUserDirectDebitSources(username, accessToken);
+				.getUserDirectDebitSources(accessToken);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("listOfBank", prepareData(listBank));

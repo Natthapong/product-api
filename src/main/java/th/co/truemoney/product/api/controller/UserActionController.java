@@ -16,7 +16,9 @@ import th.co.truemoney.product.api.domain.LoginBean;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
-import th.co.truemoney.serviceinventory.ewallet.domain.Login;
+import th.co.truemoney.serviceinventory.ewallet.domain.ChannelInfo;
+import th.co.truemoney.serviceinventory.ewallet.domain.ClientLogin;
+import th.co.truemoney.serviceinventory.ewallet.domain.EWalletOwnerLogin;
 import th.co.truemoney.serviceinventory.ewallet.domain.TmnProfile;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
@@ -25,6 +27,12 @@ public class UserActionController extends BaseController {
 
 	@Autowired
 	TmnProfileService profileService;
+
+	@Autowired
+	private ClientLogin appLogin;
+
+	@Autowired
+	private ChannelInfo channelInfo;
 
 	public void setProfileService(TmnProfileService profileService) {
 		this.profileService = profileService;
@@ -39,10 +47,11 @@ public class UserActionController extends BaseController {
 		validateSignin(request.getUsername().trim(), request.getPassword().trim(),
 				request.getType().trim());
 
-		Login login = new Login(request.getUsername().trim(), request.getPassword().trim());
+		EWalletOwnerLogin userLogin = new EWalletOwnerLogin(request.getUsername().trim(), request.getPassword().trim());
+
 		String token = "";
 		try {
-			token = profileService.login(MOBILE_APP_CHANNEL_ID, login);
+			token = profileService.login(userLogin, appLogin, channelInfo);
 		} catch (ServiceInventoryException e) {
 			String errorcode = String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode());
 			if (errorcode.equals("core.1011") || errorcode.equals("core.1013")
@@ -59,7 +68,7 @@ public class UserActionController extends BaseController {
 		}
 
 		TmnProfile profile = profileService.getTruemoneyProfile(token);
-		
+
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("fullname", profile.getFullname());
 		data.put("currentBalance", profile.getBalance());

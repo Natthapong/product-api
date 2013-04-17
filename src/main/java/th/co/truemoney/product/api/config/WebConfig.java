@@ -13,11 +13,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import th.co.truemoney.serviceinventory.ewallet.domain.ChannelInfo;
+import th.co.truemoney.serviceinventory.ewallet.domain.ClientLogin;
+
 @EnableWebMvc
 @Configuration
 @ComponentScan({"th.co.truemoney.product.api", "th.co.truemoney.serviceinventory.ewallet.client"})
 public class WebConfig extends WebMvcConfigurerAdapter {
-	
+
+	private static final Integer MOBILE_APP_CHANNEL_ID = 40;
+
 	@Bean
 	public ViewResolver getViewResolver() {
 		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
@@ -26,25 +31,25 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
 		return resolver;
 	}
-	
+
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
 	}
-	
+
 	@Override
 	public void configureContentNegotiation(
 			ContentNegotiationConfigurer configurer) {
 		configurer.favorPathExtension(false);
 	}
-	
+
 	@Bean
 	public RequestMappingHandlerMapping requestMappingHandlerMapping() {
 		RequestMappingHandlerMapping result = new RequestMappingHandlerMapping();
 		result.setUseSuffixPatternMatch(false);
 		return result;
 	}
-	
+
 	@Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
@@ -52,6 +57,16 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
     }
-	
+
+	@Bean
+	public ClientLogin appLogin() {
+		return new ClientLogin("f7cb0d495ea6d989", "MOBILE_IPHONE", "IPHONE+1");
+	}
+
+	@Bean
+	public ChannelInfo loginChannel() {
+		return new ChannelInfo(MOBILE_APP_CHANNEL_ID, "iPhone", "iPhone");
+	}
+
 }
 

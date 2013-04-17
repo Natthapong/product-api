@@ -71,7 +71,7 @@ public class TestDirectDebitController extends BaseTestController {
 		returnedDirectDebitList.add(scb);
 
 		when(
-			this.sourceOfFundServiceMock.getUserDirectDebitSources(anyString(), anyString())
+			this.sourceOfFundServiceMock.getUserDirectDebitSources(anyString())
 		).thenReturn(returnedDirectDebitList);
 
 		this.verifySuccess(
@@ -87,7 +87,7 @@ public class TestDirectDebitController extends BaseTestController {
 		String failedMessage = "AccessToken is expired";
 		String failedNamespace = "TMN-SERVICE-INVENTORY";
 		when(
-				this.sourceOfFundServiceMock.getUserDirectDebitSources(anyString(), anyString())).thenThrow(
+				this.sourceOfFundServiceMock.getUserDirectDebitSources(anyString())).thenThrow(
 				new ServiceInventoryException(400, failedCode, failedMessage,
 						failedNamespace));
 
@@ -106,7 +106,7 @@ public class TestDirectDebitController extends BaseTestController {
 		String failedMessage = "Username is invalid format";
 		String failedNamespace = "TMN-PRODUCT";
 		when(
-				this.sourceOfFundServiceMock.getUserDirectDebitSources(anyString(), anyString())).thenThrow(
+				this.sourceOfFundServiceMock.getUserDirectDebitSources(anyString())).thenThrow(
 				new ServiceInventoryException(400, failedCode, failedMessage,
 						failedNamespace));
 
@@ -138,7 +138,6 @@ public class TestDirectDebitController extends BaseTestController {
 		topUpQuote.setAccessTokenID(fakeAccessToken);
 		topUpQuote.setID("342");
 		topUpQuote.setTopUpFee(new BigDecimal(10.00));
-		topUpQuote.setUsername("sdfsdf");
 
 		TopupDirectDebitRequest request = new TopupDirectDebitRequest();
 		request.setAmount(new BigDecimal(100.00));
@@ -223,7 +222,6 @@ public class TestDirectDebitController extends BaseTestController {
 		quote.setAmount(new BigDecimal(100.00));
 		quote.setID("111");
 		quote.setTopUpFee(new BigDecimal(100.00));
-		quote.setUsername("sfsdf");
 		quote.setSourceOfFund(fakeSourceOfFund);
 
 		when(
@@ -476,7 +474,6 @@ public class TestDirectDebitController extends BaseTestController {
 		quote.setAmount(new BigDecimal(100.00));
 		quote.setID("1111");
 		quote.setTopUpFee(new BigDecimal(10.00));
-		quote.setUsername("username");
 		quote.setSourceOfFund(fakeSourceOfFund);
 
 		TopUpOrder order = new TopUpOrder(quote);

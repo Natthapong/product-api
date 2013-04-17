@@ -10,9 +10,8 @@ import java.math.BigDecimal;
 import org.junit.Test;
 
 import th.co.truemoney.product.api.domain.LoginBean;
-import th.co.truemoney.serviceinventory.ewallet.domain.ChannelInfo;
-import th.co.truemoney.serviceinventory.ewallet.domain.ClientLogin;
-import th.co.truemoney.serviceinventory.ewallet.domain.EWalletOwnerLogin;
+import th.co.truemoney.serviceinventory.ewallet.domain.ClientCredential;
+import th.co.truemoney.serviceinventory.ewallet.domain.EWalletOwnerCredential;
 import th.co.truemoney.serviceinventory.ewallet.domain.TmnProfile;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
@@ -22,10 +21,8 @@ public class TestLoginController extends BaseTestController {
 	public void loginSuccess() throws Exception {
 		when(
 			this.profileServiceMock.login(
-				any(EWalletOwnerLogin.class),
-				any(ClientLogin.class),
-				any(ChannelInfo.class)
-			)
+				any(EWalletOwnerCredential.class),
+				any(ClientCredential.class))
 		).thenReturn("token-string");
 
 		when(
@@ -43,10 +40,8 @@ public class TestLoginController extends BaseTestController {
 	public void loginInputValidationFailed() throws Exception {
 		when(
 			this.profileServiceMock.login(
-				any(EWalletOwnerLogin.class),
-				any(ClientLogin.class),
-				any(ChannelInfo.class)
-			)
+				any(EWalletOwnerCredential.class),
+				any(ClientCredential.class))
 		).thenReturn("token-string");
 
 		this.verifyBadRequest(
@@ -58,10 +53,8 @@ public class TestLoginController extends BaseTestController {
 	public void loginNotSuccess() throws Exception {
 		when(
 			this.profileServiceMock.login(
-				any(EWalletOwnerLogin.class),
-				any(ClientLogin.class),
-				any(ChannelInfo.class)
-			)
+				any(EWalletOwnerCredential.class),
+				any(ClientCredential.class)			)
 		).thenThrow(
 				new ServiceInventoryException(400, "4", "Invalid Username or Password", "umarket"));
 		this.verifyFailed(
@@ -76,10 +69,8 @@ public class TestLoginController extends BaseTestController {
 	public void accountNotActive() throws Exception {
 		when (
 			this.profileServiceMock.login(
-				any(EWalletOwnerLogin.class),
-				any(ClientLogin.class),
-				any(ChannelInfo.class)
-			)
+				any(EWalletOwnerCredential.class),
+				any(ClientCredential.class))
 		).thenThrow(
 				new ServiceInventoryException(400, "1006", "confirm umarket failed.", "TMN-SERVICE-INVENTORY")
 		);

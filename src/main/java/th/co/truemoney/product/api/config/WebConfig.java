@@ -13,15 +13,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import th.co.truemoney.serviceinventory.ewallet.domain.ChannelInfo;
-import th.co.truemoney.serviceinventory.ewallet.domain.ClientLogin;
+import th.co.truemoney.serviceinventory.ewallet.domain.ClientCredential;
 
 @EnableWebMvc
 @Configuration
 @ComponentScan({"th.co.truemoney.product.api", "th.co.truemoney.serviceinventory.ewallet.client"})
 public class WebConfig extends WebMvcConfigurerAdapter {
-
-	private static final Integer MOBILE_APP_CHANNEL_ID = 40;
 
 	@Bean
 	public ViewResolver getViewResolver() {
@@ -59,13 +56,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
 	@Bean
-	public ClientLogin appLogin() {
-		return new ClientLogin("f7cb0d495ea6d989", "MOBILE_IPHONE", "IPHONE+1");
-	}
-
-	@Bean
-	public ChannelInfo loginChannel() {
-		return new ChannelInfo(MOBILE_APP_CHANNEL_ID, "iPhone", "iPhone");
+	public ClientCredential appLogin() {
+		return new ClientCredential("f7cb0d495ea6d989", "MOBILE_IPHONE", "IPHONE+1", "iPhone", "iPhone");
 	}
 
 }

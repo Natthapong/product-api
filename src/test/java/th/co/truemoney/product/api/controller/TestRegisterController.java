@@ -28,9 +28,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import th.co.truemoney.product.api.config.TestWebConfig;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
-import th.co.truemoney.serviceinventory.ewallet.domain.ChannelInfo;
-import th.co.truemoney.serviceinventory.ewallet.domain.ClientLogin;
-import th.co.truemoney.serviceinventory.ewallet.domain.EWalletOwnerLogin;
+import th.co.truemoney.serviceinventory.ewallet.domain.ClientCredential;
+import th.co.truemoney.serviceinventory.ewallet.domain.EWalletOwnerCredential;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.ewallet.domain.TmnProfile;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
@@ -203,9 +202,8 @@ public class TestRegisterController {
 
 		when(
 				this.tmnProfileServiceMock.login(
-						any(EWalletOwnerLogin.class),
-						any(ClientLogin.class),
-						any(ChannelInfo.class))
+						any(EWalletOwnerCredential.class),
+						any(ClientCredential.class))
 		).thenReturn("token-string");
 
 		when(
@@ -248,9 +246,8 @@ public class TestRegisterController {
 					failedNamespace));
 		when(
 				this.tmnProfileServiceMock.login(
-						any(EWalletOwnerLogin.class),
-						any(ClientLogin.class),
-						any(ChannelInfo.class))
+						any(EWalletOwnerCredential.class),
+						any(ClientCredential.class))
 			).thenReturn("token-string");
 
 		when(
@@ -296,16 +293,14 @@ public class TestRegisterController {
 
 		when(
 				this.tmnProfileServiceMock.login(
-						any(EWalletOwnerLogin.class),
-						any(ClientLogin.class),
-						any(ChannelInfo.class))
+						any(EWalletOwnerCredential.class),
+						any(ClientCredential.class))
 			).thenReturn("token-string");
 
 		when(
 				this.tmnProfileServiceMock.login(
-						any(EWalletOwnerLogin.class),
-						any(ClientLogin.class),
-						any(ChannelInfo.class))
+						any(EWalletOwnerCredential.class),
+						any(ClientCredential.class))
 			).thenReturn("");
 
 			this.mockMvc
@@ -347,16 +342,14 @@ public class TestRegisterController {
 
 		when(
 				this.tmnProfileServiceMock.login(
-						any(EWalletOwnerLogin.class),
-						any(ClientLogin.class),
-						any(ChannelInfo.class))
+						any(EWalletOwnerCredential.class),
+						any(ClientCredential.class))
 			).thenReturn("token-string");
 
 		when(
 				this.tmnProfileServiceMock.login(
-						any(EWalletOwnerLogin.class),
-						any(ClientLogin.class),
-						any(ChannelInfo.class))
+						any(EWalletOwnerCredential.class),
+						any(ClientCredential.class))
 			).thenReturn("");
 
 			this.mockMvc

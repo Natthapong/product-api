@@ -21,8 +21,10 @@ public class BillUtil {
 			totalFee.add(serviceFee.calculateFee(amount));
 		}
 		
-		for (BillPaySourceOfFund sof : sofs) {
-			totalFee.add(sof.calculateFee(amount));
+		if (sofs != null) {
+			for (BillPaySourceOfFund sof : sofs) {
+				totalFee.add(sof.calculateFee(amount));
+			}
 		}
 		return totalFee;
 	}

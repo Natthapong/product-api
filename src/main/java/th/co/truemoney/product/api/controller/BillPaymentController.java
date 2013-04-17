@@ -24,7 +24,7 @@ import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
 @Controller
-@RequestMapping(value = "/payment")
+@RequestMapping(value = "/bill-payment")
 public class BillPaymentController extends BaseController {
 
 	@Autowired
@@ -36,7 +36,7 @@ public class BillPaymentController extends BaseController {
 	@Autowired
 	MessageManager messageManager;
 
-	@RequestMapping(value = "/bill/barcode/{barcode}/{accessTokenID}", method = RequestMethod.GET)
+	@RequestMapping(value = "/barcode/{barcode}/{accessTokenID}", method = RequestMethod.GET)
 	public @ResponseBody
 	ProductResponse getBillInformation(
 			@PathVariable String barcode,
@@ -69,7 +69,7 @@ public class BillPaymentController extends BaseController {
 
 	}
 
-	@RequestMapping(value = "/bill/create/{accessTokenID}", method = RequestMethod.POST)
+	@RequestMapping(value = "/create/{accessTokenID}", method = RequestMethod.POST)
 	public @ResponseBody
 	ProductResponse createBillPayment(
 			@PathVariable String accessTokenID,
@@ -90,7 +90,7 @@ public class BillPaymentController extends BaseController {
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 
-	@RequestMapping(value = "/bill/{billID}/confirm/{accessTokenID}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{billID}/confirm/{accessTokenID}", method = RequestMethod.PUT)
 	public @ResponseBody
 	ProductResponse confirmBillPayment(@PathVariable String billID,
 			@PathVariable String accessTokenID,
@@ -110,7 +110,7 @@ public class BillPaymentController extends BaseController {
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 
-	@RequestMapping(value = "/bill/{billPaymentID}/status/{accessTokenID}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{billPaymentID}/status/{accessTokenID}", method = RequestMethod.GET)
 	public @ResponseBody
 	ProductResponse getBillPaymentStatus(
 			@PathVariable String billPaymentID,
@@ -124,7 +124,7 @@ public class BillPaymentController extends BaseController {
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 
-	@RequestMapping(value = "/bill/{billPaymentID}/detail/{accessTokenID}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{billPaymentID}/details/{accessTokenID}", method = RequestMethod.GET)
 	public @ResponseBody
 	ProductResponse getBillPaymentDetail(
 			@PathVariable String billPaymentID,

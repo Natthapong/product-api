@@ -14,13 +14,15 @@ import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.ewallet.DirectDebitSourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
+import th.co.truemoney.serviceinventory.ewallet.domain.ChannelInfo;
+import th.co.truemoney.serviceinventory.ewallet.domain.ClientLogin;
 import th.co.truemoney.serviceinventory.transfer.P2PTransferService;
 
 @EnableWebMvc
 @Configuration
 @ComponentScan({"th.co.truemoney.product.api.controller", "th.co.truemoney.product.api.util"})
 public class TestWebConfig {
-
+	
 	@Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
@@ -60,5 +62,16 @@ public class TestWebConfig {
 	public String apiHost() {
 		return "http://localhost:8080";
 	}
+	
+	@Bean
+	public ClientLogin appLogin() {
+		return new ClientLogin("f7cb0d495ea6d989", "MOBILE_IPHONE", "IPHONE+1");
+	}
+
+	@Bean
+	public ChannelInfo loginChannel() {
+		return new ChannelInfo(WebConfig.MOBILE_APP_CHANNEL_ID, "iPhone", "iPhone");
+	}
+
 
 }

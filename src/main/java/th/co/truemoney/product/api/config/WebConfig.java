@@ -21,7 +21,7 @@ import th.co.truemoney.serviceinventory.ewallet.domain.ClientLogin;
 @ComponentScan({"th.co.truemoney.product.api", "th.co.truemoney.serviceinventory.ewallet.client"})
 public class WebConfig extends WebMvcConfigurerAdapter {
 
-	private static final Integer MOBILE_APP_CHANNEL_ID = 40;
+	public static final Integer MOBILE_APP_CHANNEL_ID = 40;
 
 	@Bean
 	public ViewResolver getViewResolver() {

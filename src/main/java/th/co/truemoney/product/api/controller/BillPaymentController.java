@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.domain.ProductResponse;
+import th.co.truemoney.product.api.util.BillUtil;
 import th.co.truemoney.product.api.util.MessageManager;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
@@ -61,7 +62,9 @@ public class BillPaymentController extends BaseController {
 		data.put("amount", billPaymentInfo.getAmount());
 		data.put("serviceFee", billPaymentInfo.getServiceFee());
 		data.put("sourceOfFund", billPaymentInfo.getEwalletSourceOfFund());
-
+		
+		data.put("isTrueCorpBill", BillUtil.isTrueCorpBill(billPaymentInfo.getTarget()));
+		
 		return this.responseFactory.createSuccessProductResonse(data);
 
 	}

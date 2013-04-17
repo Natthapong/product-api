@@ -66,12 +66,11 @@ public class BillPaymentController extends BaseController {
 
 		data.put("amount", billPaymentInfo.getAmount());
 		data.put("serviceFee", billPaymentInfo.getServiceFee());
-		data.put("sourceOfFund", billPaymentInfo.getEwalletSourceOfFund());
 		data.put("partialPaymentAllow", billPaymentInfo.getPartialPayment());
 		data.put("isTrueCorpBill", BillUtil.isTrueCorpBill(billPaymentInfo.getTarget()));
 
-		data.put("min_amount", billPaymentInfo.getMinAmount());
-		data.put("max_amount", billPaymentInfo.getMaxAmount());
+		data.put("minAmount", billPaymentInfo.getMinAmount());
+		data.put("maxAmount", billPaymentInfo.getMaxAmount());
 		
 		data.put("serviceFeeType", billPaymentInfo.getServiceFee().getFeeRateType());
 		data.put("serviceFee", billPaymentInfo.getServiceFee().getFeeRate());

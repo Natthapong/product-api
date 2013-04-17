@@ -16,23 +16,22 @@ import th.co.truemoney.product.api.domain.LoginBean;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
-import th.co.truemoney.serviceinventory.ewallet.domain.ChannelInfo;
-import th.co.truemoney.serviceinventory.ewallet.domain.ClientLogin;
-import th.co.truemoney.serviceinventory.ewallet.domain.EWalletOwnerLogin;
+import th.co.truemoney.serviceinventory.ewallet.domain.ClientCredential;
+import th.co.truemoney.serviceinventory.ewallet.domain.EWalletOwnerCredential;
 import th.co.truemoney.serviceinventory.ewallet.domain.TmnProfile;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 @Controller
 public class UserActionController extends BaseController {
 
+	private static final Integer MOBILE_CHANNEL_ID = 40;
+
 	@Autowired
 	TmnProfileService profileService;
 
 	@Autowired
-	private ClientLogin appLogin;
+	private ClientCredential appLogin;
 
-	@Autowired
-	private ChannelInfo channelInfo;
 
 	public void setProfileService(TmnProfileService profileService) {
 		this.profileService = profileService;
@@ -47,11 +46,14 @@ public class UserActionController extends BaseController {
 		validateSignin(request.getUsername().trim(), request.getPassword().trim(),
 				request.getType().trim());
 
-		EWalletOwnerLogin userLogin = new EWalletOwnerLogin(request.getUsername().trim(), request.getPassword().trim());
+		EWalletOwnerCredential userLogin = new EWalletOwnerCredential(
+				request.getUsername().trim(),
+				request.getPassword().trim(),
+				MOBILE_CHANNEL_ID);
 
 		String token = "";
 		try {
-			token = profileService.login(userLogin, appLogin, channelInfo);
+			token = profileService.login(userLogin, appLogin);
 		} catch (ServiceInventoryException e) {
 			String errorcode = String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode());
 			if (errorcode.equals("core.1011") || errorcode.equals("core.1013")

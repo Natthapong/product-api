@@ -130,12 +130,16 @@ public class BillPaymentController extends BaseController {
 			@PathVariable String billPaymentID,
 			@PathVariable String accessTokenID) {
 
-		BillPaymentTransaction payment = this.billPaymentService.getBillPaymentResult(billPaymentID, accessTokenID);
+		BillPaymentTransaction tnx = this.billPaymentService.getBillPaymentResult(billPaymentID, accessTokenID);
 
-		BillPaymentConfirmationInfo paymentInfo = payment.getConfirmationInfo();
+		BillPaymentConfirmationInfo confirmedInfo = tnx.getConfirmationInfo();
 
-		Bill billInfo = payment.getDraftTransaction().getBillInfo();
-
+		Bill billInfo = tnx.getDraftTransaction().getBillInfo();
+		
+		BigDecimal amount = billInfo.getAmount();
+		BigDecimal totalFee = BillUtil.calculateTotalFee(billInfo.getAmount(), billInfo.getServiceFee(), billInfo.getSourceOfFundFees());
+		BigDecimal totalAmount = amount.add(totalFee);
+		
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("target", billInfo.getTarget());
 		data.put("logoURL", billInfo.getLogoURL());
@@ -150,13 +154,14 @@ public class BillPaymentController extends BaseController {
 		data.put("ref2TitleEN", billInfo.getRef2TitleEN());
 		data.put("ref2", billInfo.getRef2());
 
-		data.put("amount", billInfo.getAmount());
-		data.put("totalFee", BigDecimal.ZERO); //TODO fix this
-		data.put("totalAmount", BigDecimal.ZERO); //TODO fix this
-		data.put("sourceOfFund", "eWallet"); //TODO warning hard code!!!
+		data.put("amount", amount);
+		data.put("totalFee", totalFee);
+		
+		data.put("totalAmount", totalAmount);
+		data.put("sourceOfFund", "eWallet"); //TODO Hard code!!!
 
-		data.put("transactionID", paymentInfo.getTransactionID());
-		data.put("transactionDate", paymentInfo.getTransactionDate());
+		data.put("transactionID", confirmedInfo.getTransactionID());
+		data.put("transactionDate", confirmedInfo.getTransactionDate());
 
 		data.put("remarkEN", messageManager.getMessageEn("payment.bill.remark"));
 		data.put("remarkTH", messageManager.getMessageTh("payment.bill.remark"));

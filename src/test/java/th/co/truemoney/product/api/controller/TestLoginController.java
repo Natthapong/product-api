@@ -10,21 +10,24 @@ import java.math.BigDecimal;
 import org.junit.Test;
 
 import th.co.truemoney.product.api.domain.LoginBean;
-import th.co.truemoney.serviceinventory.ewallet.domain.Login;
+import th.co.truemoney.serviceinventory.ewallet.domain.ChannelInfo;
+import th.co.truemoney.serviceinventory.ewallet.domain.ClientLogin;
+import th.co.truemoney.serviceinventory.ewallet.domain.EWalletOwnerLogin;
 import th.co.truemoney.serviceinventory.ewallet.domain.TmnProfile;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 public class TestLoginController extends BaseTestController {
-	
+
 	@Test
 	public void loginSuccess() throws Exception {
 		when(
 			this.profileServiceMock.login(
-				any(Integer.class),
-				any(Login.class)
+				any(EWalletOwnerLogin.class),
+				any(ClientLogin.class),
+				any(ChannelInfo.class)
 			)
 		).thenReturn("token-string");
-		
+
 		when(
 			this.profileServiceMock.getTruemoneyProfile(
 				any(String.class)
@@ -32,7 +35,7 @@ public class TestLoginController extends BaseTestController {
 		).thenReturn(new TmnProfile("Jonh Doe", new BigDecimal(100.00)));
 
 		this.verifySuccess(
-				this.doPOST("/signin", 
+				this.doPOST("/signin",
 						new LoginBean("customer@truemoney.co.th", "password", "email")));
 	}
 
@@ -40,13 +43,14 @@ public class TestLoginController extends BaseTestController {
 	public void loginInputValidationFailed() throws Exception {
 		when(
 			this.profileServiceMock.login(
-				any(Integer.class),
-				any(Login.class)
+				any(EWalletOwnerLogin.class),
+				any(ClientLogin.class),
+				any(ChannelInfo.class)
 			)
 		).thenReturn("token-string");
-		
+
 		this.verifyBadRequest(
-				this.doPOST("/signin", 
+				this.doPOST("/signin",
 						new LoginBean("wrong@email", "password", "email")));
 	}
 
@@ -54,31 +58,33 @@ public class TestLoginController extends BaseTestController {
 	public void loginNotSuccess() throws Exception {
 		when(
 			this.profileServiceMock.login(
-				any(Integer.class),
-				any(Login.class)
+				any(EWalletOwnerLogin.class),
+				any(ClientLogin.class),
+				any(ChannelInfo.class)
 			)
 		).thenThrow(
 				new ServiceInventoryException(400, "4", "Invalid Username or Password", "umarket"));
 		this.verifyFailed(
-				this.doPOST("/signin", 
+				this.doPOST("/signin",
 						new LoginBean("customer@truemoney.co.th", "password","email"))
 		).andExpect(jsonPath("$.code").value("4")
 		).andExpect(jsonPath("$.messageEn").value("Invalid Email or Password")
 		).andExpect(jsonPath("$.namespace").value("umarket"));
 	}
-	
+
 	@Test
 	public void accountNotActive() throws Exception {
 		when (
 			this.profileServiceMock.login(
-				any(Integer.class), 
-				any(Login.class)
+				any(EWalletOwnerLogin.class),
+				any(ClientLogin.class),
+				any(ChannelInfo.class)
 			)
 		).thenThrow(
 				new ServiceInventoryException(400, "1006", "confirm umarket failed.", "TMN-SERVICE-INVENTORY")
 		);
 		this.verifyFailed(
-				this.doPOST("/signin", 
+				this.doPOST("/signin",
 						new LoginBean("customer@truemoney.co.th", "password", "email"))
 		).andExpect(jsonPath("$.code").value("1006")
 		).andExpect(jsonPath("$.messageEn").value("confirm umarket failed.")

@@ -28,7 +28,9 @@ import org.springframework.web.context.WebApplicationContext;
 
 import th.co.truemoney.product.api.config.TestWebConfig;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
-import th.co.truemoney.serviceinventory.ewallet.domain.Login;
+import th.co.truemoney.serviceinventory.ewallet.domain.ChannelInfo;
+import th.co.truemoney.serviceinventory.ewallet.domain.ClientLogin;
+import th.co.truemoney.serviceinventory.ewallet.domain.EWalletOwnerLogin;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.ewallet.domain.TmnProfile;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
@@ -124,7 +126,7 @@ public class TestRegisterController {
 		tmnProfile.put("password","werw2345");
 		tmnProfile.put("mobileNumber","0899999999");
 		tmnProfile.put("fullname","Apinya Ukachoke");
-		
+
 		OTP otp = new OTP();
 		otp.setMobileNumber("0899999999");
 		otp.setOtpString("123456");
@@ -193,15 +195,18 @@ public class TestRegisterController {
 		mockData.put("mobileNumber", "0899999999");
 		mockData.put("otpString", "111111");
 		mockData.put("otpRefCode", "qwer");
-		mockData.put("hashPassword", "111111111111");
+		mockData.put("loginSecret", "111111111111");
 
 		when(
 				this.tmnProfileServiceMock.confirmCreateProfile(anyInt(), any(OTP.class)) )
 			.thenReturn(profileMock);
 
 		when(
-				this.tmnProfileServiceMock.login(any(Integer.class),
-						any(Login.class))).thenReturn("token-string");
+				this.tmnProfileServiceMock.login(
+						any(EWalletOwnerLogin.class),
+						any(ClientLogin.class),
+						any(ChannelInfo.class))
+		).thenReturn("token-string");
 
 		when(
 				this.tmnProfileServiceMock.getTruemoneyProfile(
@@ -229,7 +234,7 @@ public class TestRegisterController {
 		mockData.put("mobileNumber", "0899999999");
 		mockData.put("otpString", "111111");
 		mockData.put("otpRefCode", "qwer");
-		mockData.put("hashPassword", "111111111111");
+		mockData.put("loginSecret", "111111111111");
 
 		TmnProfile profileMock = new TmnProfile();
 		profileMock.setEmail("apinya@gmail.com");
@@ -242,8 +247,11 @@ public class TestRegisterController {
 			.thenThrow(new ServiceInventoryException(400, failedCode, failedMessage,
 					failedNamespace));
 		when(
-				this.tmnProfileServiceMock.login(any(Integer.class),
-						any(Login.class))).thenReturn("token-string");
+				this.tmnProfileServiceMock.login(
+						any(EWalletOwnerLogin.class),
+						any(ClientLogin.class),
+						any(ChannelInfo.class))
+			).thenReturn("token-string");
 
 		when(
 				this.tmnProfileServiceMock.getTruemoneyProfile(
@@ -271,7 +279,7 @@ public class TestRegisterController {
 		mockData.put("mobileNumber", "0899999999");
 		mockData.put("otpString", "123456");
 		mockData.put("otpString", "qwer");
-		mockData.put("hashPassword", "1111111");
+		mockData.put("loginSecret", "1111111");
 
 		TmnProfile profileMock = new TmnProfile();
 		profileMock.setEmail("apinya@gmail.com");
@@ -287,12 +295,18 @@ public class TestRegisterController {
 							failedMessage, failedNamespace));
 
 		when(
-				this.tmnProfileServiceMock.login(any(Integer.class),
-						any(Login.class))).thenReturn("token-string");
+				this.tmnProfileServiceMock.login(
+						any(EWalletOwnerLogin.class),
+						any(ClientLogin.class),
+						any(ChannelInfo.class))
+			).thenReturn("token-string");
 
 		when(
-				this.tmnProfileServiceMock.login(any(Integer.class),
-						any(Login.class))).thenReturn("");
+				this.tmnProfileServiceMock.login(
+						any(EWalletOwnerLogin.class),
+						any(ClientLogin.class),
+						any(ChannelInfo.class))
+			).thenReturn("");
 
 			this.mockMvc
 					.perform(post(confirmCreateProfileURL).content(mapper.writeValueAsBytes(mockData)).contentType(MediaType.APPLICATION_JSON))
@@ -304,7 +318,7 @@ public class TestRegisterController {
 					.andExpect(jsonPath("$.data").exists())
 					.andDo(print());
 	}
-	
+
 	@Test
 	public void confirmCreateProfileInvalidMobileFormat() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
@@ -315,8 +329,8 @@ public class TestRegisterController {
 		Map<String,String> mockData = new HashMap<String, String>();
 		mockData.put("mobileNumber", "0899999999");
 		mockData.put("otpString", "123456");
-		mockData.put("otpString", "qwer");
-		mockData.put("hashPassword", "1111111");
+		mockData.put("otpRef", "qwer");
+		mockData.put("loginSecret", "1111111");
 
 		TmnProfile profileMock = new TmnProfile();
 		profileMock.setEmail("apinya@gmail.com");
@@ -332,12 +346,18 @@ public class TestRegisterController {
 							failedMessage, failedNamespace));
 
 		when(
-				this.tmnProfileServiceMock.login(any(Integer.class),
-						any(Login.class))).thenReturn("token-string");
+				this.tmnProfileServiceMock.login(
+						any(EWalletOwnerLogin.class),
+						any(ClientLogin.class),
+						any(ChannelInfo.class))
+			).thenReturn("token-string");
 
 		when(
-				this.tmnProfileServiceMock.login(any(Integer.class),
-						any(Login.class))).thenReturn("");
+				this.tmnProfileServiceMock.login(
+						any(EWalletOwnerLogin.class),
+						any(ClientLogin.class),
+						any(ChannelInfo.class))
+			).thenReturn("");
 
 			this.mockMvc
 					.perform(post(confirmCreateProfileURL).content(mapper.writeValueAsBytes(mockData)).contentType(MediaType.APPLICATION_JSON))

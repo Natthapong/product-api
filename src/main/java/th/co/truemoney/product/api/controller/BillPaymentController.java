@@ -91,14 +91,18 @@ public class BillPaymentController extends BaseController {
 		Double amount = (Double)request.get("amount");
 
 		BillPaymentDraft bill = this.billPaymentService.verifyPaymentAbility(billID, new BigDecimal(amount), accessTokenID);
-
+		Bill billInfo = bill.getBillInfo();
+		BigDecimal totalFee = BillUtil.calculateTotalFee(billInfo.getAmount(), billInfo.getServiceFee(), billInfo.getSourceOfFundFees());
+		BigDecimal totalAmount = bill.getAmount().add(totalFee);
+		
 		OTP otp = this.billPaymentService.sendOTP(bill.getID(), accessTokenID);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("otpRefCode", otp.getReferenceCode());
 		data.put("mobileNumber", otp.getMobileNumber());
 		data.put("billID", bill.getID());
-
+		data.put("totalAmount", totalAmount);
+		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 

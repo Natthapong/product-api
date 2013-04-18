@@ -153,8 +153,8 @@ public class BillPaymentController extends BaseController {
 
 		Bill billInfo = tnx.getDraftTransaction().getBillInfo();
 		
-		BigDecimal amount = billInfo.getAmount();
-		BigDecimal totalFee = BillUtil.calculateTotalFee(billInfo.getAmount(), billInfo.getServiceFee(), billInfo.getSourceOfFundFees());
+		BigDecimal amount = tnx.getDraftTransaction().getAmount();
+		BigDecimal totalFee = BillUtil.calculateTotalFee(amount, billInfo.getServiceFee(), billInfo.getSourceOfFundFees());
 		BigDecimal totalAmount = amount.add(totalFee);
 		
 		Map<String, Object> data = new HashMap<String, Object>();

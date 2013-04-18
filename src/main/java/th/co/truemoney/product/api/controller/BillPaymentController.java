@@ -75,6 +75,7 @@ public class BillPaymentController extends BaseController {
 		data.put("serviceFeeType", billPaymentInfo.getServiceFee().getFeeRateType());
 		data.put("serviceFee", billPaymentInfo.getServiceFee().getFeeRate());
 		data.put("sourceOfFundFee", prepareData(billPaymentInfo.getSourceOfFundFees()));
+		data.put("billID", billPaymentInfo.getID());
 
 		return this.responseFactory.createSuccessProductResonse(data);
 

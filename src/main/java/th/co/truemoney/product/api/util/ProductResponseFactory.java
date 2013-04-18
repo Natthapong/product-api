@@ -97,7 +97,8 @@ public class ProductResponseFactory {
 															"core.27",
 															"core.38",
 															"core.71",
-															"next.1012"};
+															"next.1012",
+															"umarket.1012"};
 	
 	private boolean isInvalidAmountException(ServiceInventoryException e) {
 		return LESS_THAN_MINIMUM_AMOUNT.equals(e.getErrorNamespace() + "." + e.getErrorCode()) 

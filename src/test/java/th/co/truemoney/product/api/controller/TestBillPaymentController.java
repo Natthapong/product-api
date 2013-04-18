@@ -69,8 +69,13 @@ public class TestBillPaymentController extends BaseTestController {
 
         @Test
         public void createBillPaymentSuccess() throws Exception {
-                BillPaymentDraft bill = new BillPaymentDraft();
-
+        		Bill billInfo = new Bill();
+        		billInfo.setAmount(BigDecimal.TEN);
+        		billInfo.setServiceFee(new ServiceFeeInfo("THB", BigDecimal.ONE));
+        		
+        		BillPaymentDraft bill = new BillPaymentDraft();
+                bill.setBillInfo(billInfo);
+                
                 when(
                         billPaymentServiceMock.verifyPaymentAbility(
                                 anyString(),

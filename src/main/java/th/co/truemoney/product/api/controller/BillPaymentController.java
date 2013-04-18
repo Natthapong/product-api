@@ -90,16 +90,12 @@ public class BillPaymentController extends BaseController {
 		String billID = (String)request.get("billID");
 		BigDecimal amount = new BigDecimal(request.get("amount").replace(",", ""));
 
-<<<<<<< HEAD
-		BillPaymentDraft bill = this.billPaymentService.verifyPaymentAbility(billID, new BigDecimal(amount), accessTokenID);
-		Bill billInfo = bill.getBillInfo();
-		BigDecimal totalFee = BillUtil.calculateTotalFee(billInfo.getAmount(), billInfo.getServiceFee(), billInfo.getSourceOfFundFees());
-		BigDecimal totalAmount = bill.getAmount().add(totalFee);
-		
-=======
 		BillPaymentDraft bill = this.billPaymentService.verifyPaymentAbility(billID, amount, accessTokenID);
+		Bill billInfo = bill.getBillInfo();
 
->>>>>>> e02c7e86917e72dbde1461dc947eea62612cca1d
+		BigDecimal totalFee = BillUtil.calculateTotalFee(billInfo.getAmount(), billInfo.getServiceFee(), billInfo.getSourceOfFundFees());
+		BigDecimal totalAmount = billInfo.getAmount().add(totalFee);//TODO fix this!!!
+
 		OTP otp = this.billPaymentService.sendOTP(bill.getID(), accessTokenID);
 
 		Map<String, Object> data = new HashMap<String, Object>();

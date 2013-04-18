@@ -32,11 +32,13 @@ public class MessageManager implements MessageSourceAware {
 	}
 	
 	public String getMessageTh(String namespace, String code, Object[] params){
-		return getMessage("msg." + namespace + "." + code, params, TH);
+		String msg = getMessage("msg." + namespace + "." + code, params, TH);
+		return transformUnknownMessage(msg, namespace, code);
 	}
 	
 	public String getMessageEn(String namespace, String code, Object[] params){
-		return getMessage("msg." + namespace + "." + code, params, EN);
+		String msg = getMessage("msg." + namespace + "." + code, params, EN);
+		return transformUnknownMessage(msg, namespace, code);
 	}
 	
 	public String getMessageEn(String key) {
@@ -47,11 +49,15 @@ public class MessageManager implements MessageSourceAware {
 		return messageSource.getMessage(key, null, TH);
 	}
 	
+	private String transformUnknownMessage(String msg, String namespace, String code) {
+		return (UNKNOWN_MESSAGE.equals(msg)) ? String.format("%s [%s-%s]", msg, namespace, code) : msg;
+	}
+	
 	private String getMessage(String key, Object[] params, Locale loc) {
 		try {
 			return messageSource.getMessage(key, params, loc);
 		} catch (NoSuchMessageException e) {
-			return String.format("%s [%s]", UNKNOWN_MESSAGE, key);
+			return UNKNOWN_MESSAGE;
 		}
 	}
 

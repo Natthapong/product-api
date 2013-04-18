@@ -45,7 +45,7 @@
 
 "ewallet.p2p.verify.url" : "${apiHost}/api/v1/transfer/draft-transaction/%@/send-otp/%@?",
 
-"ewallet.p2p.confirm.otp.url" : "${apiHost}/api/v1/transfer/transaction/%invoice@/%@?",
+"ewallet.p2p.confirm.otp.url" : "${apiHost}/api/v1/transfer/transaction/%@/%@?",
 
 "ewallet.p2p.checkstatus.url" : "${apiHost}/api/v1/transfer/transaction/%@/status/%@?",
 

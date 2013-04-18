@@ -97,6 +97,7 @@ public class ProductResponseFactory {
 															"core.27",
 															"core.38",
 															"core.71",
+															"core.1012",
 															"next.1012",
 															"umarket.1012"};
 	

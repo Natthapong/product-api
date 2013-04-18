@@ -74,6 +74,7 @@ public class TestBillPaymentController extends BaseTestController {
         		billInfo.setServiceFee(new ServiceFeeInfo("THB", BigDecimal.ONE));
         		
         		BillPaymentDraft bill = new BillPaymentDraft();
+        		bill.setAmount(BigDecimal.TEN);
                 bill.setBillInfo(billInfo);
                 
                 when(

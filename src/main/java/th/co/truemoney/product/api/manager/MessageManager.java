@@ -16,8 +16,6 @@ public class MessageManager implements MessageSourceAware {
 	
 	public static final String UNKNOWN_MESSAGE = "Unknown Message";
 	
-	public static final String UNKNOWN_TITLE  = "Unknown Title";
-	
 	private static final Locale EN = new Locale("en", "US");
 	private static final Locale TH = new Locale("th", "TH");
 	
@@ -53,7 +51,7 @@ public class MessageManager implements MessageSourceAware {
 		try {
 			return messageSource.getMessage(key, params, loc);
 		} catch (NoSuchMessageException e) {
-			return UNKNOWN_MESSAGE;
+			return String.format("%s [%s]", UNKNOWN_MESSAGE, key);
 		}
 	}
 

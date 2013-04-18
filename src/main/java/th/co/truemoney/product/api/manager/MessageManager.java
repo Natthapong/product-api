@@ -1,4 +1,4 @@
-package th.co.truemoney.product.api.util;
+package th.co.truemoney.product.api.manager;
 
 import java.util.Locale;
 

@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import th.co.truemoney.product.api.util.MessageManager;
+import th.co.truemoney.product.api.manager.MessageManager;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.ewallet.DirectDebitSourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
@@ -19,7 +19,10 @@ import th.co.truemoney.serviceinventory.transfer.P2PTransferService;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan({"th.co.truemoney.product.api.controller", "th.co.truemoney.product.api.util"})
+@ComponentScan({
+	"th.co.truemoney.product.api.controller", 
+	"th.co.truemoney.product.api.manager", 
+	"th.co.truemoney.product.api.util"})
 public class TestWebConfig {
 	
 	@Bean

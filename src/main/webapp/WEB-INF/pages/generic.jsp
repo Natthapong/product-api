@@ -59,5 +59,5 @@
 
 "payment.bill.status.url" : "${apiHost}/api/v1/bill-payment/%@/status/%@?",
 
-"payment.bill.detail.url" : ""${apiHost}/api/v1/bill-payment/%@/details/%@?
+"payment.bill.detail.url" : ""${apiHost}/api/v1/bill-payment/%@/details/%@?"
 }

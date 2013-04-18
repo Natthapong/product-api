@@ -14,8 +14,7 @@ import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.ewallet.DirectDebitSourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
-import th.co.truemoney.serviceinventory.ewallet.domain.ChannelInfo;
-import th.co.truemoney.serviceinventory.ewallet.domain.ClientLogin;
+import th.co.truemoney.serviceinventory.ewallet.domain.ClientCredential;
 import th.co.truemoney.serviceinventory.transfer.P2PTransferService;
 
 @EnableWebMvc
@@ -64,14 +63,8 @@ public class TestWebConfig {
 	}
 	
 	@Bean
-	public ClientLogin appLogin() {
-		return new ClientLogin("f7cb0d495ea6d989", "MOBILE_IPHONE", "IPHONE+1");
+	public ClientCredential appLogin() {
+		return new ClientCredential("f7cb0d495ea6d989", "MOBILE_IPHONE", "IPHONE+1", "iPhone", "iPhone");
 	}
-
-	@Bean
-	public ChannelInfo loginChannel() {
-		return new ChannelInfo(WebConfig.MOBILE_APP_CHANNEL_ID, "iPhone", "iPhone");
-	}
-
-
+	
 }

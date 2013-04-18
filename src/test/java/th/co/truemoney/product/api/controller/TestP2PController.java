@@ -34,6 +34,7 @@ public class TestP2PController extends BaseTestController {
 			fakeAccessToken);
 	String getTransferDetailURL = String.format("/transfer/transaction/%s/%s",
 			"1111111111111", fakeAccessToken);
+	String unknownMessage = "กรุณารอสักครู่ แล้วทํารายการใหม่อีกครั้ง";
 
 	@Test
 	public void createTransferDraftSuccess() throws Exception {
@@ -73,7 +74,7 @@ public class TestP2PController extends BaseTestController {
 
 		this.verifyFailed(this.doPOST(transferMoneyURL, data))
 				.andExpect(jsonPath("$.code").value(""))
-				.andExpect(jsonPath("$.messageEn").value("Unknown Message [TMN-PRODUCT-]"))
+				.andExpect(jsonPath("$.messageEn").value(unknownMessage))
 				.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
 				.andExpect(jsonPath("$.messageTh").value(containsString("")));
 	}
@@ -128,7 +129,7 @@ public class TestP2PController extends BaseTestController {
 
 		this.verifyFailed(this.doPUT(verifyTransferURL, new HashMap<String, Object>()))
 				.andExpect(jsonPath("$.code").value(""))
-				.andExpect(jsonPath("$.messageEn").value("Unknown Message [TMN-PRODUCT-]"))
+				.andExpect(jsonPath("$.messageEn").value(unknownMessage))
 				.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
 				.andExpect(jsonPath("$.messageTh").value(containsString("")));
 	}
@@ -165,7 +166,7 @@ public class TestP2PController extends BaseTestController {
 
 		this.verifyFailed(this.doPOST(confirmTransferURL, data))
 				.andExpect(jsonPath("$.code").value(""))
-				.andExpect(jsonPath("$.messageEn").value("Unknown Message [TMN-PRODUCT-]"))
+				.andExpect(jsonPath("$.messageEn").value(unknownMessage))
 				.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
 				.andExpect(jsonPath("$.messageTh").value(containsString("")));
 	}
@@ -187,7 +188,7 @@ public class TestP2PController extends BaseTestController {
 
 		this.verifyFailed(this.doGET(statusTransferURL))
 				.andExpect(jsonPath("$.code").value(""))
-				.andExpect(jsonPath("$.messageEn").value("Unknown Message [TMN-PRODUCT-]"))
+				.andExpect(jsonPath("$.messageEn").value(unknownMessage))
 				.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
 				.andExpect(jsonPath("$.messageTh").value(containsString("")));
 	}
@@ -235,7 +236,7 @@ public class TestP2PController extends BaseTestController {
 
 		this.verifyFailed(this.doGET(getTransferDetailURL))
 				.andExpect(jsonPath("$.code").value(""))
-				.andExpect(jsonPath("$.messageEn").value("Unknown Message [TMN-PRODUCT-]"))
+				.andExpect(jsonPath("$.messageEn").value(unknownMessage))
 				.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
 				.andExpect(jsonPath("$.messageTh").value(containsString("")));
 	}

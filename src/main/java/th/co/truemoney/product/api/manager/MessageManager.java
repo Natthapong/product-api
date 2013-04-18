@@ -14,7 +14,7 @@ public class MessageManager implements MessageSourceAware {
 	@Autowired
 	private MessageSource messageSource;
 	
-	public static final String UNKNOWN_MESSAGE = "Unknown Message";
+	public static final String UNKNOWN_MSG = "Unknown Message";
 	
 	private static final Locale EN = new Locale("en", "US");
 	private static final Locale TH = new Locale("th", "TH");
@@ -24,21 +24,31 @@ public class MessageManager implements MessageSourceAware {
 	}
 	
 	public String getTitleTh(String namespace, String code, Object[] params) {
-		return getMessage("ttl." + namespace + "." + code, params, TH);
+		String title = getMessage("ttl." + namespace + "." + code, params, TH);
+		if (UNKNOWN_MSG.equals(title))
+			return getTitleTh("unknown", "message", params);
+		return title;
 	}
 	
 	public String getTitleEn(String namespace, String code, Object[] params) {
-		return getMessage("ttl." + namespace + "." + code, params, EN);
+		String title = getMessage("ttl." + namespace + "." + code, params, EN);
+		if (UNKNOWN_MSG.equals(title))
+			return getTitleEn("unknown", "message", params);
+		return title;
 	}
 	
 	public String getMessageTh(String namespace, String code, Object[] params){
 		String msg = getMessage("msg." + namespace + "." + code, params, TH);
-		return transformUnknownMessage(msg, namespace, code);
+		if (UNKNOWN_MSG.equals(msg))
+			return getMessageTh("unknown", "message", params);
+		return msg;
 	}
 	
 	public String getMessageEn(String namespace, String code, Object[] params){
 		String msg = getMessage("msg." + namespace + "." + code, params, EN);
-		return transformUnknownMessage(msg, namespace, code);
+		if (UNKNOWN_MSG.equals(msg))
+			return getMessageEn("unknown", "message", params);
+		return msg;
 	}
 	
 	public String getMessageEn(String key) {
@@ -49,15 +59,11 @@ public class MessageManager implements MessageSourceAware {
 		return messageSource.getMessage(key, null, TH);
 	}
 	
-	private String transformUnknownMessage(String msg, String namespace, String code) {
-		return (UNKNOWN_MESSAGE.equals(msg)) ? String.format("%s [%s-%s]", msg, namespace, code) : msg;
-	}
-	
 	private String getMessage(String key, Object[] params, Locale loc) {
 		try {
 			return messageSource.getMessage(key, params, loc);
 		} catch (NoSuchMessageException e) {
-			return UNKNOWN_MESSAGE;
+			return UNKNOWN_MSG;
 		}
 	}
 

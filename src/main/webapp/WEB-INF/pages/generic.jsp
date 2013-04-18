@@ -51,7 +51,7 @@
 
 "ewallet.p2p.transfer.detail.url" : "${apiHost}/api/v1/transfer/transaction/%@/%@?",
 
-"payment.barcode.detail.url" : "${apiHost}/api/v1/bill-payment/bill/barcode/%@/%@?",
+"payment.barcode.detail.url" : "${apiHost}/api/v1/bill-payment/barcode/%@/%@?",
 
 "payment.bill.create.url" : "${apiHost}/api/v1/bill-payment/create/%@?",
 
@@ -59,5 +59,5 @@
 
 "payment.bill.status.url" : "${apiHost}/api/v1/bill-payment/%@/status/%@?",
 
-"payment.bill.detail.url" : ""${apiHost}/api/v1/bill-payment/%@/details/%@?"
+"payment.bill.detail.url" : "${apiHost}/api/v1/bill-payment/%@/details/%@?"
 }

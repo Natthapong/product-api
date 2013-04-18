@@ -85,12 +85,12 @@ public class BillPaymentController extends BaseController {
 	public @ResponseBody
 	ProductResponse createBillPayment(
 			@PathVariable String accessTokenID,
-			@RequestBody Map<String, Object> request) {
+			@RequestBody Map<String, String> request) {
 
 		String billID = (String)request.get("billID");
-		Double amount = (Double)request.get("amount");
+		BigDecimal amount = new BigDecimal(request.get("amount").replace(",", ""));
 
-		BillPaymentDraft bill = this.billPaymentService.verifyPaymentAbility(billID, new BigDecimal(amount), accessTokenID);
+		BillPaymentDraft bill = this.billPaymentService.verifyPaymentAbility(billID, amount, accessTokenID);
 
 		OTP otp = this.billPaymentService.sendOTP(bill.getID(), accessTokenID);
 

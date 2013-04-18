@@ -73,7 +73,7 @@ public class TestP2PController extends BaseTestController {
 
 		this.verifyFailed(this.doPOST(transferMoneyURL, data))
 				.andExpect(jsonPath("$.code").value(""))
-				.andExpect(jsonPath("$.messageEn").value("Unknown Message"))
+				.andExpect(jsonPath("$.messageEn").value("Unknown Message [msg.TMN-PRODUCT.]"))
 				.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
 				.andExpect(jsonPath("$.messageTh").value(containsString("")));
 	}
@@ -128,7 +128,7 @@ public class TestP2PController extends BaseTestController {
 
 		this.verifyFailed(this.doPUT(verifyTransferURL, new HashMap<String, Object>()))
 				.andExpect(jsonPath("$.code").value(""))
-				.andExpect(jsonPath("$.messageEn").value("Unknown Message"))
+				.andExpect(jsonPath("$.messageEn").value("Unknown Message [msg.TMN-PRODUCT.]"))
 				.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
 				.andExpect(jsonPath("$.messageTh").value(containsString("")));
 	}
@@ -165,7 +165,7 @@ public class TestP2PController extends BaseTestController {
 
 		this.verifyFailed(this.doPOST(confirmTransferURL, data))
 				.andExpect(jsonPath("$.code").value(""))
-				.andExpect(jsonPath("$.messageEn").value("Unknown Message"))
+				.andExpect(jsonPath("$.messageEn").value("Unknown Message [msg.TMN-PRODUCT.]"))
 				.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
 				.andExpect(jsonPath("$.messageTh").value(containsString("")));
 	}
@@ -187,7 +187,7 @@ public class TestP2PController extends BaseTestController {
 
 		this.verifyFailed(this.doGET(statusTransferURL))
 				.andExpect(jsonPath("$.code").value(""))
-				.andExpect(jsonPath("$.messageEn").value("Unknown Message"))
+				.andExpect(jsonPath("$.messageEn").value("Unknown Message [msg.TMN-PRODUCT.]"))
 				.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
 				.andExpect(jsonPath("$.messageTh").value(containsString("")));
 	}
@@ -235,7 +235,7 @@ public class TestP2PController extends BaseTestController {
 
 		this.verifyFailed(this.doGET(getTransferDetailURL))
 				.andExpect(jsonPath("$.code").value(""))
-				.andExpect(jsonPath("$.messageEn").value("Unknown Message"))
+				.andExpect(jsonPath("$.messageEn").value("Unknown Message [msg.TMN-PRODUCT.]"))
 				.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
 				.andExpect(jsonPath("$.messageTh").value(containsString("")));
 	}

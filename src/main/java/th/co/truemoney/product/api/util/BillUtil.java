@@ -18,12 +18,15 @@ public class BillUtil {
 	public static BigDecimal calculateTotalFee(BigDecimal amount, ServiceFeeInfo serviceFee, BillPaySourceOfFund[] sofs) {
 		BigDecimal totalFee = BigDecimal.ZERO;
 		if (serviceFee != null) {
-			totalFee.add(serviceFee.calculateFee(amount));
+			totalFee = totalFee.add(serviceFee.calculateFee(amount));
 		}
 		
 		if (sofs != null) {
 			for (BillPaySourceOfFund sof : sofs) {
-				totalFee.add(sof.calculateFee(amount));
+				//TODO warning hard code add fee eWallet only
+				if ("EW".equals(sof.getSourceType())) {
+					totalFee = totalFee.add(sof.calculateFee(amount));
+				}
 			}
 		}
 		return totalFee;

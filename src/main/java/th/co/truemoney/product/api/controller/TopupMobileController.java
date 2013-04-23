@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.exception.ProductAPIException;
 import th.co.truemoney.product.api.util.ValidateUtil;
-import th.co.truemoney.serviceinventory.bill.domain.BillPaySourceOfFund;
+import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 import th.co.truemoney.serviceinventory.topup.TopUpMobileService;
 import th.co.truemoney.serviceinventory.topup.domain.TopUpMobile;
 import th.co.truemoney.serviceinventory.topup.domain.TopUpMobileDraft;
@@ -63,9 +63,9 @@ public class TopupMobileController extends BaseController {
 		return amount.add(serviceFee).add(sofFee);
 	}
 
-	private BillPaySourceOfFund getEwalletSOF(BillPaySourceOfFund[] sourceOfFundFees) {
+	private SourceOfFund getEwalletSOF(SourceOfFund[] sourceOfFundFees) {
 		if (sourceOfFundFees != null) {
-			for (BillPaySourceOfFund sof : sourceOfFundFees) {
+			for (SourceOfFund sof : sourceOfFundFees) {
 				if ("EW".equals(sof.getSourceType())) {
 					return sof;
 				}

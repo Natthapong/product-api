@@ -21,10 +21,10 @@ import th.co.truemoney.product.api.manager.MessageManager;
 import th.co.truemoney.product.api.util.BillUtil;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
-import th.co.truemoney.serviceinventory.bill.domain.BillPaySourceOfFund;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentConfirmationInfo;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
+import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
@@ -189,10 +189,10 @@ public class BillPaymentController extends BaseController {
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	
-	private List<JSONObject> prepareData(BillPaySourceOfFund[] sourceOfFundFees) {
+	private List<JSONObject> prepareData(SourceOfFund[] sourceOfFundFees) {
 		List<JSONObject> realData = new ArrayList<JSONObject>();
 
-		for (BillPaySourceOfFund billPaySourceOfFund : sourceOfFundFees) {
+		for (SourceOfFund billPaySourceOfFund : sourceOfFundFees) {
 			JSONObject returnData = new JSONObject();
 			//TODO warning hard code response eWallet only
 			if ("EW".equals(billPaySourceOfFund.getSourceType())) {

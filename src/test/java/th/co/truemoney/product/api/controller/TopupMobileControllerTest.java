@@ -17,8 +17,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import th.co.truemoney.product.api.domain.ProductResponse;
-import th.co.truemoney.serviceinventory.bill.domain.BillPaySourceOfFund;
 import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
+import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 import th.co.truemoney.serviceinventory.topup.domain.TopUpMobile;
 import th.co.truemoney.serviceinventory.topup.domain.TopUpMobileDraft;
 
@@ -112,13 +112,13 @@ public class TopupMobileControllerTest extends BaseTestController {
 		return draft;
 	}
 
-	private BillPaySourceOfFund[] createBillPaySOF() {
-		BillPaySourceOfFund sourceOfFundFee = new BillPaySourceOfFund();
+	private SourceOfFund[] createBillPaySOF() {
+		SourceOfFund sourceOfFundFee = new SourceOfFund();
 		sourceOfFundFee.setSourceType("EW");
 		sourceOfFundFee.setFeeRate(new BigDecimal("0"));
 		sourceOfFundFee.setFeeRateType("THB");
 		
-		return new BillPaySourceOfFund[] { sourceOfFundFee };
+		return new SourceOfFund[] { sourceOfFundFee };
 	}
 
 }

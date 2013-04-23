@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
-import th.co.truemoney.serviceinventory.bill.domain.BillPaySourceOfFund;
+import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentConfirmationInfo;
 import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
@@ -238,8 +238,8 @@ public class TestBillPaymentController extends BaseTestController {
                 serviceFee.setFeeRateType("THB");
                 billInfo.setServiceFee(serviceFee);
 
-                BillPaySourceOfFund[] sourceOfFundFees = new BillPaySourceOfFund[1];
-                BillPaySourceOfFund sourceOfFundFee = new BillPaySourceOfFund();
+                SourceOfFund[] sourceOfFundFees = new SourceOfFund[1];
+                SourceOfFund sourceOfFundFee = new SourceOfFund();
                 sourceOfFundFee.setSourceType("EW");
                 sourceOfFundFee.setFeeRate(new BigDecimal("1000"));
                 sourceOfFundFee.setFeeRateType("THB");

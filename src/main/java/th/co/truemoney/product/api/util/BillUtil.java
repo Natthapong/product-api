@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
-import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
+import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
 
 public class BillUtil {
 	

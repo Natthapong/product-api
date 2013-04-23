@@ -15,6 +15,7 @@ import th.co.truemoney.serviceinventory.ewallet.DirectDebitSourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
 import th.co.truemoney.serviceinventory.ewallet.domain.ClientCredential;
+import th.co.truemoney.serviceinventory.topup.TopUpMobileService;
 import th.co.truemoney.serviceinventory.transfer.P2PTransferService;
 
 @EnableWebMvc
@@ -58,6 +59,10 @@ public class TestWebConfig {
 	
 	@Bean BillPaymentService billPaymentService() {
 		return Mockito.mock(BillPaymentService.class);
+	}
+	
+	@Bean TopUpMobileService topUpMobileService() {
+		return Mockito.mock(TopUpMobileService.class);
 	}
 
 	@Bean @Qualifier("apiHost")

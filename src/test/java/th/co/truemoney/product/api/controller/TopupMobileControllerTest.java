@@ -10,10 +10,16 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import static org.mockito.Mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.util.ProductResponseFactory;
+import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
+import th.co.truemoney.serviceinventory.topup.TopUpMobileService;
+import th.co.truemoney.serviceinventory.topup.domain.TopUpMobile;
+import th.co.truemoney.serviceinventory.topup.domain.TopUpMobileDraft;
+import th.co.truemoney.serviceinventory.bill.domain.BillPaySourceOfFund;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -45,11 +51,16 @@ public class TopupMobileControllerTest extends BaseTestController {
 	@Test
 	public void verifySuccuss() {
 		
+		when(topUpMobileServiceMock.verifyAndCreateTopUpMobileDraft(anyString(), any(BigDecimal.class), anyString()))
+			.thenReturn(createTopUpMobileDraftStub());
+		
 		ProductResponse response = null;
 		try {
 			request.put("mobileNumber", "0894445266");
+			request.put("amount", "500");
 			response = controller.verifyAndCreate(accessToken, request);
 		} catch (InvalidParameterException ex) {
+			ex.printStackTrace();
 			Assert.fail();
 		}
 		
@@ -60,10 +71,16 @@ public class TopupMobileControllerTest extends BaseTestController {
 		Assert.assertEquals(new BigDecimal(500), data.get("amount"));
 		Assert.assertEquals(new BigDecimal(15), data.get("fee"));
 		Assert.assertEquals(new BigDecimal(515), data.get("totalAmount"));
+		
+		verify(topUpMobileServiceMock).verifyAndCreateTopUpMobileDraft(anyString(), any(BigDecimal.class), anyString());
 	}
 	
 	@Test
 	public void integrationTest() throws Exception {
+		
+		when(topUpMobileServiceMock.verifyAndCreateTopUpMobileDraft(anyString(), any(BigDecimal.class), anyString()))
+		.thenReturn(createTopUpMobileDraftStub());
+		
 		  Map<String, String> reqBody = new HashMap<String, String>();
 		  reqBody.put("mobileNumber", "0894445266");
 		  reqBody.put("amount", "500");
@@ -79,6 +96,30 @@ public class TopupMobileControllerTest extends BaseTestController {
 			Assert.fail();
 		} catch (InvalidParameterException ex) {
 		}
+	}
+	
+	private TopUpMobileDraft createTopUpMobileDraftStub() {
+		TopUpMobile topUpMobileInfo = new TopUpMobile();
+		topUpMobileInfo.setAmount(new BigDecimal(500));
+		topUpMobileInfo.setMobileNumber("0894445266");
+		topUpMobileInfo.setLogo("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bank/scb@2x.png");
+		topUpMobileInfo.setServiceFee(new ServiceFeeInfo("THB", new BigDecimal(15)));
+		topUpMobileInfo.setSourceOfFundFees(createBillPaySOF());
+		TopUpMobileDraft draft = new TopUpMobileDraft();
+		draft.setAccessTokenID(fakeAccessToken);
+		draft.setTopUpMobileInfo(topUpMobileInfo);
+		draft.setID("1111111111");
+		
+		return draft;
+	}
+
+	private BillPaySourceOfFund[] createBillPaySOF() {
+		BillPaySourceOfFund sourceOfFundFee = new BillPaySourceOfFund();
+		sourceOfFundFee.setSourceType("EW");
+		sourceOfFundFee.setFeeRate(new BigDecimal("0"));
+		sourceOfFundFee.setFeeRateType("THB");
+		
+		return new BillPaySourceOfFund[] { sourceOfFundFee };
 	}
 
 }

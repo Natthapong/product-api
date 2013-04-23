@@ -26,6 +26,7 @@ import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.ewallet.DirectDebitSourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
+import th.co.truemoney.serviceinventory.topup.TopUpMobileService;
 import th.co.truemoney.serviceinventory.transfer.P2PTransferService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,6 +55,9 @@ public abstract class BaseTestController {
 
 	@Autowired
 	protected BillPaymentService billPaymentServiceMock;
+	
+	@Autowired
+	protected TopUpMobileService topUpMobileServiceMock;
 
 	@Before
 	public void setup() {
@@ -63,6 +67,7 @@ public abstract class BaseTestController {
 		this.profileServiceMock = wac.getBean(TmnProfileService.class);
 		this.p2pTransferServiceMock = wac.getBean(P2PTransferService.class);
 		this.billPaymentServiceMock = wac.getBean(BillPaymentService.class);
+		this.topUpMobileServiceMock = wac.getBean(TopUpMobileService.class);
 	}
 
 	@After
@@ -72,6 +77,7 @@ public abstract class BaseTestController {
 		reset(this.profileServiceMock);
 		reset(this.p2pTransferServiceMock);
 		reset(this.billPaymentServiceMock);
+		reset(this.topUpMobileServiceMock);
 	}
 	
 	ObjectMapper mapper = new ObjectMapper();

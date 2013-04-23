@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.domain.ProductResponse;
+import th.co.truemoney.product.api.exception.ProductAPIException;
 import th.co.truemoney.product.api.util.ProductResponseFactory;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
@@ -23,6 +24,20 @@ public class BaseController {
 	public @ResponseBody
 	ProductResponse handleInvalidParameterExceptions(
     		InvalidParameterException exception, 
+			HttpServletResponse response) {
+		
+		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		return responseFactory.createErrorProductResponse(
+				new ServiceInventoryException(400,
+						exception.getMessage(),
+						"",
+						ProductResponseFactory.PRODUCT_NAMESPACE));
+	}
+	
+	@ExceptionHandler(ProductAPIException.class)
+	public @ResponseBody
+	ProductResponse handleProductAPIExceptions(
+			ProductAPIException exception, 
 			HttpServletResponse response) {
 		
 		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

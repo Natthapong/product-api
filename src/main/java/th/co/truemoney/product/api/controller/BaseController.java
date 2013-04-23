@@ -15,7 +15,7 @@ import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 public class BaseController {
 	
 	@Autowired
-	ProductResponseFactory responseFactory;
+	protected ProductResponseFactory responseFactory;
 	
 	public static final int MOBILE_APP_CHANNEL_ID = 40;
 	
@@ -41,6 +41,10 @@ public class BaseController {
 		
 		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		return responseFactory.createErrorProductResponse(exception);
+	}
+	
+	public void setResponseFactory(ProductResponseFactory responseFactory) {
+		this.responseFactory = responseFactory;
 	}
 	
 }

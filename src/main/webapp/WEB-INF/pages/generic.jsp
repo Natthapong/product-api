@@ -63,5 +63,5 @@
 
 "topup.mobile.verify.url" : "${apiHost}/api/v1/topup/mobile/draft/verifyAndCreate/%@?",
 
-"topup.mobile.confirm.otp.url" : "${apiHost}/api/v1/topup/mobile/sendotp/%@?"
+"topup.mobile.send.otp.url" : "${apiHost}/api/v1/topup/mobile/sendotp/%@?"
 }

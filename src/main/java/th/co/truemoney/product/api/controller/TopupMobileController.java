@@ -20,6 +20,7 @@ import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 import th.co.truemoney.serviceinventory.topup.TopUpMobileService;
 import th.co.truemoney.serviceinventory.topup.domain.TopUpMobile;
 import th.co.truemoney.serviceinventory.topup.domain.TopUpMobileDraft;
+import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
 @Controller
 public class TopupMobileController extends BaseController {
@@ -34,13 +35,12 @@ public class TopupMobileController extends BaseController {
 		String amount = request.get("amount");
 		
 		if(!ValidateUtil.checkMobileNumber(mobileNumber)){
-			throw new InvalidParameterException("40002");
+			throw new InvalidParameterException("40001");
 		}
 		
 		if(ValidateUtil.isEmpty(amount)){
 			throw new InvalidParameterException("amount not found");
 		}
-		
 		
 		TopUpMobileDraft draft = topUpMobileService.verifyAndCreateTopUpMobileDraft(mobileNumber, new BigDecimal(amount), accessToken);
 		TopUpMobile topUpMobileInfo = draft.getTopUpMobileInfo();
@@ -54,6 +54,19 @@ public class TopupMobileController extends BaseController {
 		data.put("amount", topUpMobileInfo.getAmount());
 		data.put("fee", topUpMobileInfo.getServiceFee().getFeeRate());
 		data.put("totalAmount", calculateTotalAmount(topUpAmount, topUpMobileInfo.getServiceFee().calculateFee(topUpAmount), getEwalletSOF(topUpMobileInfo.getSourceOfFundFees()).calculateFee(topUpAmount)));
+		
+		return this.responseFactory.createSuccessProductResonse(data);
+	}
+	
+	@RequestMapping(value = "/topup/mobile/sendotp/{accessToken}", method = RequestMethod.POST)
+	@ResponseBody
+	public ProductResponse sendOTP(@PathVariable String accessToken,@RequestBody Map<String, String> request) {
+		String draftTransactionID = request.get("draftTransactionID");
+		OTP otp = topUpMobileService.sendOTP(draftTransactionID, accessToken);
+		
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("refCode", otp.getReferenceCode());
+		data.put("amount", "500");//TODO
 		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}

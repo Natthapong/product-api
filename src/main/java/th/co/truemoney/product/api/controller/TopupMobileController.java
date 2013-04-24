@@ -90,6 +90,7 @@ public class TopupMobileController extends BaseController {
 		BigDecimal topUpAmount = topUpMobileInfo.getAmount();
 
 		Map<String, Object> data = new HashMap<String, Object>();
+        data.put("mobileNumber", otp.getMobileNumber());
 		data.put("refCode", otp.getReferenceCode());
 		data.put(
 				"totalAmount",
@@ -108,6 +109,7 @@ public class TopupMobileController extends BaseController {
 			@RequestBody Map<String, String> request) {
 		
 		OTP otp = new OTP();
+		otp.setMobileNumber(request.get("mobileNumber"));
 		otp.setOtpString(request.get("otpString"));
 		otp.setReferenceCode(request.get("refCode"));
 
@@ -130,6 +132,30 @@ public class TopupMobileController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("status", status.getStatus());
 
+		return this.responseFactory.createSuccessProductResonse(data);
+	}
+	
+	@RequestMapping(value = "/{transactionID}/datails/{accessTokenID}", method = RequestMethod.PUT)
+	@ResponseBody
+	public ProductResponse getTopUpMobileDetails(@PathVariable String transactionID,
+			@PathVariable String accessTokenID) {
+		
+		TopUpMobileTransaction transaction = topUpMobileService.getTopUpMobileResult(transactionID, accessTokenID);
+		Bill topUpMobileInfo = transaction.getDraftTransaction().getBillInfo();
+		BigDecimal topUpAmount = topUpMobileInfo.getAmount();
+		
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("transactionDate", transaction.getConfirmationInfo().getTransactionDate());
+		data.put("transactionID", transaction.getConfirmationInfo().getTransactionID());
+		data.put("amount", transaction.getDraftTransaction().getAmount());
+		data.put("logoURL", transaction.getDraftTransaction().getBillInfo().getLogoURL());
+		data.put("sourceOfFund", transaction.getDraftTransaction().getBillInfo().getEwalletSourceOfFund().getSourceType());
+		data.put("totalAmount",
+				calculateTotalAmount(topUpAmount, topUpMobileInfo
+						.getServiceFee().calculateFee(topUpAmount),
+						getEwalletSOF(topUpMobileInfo.getSourceOfFundFees())
+								.calculateFee(topUpAmount)));
+		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 

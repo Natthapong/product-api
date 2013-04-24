@@ -46,11 +46,48 @@ public class TestTopupMobileController extends BaseTestController {
 
 	@Test
 	public void failToVerifyTopUpWhenMobileIsIncorrectFormat() {
-		assertValidationFail("xxxxxxxxxx");
-		assertValidationFail("0893333");
-		assertValidationFail("09 080 3242");
+		assertValidateMobileFormatFail("xxxxxxxxxx");
+		assertValidateMobileFormatFail("0893333");
+		assertValidateMobileFormatFail("09 080 3242");
 	}
 
+	private void assertValidateMobileFormatFail(String mobileNumber) {
+		try {
+			request.put("mobileNumber", mobileNumber);
+			request.put("amount", "100");
+			controller.verifyAndCreate(accessToken, request);
+			Assert.fail();
+		} catch (InvalidParameterException ex) {
+			Assert.assertEquals("40002", ex.getMessage());
+		}
+	}
+	
+	@Test
+	public void failToVerifyTopUpWhenAmountLessThanMinimum() {
+		assertValidateAmountFormatFail("9");
+	}
+	
+	@Test
+	public void failToVerifyTopUpWhenAmountLessThanMaximum() {
+		assertValidateAmountFormatFail("1001");
+	}
+	
+	@Test
+	public void failToVerifyTopUpWhenAmountNotDivideByTen() {
+		assertValidateAmountFormatFail("501");
+	}
+	
+	private void assertValidateAmountFormatFail(String amount) {
+		try {
+			request.put("mobileNumber", "0899999999");
+			request.put("amount", amount);
+			controller.verifyAndCreate(accessToken, request);
+			Assert.fail();
+		} catch (InvalidParameterException ex) {
+			Assert.assertEquals("60000", ex.getMessage());
+		}		
+	}
+	
 	@Test
 	public void verifySuccess() {
 
@@ -124,15 +161,6 @@ public class TestTopupMobileController extends BaseTestController {
 
         this.verifyFailed(this.doPOST(sendOTPURL, reqBody));
 
-	}
-
-	private void assertValidationFail(String mobileNumber) {
-		try {
-			request.put("mobileNumber", mobileNumber);
-			controller.verifyAndCreate(accessToken, request);
-			Assert.fail();
-		} catch (InvalidParameterException ex) {
-		}
 	}
 
 	private TopUpMobileDraft createTopUpMobileDraftStub() {

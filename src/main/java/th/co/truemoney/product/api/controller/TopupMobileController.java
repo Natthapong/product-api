@@ -28,19 +28,25 @@ public class TopupMobileController extends BaseController {
 	@Autowired
 	private TopUpMobileService topUpMobileService;
 	
+	private static final int topupMinAmount = 10;
+	private static final int topupMaxAmount = 1000;
+	
 	@RequestMapping(value = "/topup/mobile/draft/verifyAndCreate/{accessToken}", method = RequestMethod.POST)
 	@ResponseBody
 	public ProductResponse verifyAndCreate(@PathVariable String accessToken, @RequestBody Map<String,String> request) {
 		String mobileNumber = request.get("mobileNumber");
+		
 		String amount = request.get("amount");
 		
 		if(!ValidateUtil.checkMobileNumber(mobileNumber)){
-			throw new InvalidParameterException("40001");
+			throw new InvalidParameterException("40002");
 		}
 		
 		if(ValidateUtil.isEmpty(amount)){
-			throw new InvalidParameterException("amount not found");
+			throw new InvalidParameterException("60000");
 		}
+		
+		checkTopupAmount(Integer.parseInt(amount));
 		
 		TopUpMobileDraft draft = topUpMobileService.verifyAndCreateTopUpMobileDraft(mobileNumber, new BigDecimal(amount), accessToken);
 		TopUpMobile topUpMobileInfo = draft.getTopUpMobileInfo();
@@ -65,6 +71,7 @@ public class TopupMobileController extends BaseController {
 		OTP otp = topUpMobileService.sendOTP(draftTransactionID, accessToken);
 		
 		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("mobileNumber", "");//System.out.println(String.valueOf(mobileNumber).replaceFirst("(\\d{3})(\\d{3})(\\d+)", "$1-$2-$3"));
 		data.put("refCode", otp.getReferenceCode());
 		data.put("amount", "500");//TODO
 		
@@ -86,6 +93,18 @@ public class TopupMobileController extends BaseController {
 		}
 		
 		throw new ProductAPIException("source of fund not supported.");
+	}
+	
+	private void checkTopupAmount(int amount){
+		
+		if((amount%10) != 0){
+			throw new InvalidParameterException("60000");
+		}else if(amount < topupMinAmount){
+			throw new InvalidParameterException("60000");
+		}else if(amount > topupMaxAmount){
+			throw new InvalidParameterException("60000");
+		}
+
 	}
 
 }

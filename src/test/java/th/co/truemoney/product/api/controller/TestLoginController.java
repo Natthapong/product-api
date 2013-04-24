@@ -56,13 +56,13 @@ public class TestLoginController extends BaseTestController {
 				any(EWalletOwnerCredential.class),
 				any(ClientCredential.class)			)
 		).thenThrow(
-				new ServiceInventoryException(400, "4", "Invalid Username or Password", "umarket"));
+				new ServiceInventoryException(400, "4", "Invalid Username or Password", "core"));
 		this.verifyFailed(
 				this.doPOST("/signin",
 						new LoginBean("customer@truemoney.co.th", "password","email"))
 		).andExpect(jsonPath("$.code").value("4")
 		).andExpect(jsonPath("$.messageEn").value("Invalid Email or Password")
-		).andExpect(jsonPath("$.namespace").value("umarket"));
+		).andExpect(jsonPath("$.namespace").value("core"));
 	}
 
 	@Test

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.exception.ProductAPIException;
 import th.co.truemoney.product.api.util.ValidateUtil;
+import th.co.truemoney.serviceinventory.bill.domain.Bill;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.topup.TopUpMobileService;
@@ -122,12 +123,7 @@ public class TopupMobileController extends BaseController {
 	@RequestMapping(value = "/{transactionID}/status/{accessTokenID}", method = RequestMethod.PUT)
 	@ResponseBody
 	public ProductResponse getTopUpMobileStatus(@PathVariable String transactionID,
-			@PathVariable String accessTokenID,
-			@RequestBody Map<String, String> request) {
-		
-		OTP otp = new OTP();
-		otp.setOtpString(request.get("otpString"));
-		otp.setReferenceCode(request.get("refCode"));
+			@PathVariable String accessTokenID) {
 
 		TopUpMobileTransaction.Status status = topUpMobileService.getTopUpMobileStatus(transactionID, accessTokenID);
 

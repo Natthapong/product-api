@@ -217,7 +217,7 @@ public class TestTopupMobileController extends BaseTestController {
 		
 		this.verifySuccess(this.doPUT(checkStatusURL,reqBody))
 			.andExpect(jsonPath("data").exists())
-			.andExpect(jsonPath("$..status").value("CONFIRMED"));
+			.andExpect(jsonPath("$..status").value("SUCCESS"));
 	}
 	
 	@Test

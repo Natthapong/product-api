@@ -87,6 +87,11 @@ public abstract class BaseTestController {
 				post(url).contentType(MediaType.APPLICATION_JSON)
 						 .content(mapper.writeValueAsBytes(reqBody)));
 	}
+	
+	protected ResultActions doPOST(String url) throws Exception {
+		return this.mockMvc.perform(
+				post(url).contentType(MediaType.APPLICATION_JSON));
+	}
 
 	protected ResultActions doGET(String url) throws Exception {
 		return this.mockMvc.perform(get(url).contentType(MediaType.APPLICATION_JSON));

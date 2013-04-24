@@ -31,7 +31,7 @@ public class TestTopupMobileController extends BaseTestController {
 	private static final String verifyTopUpMobileURL = String.format(
 			"/topup/mobile/draft/verifyAndCreate/%s", fakeAccessToken);
 	private static final String sendOTPURL = String.format(
-			"/topup/mobile/sendotp/%s", fakeAccessToken);
+			"/topup/mobile/sendotp/%s/%s", "1111111111", fakeAccessToken);
 
 	@Autowired
 	TopupMobileController controller;
@@ -89,7 +89,7 @@ public class TestTopupMobileController extends BaseTestController {
 	}
 	
 	@Test
-	public void verifySuccess() {
+	public void verifyAndCreateSuccess() {
 
 		when(
 				topUpMobileServiceMock.verifyAndCreateTopUpMobileDraft(
@@ -111,7 +111,7 @@ public class TestTopupMobileController extends BaseTestController {
 		Assert.assertEquals(
 				"https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bank/scb@2x.png",
 				data.get("logoURL"));
-		Assert.assertEquals("0894445266", data.get("mobileNumber"));
+		Assert.assertEquals("089-444-5266", data.get("mobileNumber"));
 		Assert.assertEquals(new BigDecimal(500), data.get("amount"));
 		Assert.assertEquals(new BigDecimal(15), data.get("fee"));
 		Assert.assertEquals(new BigDecimal(515), data.get("totalAmount"));
@@ -133,20 +133,26 @@ public class TestTopupMobileController extends BaseTestController {
 		reqBody.put("amount", "500");
 
 		this.verifySuccess(this.doPOST(verifyTopUpMobileURL, reqBody))
-				.andExpect(jsonPath("data").exists());
+				.andExpect(jsonPath("data").exists())
+				.andExpect(jsonPath("$..mobileNumber").value("089-444-5266"));
 	}
 
 	@Test
 	public void integrationTestSendOTPSuccess() throws Exception {
 
+		OTP otp = new OTP();
+		otp.setMobileNumber("0894445266");
+		otp.setOtpString("123456");
+		otp.setReferenceCode("qwer");
+		
 		when(topUpMobileServiceMock.sendOTP(anyString(), anyString()))
-				.thenReturn(OTPStub());
-
-		Map<String, String> reqBody = new HashMap<String, String>();
-		reqBody.put("draftTransactionID", "1111111111");
-
-		this.verifySuccess(this.doPOST(sendOTPURL, reqBody)).andExpect(
-				jsonPath("data").exists());
+				.thenReturn(otp);
+		
+		when(topUpMobileServiceMock.getTopUpMobileDraftDetail(anyString(), anyString()))
+		.thenReturn(createTopUpMobileDraftStub());
+		
+		this.verifySuccess(this.doPOST(sendOTPURL))
+			.andExpect(jsonPath("data").exists());
 
 	}
 	
@@ -156,10 +162,10 @@ public class TestTopupMobileController extends BaseTestController {
 		when(topUpMobileServiceMock.sendOTP(anyString(), anyString()))
 				.thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
 		
-		Map<String, String> reqBody = new HashMap<String, String>();
-		reqBody.put("draftTransactionID", "1111111111");
+		when(topUpMobileServiceMock.getTopUpMobileDraftDetail(anyString(), anyString()))
+		.thenReturn(createTopUpMobileDraftStub());
 
-        this.verifyFailed(this.doPOST(sendOTPURL, reqBody));
+        this.verifyFailed(this.doPOST(sendOTPURL));
 
 	}
 
@@ -171,7 +177,7 @@ public class TestTopupMobileController extends BaseTestController {
 				.setLogo("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bank/scb@2x.png");
 		topUpMobileInfo.setServiceFee(new ServiceFeeInfo("THB", new BigDecimal(
 				15)));
-		topUpMobileInfo.setSourceOfFundFees(createBillPaySOF());
+		topUpMobileInfo.setSourceOfFundFees(createSOF());
 		TopUpMobileDraft draft = new TopUpMobileDraft();
 		draft.setAccessTokenID(fakeAccessToken);
 		draft.setTopUpMobileInfo(topUpMobileInfo);
@@ -180,15 +186,7 @@ public class TestTopupMobileController extends BaseTestController {
 		return draft;
 	}
 
-	private OTP OTPStub() {
-		OTP otp = new OTP();
-		otp.setMobileNumber("0894445266");
-		otp.setOtpString("123456");
-		otp.setReferenceCode("qwer");
-		return otp;
-	}
-
-	private SourceOfFund[] createBillPaySOF() {
+	private SourceOfFund[] createSOF() {
 		SourceOfFund sourceOfFundFee = new SourceOfFund();
 		sourceOfFundFee.setSourceType("EW");
 		sourceOfFundFee.setFeeRate(new BigDecimal("0"));

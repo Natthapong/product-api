@@ -56,7 +56,7 @@ public class TopupMobileController extends BaseController {
 		data.put("draftTransactionID", draft.getID());
 		
 		data.put("logoURL", topUpMobileInfo.getLogo());
-		data.put("mobileNumber", topUpMobileInfo.getMobileNumber());
+		data.put("mobileNumber", String.valueOf(topUpMobileInfo.getMobileNumber()).replaceFirst("(\\d{3})(\\d{3})(\\d+)", "$1-$2-$3"));
 		data.put("amount", topUpMobileInfo.getAmount());
 		data.put("fee", topUpMobileInfo.getServiceFee().getFeeRate());
 		data.put("totalAmount", calculateTotalAmount(topUpAmount, topUpMobileInfo.getServiceFee().calculateFee(topUpAmount), getEwalletSOF(topUpMobileInfo.getSourceOfFundFees()).calculateFee(topUpAmount)));
@@ -64,16 +64,18 @@ public class TopupMobileController extends BaseController {
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	
-	@RequestMapping(value = "/topup/mobile/sendotp/{accessToken}", method = RequestMethod.POST)
+	@RequestMapping(value = "/topup/mobile/sendotp/{draftTransactionID}/{accessToken}", method = RequestMethod.POST)
 	@ResponseBody
-	public ProductResponse sendOTP(@PathVariable String accessToken,@RequestBody Map<String, String> request) {
-		String draftTransactionID = request.get("draftTransactionID");
+	public ProductResponse sendOTP(@PathVariable String accessToken,@PathVariable String draftTransactionID) {
 		OTP otp = topUpMobileService.sendOTP(draftTransactionID, accessToken);
 		
+		TopUpMobileDraft draft = topUpMobileService.getTopUpMobileDraftDetail(draftTransactionID, accessToken);
+		TopUpMobile topUpMobileInfo = draft.getTopUpMobileInfo();
+		BigDecimal topUpAmount = topUpMobileInfo.getAmount();
+		
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("mobileNumber", "");//System.out.println(String.valueOf(mobileNumber).replaceFirst("(\\d{3})(\\d{3})(\\d+)", "$1-$2-$3"));
 		data.put("refCode", otp.getReferenceCode());
-		data.put("amount", "500");//TODO
+		data.put("totalAmount", calculateTotalAmount(topUpAmount, topUpMobileInfo.getServiceFee().calculateFee(topUpAmount), getEwalletSOF(topUpMobileInfo.getSourceOfFundFees()).calculateFee(topUpAmount)));
 		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}

@@ -17,66 +17,123 @@ import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.exception.ProductAPIException;
 import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
+import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.topup.TopUpMobileService;
 import th.co.truemoney.serviceinventory.topup.domain.TopUpMobile;
 import th.co.truemoney.serviceinventory.topup.domain.TopUpMobileDraft;
-import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
+import th.co.truemoney.serviceinventory.topup.domain.TopUpMobileTransaction;
 
+@RequestMapping(value = "/topup/mobile")
 @Controller
 public class TopupMobileController extends BaseController {
-	
+
 	@Autowired
 	private TopUpMobileService topUpMobileService;
-	
+
 	private static final int topupMinAmount = 10;
 	private static final int topupMaxAmount = 1000;
-	
-	@RequestMapping(value = "/topup/mobile/draft/verifyAndCreate/{accessToken}", method = RequestMethod.POST)
+
+	@RequestMapping(value = "/draft/verifyAndCreate/{accessTokenID}", method = RequestMethod.POST)
 	@ResponseBody
-	public ProductResponse verifyAndCreate(@PathVariable String accessToken, @RequestBody Map<String,String> request) {
+	public ProductResponse verifyAndCreate(@PathVariable String accessTokenID,
+			@RequestBody Map<String, String> request) {
 		String mobileNumber = request.get("mobileNumber");
-		
+
 		String amount = request.get("amount");
-		
-		if(!ValidateUtil.checkMobileNumber(mobileNumber)){
+
+		if (!ValidateUtil.checkMobileNumber(mobileNumber)) {
 			throw new InvalidParameterException("40002");
 		}
-		
-		if(ValidateUtil.isEmpty(amount)){
+
+		if (ValidateUtil.isEmpty(amount)) {
 			throw new InvalidParameterException("60000");
 		}
-		
+
 		checkTopupAmount(Integer.parseInt(amount));
-		
-		TopUpMobileDraft draft = topUpMobileService.verifyAndCreateTopUpMobileDraft(mobileNumber, new BigDecimal(amount), accessToken);
+
+		TopUpMobileDraft draft = topUpMobileService
+				.verifyAndCreateTopUpMobileDraft(mobileNumber, new BigDecimal(
+						amount), accessTokenID);
 		TopUpMobile topUpMobileInfo = draft.getTopUpMobileInfo();
 		BigDecimal topUpAmount = topUpMobileInfo.getAmount();
-		
+
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("draftTransactionID", draft.getID());
-		
+
 		data.put("logoURL", topUpMobileInfo.getLogo());
-		data.put("mobileNumber", String.valueOf(topUpMobileInfo.getMobileNumber()).replaceFirst("(\\d{3})(\\d{3})(\\d+)", "$1-$2-$3"));
+		data.put(
+				"mobileNumber",
+				String.valueOf(topUpMobileInfo.getMobileNumber()).replaceFirst(
+						"(\\d{3})(\\d{3})(\\d+)", "$1-$2-$3"));
 		data.put("amount", topUpMobileInfo.getAmount());
 		data.put("fee", topUpMobileInfo.getServiceFee().getFeeRate());
-		data.put("totalAmount", calculateTotalAmount(topUpAmount, topUpMobileInfo.getServiceFee().calculateFee(topUpAmount), getEwalletSOF(topUpMobileInfo.getSourceOfFundFees()).calculateFee(topUpAmount)));
+		data.put(
+				"totalAmount",
+				calculateTotalAmount(topUpAmount, topUpMobileInfo
+						.getServiceFee().calculateFee(topUpAmount),
+						getEwalletSOF(topUpMobileInfo.getSourceOfFundFees())
+								.calculateFee(topUpAmount)));
+
+		return this.responseFactory.createSuccessProductResonse(data);
+	}
+
+	@RequestMapping(value = "/sendotp/{draftTransactionID}/{accessTokenID}", method = RequestMethod.POST)
+	@ResponseBody
+	public ProductResponse sendOTP(@PathVariable String accessTokenID,
+			@PathVariable String draftTransactionID) {
+		OTP otp = topUpMobileService.sendOTP(draftTransactionID, accessTokenID);
+
+		TopUpMobileDraft draft = topUpMobileService.getTopUpMobileDraftDetail(
+				draftTransactionID, accessTokenID);
+		TopUpMobile topUpMobileInfo = draft.getTopUpMobileInfo();
+		BigDecimal topUpAmount = topUpMobileInfo.getAmount();
+
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("refCode", otp.getReferenceCode());
+		data.put(
+				"totalAmount",
+				calculateTotalAmount(topUpAmount, topUpMobileInfo
+						.getServiceFee().calculateFee(topUpAmount),
+						getEwalletSOF(topUpMobileInfo.getSourceOfFundFees())
+								.calculateFee(topUpAmount)));
+
+		return this.responseFactory.createSuccessProductResonse(data);
+	}
+
+	@RequestMapping(value = "/confirm/{draftTransactionID}/{accessTokenID}", method = RequestMethod.PUT)
+	@ResponseBody
+	public ProductResponse confirmOTP(@PathVariable String draftTransactionID,
+			@PathVariable String accessTokenID,
+			@RequestBody Map<String, String> request) {
 		
+		OTP otp = new OTP();
+		otp.setOtpString(request.get("otpString"));
+		otp.setReferenceCode(request.get("refCode"));
+
+		TopUpMobileDraft.Status status = topUpMobileService.confirmTopUpMobile(
+				draftTransactionID, otp, accessTokenID);
+
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("status", status.getStatus());
+
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	
-	@RequestMapping(value = "/topup/mobile/sendotp/{draftTransactionID}/{accessToken}", method = RequestMethod.POST)
+	@RequestMapping(value = "/{transactionID}/status/{accessTokenID}", method = RequestMethod.PUT)
 	@ResponseBody
-	public ProductResponse sendOTP(@PathVariable String accessToken,@PathVariable String draftTransactionID) {
-		OTP otp = topUpMobileService.sendOTP(draftTransactionID, accessToken);
+	public ProductResponse getTopUpMobileStatus(@PathVariable String transactionID,
+			@PathVariable String accessTokenID,
+			@RequestBody Map<String, String> request) {
 		
-		TopUpMobileDraft draft = topUpMobileService.getTopUpMobileDraftDetail(draftTransactionID, accessToken);
-		TopUpMobile topUpMobileInfo = draft.getTopUpMobileInfo();
-		BigDecimal topUpAmount = topUpMobileInfo.getAmount();
-		
+		OTP otp = new OTP();
+		otp.setOtpString(request.get("otpString"));
+		otp.setReferenceCode(request.get("refCode"));
+
+		TopUpMobileTransaction.Status status = topUpMobileService.getTopUpMobileStatus(transactionID, accessTokenID);
+
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("refCode", otp.getReferenceCode());
-		data.put("totalAmount", calculateTotalAmount(topUpAmount, topUpMobileInfo.getServiceFee().calculateFee(topUpAmount), getEwalletSOF(topUpMobileInfo.getSourceOfFundFees()).calculateFee(topUpAmount)));
-		
+		data.put("status", status.getStatus());
+
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 
@@ -93,17 +150,17 @@ public class TopupMobileController extends BaseController {
 				}
 			}
 		}
-		
+
 		throw new ProductAPIException("source of fund not supported.");
 	}
-	
-	private void checkTopupAmount(int amount){
-		
-		if((amount%10) != 0){
+
+	private void checkTopupAmount(int amount) {
+
+		if ((amount % 10) != 0) {
 			throw new InvalidParameterException("60000");
-		}else if(amount < topupMinAmount){
+		} else if (amount < topupMinAmount) {
 			throw new InvalidParameterException("60000");
-		}else if(amount > topupMaxAmount){
+		} else if (amount > topupMaxAmount) {
 			throw new InvalidParameterException("60000");
 		}
 

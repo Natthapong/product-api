@@ -23,6 +23,7 @@ import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 import th.co.truemoney.serviceinventory.topup.domain.TopUpMobile;
 import th.co.truemoney.serviceinventory.topup.domain.TopUpMobileDraft;
+import th.co.truemoney.serviceinventory.topup.domain.TopUpMobileTransaction;
 
 public class TestTopupMobileController extends BaseTestController {
 
@@ -32,7 +33,11 @@ public class TestTopupMobileController extends BaseTestController {
 			"/topup/mobile/draft/verifyAndCreate/%s", fakeAccessToken);
 	private static final String sendOTPURL = String.format(
 			"/topup/mobile/sendotp/%s/%s", "1111111111", fakeAccessToken);
-
+	private static final String confirmOTPURL = String.format(
+			"/topup/mobile/confirm/%s/%s", "1111111111", fakeAccessToken);
+	private static final String checkStatusURL = String.format(
+			"/topup/mobile/%s/status/%s", "1111111111", fakeAccessToken);
+	
 	@Autowired
 	TopupMobileController controller;
 
@@ -167,6 +172,65 @@ public class TestTopupMobileController extends BaseTestController {
 
         this.verifyFailed(this.doPOST(sendOTPURL));
 
+	}
+	
+	@Test
+	public void integrationTestConfirmOTPSuccess() throws Exception {
+
+		when(topUpMobileServiceMock.confirmTopUpMobile(anyString(), any(OTP.class), anyString()))
+				.thenReturn(TopUpMobileDraft.Status.OTP_CONFIRMED);
+		
+		Map<String, Object> reqBody = new HashMap<String, Object>();
+		reqBody.put("otpString", "123456");
+		reqBody.put("refCode", "QWE");
+		
+		this.verifySuccess(this.doPUT(confirmOTPURL,reqBody))
+			.andExpect(jsonPath("data").exists())
+			.andExpect(jsonPath("$..status").value("CONFIRMED"));
+
+	}
+	
+	@Test
+	public void confirmOTPFail() throws Exception {
+
+		when(topUpMobileServiceMock.confirmTopUpMobile(anyString(), any(OTP.class), anyString()))
+				.thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
+		
+		
+		Map<String, Object> reqBody = new HashMap<String, Object>();
+		reqBody.put("otpString", "123456");
+		reqBody.put("refCode", "QWE");
+
+        this.verifyFailed(this.doPUT(confirmOTPURL,reqBody));
+
+	}
+	
+	@Test
+	public void integrationTestCheckStatusSuccess() throws Exception {
+
+		when(topUpMobileServiceMock.getTopUpMobileStatus(anyString(), anyString()))
+				.thenReturn(TopUpMobileTransaction.Status.SUCCESS);
+		
+		Map<String, Object> reqBody = new HashMap<String, Object>();
+		reqBody.put("otpString", "123456");
+		reqBody.put("refCode", "QWE");
+		
+		this.verifySuccess(this.doPUT(checkStatusURL,reqBody))
+			.andExpect(jsonPath("data").exists())
+			.andExpect(jsonPath("$..status").value("CONFIRMED"));
+	}
+	
+	@Test
+	public void checkStatusFail() throws Exception {
+
+		when(topUpMobileServiceMock.getTopUpMobileStatus(anyString(), anyString()))
+				.thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
+		
+		Map<String, Object> reqBody = new HashMap<String, Object>();
+		reqBody.put("otpString", "123456");
+		reqBody.put("refCode", "QWE");
+
+        this.verifyFailed(this.doPUT(checkStatusURL,reqBody));
 	}
 
 	private TopUpMobileDraft createTopUpMobileDraftStub() {

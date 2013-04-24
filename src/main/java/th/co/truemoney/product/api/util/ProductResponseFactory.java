@@ -76,20 +76,6 @@ public class ProductResponseFactory {
 	
 	private final String[] CALL_CENTER_ENABLED = new String[]{"TMN-SERVICE-INVENTORY.1006", 
 															"TMN-SERVICE-INVENTORY.10002",
-															"umarket.5",
-															"umarket.6",
-															"umarket.7",
-															"umarket.19",
-															"umarket.27",
-															"umarket.38",
-															"umarket.71",
-															"next.5",
-															"next.6",
-															"next.7",
-															"next.19",
-															"next.27",
-															"next.38",
-															"next.71",
 															"core.5",
 															"core.6",
 															"core.7",
@@ -97,9 +83,7 @@ public class ProductResponseFactory {
 															"core.27",
 															"core.38",
 															"core.71",
-															"core.1012",
-															"next.1012",
-															"umarket.1012"};
+															"core.1012"};
 	
 	private boolean isInvalidAmountException(ServiceInventoryException e) {
 		return LESS_THAN_MINIMUM_AMOUNT.equals(e.getErrorNamespace() + "." + e.getErrorCode()) 

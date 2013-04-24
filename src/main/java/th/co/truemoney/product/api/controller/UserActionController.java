@@ -58,9 +58,9 @@ public class UserActionController extends BaseController {
 			String errorcode = String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode());
 			if (errorcode.equals("core.1011") || errorcode.equals("core.1013")
 					|| errorcode.equals("core.1014")
-					|| errorcode.equals("umarket.3")
-					|| errorcode.equals("umarket.4")
-					|| errorcode.equals("umarket.5")) {
+					|| errorcode.equals("core.3")
+					|| errorcode.equals("core.4")
+					|| errorcode.equals("core.5")) {
 				if ("mobile".equals(request.getType())) {
 					throw new ServiceInventoryException(400, "50001",
 							"Invalid mobile or pin", "TMN-PRODUCT");

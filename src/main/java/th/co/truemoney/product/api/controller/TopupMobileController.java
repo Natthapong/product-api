@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.exception.ProductAPIException;
 import th.co.truemoney.product.api.util.ValidateUtil;
-import th.co.truemoney.serviceinventory.bill.domain.Bill;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.topup.TopUpMobileService;
@@ -92,8 +91,7 @@ public class TopupMobileController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
         data.put("mobileNumber", otp.getMobileNumber());
 		data.put("refCode", otp.getReferenceCode());
-		data.put(
-				"totalAmount",
+		data.put("totalAmount",
 				calculateTotalAmount(topUpAmount, topUpMobileInfo
 						.getServiceFee().calculateFee(topUpAmount),
 						getEwalletSOF(topUpMobileInfo.getSourceOfFundFees())
@@ -132,30 +130,6 @@ public class TopupMobileController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("status", status.getStatus());
 
-		return this.responseFactory.createSuccessProductResonse(data);
-	}
-	
-	@RequestMapping(value = "/{transactionID}/datails/{accessTokenID}", method = RequestMethod.PUT)
-	@ResponseBody
-	public ProductResponse getTopUpMobileDetails(@PathVariable String transactionID,
-			@PathVariable String accessTokenID) {
-		
-		TopUpMobileTransaction transaction = topUpMobileService.getTopUpMobileResult(transactionID, accessTokenID);
-		Bill topUpMobileInfo = transaction.getDraftTransaction().getBillInfo();
-		BigDecimal topUpAmount = topUpMobileInfo.getAmount();
-		
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("transactionDate", transaction.getConfirmationInfo().getTransactionDate());
-		data.put("transactionID", transaction.getConfirmationInfo().getTransactionID());
-		data.put("amount", transaction.getDraftTransaction().getAmount());
-		data.put("logoURL", transaction.getDraftTransaction().getBillInfo().getLogoURL());
-		data.put("sourceOfFund", transaction.getDraftTransaction().getBillInfo().getEwalletSourceOfFund().getSourceType());
-		data.put("totalAmount",
-				calculateTotalAmount(topUpAmount, topUpMobileInfo
-						.getServiceFee().calculateFee(topUpAmount),
-						getEwalletSOF(topUpMobileInfo.getSourceOfFundFees())
-								.calculateFee(topUpAmount)));
-		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 

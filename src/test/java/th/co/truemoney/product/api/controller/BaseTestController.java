@@ -55,14 +55,15 @@ public abstract class BaseTestController {
 
 	@Autowired
 	protected BillPaymentService billPaymentServiceMock;
-	
+
 	@Autowired
 	protected TopUpMobileService topUpMobileServiceMock;
 
 	@Before
 	public void setup() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-		this.sourceOfFundServiceMock = wac.getBean(DirectDebitSourceOfFundService.class);
+		this.sourceOfFundServiceMock = wac
+				.getBean(DirectDebitSourceOfFundService.class);
 		this.topupServiceMock = wac.getBean(TopUpService.class);
 		this.profileServiceMock = wac.getBean(TmnProfileService.class);
 		this.p2pTransferServiceMock = wac.getBean(P2PTransferService.class);
@@ -79,51 +80,66 @@ public abstract class BaseTestController {
 		reset(this.billPaymentServiceMock);
 		reset(this.topUpMobileServiceMock);
 	}
-	
+
 	ObjectMapper mapper = new ObjectMapper();
-	
+
 	protected ResultActions doPOST(String url, Object reqBody) throws Exception {
-		return this.mockMvc.perform(
-				post(url).contentType(MediaType.APPLICATION_JSON)
-						 .content(mapper.writeValueAsBytes(reqBody)));
+		return this.mockMvc.perform(post(url).contentType(
+				MediaType.APPLICATION_JSON).content(
+				mapper.writeValueAsBytes(reqBody)));
 	}
-	
+
 	protected ResultActions doPOST(String url) throws Exception {
-		return this.mockMvc.perform(
-				post(url).contentType(MediaType.APPLICATION_JSON));
+		return this.mockMvc.perform(post(url).contentType(
+				MediaType.APPLICATION_JSON));
+	}
+
+	protected ResultActions doGET(String url, Object reqBody) throws Exception {
+		return this.mockMvc.perform(get(url).contentType(
+				MediaType.APPLICATION_JSON).content(
+				mapper.writeValueAsBytes(reqBody)));
 	}
 
 	protected ResultActions doGET(String url) throws Exception {
-		return this.mockMvc.perform(get(url).contentType(MediaType.APPLICATION_JSON));
+		return this.mockMvc.perform(get(url).contentType(
+				MediaType.APPLICATION_JSON));
 	}
 
 	protected ResultActions doPUT(String url, Object reqBody) throws Exception {
-		return this.mockMvc.perform(
-				put(url).contentType(MediaType.APPLICATION_JSON)
-						.content(mapper.writeValueAsBytes(reqBody)));
+		return this.mockMvc.perform(put(url).contentType(
+				MediaType.APPLICATION_JSON).content(
+				mapper.writeValueAsBytes(reqBody)));
 	}
 
-	protected ResultActions verifySuccess(ResultActions actions) throws Exception {
+	protected ResultActions verifySuccess(ResultActions actions)
+			throws Exception {
 		return actions.andExpect(status().isOk())
-		  	   .andExpect(jsonPath("$.code").value("20000"))
-		  	   .andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
-		  	   .andExpect(jsonPath("$.messageEn").value("Success"))
-		  	   .andExpect(jsonPath("$.messageTh").exists()); //TODO check the exact message sent out
+				.andExpect(jsonPath("$.code").value("20000"))
+				.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
+				.andExpect(jsonPath("$.messageEn").value("Success"))
+				.andExpect(jsonPath("$.messageTh").exists()); // TODO check the
+																// exact message
+																// sent out
 	}
 
 	protected void verifyBadRequest(ResultActions actions) throws Exception {
 		actions.andExpect(status().isBadRequest())
-		  	   .andExpect(jsonPath("$.code").value(containsString("5000")))
-		  	   .andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
-		  	   .andExpect(jsonPath("$.messageEn").exists())
-		  	   .andExpect(jsonPath("$.messageTh").exists()); //TODO check the exact message sent out
+				.andExpect(jsonPath("$.code").value(containsString("5000")))
+				.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
+				.andExpect(jsonPath("$.messageEn").exists())
+				.andExpect(jsonPath("$.messageTh").exists()); // TODO check the
+																// exact message
+																// sent out
 	}
 
-	protected ResultActions verifyFailed(ResultActions actions) throws Exception {
+	protected ResultActions verifyFailed(ResultActions actions)
+			throws Exception {
 		return actions.andExpect(status().isInternalServerError())
-		  	   .andExpect(jsonPath("$.code").exists())
-		  	   .andExpect(jsonPath("$.namespace").exists())
-		  	   .andExpect(jsonPath("$.messageEn").exists())
-		  	   .andExpect(jsonPath("$.messageTh").exists()); //TODO check the exact message sent out
+				.andExpect(jsonPath("$.code").exists())
+				.andExpect(jsonPath("$.namespace").exists())
+				.andExpect(jsonPath("$.messageEn").exists())
+				.andExpect(jsonPath("$.messageTh").exists()); // TODO check the
+																// exact message
+																// sent out
 	}
 }

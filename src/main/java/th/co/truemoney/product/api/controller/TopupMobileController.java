@@ -17,6 +17,7 @@ import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.exception.ProductAPIException;
 import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
+import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.topup.TopUpMobileService;
 import th.co.truemoney.serviceinventory.topup.domain.TopUpMobile;
@@ -29,6 +30,9 @@ public class TopupMobileController extends BaseController {
 
 	@Autowired
 	private TopUpMobileService topUpMobileService;
+	
+	@Autowired
+	TmnProfileService profileService;
 
 	private static final int topupMinAmount = 10;
 	private static final int topupMaxAmount = 1000;
@@ -64,7 +68,7 @@ public class TopupMobileController extends BaseController {
 		data.put(
 				"mobileNumber",
 				String.valueOf(topUpMobileInfo.getMobileNumber()).replaceFirst(
-						"(\\d{3})(\\d{3})(\\d+)", "$1-$2-$3"));
+						"(\\d{3})(\\d{3})(\\d)", "$1-$2-$3"));
 		data.put("amount", topUpMobileInfo.getAmount());
 		data.put("fee", topUpMobileInfo.getServiceFee().getFeeRate());
 		data.put(
@@ -120,7 +124,7 @@ public class TopupMobileController extends BaseController {
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	
-	@RequestMapping(value = "/{transactionID}/status/{accessTokenID}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{transactionID}/status/{accessTokenID}", method = RequestMethod.GET)
 	@ResponseBody
 	public ProductResponse getTopUpMobileStatus(@PathVariable String transactionID,
 			@PathVariable String accessTokenID) {
@@ -132,6 +136,33 @@ public class TopupMobileController extends BaseController {
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
+	
+	@RequestMapping(value = "/{transactionID}/details/{accessTokenID}", method = RequestMethod.GET)
+		@ResponseBody
+		public ProductResponse getTopUpMobileDetails(@PathVariable String transactionID,
+				@PathVariable String accessTokenID) {
+			
+			TopUpMobileTransaction transaction = topUpMobileService.getTopUpMobileResult(transactionID, accessTokenID);
+			TopUpMobile topUpMobileInfo = transaction.getDraftTransaction().getTopUpMobileInfo();
+			BigDecimal topUpAmount = topUpMobileInfo.getAmount();
+			
+			Map<String, Object> data = new HashMap<String, Object>();
+			data.put("transactionDate", transaction.getConfirmationInfo().getTransactionDate());
+			data.put("transactionID", transaction.getConfirmationInfo().getTransactionID());
+			data.put("amount", topUpAmount);
+			data.put("logoURL", topUpMobileInfo.getLogo());
+			data.put("sourceOfFund", topUpMobileInfo.getEwalletSourceOfFund().getSourceType());
+			data.put("totalAmount",
+					calculateTotalAmount(topUpAmount, topUpMobileInfo
+							.getServiceFee().calculateFee(topUpAmount),
+							getEwalletSOF(topUpMobileInfo.getSourceOfFundFees())
+									.calculateFee(topUpAmount)));
+			
+			BigDecimal currentBalance = this.profileService.getEwalletBalance(accessTokenID);
+			data.put("currentEwalletBalance", currentBalance);
+			
+			return this.responseFactory.createSuccessProductResonse(data);
+		}
 
 	private Object calculateTotalAmount(BigDecimal amount,
 			BigDecimal serviceFee, BigDecimal sofFee) {

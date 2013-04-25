@@ -40,14 +40,14 @@ public class MessageManager implements MessageSourceAware {
 	public String getMessageTh(String namespace, String code, Object[] params){
 		String msg = getMessage("msg." + namespace + "." + code, params, TH);
 		if (UNKNOWN_MSG.equals(msg))
-			return getMessageTh("unknown", "message", params);
+			return getMessageTh("unknown", "message", params) + " <" + namespace + "." + code + ">";;
 		return msg;
 	}
 	
 	public String getMessageEn(String namespace, String code, Object[] params){
 		String msg = getMessage("msg." + namespace + "." + code, params, EN);
 		if (UNKNOWN_MSG.equals(msg))
-			return getMessageEn("unknown", "message", params);
+			return getMessageEn("unknown", "message", params) + " <" + namespace + "." + code + ">";
 		return msg;
 	}
 	

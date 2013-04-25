@@ -34,8 +34,8 @@ public class TopupMobileController extends BaseController {
 	@Autowired
 	TmnProfileService profileService;
 
-	private static final int topupMinAmount = 10;
-	private static final int topupMaxAmount = 1000;
+	private static final BigDecimal topupMinAmount = new BigDecimal(10);
+	private static final BigDecimal topupMaxAmount = new BigDecimal(1000);
 
 	@RequestMapping(value = "/draft/verifyAndCreate/{accessTokenID}", method = RequestMethod.POST)
 	@ResponseBody
@@ -53,7 +53,7 @@ public class TopupMobileController extends BaseController {
 			throw new InvalidParameterException("60000");
 		}
 
-		checkTopupAmount(Integer.parseInt(amount));
+		checkTopupAmount(new BigDecimal(amount));
 
 		TopUpMobileDraft draft = topUpMobileService
 				.verifyAndCreateTopUpMobileDraft(mobileNumber, new BigDecimal(
@@ -147,6 +147,7 @@ public class TopupMobileController extends BaseController {
 			BigDecimal topUpAmount = topUpMobileInfo.getAmount();
 			
 			Map<String, Object> data = new HashMap<String, Object>();
+			data.put("mobileNumber", transaction.getDraftTransaction().getTopUpMobileInfo().getMobileNumber());
 			data.put("transactionDate", transaction.getConfirmationInfo().getTransactionDate());
 			data.put("transactionID", transaction.getConfirmationInfo().getTransactionID());
 			data.put("amount", topUpAmount);
@@ -181,13 +182,13 @@ public class TopupMobileController extends BaseController {
 		throw new ProductAPIException("source of fund not supported.");
 	}
 
-	private void checkTopupAmount(int amount) {
+	private void checkTopupAmount(BigDecimal amount) {
 
-		if ((amount % 10) != 0) {
+		if (!(amount.remainder(new BigDecimal(10))).equals(BigDecimal.ZERO)) {
 			throw new InvalidParameterException("60000");
-		} else if (amount < topupMinAmount) {
+		} else if ((amount.compareTo(topupMinAmount)) == -1) {
 			throw new InvalidParameterException("60000");
-		} else if (amount > topupMaxAmount) {
+		} else if ((amount.compareTo(topupMaxAmount)) == 1) {
 			throw new InvalidParameterException("60000");
 		}
 

@@ -78,12 +78,17 @@ public class TestTopupMobileController extends BaseTestController {
 
 	@Test
 	public void failToVerifyTopUpWhenAmountLessThanMaximum() {
-		assertValidateAmountFormatFail("1001");
+		assertValidateAmountFormatFail("1010");
 	}
 
 	@Test
 	public void failToVerifyTopUpWhenAmountNotDivideByTen() {
 		assertValidateAmountFormatFail("501");
+	}
+	
+	@Test
+	public void failToVerifyTopUpWhenAmountVeryBig() {
+		assertValidateAmountFormatFail("50154654645645645645654654898989898989898989898989898978978089080");
 	}
 
 	private void assertValidateAmountFormatFail(String amount) {

@@ -34,7 +34,7 @@ public class TestP2PController extends BaseTestController {
 			fakeAccessToken);
 	String getTransferDetailURL = String.format("/transfer/transaction/%s/%s",
 			"1111111111111", fakeAccessToken);
-	String unknownMessage = "กรุณารอสักครู่ แล้วทํารายการใหม่อีกครั้ง";
+	String unknownMessage = "กรุณารอสักครู่ แล้วทํารายการใหม่อีกครั้ง <TMN-PRODUCT.>";
 
 	@Test
 	public void createTransferDraftSuccess() throws Exception {

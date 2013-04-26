@@ -11,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import th.co.truemoney.product.api.manager.MessageManager;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
+import th.co.truemoney.serviceinventory.ewallet.ActivityService;
 import th.co.truemoney.serviceinventory.ewallet.DirectDebitSourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
@@ -63,6 +64,10 @@ public class TestWebConfig {
 	
 	@Bean TopUpMobileService topUpMobileService() {
 		return Mockito.mock(TopUpMobileService.class);
+	}
+	
+	@Bean ActivityService activityService() {
+		return Mockito.mock(ActivityService.class);
 	}
 
 	@Bean @Qualifier("apiHost")

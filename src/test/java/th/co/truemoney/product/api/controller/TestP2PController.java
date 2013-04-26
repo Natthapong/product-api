@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;

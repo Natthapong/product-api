@@ -16,6 +16,7 @@ import org.junit.Test;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.ewallet.domain.Transaction;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
+import th.co.truemoney.serviceinventory.transfer.domain.P2PTransactionConfirmationInfo;
 import th.co.truemoney.serviceinventory.transfer.domain.P2PTransferDraft;
 import th.co.truemoney.serviceinventory.transfer.domain.P2PTransferTransaction;
 
@@ -193,7 +194,7 @@ public class TestP2PController extends BaseTestController {
 				.andExpect(jsonPath("$.messageTh").value(containsString("")));
 	}
 
-	@Test@Ignore
+	@Test
 	public void getTransferDetailSuccess() throws Exception {
 		P2PTransferDraft transferDraft = new P2PTransferDraft();
 		transferDraft.setAccessTokenID(fakeAccessToken);
@@ -206,7 +207,12 @@ public class TestP2PController extends BaseTestController {
 
 		P2PTransferTransaction transaction = new P2PTransferTransaction(transferDraft);
 		transaction.setStatus(Transaction.Status.SUCCESS);
-
+		
+		P2PTransactionConfirmationInfo confirmationInfo = new P2PTransactionConfirmationInfo();
+		confirmationInfo.setTransactionDate("01/01/13");
+		confirmationInfo.setTransactionID("1111111111");
+		
+		transaction.setConfirmationInfo(confirmationInfo);
 		//set requestbody for doGET
 		when(p2pTransferServiceMock.getTransactionResult(
 				any(String.class),

@@ -18,9 +18,10 @@ public class ProductResponseFactory {
 	public static final String PRODUCT_NAMESPACE = "TMN-PRODUCT";
 	
 	private static final Object[] EMPTY_PARAMS = new Object[0];
+	
 	@Autowired
 	MessageManager messageManager;
-	
+
 	public ProductResponse createSuccessProductResonse(Map<String, Object> data) {
 		ProductResponse success = new ProductResponse();
 		success.setCode(SUCCESS_CODE);
@@ -92,5 +93,9 @@ public class ProductResponseFactory {
 	
 	private boolean isCallCenterEnabled(ServiceInventoryException e) {
 		return Arrays.asList(CALL_CENTER_ENABLED).contains(e.getErrorNamespace() + "." + e.getErrorCode());
+	}
+	
+	public void setMessageManager(MessageManager messageManager) {
+		this.messageManager = messageManager;
 	}
 }

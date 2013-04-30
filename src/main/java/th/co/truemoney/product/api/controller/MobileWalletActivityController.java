@@ -30,7 +30,7 @@ public class MobileWalletActivityController extends BaseController {
 	@Autowired
 	ActivityService activityService;
 
-	private static final String imagesURL = "https://secure.truemoney-dev.com/m/tmn_webview/logo_activity_type";
+	private static final String imagesURL = "https://secure.truemoney-dev.com/m/tmn_webview/images/logo_activity_type";
 
 	@RequestMapping(value = "/list/{accessTokenID}", method = RequestMethod.GET)
 	@ResponseBody

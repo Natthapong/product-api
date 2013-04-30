@@ -27,11 +27,6 @@ public class TestMobileWalletActivityController extends BaseTestController {
 	private static final String fakeAccessToken = "1111111111";
 	private static final String getActivityListURL = String.format(
 			"/profile/activities/list/%s", fakeAccessToken);
-<<<<<<< HEAD
-
-	private static final String imagesURL = "https://secure.truemoney-dev.com/m/tmn_webview/logo_activity_type";
-=======
->>>>>>> b5bdfd6d92467330207d5422baf2fe62c8696fa9
 	
 	@Autowired
 	MobileWalletActivityController controller;
@@ -41,7 +36,6 @@ public class TestMobileWalletActivityController extends BaseTestController {
 		controller = new MobileWalletActivityController();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void getActivityListSuccess() throws Exception {
 
@@ -54,32 +48,8 @@ public class TestMobileWalletActivityController extends BaseTestController {
 				.thenThrow(new ServiceInventoryException(400, "", "", ""));
 		this.verifyFailed(this.doGET(getActivityListURL));
 	}
-	
-<<<<<<< HEAD
 
 	
-	
-	@SuppressWarnings("unused")
-=======
-	@SuppressWarnings("unchecked")
-	@Test
-	public void test() throws Exception {
-		List<Activity> list = createActivityStub("","");
-		
-		when(
-				this.activityServiceMock.getActivities(
-						fakeAccessToken
-				)).thenReturn(list);
-		ProductResponse resp = this.controller.getActivityList(fakeAccessToken);
-		Map<String, Object> data = resp.getData();
-		assertNotNull(data);
-		assertTrue(data.containsKey("activities"));
-		List<Activity> activityList = (List<Activity>) data.get("activities");
-		
-		assertEquals(1,activityList.size());
-	}
-	
->>>>>>> b5bdfd6d92467330207d5422baf2fe62c8696fa9
 	private List<Activity> createActivityStub(String type, String action) throws ParseException{
 		List<Activity> actList = new ArrayList<Activity>();
 		Activity act = new Activity();

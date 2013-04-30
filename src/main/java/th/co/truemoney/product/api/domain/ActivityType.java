@@ -30,6 +30,7 @@ public class ActivityType {
 	
 	public static final String DEBIT_ADDMONEY = "คืนค่าธรรมเนียม";
 	public static final String DIRECT_DEBIT = "บัญชีธนาคาร";
+	public static final String DIRECT_DEBIT_ADDMONEY = "เติมเงินด้วยบัญชีธนาคาร";
 	
 	public static final String KTB_ADDMONEY = "ธนาคารกรุงไทย";
 	public static final String SCB_ADDMONEY = "ธนาคารไทยพาณิชย์";

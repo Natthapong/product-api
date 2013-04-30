@@ -56,8 +56,8 @@ public class TestMobileWalletActivityControllerUnit {
 				{ new Activity(2L, "add_money", df.parse("10-03-2013"), "debit", "SCB"), new ActivityViewItem(String.valueOf(2L), "เติมเงิน Wallet", "10/03/13", "บัญชีธนาคาร", "ธนาคารไทยพาณิชย์") },
 				{ new Activity(2L, "add_money", df.parse("10-03-2013"), "debit", "BBL"), new ActivityViewItem(String.valueOf(2L), "เติมเงิน Wallet", "10/03/13", "บัญชีธนาคาร", "ธนาคารกรุงเทพ") },
 				{ new Activity(2L, "add_money", df.parse("10-03-2013"), "debit", "BAY"), new ActivityViewItem(String.valueOf(2L), "เติมเงิน Wallet", "10/03/13", "บัญชีธนาคาร", "ธนาคารกรุงศรีอยุธยา") },
-				{ new Activity(2L, "debtor", df.parse("10-03-2013"), "transfer", "0812345678"), new ActivityViewItem(String.valueOf(2L), "โอนเงินระหว่าง Wallet", "10/03/13", "ส่งเงิน", "081-234-5678") },
-				{ new Activity(2L, "creditor", df.parse("10-03-2013"), "transfer", "0812345678"), new ActivityViewItem(String.valueOf(2L), "โอนเงิน Wallet", "10/03/13", "รับเงิน", "081-234-5678") }
+				{ new Activity(2L, "transfer", df.parse("10-03-2013"), "debtor", "0812345678"), new ActivityViewItem(String.valueOf(2L), "โอนเงินระหว่าง Wallet", "10/03/13", "ส่งเงิน", "081-234-5678") },
+				{ new Activity(2L, "transfer", df.parse("10-03-2013"), "creditor", "0812345678"), new ActivityViewItem(String.valueOf(2L), "โอนเงิน Wallet", "10/03/13", "รับเงิน", "081-234-5678") }
 		});
 	}
 	

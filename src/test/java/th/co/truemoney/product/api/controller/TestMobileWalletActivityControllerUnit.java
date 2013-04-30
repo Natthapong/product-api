@@ -35,7 +35,7 @@ public class TestMobileWalletActivityControllerUnit {
 	
 	ProductResponseFactory responseFactory;
 	
-	static SimpleDateFormat df = new SimpleDateFormat("dd-mm-yyyy");
+	static SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 	
 	@Parameters
 	public static Iterable<Object[]> data() throws ParseException {

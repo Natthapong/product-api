@@ -1,6 +1,7 @@
 package th.co.truemoney.product.api.controller;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class MobileWalletActivityController extends BaseController {
 				.getActivities(accessTokenID);
 
 		List<ActivityViewItem> itemList = new ArrayList<ActivityViewItem>();
-		SimpleDateFormat dt1 = new SimpleDateFormat("dd/mm/yy");
+		SimpleDateFormat dt1 = new SimpleDateFormat("dd/MM/yy");
 		for (Activity act : activityList) {
 			ActivityViewItem item = new ActivityViewItem();
 			item.setReportID(String.valueOf(act.getReportID()));
@@ -152,10 +153,11 @@ public class MobileWalletActivityController extends BaseController {
 		}
 		return result;
 	}
+
+	DecimalFormat df = new DecimalFormat("##,###.00");
 	
 	private String formatTotalAmount(BigDecimal totalAmount){
-		DecimalFormat format = new DecimalFormat("##,###.##");
-		String totalAmountFormat = format.format(totalAmount);
+		String totalAmountFormat = df.format(totalAmount);
 		if(totalAmount.compareTo(BigDecimal.ZERO) == 1){
 			totalAmountFormat = "+"+totalAmountFormat;
 		}
@@ -170,5 +172,10 @@ public class MobileWalletActivityController extends BaseController {
 	public void setActivityService(ActivityService activityService) {
 		this.activityService = activityService;
 	}
-
+	
+	public static void main(String args[]) {
+		MobileWalletActivityController controller = new MobileWalletActivityController();
+		String formatted = controller.formatTotalAmount(new BigDecimal(2345));
+		System.out.println(formatted);
+	}
 }

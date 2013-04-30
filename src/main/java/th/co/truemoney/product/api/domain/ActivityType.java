@@ -41,4 +41,6 @@ public class ActivityType {
 	
 	public static final String RECIEVE = "รับเงิน";
 	public static final String TRANSFER = "ส่งเงิน";
+	
+	public static final String CASHCARD = "บัตรเงินสด";
 }

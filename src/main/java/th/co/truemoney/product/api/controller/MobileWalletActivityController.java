@@ -38,7 +38,7 @@ public class MobileWalletActivityController extends BaseController {
 				.getActivities(accessTokenID);
 
 		List<ActivityViewItem> itemList = new ArrayList<ActivityViewItem>();
-		SimpleDateFormat dt1 = new SimpleDateFormat("dd/mm/yy");
+		SimpleDateFormat dt1 = new SimpleDateFormat("dd/MM/yy");
 		for (Activity act : activityList) {
 			ActivityViewItem item = new ActivityViewItem();
 			item.setReportID(String.valueOf(act.getReportID()));
@@ -61,9 +61,12 @@ public class MobileWalletActivityController extends BaseController {
 				item.setText5Th(formatMobileNumber(act.getRef1()));
 				item.setText5En(formatMobileNumber(act.getRef1()));
 			} else if (ActivityType.ADD_MONEY.equals(act.getType())) {
-				if (ActivityType.DIRECT_DEBIT.equals(act.getAction())) {
+				if ("debit".equals(act.getAction())) {
 					item.setText5Th(mapBankName(act.getRef1()));
 					item.setText5En(mapBankName(act.getRef1()));
+				}else{
+					item.setText5Th(act.getRef1());
+					item.setText5En(act.getRef1());
 				}
 			} else if (ActivityType.ADD_MONEY.equals(act.getRef1())) {
 				item.setText5Th(ActivityType.DIRECT_DEBIT_ADDMONEY);
@@ -119,7 +122,7 @@ public class MobileWalletActivityController extends BaseController {
 			result = imagesURL + "/bonus.png";
 		} else if (ActivityType.ADD_MONEY.equals(type)) {
 			result = imagesURL + "/add_money.png";
-		} else if (ActivityType.TRANSFER.equals(type)) {
+		} else if (ActivityType.TRANSFER_ACTION.equals(type)) {
 			result = imagesURL + "/transfer.png";
 		}
 
@@ -137,7 +140,7 @@ public class MobileWalletActivityController extends BaseController {
 			result = ActivityType.BONUS_TH;
 		} else if (ActivityType.ADD_MONEY.equals(type)) {
 			result = ActivityType.ADD_MONEY_TH;
-		} else if (ActivityType.TRANSFER.equals(type)) {
+		} else if (ActivityType.TRANSFER_ACTION.equals(type)) {
 			if (ActivityType.TRANSFER_DEBTOR.equals(action)) {
 				result = ActivityType.TRANSFER_DEBTOR_TH;
 			} else if (ActivityType.TRANSFER_CREDITOR.equals(action)) {
@@ -153,7 +156,7 @@ public class MobileWalletActivityController extends BaseController {
 
 		if ("d.tmvhtopup".equals(action)) {
 			result = ActivityType.TMVH_TOPUP;
-		} else if ("d.trmvtopup".equals(action)) {
+		} else if ("d.tmvtopup".equals(action)) {
 			result = ActivityType.TRMV_TOPUP;
 		} else if ("d.tmvh".equals(action)) {
 			result = ActivityType.TMVH_BILLPAY;
@@ -181,13 +184,15 @@ public class MobileWalletActivityController extends BaseController {
 			result = ActivityType.TRANSFER;
 		} else if ("creditor".equals(action)) {
 			result = ActivityType.RECIEVE;
+		} else if ("mmcc".equals(action)) {
+			result = ActivityType.CASHCARD;
 		}
 
 		return result;
 	}
 
 	private String formatTotalAmount(BigDecimal totalAmount) {
-		DecimalFormat format = new DecimalFormat("##,###.##");
+		DecimalFormat format = new DecimalFormat("##,###.00");
 		String totalAmountFormat = format.format(totalAmount);
 		if (totalAmount.compareTo(BigDecimal.ZERO) == 1) {
 			totalAmountFormat = "+" + totalAmountFormat;

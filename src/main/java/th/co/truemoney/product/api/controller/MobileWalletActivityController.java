@@ -1,7 +1,6 @@
 package th.co.truemoney.product.api.controller;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ public class MobileWalletActivityController extends BaseController {
 	@Autowired
 	ActivityService activityService;
 
-	private static final String imagesURL = "https://secure.truemoney-dev.com/m/tmn_webview/logo_activity_type";
+	private static final String imagesURL = "https://secure.truemoney-dev.com/m/tmn_webview/images/logo_activity_type";
 
 	@RequestMapping(value = "/list/{accessTokenID}", method = RequestMethod.GET)
 	@ResponseBody
@@ -39,42 +38,41 @@ public class MobileWalletActivityController extends BaseController {
 				.getActivities(accessTokenID);
 
 		List<ActivityViewItem> itemList = new ArrayList<ActivityViewItem>();
-		SimpleDateFormat dt1 = new SimpleDateFormat("dd/MM/yy");
+		SimpleDateFormat dt1 = new SimpleDateFormat("dd/mm/yy");
 		for (Activity act : activityList) {
 			ActivityViewItem item = new ActivityViewItem();
 			item.setReportID(String.valueOf(act.getReportID()));
 			item.setLogoURL(mapLogoActivityType(act.getType()));
-			item.setText1Th(mapMessageType(act.getType()));
-			item.setText1En(mapMessageType(act.getType()));
+			item.setText1Th(mapMessageType(act.getType(), act.getAction()));
+			item.setText1En(mapMessageType(act.getType(), act.getAction()));
 			if (act.getTransactionDate() != null) {
 				item.setText2Th(dt1.format(act.getTransactionDate()));
 				item.setText2En(dt1.format(act.getTransactionDate()));
 			}
 			item.setText3Th(mapMessageAction(act.getAction()));
 			item.setText3En(mapMessageAction(act.getAction()));
-			
+
 			item.setText4Th(formatTotalAmount(act.getTotalAmount()));
 			item.setText4En(formatTotalAmount(act.getTotalAmount()));
 
 			if (ActivityType.TOPUP_MOBILE.equals(act.getType())
 					|| ActivityType.TRANSFER_CREDITOR.equals(act.getType())
-					|| ActivityType.TRANSFER_DEBTOR.equals(act.getType())
-					) {
+					|| ActivityType.TRANSFER_DEBTOR.equals(act.getType())) {
 				item.setText5Th(formatMobileNumber(act.getRef1()));
 				item.setText5En(formatMobileNumber(act.getRef1()));
-			}else if(ActivityType.ADD_MONEY.equals(act.getType())){
-				if(ActivityType.DIRECT_DEBIT.equals(act.getAction())){
+			} else if (ActivityType.ADD_MONEY.equals(act.getType())) {
+				if (ActivityType.DIRECT_DEBIT.equals(act.getAction())) {
 					item.setText5Th(mapBankName(act.getRef1()));
 					item.setText5En(mapBankName(act.getRef1()));
 				}
-			}else if(ActivityType.ADD_MONEY.equals(act.getRef1())){
+			} else if (ActivityType.ADD_MONEY.equals(act.getRef1())) {
 				item.setText5Th(ActivityType.DIRECT_DEBIT_ADDMONEY);
 				item.setText5En(ActivityType.DIRECT_DEBIT_ADDMONEY);
-			}else{
+			} else {
 				item.setText5Th(act.getRef1());
 				item.setText5En(act.getRef1());
 			}
-			
+
 			itemList.add(item);
 		}
 
@@ -83,29 +81,32 @@ public class MobileWalletActivityController extends BaseController {
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
-	
+
 	private String mapBankName(String ref1) {
 		String bankName = "";
-		if("KTB".equals(ref1)){
+		if ("KTB".equals(ref1)) {
 			bankName = ActivityType.KTB_ADDMONEY;
-		}else if("SCB".equals(ref1)){
+		} else if ("SCB".equals(ref1)) {
 			bankName = ActivityType.SCB_ADDMONEY;
-		}else if("BBL".equals(ref1)){
+		} else if ("BBL".equals(ref1)) {
 			bankName = ActivityType.BBL_ADDMONEY;
-		}else if("BAY".equals(ref1)){
+		} else if ("BAY".equals(ref1)) {
 			bankName = ActivityType.BAY_ADDMONEY;
 		}
 		return bankName;
 	}
 
-//	@RequestMapping(value = "/{reportID}/detail/{accessTokenID}", method = RequestMethod.GET)
-//	@ResponseBody
-//	public ProductResponse getActivityDetails(@PathVariable String reportID, @PathVariable String accessTokenID) {
-//		ActivityDetail activityDetail = activityService.getActivityDetail(new Long(reportID), accessTokenID);
-//		Map<String, Object> data = new HashMap<String, Object>();
-//		data.put("header", "bullshit");
-//		return this.responseFactory.createSuccessProductResonse(data);
-//	}
+	// @RequestMapping(value = "/{reportID}/detail/{accessTokenID}", method =
+	// RequestMethod.GET)
+	// @ResponseBody
+	// public ProductResponse getActivityDetails(@PathVariable String reportID,
+	// @PathVariable String accessTokenID) {
+	// ActivityDetail activityDetail = activityService.getActivityDetail(new
+	// Long(reportID), accessTokenID);
+	// Map<String, Object> data = new HashMap<String, Object>();
+	// data.put("header", "bullshit");
+	// return this.responseFactory.createSuccessProductResonse(data);
+	// }
 
 	private String mapLogoActivityType(String type) {
 		String result = "";
@@ -127,7 +128,7 @@ public class MobileWalletActivityController extends BaseController {
 		return result;
 	}
 
-	private String mapMessageType(String type) {
+	private String mapMessageType(String type, String action) {
 		String result = "";
 
 		if (ActivityType.TOPUP_MOBILE.equals(type)) {
@@ -138,10 +139,12 @@ public class MobileWalletActivityController extends BaseController {
 			result = ActivityType.BONUS_TH;
 		} else if (ActivityType.ADD_MONEY.equals(type)) {
 			result = ActivityType.ADD_MONEY_TH;
-		} else if (ActivityType.TRANSFER_DEBTOR.equals(type)) {
-			result = ActivityType.TRANSFER_DEBTOR_TH;
-		} else if (ActivityType.TRANSFER_CREDITOR.equals(type)) {
-			result = ActivityType.TRANSFER_CREDITOR_TH;
+		} else if (ActivityType.TRANSFER.equals(type)) {
+			if (ActivityType.TRANSFER_DEBTOR.equals(action)) {
+				result = ActivityType.TRANSFER_DEBTOR_TH;
+			} else if (ActivityType.TRANSFER_CREDITOR.equals(action)) {
+				result = ActivityType.TRANSFER_CREDITOR_TH;
+			}
 		}
 
 		return result;
@@ -181,16 +184,15 @@ public class MobileWalletActivityController extends BaseController {
 		} else if ("creditor".equals(action)) {
 			result = ActivityType.RECIEVE;
 		}
-		
+
 		return result;
 	}
 
-	DecimalFormat df = new DecimalFormat("##,###.00");
-	
-	private String formatTotalAmount(BigDecimal totalAmount){
-		String totalAmountFormat = df.format(totalAmount);
-		if(totalAmount.compareTo(BigDecimal.ZERO) == 1){
-			totalAmountFormat = "+"+totalAmountFormat;
+	private String formatTotalAmount(BigDecimal totalAmount) {
+		DecimalFormat format = new DecimalFormat("##,###.##");
+		String totalAmountFormat = format.format(totalAmount);
+		if (totalAmount.compareTo(BigDecimal.ZERO) == 1) {
+			totalAmountFormat = "+" + totalAmountFormat;
 		}
 		return totalAmountFormat;
 	}
@@ -203,10 +205,5 @@ public class MobileWalletActivityController extends BaseController {
 	public void setActivityService(ActivityService activityService) {
 		this.activityService = activityService;
 	}
-	
-	public static void main(String args[]) {
-		MobileWalletActivityController controller = new MobileWalletActivityController();
-		String formatted = controller.formatTotalAmount(new BigDecimal(2345));
-		System.out.println(formatted);
-	}
+
 }

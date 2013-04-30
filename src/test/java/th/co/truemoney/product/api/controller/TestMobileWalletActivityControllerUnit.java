@@ -40,8 +40,24 @@ public class TestMobileWalletActivityControllerUnit {
 	@Parameters
 	public static Iterable<Object[]> data() throws ParseException {
 		return Arrays.asList(new Object[][] {
-				{ new Activity(1L, "topup_mobile"), new ActivityViewItem(String.valueOf(1L), "เติมเงินมือถือ") },
-				{ new Activity(2L, "billpay"), new ActivityViewItem(String.valueOf(2L), "จ่ายบิล") }
+				{ new Activity(1L, "topup_mobile", df.parse("10-03-2013"), "d.tmvhtopup", "0812345678"), new ActivityViewItem(String.valueOf(1L), "เติมเงินมือถือ", "10/03/13", "TrueMove H", "081-234-5678") },
+				{ new Activity(1L, "topup_mobile", df.parse("10-03-2013"), "d.tmvtopup", "0812345678"), new ActivityViewItem(String.valueOf(1L), "เติมเงินมือถือ", "10/03/13",  "TrueMove", "081-234-5678") },
+				{ new Activity(2L, "billpay", df.parse("10-03-2013"), "d.catv", "111111111"), new ActivityViewItem(String.valueOf(2L), "จ่ายบิล", "10/03/13", "True Vision", "111111111") },
+				{ new Activity(2L, "billpay", df.parse("10-03-2013"), "d.dstv", "111111111"), new ActivityViewItem(String.valueOf(2L), "จ่ายบิล", "10/03/13", "True Vision", "111111111") },
+				{ new Activity(2L, "billpay", df.parse("10-03-2013"), "d.tr", "111111111"), new ActivityViewItem(String.valueOf(2L), "จ่ายบิล", "10/03/13", "โทรศัพท์บ้านทรู", "111111111") },
+				{ new Activity(2L, "billpay", df.parse("10-03-2013"), "d.tmvh", "111111111"), new ActivityViewItem(String.valueOf(2L), "จ่ายบิล", "10/03/13", "TrueMove H", "111111111") },
+				{ new Activity(2L, "billpay", df.parse("10-03-2013"), "d.trmv", "111111111"), new ActivityViewItem(String.valueOf(2L), "จ่ายบิล", "10/03/13", "TrueMove", "111111111") },
+				{ new Activity(2L, "billpay", df.parse("10-03-2013"), "d.ti", "111111111"), new ActivityViewItem(String.valueOf(2L), "จ่ายบิล", "10/03/13", "True Online", "111111111") },
+				{ new Activity(2L, "billpay", df.parse("10-03-2013"), "d.tic", "111111111"), new ActivityViewItem(String.valueOf(2L), "จ่ายบิล", "10/03/13", "True 006", "111111111") },
+				{ new Activity(2L, "billpay", df.parse("10-03-2013"), "d.tlp", "111111111"), new ActivityViewItem(String.valueOf(2L), "จ่ายบิล", "10/03/13", "Truelifeplus", "111111111") },
+				{ new Activity(2L, "billpay", df.parse("10-03-2013"), "d.tcg", "111111111"), new ActivityViewItem(String.valueOf(2L), "จ่ายบิล", "10/03/13", "บิลกลุ่มทรู", "111111111") },
+				{ new Activity(2L, "bonus", df.parse("10-03-2013"), "promo_direct_debit", "add_money"), new ActivityViewItem(String.valueOf(2L), "โปรโมชั่น", "10/03/13", "คืนค่าธรรมเนียม", "เติมเงินด้วยบัญชีธนาคาร") },
+				{ new Activity(2L, "add_money", df.parse("10-03-2013"), "debit", "KTB"), new ActivityViewItem(String.valueOf(2L), "เติมเงิน Wallet", "10/03/13", "บัญชีธนาคาร", "ธนาคารกรุงไทย") },
+				{ new Activity(2L, "add_money", df.parse("10-03-2013"), "debit", "SCB"), new ActivityViewItem(String.valueOf(2L), "เติมเงิน Wallet", "10/03/13", "บัญชีธนาคาร", "ธนาคารไทยพาณิชย์") },
+				{ new Activity(2L, "add_money", df.parse("10-03-2013"), "debit", "BBL"), new ActivityViewItem(String.valueOf(2L), "เติมเงิน Wallet", "10/03/13", "บัญชีธนาคาร", "ธนาคารกรุงเทพ") },
+				{ new Activity(2L, "add_money", df.parse("10-03-2013"), "debit", "BAY"), new ActivityViewItem(String.valueOf(2L), "เติมเงิน Wallet", "10/03/13", "บัญชีธนาคาร", "ธนาคารกรุงศรีอยุธยา") },
+				{ new Activity(2L, "debtor", df.parse("10-03-2013"), "transfer", "0812345678"), new ActivityViewItem(String.valueOf(2L), "โอนเงินระหว่าง Wallet", "10/03/13", "ส่งเงิน", "081-234-5678") },
+				{ new Activity(2L, "creditor", df.parse("10-03-2013"), "transfer", "0812345678"), new ActivityViewItem(String.valueOf(2L), "โอนเงิน Wallet", "10/03/13", "รับเงิน", "081-234-5678") }
 		});
 	}
 	
@@ -67,6 +83,8 @@ public class TestMobileWalletActivityControllerUnit {
 	public void tearDown() {
 		reset(this.activityServiceMock);
 	}
+	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void getActivities() throws Exception {
 		String accessToken = "_whatever_";

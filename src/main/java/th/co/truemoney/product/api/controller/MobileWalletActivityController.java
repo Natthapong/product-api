@@ -1,5 +1,7 @@
 package th.co.truemoney.product.api.controller;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,22 +23,22 @@ import th.co.truemoney.serviceinventory.ewallet.domain.Activity;
 
 @RequestMapping(value = "/profile/activities")
 @Controller
-public class MobileWalletActivityController extends BaseController{
-	
+public class MobileWalletActivityController extends BaseController {
+
 	@Autowired
 	ActivityService activityService;
-	
+
 	private static final String imagesURL = "https://secure.truemoney-dev.com/m/tmn_webview/logo_activity_type";
-	
-	
+
 	@RequestMapping(value = "/list/{accessTokenID}", method = RequestMethod.GET)
 	@ResponseBody
 	public ProductResponse getActivityList(@PathVariable String accessTokenID) {
-		List<Activity> activityList = activityService.getActivities(accessTokenID);
-		
+		List<Activity> activityList = activityService
+				.getActivities(accessTokenID);
+
 		List<ActivityViewItem> itemList = new ArrayList<ActivityViewItem>();
 		SimpleDateFormat dt1 = new SimpleDateFormat("dd/mm/yy");
-		for(Activity act:activityList){
+		for (Activity act : activityList) {
 			ActivityViewItem item = new ActivityViewItem();
 			item.setReportID(String.valueOf(act.getReportID()));
 			item.setLogoURL(mapLogoActivityType(act.getType()));
@@ -46,60 +48,126 @@ public class MobileWalletActivityController extends BaseController{
 				item.setText2Th(dt1.format(act.getTransactionDate()));
 				item.setText2En(dt1.format(act.getTransactionDate()));
 			}
-			item.setText3Th("TrueMove H");
+			item.setText3Th(mapMessageAction(act.getAction(), act.getType()));
+			item.setText3En(mapMessageAction(act.getAction(), act.getType()));
+			
+			item.setText4Th(formatTotalAmount(act.getTotalAmount()));
+			item.setText4En(formatTotalAmount(act.getTotalAmount()));
+
+			if (ActivityType.TOPUP_MOBILE.equals(act.getType())
+					|| ActivityType.TRANSFER_CREDITOR.equals(act.getType())
+					|| ActivityType.TRANSFER_DEBTOR.equals(act.getType())) {
+				item.setText5Th(formatMobileNumber(act.getRef1()));
+				item.setText5En(formatMobileNumber(act.getRef1()));
+			}else{
+				item.setText5Th(act.getRef1());
+				item.setText5En(act.getRef1());
+			}
 			
 			itemList.add(item);
 		}
-		
-		
+
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("activities", itemList);
-		
+
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
-	
-	private String mapLogoActivityType(String type){
+
+	private String mapLogoActivityType(String type) {
 		String result = "";
-		
-		if(ActivityType.TOPUP_MOBILE.equals(type)){
-			result = imagesURL+"/topup_mobile.png";
-		}else if(ActivityType.BILLPAY.equals(type)){
-			result = imagesURL+"/billpay.png";
-		}else if(ActivityType.BONUS.equals(type)){
-			result = imagesURL+"/bonus.png";
-		}else if(ActivityType.ADD_MONEY.equals(type)){
-			result = imagesURL+"/add_money.png";
-		}else if(ActivityType.TRANSFER_DEBTOR.equals(type)){
-			result = imagesURL+"/transfer.png";
-		}else if(ActivityType.TRANSFER_CREDITOR.equals(type)){
-			result = imagesURL+"/transfer.png";
+
+		if (ActivityType.TOPUP_MOBILE.equals(type)) {
+			result = imagesURL + "/topup_mobile.png";
+		} else if (ActivityType.BILLPAY.equals(type)) {
+			result = imagesURL + "/billpay.png";
+		} else if (ActivityType.BONUS.equals(type)) {
+			result = imagesURL + "/bonus.png";
+		} else if (ActivityType.ADD_MONEY.equals(type)) {
+			result = imagesURL + "/add_money.png";
+		} else if (ActivityType.TRANSFER_DEBTOR.equals(type)) {
+			result = imagesURL + "/transfer.png";
+		} else if (ActivityType.TRANSFER_CREDITOR.equals(type)) {
+			result = imagesURL + "/transfer.png";
 		}
-		
+
+		return result;
+	}
+
+	private String mapMessageType(String type) {
+		String result = "";
+
+		if (ActivityType.TOPUP_MOBILE.equals(type)) {
+			result = ActivityType.TOPUP_MOBILE_TH;
+		} else if (ActivityType.BILLPAY.equals(type)) {
+			result = ActivityType.BILLPAY_TH;
+		} else if (ActivityType.BONUS.equals(type)) {
+			result = ActivityType.BONUS_TH;
+		} else if (ActivityType.ADD_MONEY.equals(type)) {
+			result = ActivityType.ADD_MONEY_TH;
+		} else if (ActivityType.TRANSFER_DEBTOR.equals(type)) {
+			result = ActivityType.TRANSFER_DEBTOR_TH;
+		} else if (ActivityType.TRANSFER_CREDITOR.equals(type)) {
+			result = ActivityType.TRANSFER_CREDITOR_TH;
+		}
+
+		return result;
+	}
+
+	private String mapMessageAction(String action, String type) {
+		String result = "";
+
+		if ("d.tmvhtopup".equals(action)) {
+			result = ActivityType.TMVH_TOPUP;
+		} else if ("d.trmvtopup".equals(action)) {
+			result = ActivityType.TRMV_TOPUP;
+		} else if ("d.tmvh".equals(action)) {
+			result = ActivityType.TMVH_BILLPAY;
+		} else if ("d.trmv".equals(action)) {
+			result = ActivityType.TRMV_BILLPAY;
+		} else if ("d.catv".equals(action)) {
+			result = ActivityType.CATV_BILLPAY;
+		} else if ("d.dstv".equals(action)) {
+			result = ActivityType.DSTV_BILLPAY;
+		} else if ("d.tr".equals(action)) {
+			result = ActivityType.TR_BILLPAY;
+		} else if ("d.ti".equals(action)) {
+			result = ActivityType.TI_BILLPAY;
+		} else if ("d.tic".equals(action)) {
+			result = ActivityType.TIC_BILLPAY;
+		} else if ("d.tlp".equals(action)) {
+			result = ActivityType.TLP_BILLPAY;
+		} else if ("d.tcg".equals(action)) {
+			result = ActivityType.TCG_BILLPAY;
+		} else if ("promo_direct_debit".equals(action)) {
+			result = ActivityType.DEBIT_ADDMONEY;
+		} else if ("debit".equals(action)) {
+			result = ActivityType.DIRECT_DEBIT;
+		} else if ("transfer".equals(action)) {
+			if ("debtor".equals(type)) {
+				result = ActivityType.TRANSFER;
+			} else if ("creditor".equals(type)) {
+				result = ActivityType.RECIEVE;
+			}
+		}
 		return result;
 	}
 	
-	private String mapMessageType(String type){
-		String result = "";
-		
-		if(ActivityType.TOPUP_MOBILE.equals(type)){
-			result = ActivityType.TOPUP_MOBILE_TH;
-		}else if(ActivityType.BILLPAY.equals(type)){
-			result = ActivityType.BILLPAY_TH;
-		}else if(ActivityType.BONUS.equals(type)){
-			result = ActivityType.BONUS_TH;
-		}else if(ActivityType.ADD_MONEY.equals(type)){
-			result = ActivityType.ADD_MONEY_TH;
-		}else if(ActivityType.TRANSFER_DEBTOR.equals(type)){
-			result = ActivityType.TRANSFER_DEBTOR_TH;
-		}else if(ActivityType.TRANSFER_CREDITOR.equals(type)){
-			result = ActivityType.TRANSFER_CREDITOR_TH;
+	private String formatTotalAmount(BigDecimal totalAmount){
+		DecimalFormat format = new DecimalFormat("##,###.##");
+		String totalAmountFormat = format.format(totalAmount);
+		if(totalAmount.compareTo(BigDecimal.ZERO) == 1){
+			totalAmountFormat = "+"+totalAmountFormat;
 		}
-		
-		return result;
+		return totalAmountFormat;
+	}
+
+	private String formatMobileNumber(String mobileNumber) {
+		return String.valueOf(mobileNumber).replaceFirst(
+				"(\\d{3})(\\d{3})(\\d)", "$1-$2-$3");
 	}
 
 	public void setActivityService(ActivityService activityService) {
 		this.activityService = activityService;
 	}
-	
+
 }

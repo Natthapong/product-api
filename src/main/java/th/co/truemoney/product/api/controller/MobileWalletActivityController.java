@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.domain.ActivityType;
+import th.co.truemoney.product.api.domain.ActivityViewDetailTopupMobile;
 import th.co.truemoney.product.api.domain.ActivityViewItem;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.serviceinventory.ewallet.ActivityService;
 import th.co.truemoney.serviceinventory.ewallet.domain.Activity;
+import th.co.truemoney.serviceinventory.ewallet.domain.ActivityDetail;
 
 @RequestMapping(value = "/profile/activities")
 @Controller
@@ -48,17 +50,26 @@ public class MobileWalletActivityController extends BaseController {
 				item.setText2Th(dt1.format(act.getTransactionDate()));
 				item.setText2En(dt1.format(act.getTransactionDate()));
 			}
-			item.setText3Th(mapMessageAction(act.getAction(), act.getType()));
-			item.setText3En(mapMessageAction(act.getAction(), act.getType()));
+			item.setText3Th(mapMessageAction(act.getAction()));
+			item.setText3En(mapMessageAction(act.getAction()));
 			
 			item.setText4Th(formatTotalAmount(act.getTotalAmount()));
 			item.setText4En(formatTotalAmount(act.getTotalAmount()));
 
 			if (ActivityType.TOPUP_MOBILE.equals(act.getType())
 					|| ActivityType.TRANSFER_CREDITOR.equals(act.getType())
-					|| ActivityType.TRANSFER_DEBTOR.equals(act.getType())) {
+					|| ActivityType.TRANSFER_DEBTOR.equals(act.getType())
+					) {
 				item.setText5Th(formatMobileNumber(act.getRef1()));
 				item.setText5En(formatMobileNumber(act.getRef1()));
+			}else if(ActivityType.ADD_MONEY.equals(act.getType())){
+				if(ActivityType.DIRECT_DEBIT.equals(act.getAction())){
+					item.setText5Th(mapBankName(act.getRef1()));
+					item.setText5En(mapBankName(act.getRef1()));
+				}
+			}else if(ActivityType.ADD_MONEY.equals(act.getRef1())){
+				item.setText5Th(ActivityType.DIRECT_DEBIT_ADDMONEY);
+				item.setText5En(ActivityType.DIRECT_DEBIT_ADDMONEY);
 			}else{
 				item.setText5Th(act.getRef1());
 				item.setText5En(act.getRef1());
@@ -72,6 +83,29 @@ public class MobileWalletActivityController extends BaseController {
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
+	
+	private String mapBankName(String ref1) {
+		String bankName = "";
+		if("KTB".equals(ref1)){
+			bankName = ActivityType.KTB_ADDMONEY;
+		}else if("SCB".equals(ref1)){
+			bankName = ActivityType.SCB_ADDMONEY;
+		}else if("BBL".equals(ref1)){
+			bankName = ActivityType.BBL_ADDMONEY;
+		}else if("BAY".equals(ref1)){
+			bankName = ActivityType.BAY_ADDMONEY;
+		}
+		return bankName;
+	}
+
+//	@RequestMapping(value = "/{reportID}/detail/{accessTokenID}", method = RequestMethod.GET)
+//	@ResponseBody
+//	public ProductResponse getActivityDetails(@PathVariable String reportID, @PathVariable String accessTokenID) {
+//		ActivityDetail activityDetail = activityService.getActivityDetail(new Long(reportID), accessTokenID);
+//		Map<String, Object> data = new HashMap<String, Object>();
+//		data.put("header", "bullshit");
+//		return this.responseFactory.createSuccessProductResonse(data);
+//	}
 
 	private String mapLogoActivityType(String type) {
 		String result = "";
@@ -113,7 +147,7 @@ public class MobileWalletActivityController extends BaseController {
 		return result;
 	}
 
-	private String mapMessageAction(String action, String type) {
+	private String mapMessageAction(String action) {
 		String result = "";
 
 		if ("d.tmvhtopup".equals(action)) {
@@ -142,13 +176,12 @@ public class MobileWalletActivityController extends BaseController {
 			result = ActivityType.DEBIT_ADDMONEY;
 		} else if ("debit".equals(action)) {
 			result = ActivityType.DIRECT_DEBIT;
-		} else if ("transfer".equals(action)) {
-			if ("debtor".equals(type)) {
-				result = ActivityType.TRANSFER;
-			} else if ("creditor".equals(type)) {
-				result = ActivityType.RECIEVE;
-			}
+		} else if ("debtor".equals(action)) {
+			result = ActivityType.TRANSFER;
+		} else if ("creditor".equals(action)) {
+			result = ActivityType.RECIEVE;
 		}
+		
 		return result;
 	}
 	

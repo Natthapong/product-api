@@ -69,5 +69,9 @@
 
 "topup.mobile.status.url" : "${apiHost}/api/v1/topup/mobile/%@/status/%@?",
 
-"topup.mobile.details.url" : "${apiHost}/api/v1/topup/mobile/%@/details/%@?"
+"topup.mobile.details.url" : "${apiHost}/api/v1/topup/mobile/%@/details/%@?",
+
+"profile.activities.list.url" : "${apiHost}/api/v1/profile/activities/list/%@?",
+
+"profile.activities.detail.url" : "${apiHost}/api/v1/profile/activities/%@/detail/%@?"
 }

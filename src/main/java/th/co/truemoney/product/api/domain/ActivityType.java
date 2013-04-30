@@ -5,6 +5,8 @@ public class ActivityType {
 	public static final String BILLPAY = "billpay";
 	public static final String ADD_MONEY = "add_money";
 	public static final String BONUS = "bonus";
+	public static final String TRANSFER_ACTION = "transfer";
+	
 	public static final String TRANSFER_DEBTOR = "debtor";
 	public static final String TRANSFER_CREDITOR = "creditor";
 	

@@ -120,9 +120,7 @@ public class MobileWalletActivityController extends BaseController {
 			result = imagesURL + "/bonus.png";
 		} else if (ActivityType.ADD_MONEY.equals(type)) {
 			result = imagesURL + "/add_money.png";
-		} else if (ActivityType.TRANSFER_DEBTOR.equals(type)) {
-			result = imagesURL + "/transfer.png";
-		} else if (ActivityType.TRANSFER_CREDITOR.equals(type)) {
+		} else if (ActivityType.TRANSFER.equals(type)) {
 			result = imagesURL + "/transfer.png";
 		}
 

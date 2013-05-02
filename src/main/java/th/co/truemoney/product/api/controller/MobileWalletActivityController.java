@@ -90,10 +90,6 @@ public class MobileWalletActivityController extends BaseController {
 		 ActivityDetail detail = activityService.getActivityDetail(new Long(reportID), accessTokenID);
 		 Map<String, Object> data = new HashMap<String, Object>();
 		 
-		 Map<String, String> header = new HashMap<String, String>();
-		 header.put("textTh", mapMessageType(detail.getType(), detail.getAction()));
-		 header.put("textEn", detail.getType());
-		 data.put("header", header);
 		 data.put("section1", buildSection1(detail));
 		 data.put("section2", buildSection2(detail));
 		 data.put("section3", buildSection3(detail));

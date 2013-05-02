@@ -2,7 +2,6 @@ package th.co.truemoney.product.api.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -65,11 +64,6 @@ public class TestMobileWalletActivityDetailController extends
 		
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
-		
-		assertNotNull(data.get("header"));
-		Map<String, String> header = (Map<String, String>) data.get("header");
-		assertTrue(header.containsKey("textTh"));
-		assertTrue(header.containsKey("textEn"));
 		
 		assertTrue(data.containsKey("section1"));
 		Map<String, String> section1 = (Map<String, String>) data.get("section1");
@@ -165,13 +159,6 @@ public class TestMobileWalletActivityDetailController extends
 		
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(4L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
-		
-		assertNotNull(data.get("header"));
-		Map<String, String> header = (Map<String, String>) data.get("header");
-		assertTrue(header.containsKey("textTh"));
-		assertTrue(header.containsKey("textEn"));
-		assertEquals("จ่ายบิล", header.get("textTh"));
-		assertEquals("billpay", header.get("textEn"));
 		
 		assertTrue(data.containsKey("section1"));
 		Map<String, String> section1 = (Map<String, String>) data.get("section1");
@@ -273,13 +260,6 @@ public class TestMobileWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(5L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
-		assertNotNull(data.get("header"));
-		Map<String, String> header = (Map<String, String>) data.get("header");
-		assertTrue(header.containsKey("textTh"));
-		assertTrue(header.containsKey("textEn"));
-		assertEquals("โปรโมชั่น", header.get("textTh"));
-		assertEquals("bonus", header.get("textEn"));
-		
 		assertTrue(data.containsKey("section1"));
 		Map<String, String> section1 = (Map<String, String>) data.get("section1");
 		assertFalse(section1.containsKey("logoURL"));
@@ -357,13 +337,6 @@ public class TestMobileWalletActivityDetailController extends
 		
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
-		
-		assertNotNull(data.get("header"));
-		Map<String, String> header = (Map<String, String>) data.get("header");
-		assertTrue(header.containsKey("textTh"));
-		assertTrue(header.containsKey("textEn"));
-		assertEquals("เติมเงิน Wallet", header.get("textTh"));
-		assertEquals("add_money", header.get("textEn"));
 		
 		assertTrue(data.containsKey("section1"));
 		Map<String, String> section1 = (Map<String, String>) data.get("section1");
@@ -465,13 +438,6 @@ public class TestMobileWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(7L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
-		assertNotNull(data.get("header"));
-		Map<String, String> header = (Map<String, String>) data.get("header");
-		assertTrue(header.containsKey("textTh"));
-		assertTrue(header.containsKey("textEn"));
-		assertEquals("โอนเงิน", header.get("textTh"));
-		assertEquals("transfer", header.get("textEn"));
-		
 		assertTrue(data.containsKey("section1"));
 		Map<String, String> section1 = (Map<String, String>) data.get("section1");
 		assertFalse(section1.containsKey("logoURL"));
@@ -554,13 +520,6 @@ public class TestMobileWalletActivityDetailController extends
 		
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(7L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
-		
-		assertNotNull(data.get("header"));
-		Map<String, String> header = (Map<String, String>) data.get("header");
-		assertTrue(header.containsKey("textTh"));
-		assertTrue(header.containsKey("textEn"));
-		assertEquals("โอนเงิน", header.get("textTh"));
-		assertEquals("transfer", header.get("textEn"));
 		
 		assertTrue(data.containsKey("section1"));
 		Map<String, String> section1 = (Map<String, String>) data.get("section1");

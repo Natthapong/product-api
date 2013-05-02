@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,9 @@ public class MobileWalletActivityController extends BaseController {
 	@Autowired
 	ActivityService activityService;
 
-	private static final String imagesURL = "https://secure.truemoney-dev.com/m/tmn_webview/images/logo_activity_type";
+	private static final String logoActivityTypeURL = "https://secure.truemoney-dev.com/m/tmn_webview/images/logo_activity_type";
+	
+	private static final String logoBillURL = "https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill";
 
 	@RequestMapping(value = "/list/{accessTokenID}", method = RequestMethod.GET)
 	@ResponseBody
@@ -38,7 +41,7 @@ public class MobileWalletActivityController extends BaseController {
 				.getActivities(accessTokenID);
 
 		List<ActivityViewItem> itemList = new ArrayList<ActivityViewItem>();
-		SimpleDateFormat dt1 = new SimpleDateFormat("dd/MM/yy");
+		
 		for (Activity act : activityList) {
 			ActivityViewItem item = new ActivityViewItem();
 			item.setReportID(String.valueOf(act.getReportID()));
@@ -46,14 +49,14 @@ public class MobileWalletActivityController extends BaseController {
 			item.setText1Th(mapMessageType(act.getType(), act.getAction()));
 			item.setText1En(mapMessageType(act.getType(), act.getAction()));
 			if (act.getTransactionDate() != null) {
-				item.setText2Th(dt1.format(act.getTransactionDate()));
-				item.setText2En(dt1.format(act.getTransactionDate()));
+				item.setText2Th(formatDate(act.getTransactionDate()));
+				item.setText2En(formatDate(act.getTransactionDate()));
 			}
 			item.setText3Th(mapMessageAction(act.getAction()));
 			item.setText3En(mapMessageAction(act.getAction()));
 
-			item.setText4Th(formatTotalAmount(act.getTotalAmount()));
-			item.setText4En(formatTotalAmount(act.getTotalAmount()));
+			item.setText4Th(formatSignedAmount(act.getTotalAmount()));
+			item.setText4En(formatSignedAmount(act.getTotalAmount()));
 
 			if (ActivityType.TOPUP_MOBILE.equals(act.getType())
 					|| ActivityType.TRANSFER.equals(act.getType())) {
@@ -98,37 +101,102 @@ public class MobileWalletActivityController extends BaseController {
 		return bankName;
 	}
 
-	 @RequestMapping(value = "/{reportID}/detail/{accessTokenID}", method =
-	 RequestMethod.GET)
+	 @RequestMapping(value = "/{reportID}/detail/{accessTokenID}", method =RequestMethod.GET)
 	 @ResponseBody
-	 public ProductResponse getActivityDetails(@PathVariable String reportID,
-	 @PathVariable String accessTokenID) {
-	 ActivityDetail activityDetail = activityService.getActivityDetail(new
-	 Long(reportID), accessTokenID);
-	 Map<String, Object> data = new HashMap<String, Object>();
-	 data.put("header", "bullshit");
-	 return this.responseFactory.createSuccessProductResonse(data);
+	 public ProductResponse getActivityDetails(@PathVariable String reportID, @PathVariable String accessTokenID) {
+		 ActivityDetail detail = activityService.getActivityDetail(new Long(reportID), accessTokenID);
+		 Map<String, Object> data = new HashMap<String, Object>();
+		 
+		 Map<String, String> header = new HashMap<String, String>();
+		 header.put("textTh", mapMessageType(detail.getType(), detail.getAction()));
+		 header.put("textEn", detail.getType());
+		 data.put("header", header);
+		 
+		 Map<String, String> section1 = new HashMap<String, String>();
+		 section1.put("logoURL", getActionLogoURL(detail.getAction()));
+		 section1.put("titleTh", "");
+		 section1.put("titleEn", "");
+		 data.put("section1", section1);
+		 
+		 Map<String, Object> section2 = new HashMap<String, Object>();
+		 Map<String, Object> column1 = new HashMap<String, Object>();
+		 Map<String, String> cell1 = new HashMap<String, String>();
+		 cell1.put("titleTh", "หมายเลขโทรศัพท์");
+		 cell1.put("titleEn", "mobile number");
+		 cell1.put("value", formatMobileNumber(detail.getRef1()));
+		 column1.put("cell1", cell1);
+		 section2.put("column1", column1);
+		 data.put("section2", section2);
+		 
+		 Map<String, Object> section3 = new HashMap<String, Object>();
+		 Map<String, Object> column31 = new HashMap<String, Object>();
+		 Map<String, Object> column32 = new HashMap<String, Object>();
+		 Map<String, String> cell311 = new HashMap<String, String>();
+		 Map<String, String> cell312 = new HashMap<String, String>();
+		 Map<String, String> cell321 = new HashMap<String, String>();
+		 cell311.put("titleTh", "จำนวนเงิน");
+		 cell311.put("titleEn", "amount");
+		 cell311.put("value", formatAmount(detail.getAmount()));
+		 cell312.put("titleTh", "รวมเงินที่ชำระ");
+		 cell312.put("titleEn", "total amount");
+		 cell312.put("value", formatAmount(detail.getTotalAmount()));
+		 cell321.put("titleTh", "ค่าธรรมเนียม");
+		 cell321.put("titleEn", "total fee");
+		 cell321.put("value", formatAmount(detail.getTotalFeeAmount()));
+		 column31.put("cell1", cell311);
+		 column31.put("cell2", cell312);
+		 column32.put("cell1", cell321);
+		 section3.put("column1", column31);
+		 section3.put("column2", column32);
+		 data.put("section3", section3);
+		 
+		 Map<String, Object> section4 = new HashMap<String, Object>();
+		 Map<String, Object> column41 = new HashMap<String, Object>();
+		 Map<String, Object> column42 = new HashMap<String, Object>();
+		 Map<String, String> cell411 = new HashMap<String, String>();
+		 Map<String, String> cell421 = new HashMap<String, String>();
+		 cell411.put("titleTh", "วันที่-เวลา");
+		 cell411.put("titleEn", "transaction date");
+		 cell411.put("value", formatDateTime(detail.getTransactionDate()));
+		 cell421.put("titleTh", "เลขที่อ้างอิง");
+		 cell421.put("titleEn", "transaction ID");
+		 cell421.put("value", detail.getTransactionID());
+		 column41.put("cell1", cell411);
+		 column42.put("cell1", cell421);
+		 section4.put("column1", column41);
+		 section4.put("column2", column42);
+		 data.put("section4", section4);
+		 
+		 return this.responseFactory.createSuccessProductResonse(data);
 	 }
-
-	private String mapLogoActivityType(String type) {
+	
+	 private String getActionLogoURL(String action) {
+		 if ("d.tmvhtopup".equals(action)) {
+			return logoBillURL + "/tmvh@2x.png";
+		 } else {
+			 return logoBillURL + "/tcg@2x.png";
+		 }
+	 }
+	 
+	 private String mapLogoActivityType(String type) {
 		String result = "";
 
 		if (ActivityType.TOPUP_MOBILE.equals(type)) {
-			result = imagesURL + "/topup_mobile.png";
+			result = logoActivityTypeURL + "/topup_mobile.png";
 		} else if (ActivityType.BILLPAY.equals(type)) {
-			result = imagesURL + "/billpay.png";
+			result = logoActivityTypeURL + "/billpay.png";
 		} else if (ActivityType.BONUS.equals(type)) {
-			result = imagesURL + "/bonus.png";
+			result = logoActivityTypeURL + "/bonus.png";
 		} else if (ActivityType.ADD_MONEY.equals(type)) {
-			result = imagesURL + "/add_money.png";
+			result = logoActivityTypeURL + "/add_money.png";
 		} else if (ActivityType.TRANSFER.equals(type)) {
-			result = imagesURL + "/transfer.png";
+			result = logoActivityTypeURL + "/transfer.png";
 		}
 
 		return result;
-	}
+	 }
 
-	private String mapMessageType(String type, String action) {
+	 private String mapMessageType(String type, String action) {
 		String result = "";
 
 		if (ActivityType.TOPUP_MOBILE.equals(type)) {
@@ -189,16 +257,33 @@ public class MobileWalletActivityController extends BaseController {
 
 		return result;
 	}
-
-	private String formatTotalAmount(BigDecimal totalAmount) {
-		DecimalFormat format = new DecimalFormat("##,###.00");
-		String totalAmountFormat = format.format(totalAmount);
-		if (totalAmount.compareTo(BigDecimal.ZERO) == 1) {
-			totalAmountFormat = "+" + totalAmountFormat;
-		}
-		return totalAmountFormat;
+	
+	private static DecimalFormat df = new DecimalFormat("##,###.00");
+	
+	private static SimpleDateFormat dtf1 = new SimpleDateFormat("dd/MM/yy");
+	
+	private static SimpleDateFormat dtf2 = new SimpleDateFormat("HH:mm");
+	
+	private String formatDate(Date date) {
+		return dtf1.format(date);
 	}
-
+	
+	private String formatDateTime(Date date) {
+		return formatDate(date) + " " + dtf2.format(date);
+	}
+	
+	private String formatAmount(BigDecimal amount) {
+		return df.format(amount);
+	}
+	
+	private String formatSignedAmount(BigDecimal amount) {
+		String formattedAmount = formatAmount(amount);
+		if (amount.compareTo(BigDecimal.ZERO) == 1) {	
+			formattedAmount = "+" + formattedAmount;
+		}
+		return formattedAmount;
+	}
+	
 	private String formatMobileNumber(String mobileNumber) {
 		return String.valueOf(mobileNumber).replaceFirst(
 				"(\\d{3})(\\d{3})(\\d)", "$1-$2-$3");

@@ -105,10 +105,19 @@ public class MobileWalletActivityController extends BaseController {
 	 }
 	 
 	 private Map<String, String> buildSection1(ActivityDetail detail) {
+		 String type = detail.getType();
 		 Map<String, String> section1 = new HashMap<String, String>();
-		 section1.put("logoURL", getActionLogoURL(detail.getAction()));
-		 section1.put("titleTh", "");
-		 section1.put("titleEn", "");
+		 
+		 if (ActivityType.TOPUP_MOBILE.equals(type) 
+				 || ActivityType.BILLPAY.equals(type) 
+				 || ActivityType.DIRECT_DEBIT.equals(type)) {
+			 section1.put("logoURL", getActionLogoURL(detail.getAction()));
+			 section1.put("titleTh", "");
+			 section1.put("titleEn", "");
+		 } else {
+			 section1.put("titleTh", "คืนค่าธรรมเนียม");
+			 section1.put("titleEn", "kickback");
+		 }
 		 return section1;
 	 }
 	 
@@ -121,6 +130,10 @@ public class MobileWalletActivityController extends BaseController {
 			 cell1.put("titleTh", "หมายเลขโทรศัพท์");
 			 cell1.put("titleEn", "mobile number");
 			 cell1.put("value", formatMobileNumber(detail.getRef1()));
+		 } else if (ActivityType.BONUS.equals(detail.getType())) {
+			 cell1.put("titleTh", "ทำรายการ");
+			 cell1.put("titleEn", "activity");
+			 cell1.put("value", ActivityType.DIRECT_DEBIT_ADDMONEY);
 		 } else {
 			 cell1.put("titleTh", "รหัสลูกค้า");
 			 cell1.put("titleEn", "customer ID");
@@ -145,17 +158,20 @@ public class MobileWalletActivityController extends BaseController {
 		 cell311.put("titleTh", "จำนวนเงิน");
 		 cell311.put("titleEn", "amount");
 		 cell311.put("value", formatAmount(detail.getAmount()));
-		 cell312.put("titleTh", "รวมเงินที่ชำระ");
-		 cell312.put("titleEn", "total amount");
-		 cell312.put("value", formatAmount(detail.getTotalAmount()));
-		 cell321.put("titleTh", "ค่าธรรมเนียม");
-		 cell321.put("titleEn", "total fee");
-		 cell321.put("value", formatAmount(detail.getTotalFeeAmount()));
 		 column31.put("cell1", cell311);
-		 column31.put("cell2", cell312);
-		 column32.put("cell1", cell321);
 		 section3.put("column1", column31);
-		 section3.put("column2", column32);
+		 
+		 if (!ActivityType.BONUS.equals(detail.getType())) {
+			 cell312.put("titleTh", "รวมเงินที่ชำระ");
+			 cell312.put("titleEn", "total amount");
+			 cell312.put("value", formatAmount(detail.getTotalAmount()));
+			 cell321.put("titleTh", "ค่าธรรมเนียม");
+			 cell321.put("titleEn", "total fee");
+			 cell321.put("value", formatAmount(detail.getTotalFeeAmount()));
+			 column31.put("cell2", cell312);
+			 column32.put("cell1", cell321);
+			 section3.put("column2", column32);
+		 }
 		 return section3;
 	 }
 	 

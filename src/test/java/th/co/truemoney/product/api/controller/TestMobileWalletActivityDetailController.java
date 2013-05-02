@@ -376,11 +376,10 @@ public class TestMobileWalletActivityDetailController extends
 		Map<String, Object> column32 = (Map<String, Object>) section3.get("column2");
 		assertTrue(column31.containsKey("cell1"));
 		assertTrue(column31.containsKey("cell2"));
-		assertTrue(column32.containsKey("cell1"));
+		assertFalse(column32.containsKey("cell1"));
 		assertFalse(column32.containsKey("cell2"));
 		Map<String, String> cell311 = (Map<String, String>) column31.get("cell1");
 		Map<String, String> cell312 = (Map<String, String>) column31.get("cell2");
-		Map<String, String> cell321 = (Map<String, String>) column32.get("cell1");
 		assertTrue(cell311.containsKey("titleTh"));
 		assertTrue(cell311.containsKey("titleEn"));
 		assertTrue(cell311.containsKey("value"));
@@ -393,13 +392,7 @@ public class TestMobileWalletActivityDetailController extends
 		assertEquals("รวมเงินที่ชำระ", cell312.get("titleTh"));
 		assertEquals("total amount", cell312.get("titleEn"));
 		assertEquals("24,690.00", cell312.get("value"));
-		assertTrue(cell321.containsKey("titleTh"));
-		assertTrue(cell321.containsKey("titleEn"));
-		assertTrue(cell321.containsKey("value"));
-		assertEquals("ค่าธรรมเนียม", cell321.get("titleTh"));
-		assertEquals("total fee", cell321.get("titleEn"));
-		assertEquals("1,234.50", cell321.get("value"));
-		
+
 		assertTrue(data.containsKey("section4"));
 		Map<String, Object> section4 = (Map<String, Object>) data.get("section4");
 		assertTrue(section4.containsKey("column1"));

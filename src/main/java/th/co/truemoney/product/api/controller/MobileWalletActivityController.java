@@ -194,11 +194,13 @@ public class MobileWalletActivityController extends BaseController {
 			 cell312.put("titleTh", "รวมเงินที่ชำระ");
 			 cell312.put("titleEn", "total amount");
 			 cell312.put("value", Utils.formatAbsoluteAmount(detail.getTotalAmount()));
-			 cell321.put("titleTh", "ค่าธรรมเนียม");
-			 cell321.put("titleEn", "total fee");
-			 cell321.put("value", Utils.formatAbsoluteAmount(detail.getTotalFeeAmount()));
+			 if (!ActivityType.ADD_MONEY.equals(detail.getType())) {
+				 cell321.put("titleTh", "ค่าธรรมเนียม");
+				 cell321.put("titleEn", "total fee");
+				 cell321.put("value", Utils.formatAbsoluteAmount(detail.getTotalFeeAmount()));
+				 column32.put("cell1", cell321);
+			 }
 			 column31.put("cell2", cell312);
-			 column32.put("cell1", cell321);
 			 section3.put("column2", column32);
 		 }
 		 return section3;

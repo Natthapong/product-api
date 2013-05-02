@@ -20,8 +20,8 @@ public class ActivityType {
 	public static final String TMVH_TOPUP = "TrueMove H";
 	public static final String TRMV_TOPUP = "TrueMove";
 	
-	public static final String CATV_BILLPAY = "True Vision";
-	public static final String DSTV_BILLPAY = "True Vision";
+	public static final String CATV_BILLPAY = "True Visions";
+	public static final String DSTV_BILLPAY = "True Visions";
 	public static final String TR_BILLPAY = "โทรศัพท์บ้านทรู";
 	public static final String TMVH_BILLPAY = "TrueMove H";
 	public static final String TI_BILLPAY = "True Online";

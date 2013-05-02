@@ -30,8 +30,6 @@ public class MobileWalletActivityController extends BaseController {
 	
 	@Autowired
 	OnlineResourceManager onlineResourceManager;
-	
-	private static final String logoBillURL = "https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill";
 
 	@RequestMapping(value = "/list/{accessTokenID}", method = RequestMethod.GET)
 	@ResponseBody
@@ -44,7 +42,7 @@ public class MobileWalletActivityController extends BaseController {
 		for (Activity act : activityList) {
 			ActivityViewItem item = new ActivityViewItem();
 			item.setReportID(String.valueOf(act.getReportID()));
-			item.setLogoURL(onlineResourceManager.getLogoActivityTypeURL(act.getType()));
+			item.setLogoURL(onlineResourceManager.getActivityTypeLogoURL(act.getType()));
 			item.setText1Th(mapMessageType(act.getType(), act.getAction()));
 			item.setText1En(mapMessageType(act.getType(), act.getAction()));
 			if (act.getTransactionDate() != null) {
@@ -110,7 +108,7 @@ public class MobileWalletActivityController extends BaseController {
 		 
 		 if (ActivityType.TOPUP_MOBILE.equals(type) 
 				 || ActivityType.BILLPAY.equals(type)) {
-			 section1.put("logoURL", getActionLogoURL(detail.getAction()));
+			 section1.put("logoURL", onlineResourceManager.getActivityActionLogoURL(detail.getAction()));
 			 section1.put("titleTh", "");
 			 section1.put("titleEn", "");
 		 } else if (ActivityType.ADD_MONEY.equals(type)) {
@@ -226,21 +224,6 @@ public class MobileWalletActivityController extends BaseController {
 		 section4.put("column1", column41);
 		 section4.put("column2", column42);
 		 return section4;
-	 }
-	 
-	 private String getActionLogoURL(String action) {
-		 String logo = "";
-		 if (action != null) {
-			 if ("d.tmvhtopup".equals(action)) {
-				 logo = "tmvh@2x.png";
-			 } else if ("d.tmvtopup".equals(action)) {
-				 logo = "trmv@2x.png";
-			 } else {
-				 String[] splitted = action.split("\\.");
-				 logo = splitted[1] + "@2x.png";
-		     }
-		 }
-		 return logoBillURL + "/" + logo;
 	 }
 	 
 	 private String mapBankName(String ref1) {

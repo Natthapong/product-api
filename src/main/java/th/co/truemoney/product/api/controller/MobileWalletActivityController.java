@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -146,7 +147,7 @@ public class MobileWalletActivityController extends BaseController {
 			 cell1.put("value", mapBankName(detail.getRef1()));
 			 cell2.put("titleTh", "หมายเลขบัญชี");
 			 cell2.put("titleEn", "account number");
-			 cell2.put("value", detail.getRef2());
+			 cell2.put("value", StringUtils.hasText(detail.getRef2()) ? detail.getRef2() : "-");
 			 column1.put("cell2", cell2);
 		 } else if (ActivityType.TRANSFER.equals(detail.getType())) {
 			 if (ActivityType.TRANSFER_DEBTOR.equals(detail.getAction()))
@@ -160,7 +161,7 @@ public class MobileWalletActivityController extends BaseController {
 			 else
 				 cell2.put("titleTh", "ชื่อผู้ส่ง");
 			 cell2.put("titleEn", "account owner");
-			 cell2.put("value", detail.getRef2());
+			 cell2.put("value", StringUtils.hasText(detail.getRef2()) ? detail.getRef2() : "-");
 			 column1.put("cell2", cell2);
 		 } else {
 			 cell1.put("titleTh", "รหัสลูกค้า");
@@ -168,7 +169,7 @@ public class MobileWalletActivityController extends BaseController {
 			 cell1.put("value", detail.getRef1());
 			 cell2.put("titleTh", "เลขที่ใบแจ้งค่าบริการ");
 			 cell2.put("titleEn", "invoice number");
-			 cell2.put("value", detail.getRef2());
+			 cell2.put("value", StringUtils.hasText(detail.getRef2()) ? detail.getRef2() : "-");
 			 column1.put("cell2", cell2);
 		 }
 		 column1.put("cell1", cell1);

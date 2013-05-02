@@ -5,7 +5,7 @@ public class ActivityType {
 	public static final String BILLPAY = "billpay";
 	public static final String ADD_MONEY = "add_money";
 	public static final String BONUS = "bonus";
-	public static final String TRANSFER_ACTION = "transfer";
+	public static final String TRANSFER = "transfer";
 	
 	public static final String TRANSFER_DEBTOR = "debtor";
 	public static final String TRANSFER_CREDITOR = "creditor";
@@ -39,8 +39,8 @@ public class ActivityType {
 	public static final String BBL_ADDMONEY = "ธนาคารกรุงเทพ";
 	public static final String BAY_ADDMONEY = "ธนาคารกรุงศรีอยุธยา";
 	
-	public static final String RECIEVE = "รับเงิน";
-	public static final String TRANSFER = "ส่งเงิน";
+	public static final String RECIEVE_TXT = "รับเงิน";
+	public static final String TRANSFER_TXT = "ส่งเงิน";
 	
 	public static final String CASHCARD = "บัตรเงินสด";
 }

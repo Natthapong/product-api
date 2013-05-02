@@ -56,8 +56,7 @@ public class MobileWalletActivityController extends BaseController {
 			item.setText4En(formatTotalAmount(act.getTotalAmount()));
 
 			if (ActivityType.TOPUP_MOBILE.equals(act.getType())
-					|| ActivityType.TRANSFER_CREDITOR.equals(act.getType())
-					|| ActivityType.TRANSFER_DEBTOR.equals(act.getType())) {
+					|| ActivityType.TRANSFER.equals(act.getType())) {
 				item.setText5Th(formatMobileNumber(act.getRef1()));
 				item.setText5En(formatMobileNumber(act.getRef1()));
 			} else if (ActivityType.ADD_MONEY.equals(act.getType())) {
@@ -99,17 +98,17 @@ public class MobileWalletActivityController extends BaseController {
 		return bankName;
 	}
 
-	// @RequestMapping(value = "/{reportID}/detail/{accessTokenID}", method =
-	// RequestMethod.GET)
-	// @ResponseBody
-	// public ProductResponse getActivityDetails(@PathVariable String reportID,
-	// @PathVariable String accessTokenID) {
-	// ActivityDetail activityDetail = activityService.getActivityDetail(new
-	// Long(reportID), accessTokenID);
-	// Map<String, Object> data = new HashMap<String, Object>();
-	// data.put("header", "bullshit");
-	// return this.responseFactory.createSuccessProductResonse(data);
-	// }
+	 @RequestMapping(value = "/{reportID}/detail/{accessTokenID}", method =
+	 RequestMethod.GET)
+	 @ResponseBody
+	 public ProductResponse getActivityDetails(@PathVariable String reportID,
+	 @PathVariable String accessTokenID) {
+	 ActivityDetail activityDetail = activityService.getActivityDetail(new
+	 Long(reportID), accessTokenID);
+	 Map<String, Object> data = new HashMap<String, Object>();
+	 data.put("header", "bullshit");
+	 return this.responseFactory.createSuccessProductResonse(data);
+	 }
 
 	private String mapLogoActivityType(String type) {
 		String result = "";
@@ -122,7 +121,7 @@ public class MobileWalletActivityController extends BaseController {
 			result = imagesURL + "/bonus.png";
 		} else if (ActivityType.ADD_MONEY.equals(type)) {
 			result = imagesURL + "/add_money.png";
-		} else if (ActivityType.TRANSFER_ACTION.equals(type)) {
+		} else if (ActivityType.TRANSFER.equals(type)) {
 			result = imagesURL + "/transfer.png";
 		}
 
@@ -140,7 +139,7 @@ public class MobileWalletActivityController extends BaseController {
 			result = ActivityType.BONUS_TH;
 		} else if (ActivityType.ADD_MONEY.equals(type)) {
 			result = ActivityType.ADD_MONEY_TH;
-		} else if (ActivityType.TRANSFER_ACTION.equals(type)) {
+		} else if (ActivityType.TRANSFER.equals(type)) {
 			if (ActivityType.TRANSFER_DEBTOR.equals(action)) {
 				result = ActivityType.TRANSFER_DEBTOR_TH;
 			} else if (ActivityType.TRANSFER_CREDITOR.equals(action)) {
@@ -181,9 +180,9 @@ public class MobileWalletActivityController extends BaseController {
 		} else if ("debit".equals(action)) {
 			result = ActivityType.DIRECT_DEBIT;
 		} else if ("debtor".equals(action)) {
-			result = ActivityType.TRANSFER;
+			result = ActivityType.TRANSFER_TXT;
 		} else if ("creditor".equals(action)) {
-			result = ActivityType.RECIEVE;
+			result = ActivityType.RECIEVE_TXT;
 		} else if ("mmcc".equals(action)) {
 			result = ActivityType.CASHCARD;
 		}

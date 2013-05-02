@@ -35,7 +35,7 @@ public class Utils {
 		return totalFee;
 	}
 	
-	private static DecimalFormat df = new DecimalFormat("##,###.00");
+	private static DecimalFormat df = new DecimalFormat("##,##0.00");
 	
 	private static SimpleDateFormat dtf1 = new SimpleDateFormat("dd/MM/yy");
 	

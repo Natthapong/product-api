@@ -157,7 +157,7 @@ public class MobileWalletActivityController extends BaseController {
 		 Map<String, String> cell421 = new HashMap<String, String>();
 		 cell411.put("titleTh", "วันที่-เวลา");
 		 cell411.put("titleEn", "transaction date");
-		 cell411.put("value", formatDateTime(detail.getTransactionDate()));
+		 cell411.put("value", formatDateTime(detail.getTransactionDate()));	 
 		 cell421.put("titleTh", "เลขที่อ้างอิง");
 		 cell421.put("titleEn", "transaction ID");
 		 cell421.put("value", detail.getTransactionID());
@@ -265,11 +265,14 @@ public class MobileWalletActivityController extends BaseController {
 	private static SimpleDateFormat dtf2 = new SimpleDateFormat("HH:mm");
 	
 	private String formatDate(Date date) {
-		return dtf1.format(date);
+		return  date != null ? dtf1.format(date) : "";
 	}
 	
 	private String formatDateTime(Date date) {
-		return formatDate(date) + " " + dtf2.format(date);
+		if (date != null)
+			return formatDate(date) + " " + dtf2.format(date);
+		else
+			return "";
 	}
 	
 	private String formatAmount(BigDecimal amount) {

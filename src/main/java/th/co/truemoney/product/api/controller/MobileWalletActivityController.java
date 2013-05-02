@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -87,20 +86,6 @@ public class MobileWalletActivityController extends BaseController {
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 
-	private String mapBankName(String ref1) {
-		String bankName = "";
-		if ("KTB".equals(ref1)) {
-			bankName = ActivityType.KTB_ADDMONEY;
-		} else if ("SCB".equals(ref1)) {
-			bankName = ActivityType.SCB_ADDMONEY;
-		} else if ("BBL".equals(ref1)) {
-			bankName = ActivityType.BBL_ADDMONEY;
-		} else if ("BAY".equals(ref1)) {
-			bankName = ActivityType.BAY_ADDMONEY;
-		}
-		return bankName;
-	}
-
 	 @RequestMapping(value = "/{reportID}/detail/{accessTokenID}", method =RequestMethod.GET)
 	 @ResponseBody
 	 public ProductResponse getActivityDetails(@PathVariable String reportID, @PathVariable String accessTokenID) {
@@ -111,23 +96,46 @@ public class MobileWalletActivityController extends BaseController {
 		 header.put("textTh", mapMessageType(detail.getType(), detail.getAction()));
 		 header.put("textEn", detail.getType());
 		 data.put("header", header);
+		 data.put("section1", buildSection1(detail));
+		 data.put("section2", buildSection2(detail));
+		 data.put("section3", buildSection3(detail));
+		 data.put("section4", buildSection4(detail));
 		 
+		 return this.responseFactory.createSuccessProductResonse(data);
+	 }
+	 
+	 private Map<String, String> buildSection1(ActivityDetail detail) {
 		 Map<String, String> section1 = new HashMap<String, String>();
 		 section1.put("logoURL", getActionLogoURL(detail.getAction()));
 		 section1.put("titleTh", "");
 		 section1.put("titleEn", "");
-		 data.put("section1", section1);
-		 
+		 return section1;
+	 }
+	 
+	 private Map<String, Object> buildSection2(ActivityDetail detail) {
 		 Map<String, Object> section2 = new HashMap<String, Object>();
 		 Map<String, Object> column1 = new HashMap<String, Object>();
 		 Map<String, String> cell1 = new HashMap<String, String>();
-		 cell1.put("titleTh", "หมายเลขโทรศัพท์");
-		 cell1.put("titleEn", "mobile number");
-		 cell1.put("value", formatMobileNumber(detail.getRef1()));
+		 Map<String, String> cell2 = new HashMap<String, String>();
+		 if (ActivityType.TOPUP_MOBILE.equals(detail.getType())) {
+			 cell1.put("titleTh", "หมายเลขโทรศัพท์");
+			 cell1.put("titleEn", "mobile number");
+			 cell1.put("value", formatMobileNumber(detail.getRef1()));
+		 } else {
+			 cell1.put("titleTh", "รหัสลูกค้า");
+			 cell1.put("titleEn", "customer ID");
+			 cell1.put("value", detail.getRef1());
+			 cell2.put("titleTh", "เลขที่ใบแจ้งค่าบริการ");
+			 cell2.put("titleEn", "invoice number");
+			 cell2.put("value", detail.getRef2());
+			 column1.put("cell2", cell2);
+		 }
 		 column1.put("cell1", cell1);
 		 section2.put("column1", column1);
-		 data.put("section2", section2);
-		 
+		 return section2;
+	 }
+	 
+	 public Map<String, Object> buildSection3(ActivityDetail detail) {
 		 Map<String, Object> section3 = new HashMap<String, Object>();
 		 Map<String, Object> column31 = new HashMap<String, Object>();
 		 Map<String, Object> column32 = new HashMap<String, Object>();
@@ -148,8 +156,10 @@ public class MobileWalletActivityController extends BaseController {
 		 column32.put("cell1", cell321);
 		 section3.put("column1", column31);
 		 section3.put("column2", column32);
-		 data.put("section3", section3);
-		 
+		 return section3;
+	 }
+	 
+	 public Map<String, Object> buildSection4(ActivityDetail detail) {
 		 Map<String, Object> section4 = new HashMap<String, Object>();
 		 Map<String, Object> column41 = new HashMap<String, Object>();
 		 Map<String, Object> column42 = new HashMap<String, Object>();
@@ -165,17 +175,35 @@ public class MobileWalletActivityController extends BaseController {
 		 column42.put("cell1", cell421);
 		 section4.put("column1", column41);
 		 section4.put("column2", column42);
-		 data.put("section4", section4);
-		 
-		 return this.responseFactory.createSuccessProductResonse(data);
+		 return section4;
 	 }
-	
 	 private String getActionLogoURL(String action) {
-		 if ("d.tmvhtopup".equals(action)) {
-			return logoBillURL + "/tmvh@2x.png";
-		 } else {
-			 return logoBillURL + "/tcg@2x.png";
+		 String logo = "";
+		 if (action != null) {
+			 if ("d.tmvhtopup".equals(action)) {
+				 logo = "tmvh@2x.png";
+			 } else if ("d.tmvtopup".equals(action)) {
+				 logo = "trmv@2x.png";
+			 } else {
+				 String[] splitted = action.split("\\.");
+				 logo = splitted[1] + "@2x.png";
+		     }
 		 }
+		 return logoBillURL + "/" + logo;
+	 }
+	 
+	 private String mapBankName(String ref1) {
+		String bankName = "";
+		if ("KTB".equals(ref1)) {
+			bankName = ActivityType.KTB_ADDMONEY;
+		} else if ("SCB".equals(ref1)) {
+			bankName = ActivityType.SCB_ADDMONEY;
+		} else if ("BBL".equals(ref1)) {
+			bankName = ActivityType.BBL_ADDMONEY;
+		} else if ("BAY".equals(ref1)) {
+			bankName = ActivityType.BAY_ADDMONEY;
+		}
+		return bankName;
 	 }
 	 
 	 private String mapLogoActivityType(String type) {

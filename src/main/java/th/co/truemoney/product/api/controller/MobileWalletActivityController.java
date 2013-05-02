@@ -1,13 +1,10 @@
 package th.co.truemoney.product.api.controller;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +16,7 @@ import th.co.truemoney.product.api.domain.ActivityType;
 import th.co.truemoney.product.api.domain.ActivityViewItem;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.manager.OnlineResourceManager;
+import th.co.truemoney.product.api.util.Utils;
 import th.co.truemoney.serviceinventory.ewallet.ActivityService;
 import th.co.truemoney.serviceinventory.ewallet.domain.Activity;
 import th.co.truemoney.serviceinventory.ewallet.domain.ActivityDetail;
@@ -33,8 +31,6 @@ public class MobileWalletActivityController extends BaseController {
 	@Autowired
 	OnlineResourceManager onlineResourceManager;
 	
-	private static final String logoActivityTypeURL = "https://secure.truemoney-dev.com/m/tmn_webview/images/logo_activity_type";
-	
 	private static final String logoBillURL = "https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill";
 
 	@RequestMapping(value = "/list/{accessTokenID}", method = RequestMethod.GET)
@@ -48,23 +44,23 @@ public class MobileWalletActivityController extends BaseController {
 		for (Activity act : activityList) {
 			ActivityViewItem item = new ActivityViewItem();
 			item.setReportID(String.valueOf(act.getReportID()));
-			item.setLogoURL(mapLogoActivityType(act.getType()));
+			item.setLogoURL(onlineResourceManager.getLogoActivityTypeURL(act.getType()));
 			item.setText1Th(mapMessageType(act.getType(), act.getAction()));
 			item.setText1En(mapMessageType(act.getType(), act.getAction()));
 			if (act.getTransactionDate() != null) {
-				item.setText2Th(formatDate(act.getTransactionDate()));
-				item.setText2En(formatDate(act.getTransactionDate()));
+				item.setText2Th(Utils.formatDate(act.getTransactionDate()));
+				item.setText2En(Utils.formatDate(act.getTransactionDate()));
 			}
 			item.setText3Th(mapMessageAction(act.getAction()));
 			item.setText3En(mapMessageAction(act.getAction()));
 
-			item.setText4Th(formatSignedAmount(act.getTotalAmount()));
-			item.setText4En(formatSignedAmount(act.getTotalAmount()));
+			item.setText4Th(Utils.formatSignedAmount(act.getTotalAmount()));
+			item.setText4En(Utils.formatSignedAmount(act.getTotalAmount()));
 
 			if (ActivityType.TOPUP_MOBILE.equals(act.getType())
 					|| ActivityType.TRANSFER.equals(act.getType())) {
-				item.setText5Th(formatMobileNumber(act.getRef1()));
-				item.setText5En(formatMobileNumber(act.getRef1()));
+				item.setText5Th(Utils.formatMobileNumber(act.getRef1()));
+				item.setText5En(Utils.formatMobileNumber(act.getRef1()));
 			} else if (ActivityType.ADD_MONEY.equals(act.getType())) {
 				if ("debit".equals(act.getAction())) {
 					item.setText5Th(mapBankName(act.getRef1()));
@@ -145,7 +141,7 @@ public class MobileWalletActivityController extends BaseController {
 		 if (ActivityType.TOPUP_MOBILE.equals(detail.getType())) {
 			 cell1.put("titleTh", "หมายเลขโทรศัพท์");
 			 cell1.put("titleEn", "mobile number");
-			 cell1.put("value", formatMobileNumber(detail.getRef1()));
+			 cell1.put("value", Utils.formatMobileNumber(detail.getRef1()));
 		 } else if (ActivityType.BONUS.equals(detail.getType())) {
 			 cell1.put("titleTh", "ทำรายการ");
 			 cell1.put("titleEn", "activity");
@@ -164,7 +160,7 @@ public class MobileWalletActivityController extends BaseController {
 			 else
 				 cell1.put("titleTh", "หมายเลขผู้ส่ง");
 			 cell1.put("titleEn", "account number");
-			 cell1.put("value", formatMobileNumber(detail.getRef1()));
+			 cell1.put("value", Utils.formatMobileNumber(detail.getRef1()));
 			 if (ActivityType.TRANSFER_DEBTOR.equals(detail.getAction()))
 				 cell2.put("titleTh", "ชื่อผู้รับ");
 			 else
@@ -195,17 +191,17 @@ public class MobileWalletActivityController extends BaseController {
 		 Map<String, String> cell321 = new HashMap<String, String>();
 		 cell311.put("titleTh", "จำนวนเงิน");
 		 cell311.put("titleEn", "amount");
-		 cell311.put("value", formatAmount(detail.getAmount()));
+		 cell311.put("value", Utils.formatAbsoluteAmount(detail.getAmount()));
 		 column31.put("cell1", cell311);
 		 section3.put("column1", column31);
 		 
 		 if (!(ActivityType.BONUS.equals(detail.getType()) || ActivityType.TRANSFER.equals(detail.getType()))) {
 			 cell312.put("titleTh", "รวมเงินที่ชำระ");
 			 cell312.put("titleEn", "total amount");
-			 cell312.put("value", formatAmount(detail.getTotalAmount()));
+			 cell312.put("value", Utils.formatAbsoluteAmount(detail.getTotalAmount()));
 			 cell321.put("titleTh", "ค่าธรรมเนียม");
 			 cell321.put("titleEn", "total fee");
-			 cell321.put("value", formatAmount(detail.getTotalFeeAmount()));
+			 cell321.put("value", Utils.formatAbsoluteAmount(detail.getTotalFeeAmount()));
 			 column31.put("cell2", cell312);
 			 column32.put("cell1", cell321);
 			 section3.put("column2", column32);
@@ -221,7 +217,7 @@ public class MobileWalletActivityController extends BaseController {
 		 Map<String, String> cell421 = new HashMap<String, String>();
 		 cell411.put("titleTh", "วันที่-เวลา");
 		 cell411.put("titleEn", "transaction date");
-		 cell411.put("value", formatDateTime(detail.getTransactionDate()));	 
+		 cell411.put("value", Utils.formatDateTime(detail.getTransactionDate()));	 
 		 cell421.put("titleTh", "เลขที่อ้างอิง");
 		 cell421.put("titleEn", "transaction ID");
 		 cell421.put("value", detail.getTransactionID());
@@ -259,24 +255,6 @@ public class MobileWalletActivityController extends BaseController {
 			bankName = ActivityType.BAY_ADDMONEY;
 		}
 		return bankName;
-	 }
-	 
-	 private String mapLogoActivityType(String type) {
-		String result = "";
-
-		if (ActivityType.TOPUP_MOBILE.equals(type)) {
-			result = logoActivityTypeURL + "/topup_mobile.png";
-		} else if (ActivityType.BILLPAY.equals(type)) {
-			result = logoActivityTypeURL + "/billpay.png";
-		} else if (ActivityType.BONUS.equals(type)) {
-			result = logoActivityTypeURL + "/bonus.png";
-		} else if (ActivityType.ADD_MONEY.equals(type)) {
-			result = logoActivityTypeURL + "/add_money.png";
-		} else if (ActivityType.TRANSFER.equals(type)) {
-			result = logoActivityTypeURL + "/transfer.png";
-		}
-
-		return result;
 	 }
 
 	 private String mapMessageType(String type, String action) {
@@ -341,42 +319,12 @@ public class MobileWalletActivityController extends BaseController {
 		return result;
 	}
 	
-	private static DecimalFormat df = new DecimalFormat("##,###.00");
-	
-	private static SimpleDateFormat dtf1 = new SimpleDateFormat("dd/MM/yy");
-	
-	private static SimpleDateFormat dtf2 = new SimpleDateFormat("HH:mm");
-	
-	private String formatDate(Date date) {
-		return  date != null ? dtf1.format(date) : "";
-	}
-	
-	private String formatDateTime(Date date) {
-		if (date != null)
-			return formatDate(date) + " " + dtf2.format(date);
-		else
-			return "";
-	}
-	
-	private String formatAmount(BigDecimal amount) {
-		return df.format(amount);
-	}
-	
-	private String formatSignedAmount(BigDecimal amount) {
-		String formattedAmount = formatAmount(amount);
-		if (amount.compareTo(BigDecimal.ZERO) == 1) {	
-			formattedAmount = "+" + formattedAmount;
-		}
-		return formattedAmount;
-	}
-	
-	private String formatMobileNumber(String mobileNumber) {
-		return String.valueOf(mobileNumber).replaceFirst(
-				"(\\d{3})(\\d{3})(\\d)", "$1-$2-$3");
-	}
-
 	public void setActivityService(ActivityService activityService) {
 		this.activityService = activityService;
+	}
+
+	public void setOnlineResourceManager(OnlineResourceManager onlineResourceManager) {
+		this.onlineResourceManager = onlineResourceManager;
 	}
 
 }

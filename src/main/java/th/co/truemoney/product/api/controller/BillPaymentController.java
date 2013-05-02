@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.manager.MessageManager;
-import th.co.truemoney.product.api.util.BillUtil;
+import th.co.truemoney.product.api.util.Utils;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
@@ -67,7 +67,7 @@ public class BillPaymentController extends BaseController {
 		data.put("amount", billPaymentInfo.getAmount());
 		data.put("serviceFee", billPaymentInfo.getServiceFee());
 		data.put("partialPaymentAllow", billPaymentInfo.getPartialPayment());
-		data.put("isTrueCorpBill", BillUtil.isTrueCorpBill(billPaymentInfo.getTarget()));
+		data.put("isTrueCorpBill", Utils.isTrueCorpBill(billPaymentInfo.getTarget()));
 
 		data.put("minAmount", billPaymentInfo.getMinAmount());
 		data.put("maxAmount", billPaymentInfo.getMaxAmount());
@@ -93,7 +93,7 @@ public class BillPaymentController extends BaseController {
 		BillPaymentDraft bill = this.billPaymentService.verifyPaymentAbility(billID, amount, accessTokenID);
 		Bill billInfo = bill.getBillInfo();
 
-		BigDecimal totalFee = BillUtil.calculateTotalFee(bill.getAmount(), billInfo.getServiceFee(), billInfo.getSourceOfFundFees());
+		BigDecimal totalFee = Utils.calculateTotalFee(bill.getAmount(), billInfo.getServiceFee(), billInfo.getSourceOfFundFees());
 		BigDecimal totalAmount = bill.getAmount().add(totalFee);
 
 		OTP otp = this.billPaymentService.sendOTP(bill.getID(), accessTokenID);
@@ -154,7 +154,7 @@ public class BillPaymentController extends BaseController {
 		Bill billInfo = tnx.getDraftTransaction().getBillInfo();
 		
 		BigDecimal amount = tnx.getDraftTransaction().getAmount();
-		BigDecimal totalFee = BillUtil.calculateTotalFee(amount, billInfo.getServiceFee(), billInfo.getSourceOfFundFees());
+		BigDecimal totalFee = Utils.calculateTotalFee(amount, billInfo.getServiceFee(), billInfo.getSourceOfFundFees());
 		BigDecimal totalAmount = amount.add(totalFee);
 		
 		Map<String, Object> data = new HashMap<String, Object>();

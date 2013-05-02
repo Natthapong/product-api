@@ -5,23 +5,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class OnlineResourceManager {
 	
-	private static final String imageBankURL = "https://secure.truemoney-dev.com/m/tmn_webview/";
+	private static final String logoBankURL = "https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bank/";
+	
+	private static final String logoActivityTypeURL = "https://secure.truemoney-dev.com/m/tmn_webview/images/logo_activity_type/";
 	
 	public String getBankLogoURL(String bankCode) {
-		String returnData = new String();
-		if (bankCode.equals("SCB")) {
-			returnData = imageBankURL + "images/logo_bank/scb@2x.png";
-		} else if (bankCode.equals("KTB")) {
-			returnData = imageBankURL + "images/logo_bank/ktb@2x.png";
-		} else if (bankCode.equals("BBL")) {
-			returnData = imageBankURL + "images/logo_bank/bbl@2x.png";
-		} else if (bankCode.equals("BAY")) {
-			returnData = imageBankURL + "images/logo_bank/bay@2x.png";
-		} else if (bankCode.equals("KBANK")) {
-			returnData = imageBankURL + "images/logo_bank/kbank@2x.png";
-		} else if (bankCode.equals("TMB")) {
-			returnData = imageBankURL + "images/logo_bank/tmb@2x.png";
-		}
-		return returnData;
+		return logoBankURL + lower(bankCode) + "@2x.png";
+	}
+	
+	private String lower(String str) {
+		return str != null ? str.toLowerCase() : "";
+	}
+	
+	public String getLogoActivityTypeURL(String type) {
+		return logoActivityTypeURL + lower(type) + ".png";
 	}
 }

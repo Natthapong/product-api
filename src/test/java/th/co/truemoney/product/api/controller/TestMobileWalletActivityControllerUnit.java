@@ -22,6 +22,7 @@ import org.junit.runners.Parameterized.Parameters;
 import th.co.truemoney.product.api.domain.ActivityViewItem;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.manager.MessageManager;
+import th.co.truemoney.product.api.manager.OnlineResourceManager;
 import th.co.truemoney.product.api.util.ProductResponseFactory;
 import th.co.truemoney.serviceinventory.ewallet.ActivityService;
 import th.co.truemoney.serviceinventory.ewallet.domain.Activity;
@@ -78,6 +79,7 @@ public class TestMobileWalletActivityControllerUnit {
 		this.controller = new MobileWalletActivityController();
 		this.controller.setActivityService(this.activityServiceMock);
 		this.controller.setResponseFactory(responseFactory);
+		this.controller.setOnlineResourceManager(new OnlineResourceManager());
 	}
 	
 	public void tearDown() {

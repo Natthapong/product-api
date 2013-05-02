@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import th.co.truemoney.product.api.domain.ActivityType;
 import th.co.truemoney.product.api.domain.ActivityViewItem;
 import th.co.truemoney.product.api.domain.ProductResponse;
+import th.co.truemoney.product.api.manager.OnlineResourceManager;
 import th.co.truemoney.serviceinventory.ewallet.ActivityService;
 import th.co.truemoney.serviceinventory.ewallet.domain.Activity;
 import th.co.truemoney.serviceinventory.ewallet.domain.ActivityDetail;
@@ -28,7 +29,10 @@ public class MobileWalletActivityController extends BaseController {
 
 	@Autowired
 	ActivityService activityService;
-
+	
+	@Autowired
+	OnlineResourceManager onlineResourceManager;
+	
 	private static final String logoActivityTypeURL = "https://secure.truemoney-dev.com/m/tmn_webview/images/logo_activity_type";
 	
 	private static final String logoBillURL = "https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill";
@@ -109,11 +113,14 @@ public class MobileWalletActivityController extends BaseController {
 		 Map<String, String> section1 = new HashMap<String, String>();
 		 
 		 if (ActivityType.TOPUP_MOBILE.equals(type) 
-				 || ActivityType.BILLPAY.equals(type) 
-				 || ActivityType.DIRECT_DEBIT.equals(type)) {
+				 || ActivityType.BILLPAY.equals(type)) {
 			 section1.put("logoURL", getActionLogoURL(detail.getAction()));
 			 section1.put("titleTh", "");
 			 section1.put("titleEn", "");
+		 } else if (ActivityType.ADD_MONEY.equals(type)) {
+			 section1.put("logoURL", onlineResourceManager.getBankLogoURL(detail.getRef1()));
+			 section1.put("titleTh", "บัญชีธนาคาร");
+			 section1.put("titleEn", "bank account");
 		 } else {
 			 section1.put("titleTh", "คืนค่าธรรมเนียม");
 			 section1.put("titleEn", "kickback");
@@ -134,6 +141,14 @@ public class MobileWalletActivityController extends BaseController {
 			 cell1.put("titleTh", "ทำรายการ");
 			 cell1.put("titleEn", "activity");
 			 cell1.put("value", ActivityType.DIRECT_DEBIT_ADDMONEY);
+		 } else if (ActivityType.ADD_MONEY.equals(detail.getType())) {
+			 cell1.put("titleTh", "ธนาคาร");
+			 cell1.put("titleEn", "bank name");
+			 cell1.put("value", mapBankName(detail.getRef1()));
+			 cell2.put("titleTh", "หมายเลขบัญชี");
+			 cell2.put("titleEn", "account number");
+			 cell2.put("value", detail.getRef2());
+			 column1.put("cell2", cell2);
 		 } else {
 			 cell1.put("titleTh", "รหัสลูกค้า");
 			 cell1.put("titleEn", "customer ID");
@@ -193,6 +208,7 @@ public class MobileWalletActivityController extends BaseController {
 		 section4.put("column2", column42);
 		 return section4;
 	 }
+	 
 	 private String getActionLogoURL(String action) {
 		 String logo = "";
 		 if (action != null) {

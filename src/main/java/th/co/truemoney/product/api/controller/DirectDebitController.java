@@ -22,6 +22,7 @@ import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.domain.TopupDirectDebitRequest;
 import th.co.truemoney.product.api.domain.TopupOrderConfirmRequest;
 import th.co.truemoney.product.api.domain.TopupQuotableRequest;
+import th.co.truemoney.product.api.manager.OnlineResourceManager;
 import th.co.truemoney.serviceinventory.ewallet.DirectDebitSourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
@@ -42,9 +43,10 @@ public class DirectDebitController extends BaseController {
 
 	@Autowired
 	TmnProfileService profileService;
-
-	private static final String imageBankURL = "https://secure.truemoney-dev.com/m/tmn_webview/";
-
+	
+	@Autowired
+	OnlineResourceManager onlineResourceManager;
+	
 	@RequestMapping(value = "/add-money/ewallet/banks/{username}/{accessToken}", method = RequestMethod.GET)
 	@ResponseBody
 	public ProductResponse getUserDirectDebitSources(
@@ -79,7 +81,7 @@ public class DirectDebitController extends BaseController {
 		data.put("bankNumber", db.getBankAccountNumber());
 		data.put("bankNameEn", db.getBankNameEn());
 		data.put("bankNameTh", db.getBankNameTh());
-		data.put("urlLogo", getUrlLogo(db.getBankCode()));
+		data.put("urlLogo", onlineResourceManager.getBankLogoURL(db.getBankCode()));
 		data.put("sourceOfFundID", quote.getSourceOfFund().getSourceOfFundID());
 		data.put("accessToken", quote.getAccessTokenID());
 
@@ -105,7 +107,7 @@ public class DirectDebitController extends BaseController {
 		data.put("bankNumber", db.getBankAccountNumber());
 		data.put("bankNameEn", db.getBankNameEn());
 		data.put("bankNameTh", db.getBankNameTh());
-		data.put("urlLogo", getUrlLogo(db.getBankCode()));
+		data.put("urlLogo", onlineResourceManager.getBankLogoURL(db.getBankCode()));
 		data.put("sourceOfFundID", quote.getSourceOfFund().getSourceOfFundID());
 		data.put("accessToken", quote.getAccessTokenID());
 
@@ -198,7 +200,7 @@ public class DirectDebitController extends BaseController {
 		data.put("bankNumber", db.getBankAccountNumber());
 		data.put("bankNameEn", db.getBankNameEn());
 		data.put("bankNameTh", db.getBankNameTh());
-		data.put("urlLogo", getUrlLogo(db.getBankCode()));
+		data.put("urlLogo", onlineResourceManager.getBankLogoURL(db.getBankCode()));
 		data.put("fee", quote.getTopUpFee());
 		data.put("currentBalance", balance);
 
@@ -217,29 +219,10 @@ public class DirectDebitController extends BaseController {
 			returnData.put("minAmount", debit.getMinAmount());
 			returnData.put("maxAmount", debit.getMaxAmount());
 			returnData.put("sourceOfFundID", debit.getSourceOfFundID());
-			returnData.put("urlLogo", getUrlLogo(debit.getBankCode()));
+			returnData.put("urlLogo", onlineResourceManager.getBankLogoURL(debit.getBankCode()));
 			realData.add(returnData);
 		}
 		return realData;
-	}
-
-	private String getUrlLogo(String bankCode) {
-		String returnData = new String();
-		if (bankCode.equals("SCB")) {
-			returnData = imageBankURL + "images/logo_bank/scb@2x.png";
-		} else if (bankCode.equals("KTB")) {
-			returnData = imageBankURL + "images/logo_bank/ktb@2x.png";
-		} else if (bankCode.equals("BBL")) {
-			returnData = imageBankURL + "images/logo_bank/bbl@2x.png";
-		} else if (bankCode.equals("BAY")) {
-			returnData = imageBankURL + "images/logo_bank/bay@2x.png";
-		} else if (bankCode.equals("KBANK")) {
-			returnData = imageBankURL + "images/logo_bank/kbank@2x.png";
-		} else if (bankCode.equals("TMB")) {
-			returnData = imageBankURL + "images/logo_bank/tmb@2x.png";
-		}
-
-		return returnData;
 	}
 
 }

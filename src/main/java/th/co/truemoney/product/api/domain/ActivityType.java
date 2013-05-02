@@ -14,8 +14,8 @@ public class ActivityType {
 	public static final String BILLPAY_TH = "จ่ายบิล";
 	public static final String ADD_MONEY_TH = "เติมเงิน Wallet";
 	public static final String BONUS_TH = "โปรโมชั่น";
-	public static final String TRANSFER_DEBTOR_TH = "โอนเงินระหว่าง Wallet";
-	public static final String TRANSFER_CREDITOR_TH = "โอนเงิน Wallet";
+	public static final String TRANSFER_DEBTOR_TH = "โอนเงิน";
+	public static final String TRANSFER_CREDITOR_TH = "โอนเงิน";
 	
 	public static final String TMVH_TOPUP = "TrueMove H";
 	public static final String TRMV_TOPUP = "TrueMove";

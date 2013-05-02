@@ -121,6 +121,15 @@ public class MobileWalletActivityController extends BaseController {
 			 section1.put("logoURL", onlineResourceManager.getBankLogoURL(detail.getRef1()));
 			 section1.put("titleTh", "บัญชีธนาคาร");
 			 section1.put("titleEn", "bank account");
+		 } else if (ActivityType.TRANSFER.equals(type)) {
+			 String transferTxt = "";
+			 if (ActivityType.TRANSFER_DEBTOR.equals(detail.getAction())) {
+				 transferTxt = ActivityType.TRANSFER_TXT;
+			 } else if (ActivityType.TRANSFER_CREDITOR.equals(detail.getAction())) {
+				 transferTxt = ActivityType.RECIEVE_TXT;
+			 } 
+			 section1.put("titleTh", transferTxt);
+			 section1.put("titleEn", detail.getAction());
 		 } else {
 			 section1.put("titleTh", "คืนค่าธรรมเนียม");
 			 section1.put("titleEn", "kickback");
@@ -147,6 +156,20 @@ public class MobileWalletActivityController extends BaseController {
 			 cell1.put("value", mapBankName(detail.getRef1()));
 			 cell2.put("titleTh", "หมายเลขบัญชี");
 			 cell2.put("titleEn", "account number");
+			 cell2.put("value", detail.getRef2());
+			 column1.put("cell2", cell2);
+		 } else if (ActivityType.TRANSFER.equals(detail.getType())) {
+			 if (ActivityType.TRANSFER_DEBTOR.equals(detail.getAction()))
+				 cell1.put("titleTh", "หมายเลขผู้รับ");
+			 else
+				 cell1.put("titleTh", "หมายเลขผู้ส่ง");
+			 cell1.put("titleEn", "account number");
+			 cell1.put("value", formatMobileNumber(detail.getRef1()));
+			 if (ActivityType.TRANSFER_DEBTOR.equals(detail.getAction()))
+				 cell2.put("titleTh", "ชื่อผู้รับ");
+			 else
+				 cell2.put("titleTh", "ชื่อผู้ส่ง");
+			 cell2.put("titleEn", "account owner");
 			 cell2.put("value", detail.getRef2());
 			 column1.put("cell2", cell2);
 		 } else {
@@ -176,7 +199,7 @@ public class MobileWalletActivityController extends BaseController {
 		 column31.put("cell1", cell311);
 		 section3.put("column1", column31);
 		 
-		 if (!ActivityType.BONUS.equals(detail.getType())) {
+		 if (!(ActivityType.BONUS.equals(detail.getType()) || ActivityType.TRANSFER.equals(detail.getType()))) {
 			 cell312.put("titleTh", "รวมเงินที่ชำระ");
 			 cell312.put("titleEn", "total amount");
 			 cell312.put("value", formatAmount(detail.getTotalAmount()));

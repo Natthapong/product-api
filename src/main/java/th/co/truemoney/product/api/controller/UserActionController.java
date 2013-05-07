@@ -69,16 +69,9 @@ public class UserActionController extends BaseController {
 			throw e;
 		}
 
-		TmnProfile profile = profileService.getTruemoneyProfile(token);
-
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("fullname", profile.getFullname());
-		data.put("currentBalance", profile.getBalance());
-		data.put("mobileNumber", profile.getMobileNumber());
-		data.put("email", profile.getEmail());
-		data.put("accessToken", token);
-
-		return this.responseFactory.createSuccessProductResonse(data);
+		ProductResponse response = getUserProfile(token);
+		response.getData().put("accessToken", token);
+		return response;
 	}
 
 	@RequestMapping(value = "/signout/{accessToken}", method = RequestMethod.POST)
@@ -91,8 +84,17 @@ public class UserActionController extends BaseController {
 				.createSuccessProductResonse(new HashMap<String, Object>());
 	}
 
-	public Map<String, String> extendSession(String sessionID) {
-		return null;
+	@RequestMapping(value = "/profile/{accessToken}", method = RequestMethod.GET)
+	@ResponseBody
+	public ProductResponse getUserProfile(@PathVariable String accessToken) {
+		TmnProfile tmnProfile = profileService.getTruemoneyProfile(accessToken);
+		Map<String,Object> data = new HashMap<String,Object>();
+		data.put("email", tmnProfile.getEmail());
+		data.put("fullname", tmnProfile.getFullname());
+		data.put("mobileNumber", tmnProfile.getMobileNumber());
+		data.put("currentBalance", tmnProfile.getBalance().toString());
+		
+		return this.responseFactory.createSuccessProductResonse(data);
 	}
 
 	private void validateSignin(String username, String password, String type) {

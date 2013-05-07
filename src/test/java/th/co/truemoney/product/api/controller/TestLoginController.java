@@ -2,6 +2,7 @@ package th.co.truemoney.product.api.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -33,7 +34,13 @@ public class TestLoginController extends BaseTestController {
 
 		this.verifySuccess(
 				this.doPOST("/signin",
-						new LoginBean("customer@truemoney.co.th", "password", "email")));
+						new LoginBean("customer@truemoney.co.th", "password", "email")))
+						.andExpect(jsonPath("$.data").exists())
+						.andExpect(jsonPath("$..email").exists())
+						.andExpect(jsonPath("$..mobileNumber").exists())
+						.andExpect(jsonPath("$..currentBalance").exists())
+						.andExpect(jsonPath("$..fullname").exists())
+						.andExpect(jsonPath("$..accessToken").exists());
 	}
 
 	@Test
@@ -81,5 +88,23 @@ public class TestLoginController extends BaseTestController {
 		).andExpect(jsonPath("$.messageEn").value("confirm umarket failed.")
 		).andExpect(jsonPath("$.namespace").value("TMN-SERVICE-INVENTORY")
 		).andExpect(jsonPath("$.messageTh").value(containsString("02-647-3333")));
+	}
+	
+	@Test
+	public void getUserprofileSuccess() throws Exception{
+		TmnProfile tmnProfile = new TmnProfile();
+		tmnProfile.setBalance(new BigDecimal(10000));
+		tmnProfile.setEmail("apinya@truecorp.co.th");
+		tmnProfile.setFullname("Apinya Ukachoke");
+		tmnProfile.setMobileNumber("0812345678");
+		
+		when( this.profileServiceMock.getTruemoneyProfile(anyString())).thenReturn(tmnProfile);
+		
+		this.verifySuccess(this.doGET("/profile/1111111111"))
+		.andExpect(jsonPath("$..email").value("apinya@truecorp.co.th"))
+		.andExpect(jsonPath("$..fullname").value("Apinya Ukachoke"))
+		.andExpect(jsonPath("$..mobileNumber").value("0812345678"))
+		.andExpect(jsonPath("$..currentBalance").value("10000"));
+		
 	}
 }

@@ -77,12 +77,8 @@ public class ProductResponseFactory {
 	
 	private final String[] CALL_CENTER_ENABLED = new String[]{"TMN-SERVICE-INVENTORY.1006", 
 															"TMN-SERVICE-INVENTORY.10002",
-															"core.5",
-															"core.6",
 															"core.7",
-															"core.19",
 															"core.27",
-															"core.38",
 															"core.71",
 															"core.1012"};
 	

@@ -25,6 +25,7 @@ import th.co.truemoney.product.api.config.TestWebConfig;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.ewallet.ActivityService;
 import th.co.truemoney.serviceinventory.ewallet.DirectDebitSourceOfFundService;
+import th.co.truemoney.serviceinventory.ewallet.FavoriteService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
 import th.co.truemoney.serviceinventory.topup.TopUpMobileService;
@@ -62,6 +63,9 @@ public abstract class BaseTestController {
 	
 	@Autowired
 	protected ActivityService activityServiceMock;
+	
+	@Autowired
+	protected FavoriteService favoriteServiceMock;
 
 	@Before
 	public void setup() {
@@ -74,6 +78,7 @@ public abstract class BaseTestController {
 		this.billPaymentServiceMock = wac.getBean(BillPaymentService.class);
 		this.topUpMobileServiceMock = wac.getBean(TopUpMobileService.class);
 		this.activityServiceMock = wac.getBean(ActivityService.class);
+		this.favoriteServiceMock = wac.getBean(FavoriteService.class);
 	}
 
 	@After
@@ -85,6 +90,7 @@ public abstract class BaseTestController {
 		reset(this.billPaymentServiceMock);
 		reset(this.topUpMobileServiceMock);
 		reset(this.activityServiceMock);
+		reset(this.favoriteServiceMock);
 	}
 
 	ObjectMapper mapper = new ObjectMapper();

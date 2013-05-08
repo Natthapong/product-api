@@ -13,6 +13,7 @@ import th.co.truemoney.product.api.manager.MessageManager;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.ewallet.ActivityService;
 import th.co.truemoney.serviceinventory.ewallet.DirectDebitSourceOfFundService;
+import th.co.truemoney.serviceinventory.ewallet.FavoriteService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
 import th.co.truemoney.serviceinventory.ewallet.domain.ClientCredential;
@@ -68,6 +69,10 @@ public class TestWebConfig {
 	
 	@Bean ActivityService activityService() {
 		return Mockito.mock(ActivityService.class);
+	}
+	
+	@Bean FavoriteService favoriteService(){
+		return Mockito.mock(FavoriteService.class);
 	}
 
 	@Bean @Qualifier("apiHost")

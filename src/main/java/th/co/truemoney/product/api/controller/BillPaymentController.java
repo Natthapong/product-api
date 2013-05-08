@@ -51,7 +51,7 @@ public class BillPaymentController extends BaseController {
 			@PathVariable String barcode,
 			@PathVariable String accessTokenID) {
 		
-		StopWatch timer = new StopWatch("getBillInformation");
+		StopWatch timer = new StopWatch("getBillInformation ("+accessTokenID+")");
 		timer.start();
 		
 		Bill billPaymentInfo = billPaymentService.retrieveBillInformation(barcode, accessTokenID);
@@ -98,7 +98,7 @@ public class BillPaymentController extends BaseController {
 			@PathVariable String accessTokenID,
 			@RequestBody Map<String, String> request) {
 		
-		StopWatch timer = new StopWatch("createBillPayment");
+		StopWatch timer = new StopWatch("createBillPayment ("+accessTokenID+")");
 		timer.start();
 
 		String billID = (String)request.get("billID");
@@ -132,7 +132,7 @@ public class BillPaymentController extends BaseController {
 			@PathVariable String accessTokenID,
 			@RequestBody Map<String, String> request) {
 		
-		StopWatch timer = new StopWatch("confirmBillPayment");
+		StopWatch timer = new StopWatch("confirmBillPayment ("+accessTokenID+")");
 		timer.start();
 		
 		OTP otp = new OTP();
@@ -160,7 +160,7 @@ public class BillPaymentController extends BaseController {
 			@PathVariable String billPaymentID,
 			@PathVariable String accessTokenID) {
 		
-		StopWatch timer = new StopWatch("getBillPaymentStatus");
+		StopWatch timer = new StopWatch("getBillPaymentStatus ("+accessTokenID+")");
 		timer.start();
 		
 		BillPaymentTransaction.Status sts = this.billPaymentService.getBillPaymentStatus(billPaymentID, accessTokenID);
@@ -182,7 +182,7 @@ public class BillPaymentController extends BaseController {
 			@PathVariable String billPaymentID,
 			@PathVariable String accessTokenID) {
 		
-		StopWatch timer = new StopWatch("getBillPaymentDetail");
+		StopWatch timer = new StopWatch("getBillPaymentDetail ("+accessTokenID+")");
 		timer.start();
 		
 		BillPaymentTransaction tnx = this.billPaymentService.getBillPaymentResult(billPaymentID, accessTokenID);

@@ -10,6 +10,13 @@
 		</layout>
 	</appender>
 	
+	<appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="file" value="${catalina.home}/logs/billpay.log" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{HH:mm:ss} [%t] %c{1} - %m%n" />
+        </layout>
+    </appender>
+	
 	<logger name="org.springframework.samples">
 		<level value="debug" />
 	</logger>
@@ -35,7 +42,8 @@
 	</logger>
 	
 	<logger name="th.co.truemoney.product.api">
-		<level value="debug" />
+		<level value="info" />
+		<appender-ref ref="file" />
 	</logger>
 	
 	<root>

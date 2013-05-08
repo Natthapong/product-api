@@ -75,5 +75,9 @@
 
 "profile.activities.detail.url" : "${apiHost}/api/v1/profile/activities/%@/detail/%@?",
 
-"account.profile.url" : "${apiHost}/api/v1/profile/%@?"
+"account.profile.url" : "${apiHost}/api/v1/profile/%@?",
+
+"favorite.list.url" : "${apiHost}/api/v1/favorite/%@?",
+
+"favorite.add.url" : "${apiHost}/api/v1/favorite/add/%@?"
 }

@@ -5,6 +5,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -52,7 +53,8 @@ public class TestBillPaymentController extends BaseTestController {
                         )
                 ).thenReturn(testBillInfo);
 
-                this.verifySuccess(this.doGET(getBarcodeDetailURL));
+                this.verifySuccess(this.doGET(getBarcodeDetailURL))
+                .andExpect(jsonPath("$..isFavoritable").doesNotExist());
         }
 
         @Test
@@ -180,6 +182,7 @@ public class TestBillPaymentController extends BaseTestController {
 
                 Bill billInfo = new Bill();
                 billInfo.setServiceFee(sFee);
+                billInfo.setFavoritable(true);
 
                 BillPaymentDraft bill = new BillPaymentDraft();
                 bill.setBillInfo(billInfo);
@@ -201,7 +204,9 @@ public class TestBillPaymentController extends BaseTestController {
                 		)
                 ).thenReturn(new BigDecimal(100.00));
                 
-                this.verifySuccess(this.doGET(getBillPaymentDetailURL)).andDo(print());
+                this.verifySuccess(this.doGET(getBillPaymentDetailURL))
+                .andExpect(jsonPath("$..isFavoritable").value("true"))
+                .andDo(print());
         }
 
         @Test
@@ -232,6 +237,8 @@ public class TestBillPaymentController extends BaseTestController {
                 billInfo.setRef2("010520120200015601");
 
                 billInfo.setAmount(new BigDecimal("10000"));
+                
+                billInfo.setFavoritable(false);
 
                 ServiceFeeInfo serviceFee = new ServiceFeeInfo();
                 serviceFee.setFeeRate(new BigDecimal("1000"));

@@ -223,6 +223,8 @@ public class BillPaymentController extends BaseController {
 
 		BigDecimal currentBalance = this.profileService.getEwalletBalance(accessTokenID);
 		data.put("currentEwalletBalance", currentBalance);
+		
+		data.put("isFavoritable", String.valueOf(billInfo.isFavoritable()));
 
 		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
 		

@@ -8,8 +8,10 @@ import java.util.Map;
 
 import net.minidev.json.JSONObject;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,20 +35,25 @@ import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 public class BillPaymentController extends BaseController {
 
 	@Autowired
-	public BillPaymentService billPaymentService;
+	BillPaymentService billPaymentService;
 
 	@Autowired
 	TmnProfileService profileService;
 
 	@Autowired
 	MessageManager messageManager;
+	
+	Logger logger = Logger.getLogger(BillPaymentController.class);
 
 	@RequestMapping(value = "/barcode/{barcode}/{accessTokenID}", method = RequestMethod.GET)
 	public @ResponseBody
 	ProductResponse getBillInformation(
 			@PathVariable String barcode,
 			@PathVariable String accessTokenID) {
-
+		
+		StopWatch timer = new StopWatch("getBillInformation");
+		timer.start();
+		
 		Bill billPaymentInfo = billPaymentService.retrieveBillInformation(barcode, accessTokenID);
 
 		Map<String, Object> data = new HashMap<String, Object>();
@@ -77,8 +84,12 @@ public class BillPaymentController extends BaseController {
 		data.put("sourceOfFundFee", prepareData(billPaymentInfo.getSourceOfFundFees()));
 		data.put("billID", billPaymentInfo.getID());
 
-		return this.responseFactory.createSuccessProductResonse(data);
-
+		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
+		
+		timer.stop();
+		logger.info(timer.shortSummary());
+		
+		return response;
 	}
 
 	@RequestMapping(value = "/create/{accessTokenID}", method = RequestMethod.POST)
@@ -86,6 +97,9 @@ public class BillPaymentController extends BaseController {
 	ProductResponse createBillPayment(
 			@PathVariable String accessTokenID,
 			@RequestBody Map<String, String> request) {
+		
+		StopWatch timer = new StopWatch("createBillPayment");
+		timer.start();
 
 		String billID = (String)request.get("billID");
 		BigDecimal amount = new BigDecimal(request.get("amount").replace(",", ""));
@@ -103,16 +117,24 @@ public class BillPaymentController extends BaseController {
 		data.put("mobileNumber", otp.getMobileNumber());
 		data.put("billID", bill.getID());
 		data.put("totalAmount", totalAmount);
+
+		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
 		
-		return this.responseFactory.createSuccessProductResonse(data);
-	}
+		timer.stop();
+		logger.info(timer.shortSummary());
+		
+		return response;
+		}
 
 	@RequestMapping(value = "/{billID}/confirm/{accessTokenID}", method = RequestMethod.PUT)
 	public @ResponseBody
 	ProductResponse confirmBillPayment(@PathVariable String billID,
 			@PathVariable String accessTokenID,
 			@RequestBody Map<String, String> request) {
-
+		
+		StopWatch timer = new StopWatch("confirmBillPayment");
+		timer.start();
+		
 		OTP otp = new OTP();
 		otp.setOtpString(request.get("otpString"));
 		otp.setReferenceCode(request.get("otpRefCode"));
@@ -123,30 +145,46 @@ public class BillPaymentController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("billPaymentStatus", sts.getStatus());
 		data.put("billPaymentID", billID); //billPaymentID has the same value as billID
-
-		return this.responseFactory.createSuccessProductResonse(data);
-	}
+		
+		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
+		
+		timer.stop();
+		logger.info(timer.shortSummary());
+		
+		return response;
+		}
 
 	@RequestMapping(value = "/{billPaymentID}/status/{accessTokenID}", method = RequestMethod.GET)
 	public @ResponseBody
 	ProductResponse getBillPaymentStatus(
 			@PathVariable String billPaymentID,
 			@PathVariable String accessTokenID) {
-
+		
+		StopWatch timer = new StopWatch("getBillPaymentStatus");
+		timer.start();
+		
 		BillPaymentTransaction.Status sts = this.billPaymentService.getBillPaymentStatus(billPaymentID, accessTokenID);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("billPaymentStatus", sts.getStatus());
-
-		return this.responseFactory.createSuccessProductResonse(data);
-	}
+		
+		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
+		
+		timer.stop();
+		logger.info(timer.shortSummary());
+		
+		return response;
+		}
 
 	@RequestMapping(value = "/{billPaymentID}/details/{accessTokenID}", method = RequestMethod.GET)
 	public @ResponseBody
 	ProductResponse getBillPaymentDetail(
 			@PathVariable String billPaymentID,
 			@PathVariable String accessTokenID) {
-
+		
+		StopWatch timer = new StopWatch("getBillPaymentDetail");
+		timer.start();
+		
 		BillPaymentTransaction tnx = this.billPaymentService.getBillPaymentResult(billPaymentID, accessTokenID);
 
 		BillPaymentConfirmationInfo confirmedInfo = tnx.getConfirmationInfo();
@@ -186,7 +224,12 @@ public class BillPaymentController extends BaseController {
 		BigDecimal currentBalance = this.profileService.getEwalletBalance(accessTokenID);
 		data.put("currentEwalletBalance", currentBalance);
 
-		return this.responseFactory.createSuccessProductResonse(data);
+		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
+		
+		timer.stop();
+		logger.info(timer.shortSummary());
+		
+		return response;
 	}
 	
 	private List<JSONObject> prepareData(SourceOfFund[] sourceOfFundFees) {

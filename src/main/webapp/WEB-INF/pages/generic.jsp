@@ -73,5 +73,7 @@
 
 "profile.activities.list.url" : "${apiHost}/api/v1/profile/activities/list/%@?",
 
-"profile.activities.detail.url" : "${apiHost}/api/v1/profile/activities/%@/detail/%@?"
+"profile.activities.detail.url" : "${apiHost}/api/v1/profile/activities/%@/detail/%@?",
+
+"account.profile.url" : "${apiHost}/api/v1/profile/%@?"
 }

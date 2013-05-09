@@ -1,16 +1,25 @@
 package th.co.truemoney.product.api.domain;
 
-
+import java.util.EnumMap;
 
 public class WalletActivity {
 	
+	private static EnumMap<TYPE, String> representThaiText = new EnumMap<WalletActivity.TYPE, String>(TYPE.class);
 	
-	//private EnumMap<TYPE, String> representThaiStrings = new EnumMap<WalletActivity.TYPE, String>(TYPE.class);
-	
-	//private EnumMap<TYPE, String> representEnglishStrings = new EnumMap<WalletActivity.TYPE, String>(TYPE.class);
+	private static EnumMap<TYPE, String> representEnglishText = new EnumMap<WalletActivity.TYPE, String>(TYPE.class);
 	
 	public WalletActivity() {
-		super();
+		representThaiText.put(TYPE.TOPUP_MOBILE, "เติมเงินมือถือ");
+		representThaiText.put(TYPE.ADD_MONEY, "เติมเงิน Wallet");
+		representThaiText.put(TYPE.TRANSFER, "โอนเงิน");
+		representThaiText.put(TYPE.BILLPAY, "จ่ายบิล");
+		representThaiText.put(TYPE.BONUS, "โปรโมชั่น");
+		
+		representEnglishText.put(TYPE.TOPUP_MOBILE, "Topup Mobile");
+		representEnglishText.put(TYPE.ADD_MONEY, "Add Money");
+		representEnglishText.put(TYPE.TRANSFER, "Transfer");
+		representEnglishText.put(TYPE.BILLPAY, "Bill Payment");
+		representEnglishText.put(TYPE.BONUS, "Promotion");
 	}
 
 	public static enum TYPE {
@@ -30,5 +39,21 @@ public class WalletActivity {
 			return TYPE.BONUS;
 		}
 		throw new IllegalArgumentException("No Enum specified for this string");
+	}
+	
+	public static String getEnglishText(TYPE type) {
+		return representEnglishText.get(type);
+	}
+	
+	public static String getEnglishText(String type) {
+		return getEnglishText(getEnum(type));
+	}
+	
+	public static String getThaiText(TYPE type) {
+		return representThaiText.get(type);
+	}
+	
+	public static String getThaiText(String type) {
+		return getThaiText(getEnum(type));
 	}
 }

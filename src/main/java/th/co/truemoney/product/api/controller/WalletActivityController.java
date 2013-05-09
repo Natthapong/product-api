@@ -51,8 +51,8 @@ public class WalletActivityController extends BaseController {
 			ActivityViewItem item = new ActivityViewItem();
 			item.setReportID(String.valueOf(act.getReportID()));
 			item.setLogoURL(onlineResourceManager.getActivityTypeLogoURL(act.getType()));
-			item.setText1Th(mapMessageType(act.getType(), act.getAction()));
-			item.setText1En(mapMessageType(act.getType(), act.getAction()));
+			item.setText1Th(WalletActivity.getThaiText(act.getType()));
+			item.setText1En(WalletActivity.getThaiText(act.getType()));
 			if (act.getTransactionDate() != null) {
 				item.setText2Th(Utils.formatDate(act.getTransactionDate()));
 				item.setText2En(Utils.formatDate(act.getTransactionDate()));
@@ -141,29 +141,7 @@ public class WalletActivityController extends BaseController {
 		}
 		return bankName;
 	 }
-
-	 private String mapMessageType(String type, String action) {
-		String result = "";
-
-		if (ActivityType.TOPUP_MOBILE.equals(type)) {
-			result = ActivityType.TOPUP_MOBILE_TH;
-		} else if (ActivityType.BILLPAY.equals(type)) {
-			result = ActivityType.BILLPAY_TH;
-		} else if (ActivityType.BONUS.equals(type)) {
-			result = ActivityType.BONUS_TH;
-		} else if (ActivityType.ADD_MONEY.equals(type)) {
-			result = ActivityType.ADD_MONEY_TH;
-		} else if (ActivityType.TRANSFER.equals(type)) {
-			if (ActivityType.TRANSFER_DEBTOR.equals(action)) {
-				result = ActivityType.TRANSFER_DEBTOR_TH;
-			} else if (ActivityType.TRANSFER_CREDITOR.equals(action)) {
-				result = ActivityType.TRANSFER_CREDITOR_TH;
-			}
-		}
-
-		return result;
-	}
-
+	
 	private String mapMessageAction(String action) {
 		String result = "";
 

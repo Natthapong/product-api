@@ -3,8 +3,9 @@ package th.co.truemoney.product.api.handler;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TopupMobileActivityDetailViewHandler extends GeneralActivityDetailViewHandler {
-	
+public class BillPayActivityDetailViewHandler extends
+		GeneralActivityDetailViewHandler {
+
 	@Override
 	public Map<String, String> buildSection1() {
 		Map<String, String> section1 = new HashMap<String, String>();

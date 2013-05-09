@@ -1,14 +1,13 @@
 package th.co.truemoney.product.api.domain;
 
-import java.util.EnumMap;
 
 
 public class WalletActivity {
 	
 	
-	private EnumMap<TYPE, String> representThaiStrings = new EnumMap<WalletActivity.TYPE, String>(TYPE.class);
+	//private EnumMap<TYPE, String> representThaiStrings = new EnumMap<WalletActivity.TYPE, String>(TYPE.class);
 	
-	private EnumMap<TYPE, String> representEnglishStrings = new EnumMap<WalletActivity.TYPE, String>(TYPE.class);
+	//private EnumMap<TYPE, String> representEnglishStrings = new EnumMap<WalletActivity.TYPE, String>(TYPE.class);
 	
 	public WalletActivity() {
 		super();

@@ -1,7 +1,6 @@
 package th.co.truemoney.product.api.controller;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +19,11 @@ import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.domain.WalletActivity;
 import th.co.truemoney.product.api.domain.WalletActivity.TYPE;
 import th.co.truemoney.product.api.handler.ActivityDetailViewHandler;
+import th.co.truemoney.product.api.handler.AddMoneyActivityDetailViewHandler;
+import th.co.truemoney.product.api.handler.BillPayActivityDetailViewHandler;
+import th.co.truemoney.product.api.handler.BonusActivityDetailViewHandler;
 import th.co.truemoney.product.api.handler.TopupMobileActivityDetailViewHandler;
+import th.co.truemoney.product.api.handler.TransferActivityDetailViewHandler;
 import th.co.truemoney.product.api.manager.OnlineResourceManager;
 import th.co.truemoney.product.api.util.Utils;
 import th.co.truemoney.serviceinventory.ewallet.ActivityService;
@@ -100,8 +103,8 @@ public class WalletActivityController extends BaseController {
 		handler.handle(activity);
 		
 		Map<String, Object> data = new HashMap<String, Object>();
-		//data.put("section1", handler.buildSection1());
-		data.put("section1", buildSection1(activity));
+		data.put("section1", handler.buildSection1());
+		//data.put("section1", buildSection1(activity));
 		data.put("section2", buildSection2(activity));
 		data.put("section3", buildSection3(activity));
 		data.put("section4", buildSection4(activity));
@@ -114,11 +117,19 @@ public class WalletActivityController extends BaseController {
 		switch (t) {
 			case TOPUP_MOBILE:
 				return new TopupMobileActivityDetailViewHandler();
+			case ADD_MONEY:
+				return new AddMoneyActivityDetailViewHandler();
+			case TRANSFER:
+				return new TransferActivityDetailViewHandler();
+			case BILLPAY:
+				return new BillPayActivityDetailViewHandler();
+			case BONUS:
+				return new BonusActivityDetailViewHandler();
 			default:
-				return null; //TODO
+				throw new IllegalArgumentException("No support handler for '" + type + "' activity type");
 		}
 	}
-	
+	/*
 	 private Map<String, String> buildSection1(ActivityDetail detail) {
 		 String type = detail.getType();
 		 Map<String, String> section1 = new HashMap<String, String>();
@@ -147,7 +158,7 @@ public class WalletActivityController extends BaseController {
 		 }
 		 return section1;
 	 }
-	 
+	 */
 	 private Map<String, Object> buildSection2(ActivityDetail detail) {
 		 Map<String, Object> section2 = new HashMap<String, Object>();
 		 Map<String, Object> column1 = new HashMap<String, Object>();

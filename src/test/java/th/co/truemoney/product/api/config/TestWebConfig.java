@@ -10,6 +10,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import th.co.truemoney.product.api.manager.MessageManager;
+import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.ewallet.ActivityService;
 import th.co.truemoney.serviceinventory.ewallet.DirectDebitSourceOfFundService;
@@ -23,11 +24,11 @@ import th.co.truemoney.serviceinventory.transfer.P2PTransferService;
 @EnableWebMvc
 @Configuration
 @ComponentScan({
-	"th.co.truemoney.product.api.controller", 
-	"th.co.truemoney.product.api.manager", 
+	"th.co.truemoney.product.api.controller",
+	"th.co.truemoney.product.api.manager",
 	"th.co.truemoney.product.api.util"})
 public class TestWebConfig {
-	
+
 	@Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
@@ -58,31 +59,35 @@ public class TestWebConfig {
 	public P2PTransferService p2pTransferService() {
 		return Mockito.mock(P2PTransferService.class);
 	}
-	
+
 	@Bean BillPaymentService billPaymentService() {
 		return Mockito.mock(BillPaymentService.class);
 	}
-	
+
 	@Bean TopUpMobileService topUpMobileService() {
 		return Mockito.mock(TopUpMobileService.class);
 	}
-	
+
 	@Bean ActivityService activityService() {
 		return Mockito.mock(ActivityService.class);
 	}
-	
+
 	@Bean FavoriteService favoriteService(){
 		return Mockito.mock(FavoriteService.class);
+	}
+
+	@Bean TransactionAuthenService transactionAuthenService() {
+		return Mockito.mock(TransactionAuthenService.class);
 	}
 
 	@Bean @Qualifier("apiHost")
 	public String apiHost() {
 		return "http://localhost:8080";
 	}
-	
+
 	@Bean
 	public ClientCredential appLogin() {
 		return new ClientCredential("f7cb0d495ea6d989", "MOBILE_IPHONE", "IPHONE+1", "iPhone", "iPhone");
 	}
-	
+
 }

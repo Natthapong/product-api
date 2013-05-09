@@ -3,7 +3,6 @@ package th.co.truemoney.product.api.controller;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
-
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -12,13 +11,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
+import org.mockito.Mockito;
 
-import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
-import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
-import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentConfirmationInfo;
+import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
+import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
 import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
+import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
@@ -74,11 +74,11 @@ public class TestBillPaymentController extends BaseTestController {
         		Bill billInfo = new Bill();
         		billInfo.setAmount(BigDecimal.TEN);
         		billInfo.setServiceFee(new ServiceFeeInfo("THB", BigDecimal.ONE));
-        		
+
         		BillPaymentDraft bill = new BillPaymentDraft();
         		bill.setAmount(BigDecimal.TEN);
                 bill.setBillInfo(billInfo);
-                
+
                 when(
                         billPaymentServiceMock.verifyPaymentAbility(
                                 anyString(),
@@ -88,7 +88,7 @@ public class TestBillPaymentController extends BaseTestController {
                 ).thenReturn(bill);
 
                 when(
-                        billPaymentServiceMock.sendOTP(
+                        transactionAuthenServiceMock.requestOTP(
                                 anyString(),
                                 anyString()
                         )
@@ -127,7 +127,7 @@ public class TestBillPaymentController extends BaseTestController {
         @Test
         public void confirmBillPaymentSuccess() throws Exception {
                 when(
-                        billPaymentServiceMock.confirmBill(
+                		transactionAuthenServiceMock.verifyOTP(
                                 anyString(),
                                 any(OTP.class),
                                 anyString()
@@ -135,12 +135,14 @@ public class TestBillPaymentController extends BaseTestController {
                 ).thenReturn(BillPaymentDraft.Status.CREATED);
 
                 this.verifySuccess(this.doPUT(confirmBillPaymentURL, new HashMap<String, Object>()));
+
+                Mockito.verify(billPaymentServiceMock).performPayment(anyString(), anyString());
         }
 
         @Test
         public void confirmBillPaymentFail() throws Exception {
                 when(
-                        billPaymentServiceMock.confirmBill(
+                		transactionAuthenServiceMock.verifyOTP(
                                 anyString(),
                                 any(OTP.class),
                                 anyString()
@@ -148,6 +150,8 @@ public class TestBillPaymentController extends BaseTestController {
                 ).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
 
                 this.verifyFailed(this.doPUT(confirmBillPaymentURL, new HashMap<String, Object>()));
+
+                Mockito.verify(billPaymentServiceMock, Mockito.never()).performPayment(anyString(), anyString());
         }
 
         @Test
@@ -182,7 +186,6 @@ public class TestBillPaymentController extends BaseTestController {
 
                 Bill billInfo = new Bill();
                 billInfo.setServiceFee(sFee);
-                billInfo.setFavoritable(true);
 
                 BillPaymentDraft bill = new BillPaymentDraft();
                 bill.setBillInfo(billInfo);
@@ -203,7 +206,7 @@ public class TestBillPaymentController extends BaseTestController {
                 				anyString()
                 		)
                 ).thenReturn(new BigDecimal(100.00));
-                
+
                 this.verifySuccess(this.doGET(getBillPaymentDetailURL))
                 .andExpect(jsonPath("$..isFavoritable").value("true"))
                 .andDo(print());
@@ -217,7 +220,7 @@ public class TestBillPaymentController extends BaseTestController {
                                 anyString()
                         )
                 ).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
-                
+
                 this.verifyFailed(this.doGET(getBillPaymentDetailURL));
         }
 
@@ -237,7 +240,7 @@ public class TestBillPaymentController extends BaseTestController {
                 billInfo.setRef2("010520120200015601");
 
                 billInfo.setAmount(new BigDecimal("10000"));
-                
+
                 billInfo.setFavoritable(false);
 
                 ServiceFeeInfo serviceFee = new ServiceFeeInfo();

@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import th.co.truemoney.product.api.config.TestWebConfig;
+import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.ewallet.ActivityService;
 import th.co.truemoney.serviceinventory.ewallet.DirectDebitSourceOfFundService;
@@ -60,12 +61,15 @@ public abstract class BaseTestController {
 
 	@Autowired
 	protected TopUpMobileService topUpMobileServiceMock;
-	
+
 	@Autowired
 	protected ActivityService activityServiceMock;
-	
+
 	@Autowired
 	protected FavoriteService favoriteServiceMock;
+
+	@Autowired
+	protected TransactionAuthenService transactionAuthenServiceMock;
 
 	@Before
 	public void setup() {
@@ -79,6 +83,7 @@ public abstract class BaseTestController {
 		this.topUpMobileServiceMock = wac.getBean(TopUpMobileService.class);
 		this.activityServiceMock = wac.getBean(ActivityService.class);
 		this.favoriteServiceMock = wac.getBean(FavoriteService.class);
+		this.transactionAuthenServiceMock = wac.getBean(TransactionAuthenService.class);
 	}
 
 	@After

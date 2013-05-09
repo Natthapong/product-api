@@ -1,9 +1,5 @@
 package th.co.truemoney.product.api.controller;
 
-import static org.junit.Assert.assertEquals;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.text.ParseException;
@@ -12,13 +8,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.serviceinventory.ewallet.domain.Activity;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
@@ -27,10 +21,10 @@ public class TestMobileWalletActivityController extends BaseTestController {
 	private static final String fakeAccessToken = "1111111111";
 	private static final String getActivityListURL = String.format(
 			"/profile/activities/list/%s", fakeAccessToken);
-	
+
 	@Autowired
 	WalletActivityController controller;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		controller = new WalletActivityController();
@@ -49,7 +43,7 @@ public class TestMobileWalletActivityController extends BaseTestController {
 		this.verifyFailed(this.doGET(getActivityListURL));
 	}
 
-	
+
 	private List<Activity> createActivityStub(String type, String action) throws ParseException{
 		List<Activity> actList = new ArrayList<Activity>();
 		Activity act = new Activity();
@@ -59,9 +53,9 @@ public class TestMobileWalletActivityController extends BaseTestController {
 		act.setTransactionDate(date);
 		act.setType(type);
 		act.setAction(action);
-		
+
 		actList.add(act);
 		return actList;
 	}
-	
+
 }

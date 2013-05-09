@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.manager.MessageManager;
 import th.co.truemoney.product.api.util.Utils;
+import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
@@ -35,14 +36,17 @@ import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 public class BillPaymentController extends BaseController {
 
 	@Autowired
-	BillPaymentService billPaymentService;
+    BillPaymentService billPaymentService;
+
+	@Autowired
+	TransactionAuthenService authService;
 
 	@Autowired
 	TmnProfileService profileService;
 
 	@Autowired
 	MessageManager messageManager;
-	
+
 	Logger logger = Logger.getLogger(BillPaymentController.class);
 
 	@RequestMapping(value = "/barcode/{barcode}/{accessTokenID}", method = RequestMethod.GET)
@@ -50,10 +54,10 @@ public class BillPaymentController extends BaseController {
 	ProductResponse getBillInformation(
 			@PathVariable String barcode,
 			@PathVariable String accessTokenID) {
-		
+
 		StopWatch timer = new StopWatch("getBillInformation ("+accessTokenID+")");
 		timer.start();
-		
+
 		Bill billPaymentInfo = billPaymentService.retrieveBillInformation(barcode, accessTokenID);
 
 		Map<String, Object> data = new HashMap<String, Object>();
@@ -78,17 +82,17 @@ public class BillPaymentController extends BaseController {
 
 		data.put("minAmount", billPaymentInfo.getMinAmount());
 		data.put("maxAmount", billPaymentInfo.getMaxAmount());
-		
+
 		data.put("serviceFeeType", billPaymentInfo.getServiceFee().getFeeRateType());
 		data.put("serviceFee", billPaymentInfo.getServiceFee().getFeeRate());
 		data.put("sourceOfFundFee", prepareData(billPaymentInfo.getSourceOfFundFees()));
 		data.put("billID", billPaymentInfo.getID());
 
 		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
-		
+
 		timer.stop();
 		logger.info(timer.shortSummary());
-		
+
 		return response;
 	}
 
@@ -97,7 +101,7 @@ public class BillPaymentController extends BaseController {
 	ProductResponse createBillPayment(
 			@PathVariable String accessTokenID,
 			@RequestBody Map<String, String> request) {
-		
+
 		StopWatch timer = new StopWatch("createBillPayment ("+accessTokenID+")");
 		timer.start();
 
@@ -110,7 +114,7 @@ public class BillPaymentController extends BaseController {
 		BigDecimal totalFee = Utils.calculateTotalFee(bill.getAmount(), billInfo.getServiceFee(), billInfo.getSourceOfFundFees());
 		BigDecimal totalAmount = bill.getAmount().add(totalFee);
 
-		OTP otp = this.billPaymentService.sendOTP(bill.getID(), accessTokenID);
+		OTP otp = this.authService.requestOTP(bill.getID(), accessTokenID);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("otpRefCode", otp.getReferenceCode());
@@ -119,10 +123,10 @@ public class BillPaymentController extends BaseController {
 		data.put("totalAmount", totalAmount);
 
 		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
-		
+
 		timer.stop();
 		logger.info(timer.shortSummary());
-		
+
 		return response;
 		}
 
@@ -131,26 +135,27 @@ public class BillPaymentController extends BaseController {
 	ProductResponse confirmBillPayment(@PathVariable String billID,
 			@PathVariable String accessTokenID,
 			@RequestBody Map<String, String> request) {
-		
+
 		StopWatch timer = new StopWatch("confirmBillPayment ("+accessTokenID+")");
 		timer.start();
-		
+
 		OTP otp = new OTP();
 		otp.setOtpString(request.get("otpString"));
 		otp.setReferenceCode(request.get("otpRefCode"));
 		otp.setMobileNumber(request.get("mobileNumber"));
 
-		BillPaymentDraft.Status sts = billPaymentService.confirmBill(billID, otp, accessTokenID);
+		BillPaymentDraft.Status sts = authService.verifyOTP(billID, otp, accessTokenID);
+		billPaymentService.performPayment(billID, accessTokenID);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("billPaymentStatus", sts.getStatus());
 		data.put("billPaymentID", billID); //billPaymentID has the same value as billID
-		
+
 		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
-		
+
 		timer.stop();
 		logger.info(timer.shortSummary());
-		
+
 		return response;
 		}
 
@@ -159,20 +164,20 @@ public class BillPaymentController extends BaseController {
 	ProductResponse getBillPaymentStatus(
 			@PathVariable String billPaymentID,
 			@PathVariable String accessTokenID) {
-		
+
 		StopWatch timer = new StopWatch("getBillPaymentStatus ("+accessTokenID+")");
 		timer.start();
-		
+
 		BillPaymentTransaction.Status sts = this.billPaymentService.getBillPaymentStatus(billPaymentID, accessTokenID);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("billPaymentStatus", sts.getStatus());
-		
+
 		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
-		
+
 		timer.stop();
 		logger.info(timer.shortSummary());
-		
+
 		return response;
 		}
 
@@ -181,20 +186,20 @@ public class BillPaymentController extends BaseController {
 	ProductResponse getBillPaymentDetail(
 			@PathVariable String billPaymentID,
 			@PathVariable String accessTokenID) {
-		
+
 		StopWatch timer = new StopWatch("getBillPaymentDetail ("+accessTokenID+")");
 		timer.start();
-		
+
 		BillPaymentTransaction tnx = this.billPaymentService.getBillPaymentResult(billPaymentID, accessTokenID);
 
 		BillPaymentConfirmationInfo confirmedInfo = tnx.getConfirmationInfo();
 
 		Bill billInfo = tnx.getDraftTransaction().getBillInfo();
-		
+
 		BigDecimal amount = tnx.getDraftTransaction().getAmount();
 		BigDecimal totalFee = Utils.calculateTotalFee(amount, billInfo.getServiceFee(), billInfo.getSourceOfFundFees());
 		BigDecimal totalAmount = amount.add(totalFee);
-		
+
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("target", billInfo.getTarget());
 		data.put("logoURL", billInfo.getLogoURL());
@@ -211,7 +216,7 @@ public class BillPaymentController extends BaseController {
 
 		data.put("amount", amount);
 		data.put("totalFee", totalFee);
-		
+
 		data.put("totalAmount", totalAmount);
 		data.put("sourceOfFund", "eWallet"); //TODO Hard code!!!
 
@@ -223,17 +228,17 @@ public class BillPaymentController extends BaseController {
 
 		BigDecimal currentBalance = this.profileService.getEwalletBalance(accessTokenID);
 		data.put("currentEwalletBalance", currentBalance);
-		
+
 		data.put("isFavoritable", String.valueOf(billInfo.isFavoritable()));
 
 		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
-		
+
 		timer.stop();
 		logger.info(timer.shortSummary());
-		
+
 		return response;
 	}
-	
+
 	private List<JSONObject> prepareData(SourceOfFund[] sourceOfFundFees) {
 		List<JSONObject> realData = new ArrayList<JSONObject>();
 

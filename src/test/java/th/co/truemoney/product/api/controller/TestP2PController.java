@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.ewallet.domain.Transaction;
@@ -94,7 +95,7 @@ public class TestP2PController extends BaseTestController {
 		transferDraft.setMobileNumber("0899999999");
 		transferDraft.setOtpReferenceCode("qwer");
 
-		when(p2pTransferServiceMock.submitTransferRequest(
+		when(transactionAuthenServiceMock.requestOTP(
 				any(String.class),
 				any(String.class))
 			).thenReturn(otp);
@@ -117,7 +118,7 @@ public class TestP2PController extends BaseTestController {
 		transferDraft.setMobileNumber("0899999999");
 		transferDraft.setOtpReferenceCode("qwer");
 
-		when(p2pTransferServiceMock.submitTransferRequest(
+		when(transactionAuthenServiceMock.requestOTP(
 				any(String.class),
 				any(String.class))
 			).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
@@ -141,7 +142,7 @@ public class TestP2PController extends BaseTestController {
 		data.put("otpString", "123456");
 		data.put("otpRefCode", "qwer");
 
-		when(p2pTransferServiceMock.authorizeAndPerformTransfer(
+		when(transactionAuthenServiceMock.verifyOTP(
 					any(String.class),
 					any(OTP.class),
 					any(String.class))
@@ -149,6 +150,8 @@ public class TestP2PController extends BaseTestController {
 
 		this.verifySuccess(this.doPOST(confirmTransferURL, data)).andExpect(
 				jsonPath("$..transferStatus").exists());
+
+		Mockito.verify(p2pTransferServiceMock).performTransfer(anyString(), anyString());
 	}
 
 	@Test
@@ -158,7 +161,7 @@ public class TestP2PController extends BaseTestController {
 		data.put("otpString", "123456");
 		data.put("otpRefCode", "qwer");
 
-		when(p2pTransferServiceMock.authorizeAndPerformTransfer(
+		when(transactionAuthenServiceMock.verifyOTP(
 				any(String.class),
 				any(OTP.class),
 				any(String.class)))
@@ -169,6 +172,8 @@ public class TestP2PController extends BaseTestController {
 				.andExpect(jsonPath("$.messageEn").value(unknownMessage))
 				.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
 				.andExpect(jsonPath("$.messageTh").value(containsString("")));
+
+		Mockito.verify(p2pTransferServiceMock, Mockito.never()).performTransfer(anyString(), anyString());
 	}
 
 	@Test
@@ -206,11 +211,11 @@ public class TestP2PController extends BaseTestController {
 
 		P2PTransferTransaction transaction = new P2PTransferTransaction(transferDraft);
 		transaction.setStatus(Transaction.Status.SUCCESS);
-		
+
 		P2PTransactionConfirmationInfo confirmationInfo = new P2PTransactionConfirmationInfo();
 		confirmationInfo.setTransactionDate("01/01/13");
 		confirmationInfo.setTransactionID("1111111111");
-		
+
 		transaction.setConfirmationInfo(confirmationInfo);
 		//set requestbody for doGET
 		when(p2pTransferServiceMock.getTransactionResult(

@@ -23,6 +23,7 @@ import th.co.truemoney.product.api.domain.TopupDirectDebitRequest;
 import th.co.truemoney.product.api.domain.TopupOrderConfirmRequest;
 import th.co.truemoney.product.api.domain.TopupQuotableRequest;
 import th.co.truemoney.product.api.manager.OnlineResourceManager;
+import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.ewallet.DirectDebitSourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.TopUpService;
@@ -39,14 +40,17 @@ public class DirectDebitController extends BaseController {
 	DirectDebitSourceOfFundService sourceOfFundService;
 
 	@Autowired
+	TransactionAuthenService authService;
+
+	@Autowired
 	TopUpService topupService;
 
 	@Autowired
 	TmnProfileService profileService;
-	
+
 	@Autowired
 	OnlineResourceManager onlineResourceManager;
-	
+
 	@RequestMapping(value = "/add-money/ewallet/banks/{username}/{accessToken}", method = RequestMethod.GET)
 	@ResponseBody
 	public ProductResponse getUserDirectDebitSources(
@@ -124,7 +128,7 @@ public class DirectDebitController extends BaseController {
 			@RequestBody TopupQuotableRequest request,
 			@PathVariable String accessToken) {
 
-		OTP otp = this.topupService.submitTopUpRequest(request.getQuoteID(),
+		OTP otp = this.authService.requestOTP(request.getQuoteID(),
 				accessToken);
 		TopUpQuote quote = this.topupService.getTopUpQuoteDetails(
 				request.getQuoteID(), accessToken);
@@ -153,8 +157,9 @@ public class DirectDebitController extends BaseController {
 		otp.setOtpString(request.getOtpString());
 		otp.setMobileNumber(request.getMobileNumber());
 
-		TopUpQuote.Status quoteStatus = this.topupService.authorizeAndPerformTopUp(
-				request.getQuoteID(), otp, accessToken);
+		TopUpQuote.Status quoteStatus = this.authService.verifyOTP(request.getQuoteID(), otp, accessToken);
+		this.topupService.performTopUp(request.getQuoteID(), accessToken);
+
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("topupStatus", quoteStatus.getStatus());
 

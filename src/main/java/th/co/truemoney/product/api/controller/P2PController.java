@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.util.ValidateUtil;
+import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
@@ -29,6 +30,9 @@ public class P2PController extends BaseController {
 
 	@Autowired
 	private P2PTransferService p2pTransferService;
+
+	@Autowired
+	private TransactionAuthenService authService;
 
 	@Autowired
 	private TmnProfileService profileService;
@@ -61,7 +65,7 @@ public class P2PController extends BaseController {
 	@ResponseBody
 	public ProductResponse verifyTransfer(@PathVariable String draftTransactionID, @PathVariable String accessToken)throws ServiceInventoryException {
 
-		OTP otp = p2pTransferService.submitTransferRequest(draftTransactionID, accessToken);
+		OTP otp = authService.requestOTP(draftTransactionID, accessToken);
 		P2PTransferDraft transaction = p2pTransferService.getTransferDraftDetails(draftTransactionID, accessToken);
 
 		Map<String, Object> data = new HashMap<String, Object>();
@@ -81,7 +85,8 @@ public class P2PController extends BaseController {
 		otp.setOtpString(request.get("otpString"));
 		otp.setReferenceCode(request.get("otpRefCode"));
 		otp.setMobileNumber(request.get("mobileNumber"));
-		P2PTransferDraft.Status transaction = p2pTransferService.authorizeAndPerformTransfer(transactionID, otp, accessToken);
+		P2PTransferDraft.Status transaction = authService.verifyOTP(transactionID, otp, accessToken);
+		p2pTransferService.performTransfer(transactionID, accessToken);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("transferStatus", transaction.getStatus());

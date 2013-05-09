@@ -14,6 +14,7 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import th.co.truemoney.product.api.domain.ProductResponse;
@@ -85,7 +86,7 @@ public class TestTopupMobileController extends BaseTestController {
 	public void failToVerifyTopUpWhenAmountNotDivideByTen() {
 		assertValidateAmountFormatFail("501");
 	}
-	
+
 	@Test
 	public void failToVerifyTopUpWhenAmountVeryBig() {
 		assertValidateAmountFormatFail("50154654645645645645654654898989898989898989898989898978978089080");
@@ -159,7 +160,7 @@ public class TestTopupMobileController extends BaseTestController {
 		otp.setOtpString("123456");
 		otp.setReferenceCode("qwer");
 
-		when(topUpMobileServiceMock.sendOTP(anyString(), anyString()))
+		when(transactionAuthenServiceMock.requestOTP(anyString(), anyString()))
 				.thenReturn(otp);
 
 		when(
@@ -174,7 +175,7 @@ public class TestTopupMobileController extends BaseTestController {
 	@Test
 	public void sendOTPFail() throws Exception {
 
-		when(topUpMobileServiceMock.sendOTP(anyString(), anyString()))
+		when(transactionAuthenServiceMock.requestOTP(anyString(), anyString()))
 				.thenThrow(
 						new ServiceInventoryException(400, "", "",
 								"TMN-PRODUCT"));
@@ -191,7 +192,7 @@ public class TestTopupMobileController extends BaseTestController {
 	public void integrationTestConfirmOTPSuccess() throws Exception {
 
 		when(
-				topUpMobileServiceMock.confirmTopUpMobile(anyString(),
+				transactionAuthenServiceMock.verifyOTP(anyString(),
 						any(OTP.class), anyString())).thenReturn(
 				TopUpMobileDraft.Status.OTP_CONFIRMED);
 
@@ -203,13 +204,14 @@ public class TestTopupMobileController extends BaseTestController {
 				.andExpect(jsonPath("data").exists())
 				.andExpect(jsonPath("$..status").value("CONFIRMED"));
 
+		Mockito.verify(topUpMobileServiceMock).performTopUpMobile(anyString(), anyString());
 	}
 
 	@Test
 	public void confirmOTPFail() throws Exception {
 
 		when(
-				topUpMobileServiceMock.confirmTopUpMobile(anyString(),
+				transactionAuthenServiceMock.verifyOTP(anyString(),
 						any(OTP.class), anyString())).thenThrow(
 				new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
 
@@ -218,6 +220,8 @@ public class TestTopupMobileController extends BaseTestController {
 		reqBody.put("refCode", "QWE");
 
 		this.verifyFailed(this.doPUT(confirmOTPURL, reqBody));
+
+		Mockito.verify(topUpMobileServiceMock, Mockito.never()).performTopUpMobile(anyString(), anyString());
 
 	}
 
@@ -311,7 +315,7 @@ public class TestTopupMobileController extends BaseTestController {
 		topUpMobileDraft.setOtpReferenceCode("QWE");
 		topUpMobileDraft.setSelectedSourceOfFundType("EW");
 		topUpMobileDraft.setTransactionID("1111111111");
-		
+
 		TopUpMobile topUpMobile = new TopUpMobile();
 		topUpMobile.setAmount(new BigDecimal(500));
 		topUpMobile.setID("1111111111");
@@ -320,21 +324,21 @@ public class TestTopupMobileController extends BaseTestController {
 		topUpMobile.setMinAmount(new BigDecimal(10));
 		topUpMobile.setMobileNumber("0894445266");
 		topUpMobile.setRemainBalance(new BigDecimal(1000));
-		
+
 		ServiceFeeInfo serviceFee = new ServiceFeeInfo();
 		serviceFee.setFeeRate(new BigDecimal(10));
 		serviceFee.setFeeRateType("THB");
-		
+
 		topUpMobile.setServiceFee(serviceFee);
-		
+
 		SourceOfFund[] sof = new SourceOfFund[1];
 		sof[0]= new SourceOfFund();
 		sof[0].setFeeRate(new BigDecimal(0));
 		sof[0].setFeeRateType("THB");
 		sof[0].setSourceType("EW");
-		
+
 		topUpMobile.setSourceOfFundFees(sof);
-		
+
 		topUpMobileDraft.setTopUpMobileInfo(topUpMobile);
 
 		transaction.setDraftTransaction(topUpMobileDraft);

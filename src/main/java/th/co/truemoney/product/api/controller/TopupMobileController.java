@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.exception.ProductAPIException;
 import th.co.truemoney.product.api.util.ValidateUtil;
+import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
@@ -30,6 +31,9 @@ public class TopupMobileController extends BaseController {
 
 	@Autowired
 	private TopUpMobileService topUpMobileService;
+
+	@Autowired
+	private TransactionAuthenService authService;
 
 	@Autowired
 	TmnProfileService profileService;
@@ -85,7 +89,7 @@ public class TopupMobileController extends BaseController {
 	@ResponseBody
 	public ProductResponse sendOTP(@PathVariable String accessTokenID,
 			@PathVariable String draftTransactionID) {
-		OTP otp = topUpMobileService.sendOTP(draftTransactionID, accessTokenID);
+		OTP otp = authService.requestOTP(draftTransactionID, accessTokenID);
 
 		TopUpMobileDraft draft = topUpMobileService.getTopUpMobileDraftDetail(
 				draftTransactionID, accessTokenID);
@@ -116,8 +120,9 @@ public class TopupMobileController extends BaseController {
 		otp.setOtpString(request.get("otpString"));
 		otp.setReferenceCode(request.get("refCode"));
 
-		TopUpMobileDraft.Status status = topUpMobileService.confirmTopUpMobile(
-				draftTransactionID, otp, accessTokenID);
+		TopUpMobileDraft.Status status = authService.verifyOTP(draftTransactionID, otp, accessTokenID);
+
+		topUpMobileService.performTopUpMobile(draftTransactionID, accessTokenID);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("status", status.getStatus());

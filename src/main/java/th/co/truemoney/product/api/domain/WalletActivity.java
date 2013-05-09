@@ -12,7 +12,7 @@ public class WalletActivity {
 	
 	private static Map<String, String> actionList = new HashMap<String, String>();
 	
-	public WalletActivity() {
+	static {
 		representThaiText.put(TYPE.TOPUP_MOBILE, "เติมเงินมือถือ");
 		representThaiText.put(TYPE.ADD_MONEY, "เติมเงิน Wallet");
 		representThaiText.put(TYPE.TRANSFER, "โอนเงิน");
@@ -83,6 +83,6 @@ public class WalletActivity {
 	}
 	
 	public static String getActionInEnglish(String action) {
-		return getActionInThai(action); //TODO action description in English add later
+		return action; //TODO action description in English add later
 	}
 }

@@ -3,7 +3,6 @@ package th.co.truemoney.product.api.handler;
 import java.util.HashMap;
 import java.util.Map;
 
-import th.co.truemoney.product.api.domain.ActivityType;
 import th.co.truemoney.product.api.manager.OnlineResourceManager;
 import th.co.truemoney.product.api.util.Utils;
 import th.co.truemoney.serviceinventory.ewallet.domain.ActivityDetail;
@@ -75,20 +74,5 @@ public abstract class GeneralActivityDetailViewHandler implements ActivityDetail
 		section4.put("column2", column42);
 		return section4;
 	}
-
-	protected String mapBankName(String ref1) {
-		String bankName = "";
-		if ("KTB".equals(ref1)) {
-			bankName = ActivityType.KTB_ADDMONEY;
-		} else if ("SCB".equals(ref1)) {
-			bankName = ActivityType.SCB_ADDMONEY;
-		} else if ("BBL".equals(ref1)) {
-			bankName = ActivityType.BBL_ADDMONEY;
-		} else if ("BAY".equals(ref1)) {
-			bankName = ActivityType.BAY_ADDMONEY;
-		}
-		return bankName;
-	 }
-
 
 }

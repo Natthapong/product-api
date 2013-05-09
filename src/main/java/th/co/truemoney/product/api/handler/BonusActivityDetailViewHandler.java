@@ -3,8 +3,6 @@ package th.co.truemoney.product.api.handler;
 import java.util.HashMap;
 import java.util.Map;
 
-import th.co.truemoney.product.api.domain.ActivityType;
-
 public class BonusActivityDetailViewHandler extends
 		GeneralActivityDetailViewHandler {
 
@@ -23,7 +21,7 @@ public class BonusActivityDetailViewHandler extends
 		 Map<String, String> cell1 = new HashMap<String, String>();
 		 cell1.put("titleTh", "ทำรายการ");
 		 cell1.put("titleEn", "activity");
-		 cell1.put("value", ActivityType.DIRECT_DEBIT_ADDMONEY);
+		 cell1.put("value", "เติมเงินด้วยบัญชีธนาคาร");
 		 column1.put("cell1", cell1);
 		 section2.put("column1", column1);
 		 return section2;

@@ -8,10 +8,10 @@ public class TestActivityType {
 	
 	@Test
 	public void getActivityType() {
-		assertEquals(WalletActivity.TYPE.TOPUP_MOBILE, WalletActivity.getEnum("topup_mobile"));
-		assertEquals(WalletActivity.TYPE.ADD_MONEY, WalletActivity.getEnum("add_money"));
-		assertEquals(WalletActivity.TYPE.TRANSFER, WalletActivity.getEnum("transfer"));
-		assertEquals(WalletActivity.TYPE.BILLPAY, WalletActivity.getEnum("billpay"));
-		assertEquals(WalletActivity.TYPE.BONUS, WalletActivity.getEnum("bonus"));
+		assertEquals(WalletActivity.TYPE.TOPUP_MOBILE, WalletActivity.getType("topup_mobile"));
+		assertEquals(WalletActivity.TYPE.ADD_MONEY, WalletActivity.getType("add_money"));
+		assertEquals(WalletActivity.TYPE.TRANSFER, WalletActivity.getType("transfer"));
+		assertEquals(WalletActivity.TYPE.BILLPAY, WalletActivity.getType("billpay"));
+		assertEquals(WalletActivity.TYPE.BONUS, WalletActivity.getType("bonus"));
 	}
 }

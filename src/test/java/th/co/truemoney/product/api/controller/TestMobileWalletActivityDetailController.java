@@ -13,8 +13,8 @@ import java.util.Map;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import th.co.truemoney.product.api.domain.ActivityType;
 import th.co.truemoney.product.api.domain.ProductResponse;
+import th.co.truemoney.product.api.domain.WalletActivity.TYPE;
 import th.co.truemoney.serviceinventory.ewallet.domain.ActivityDetail;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
@@ -54,7 +54,7 @@ public class TestMobileWalletActivityDetailController extends
 		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
 		
 		ActivityDetail detail = new ActivityDetail();
-		detail.setType(ActivityType.TOPUP_MOBILE);
+		detail.setType(TYPE.TOPUP_MOBILE.name());
 		detail.setAction("d.tmvhtopup");
 		detail.setRef1("0897654333");
 		detail.setAmount(new BigDecimal(23455.50));
@@ -148,7 +148,7 @@ public class TestMobileWalletActivityDetailController extends
 		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
 		
 		ActivityDetail detail = new ActivityDetail();
-		detail.setType(ActivityType.BILLPAY);
+		detail.setType(TYPE.BILLPAY.name());
 		detail.setAction("d.ti");
 		detail.setRef1("864895245");
 		detail.setRef2("923178945372901");
@@ -250,7 +250,7 @@ public class TestMobileWalletActivityDetailController extends
 		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
 		
 		ActivityDetail detail = new ActivityDetail();
-		detail.setType(ActivityType.BONUS);
+		detail.setType(TYPE.BONUS.name());
 		detail.setAction("promo_direct_debit");
 		detail.setRef1("add_money");
 		detail.setAmount(new BigDecimal(23455.50));
@@ -326,7 +326,7 @@ public class TestMobileWalletActivityDetailController extends
 		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
 		
 		ActivityDetail detail = new ActivityDetail();
-		detail.setType(ActivityType.ADD_MONEY);
+		detail.setType(TYPE.ADD_MONEY.name());
 		detail.setAction("debit");
 		detail.setRef1("KTB");
 		detail.setRef2("***7412");
@@ -420,7 +420,7 @@ public class TestMobileWalletActivityDetailController extends
 		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
 		
 		ActivityDetail detail = new ActivityDetail();
-		detail.setType(ActivityType.TRANSFER);
+		detail.setType(TYPE.TRANSFER.name());
 		detail.setAction("debtor");
 		detail.setRef1("0853828482");
 		detail.setRef2("ทวี คุณบิดา");
@@ -503,7 +503,7 @@ public class TestMobileWalletActivityDetailController extends
 		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
 		
 		ActivityDetail detail = new ActivityDetail();
-		detail.setType(ActivityType.TRANSFER);
+		detail.setType(TYPE.TRANSFER.name());
 		detail.setAction("creditor");
 		detail.setRef1("0853828482");
 		detail.setRef2("ทวี คุณบิดา");

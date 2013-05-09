@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.springframework.util.StringUtils;
 
+import th.co.truemoney.product.api.util.BankUtil;
+
 public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailViewHandler {
 
 	@Override
@@ -24,7 +26,7 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 		Map<String, String> cell2 = new HashMap<String, String>();
 	 	cell1.put("titleTh", "ธนาคาร");
 		cell1.put("titleEn", "bank name");
-		cell1.put("value", mapBankName(activity.getRef1()));
+		cell1.put("value", BankUtil.getThaiBankName(activity.getRef1()));
 		cell2.put("titleTh", "หมายเลขบัญชี");
 		cell2.put("titleEn", "account number");
 		cell2.put("value", StringUtils.hasText(activity.getRef2()) ? activity.getRef2() : "-");

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.springframework.util.StringUtils;
 
-import th.co.truemoney.product.api.domain.ActivityType;
+import th.co.truemoney.product.api.domain.WalletActivity;
 import th.co.truemoney.product.api.util.Utils;
 
 public class TransferActivityDetailViewHandler extends GeneralActivityDetailViewHandler {
@@ -13,14 +13,8 @@ public class TransferActivityDetailViewHandler extends GeneralActivityDetailView
 	@Override
 	public Map<String, String> buildSection1() {
 		Map<String, String> section1 = super.buildSection1();
-		String transferTxt = "";
-		 if (ActivityType.TRANSFER_DEBTOR.equals(activity.getAction())) {
-			 transferTxt = ActivityType.TRANSFER_TXT;
-		 } else if (ActivityType.TRANSFER_CREDITOR.equals(activity.getAction())) {
-			 transferTxt = ActivityType.RECIEVE_TXT;
-		 } 
-		 section1.put("titleTh", transferTxt);
-		 section1.put("titleEn", activity.getAction());
+		section1.put("titleTh", WalletActivity.getActionInThai(activity.getAction()));
+		section1.put("titleEn", WalletActivity.getActionInEnglish(activity.getAction()));
 		return section1;
 	}
 
@@ -30,13 +24,13 @@ public class TransferActivityDetailViewHandler extends GeneralActivityDetailView
 		Map<String, Object> column1 = new HashMap<String, Object>();
 		Map<String, String> cell1 = new HashMap<String, String>();
 		Map<String, String> cell2 = new HashMap<String, String>();
-		if (ActivityType.TRANSFER_DEBTOR.equals(activity.getAction()))
+		if ("debtor".equals(activity.getAction()))
 			cell1.put("titleTh", "หมายเลขผู้รับ");
 		else
 			cell1.put("titleTh", "หมายเลขผู้ส่ง");
 		cell1.put("titleEn", "account number");
 		cell1.put("value", Utils.formatMobileNumber(activity.getRef1()));
-		if (ActivityType.TRANSFER_DEBTOR.equals(activity.getAction()))
+		if ("debtor".equals(activity.getAction()))
 			cell2.put("titleTh", "ชื่อผู้รับ");
 		else
 			cell2.put("titleTh", "ชื่อผู้ส่ง");

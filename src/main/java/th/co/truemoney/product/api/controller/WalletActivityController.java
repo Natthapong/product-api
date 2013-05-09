@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import th.co.truemoney.product.api.domain.ActivityType;
 import th.co.truemoney.product.api.domain.ActivityViewItem;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.domain.WalletActivity;
@@ -24,6 +23,7 @@ import th.co.truemoney.product.api.handler.BonusActivityDetailViewHandler;
 import th.co.truemoney.product.api.handler.TopupMobileActivityDetailViewHandler;
 import th.co.truemoney.product.api.handler.TransferActivityDetailViewHandler;
 import th.co.truemoney.product.api.manager.OnlineResourceManager;
+import th.co.truemoney.product.api.util.BankUtil;
 import th.co.truemoney.product.api.util.Utils;
 import th.co.truemoney.serviceinventory.ewallet.ActivityService;
 import th.co.truemoney.serviceinventory.ewallet.domain.Activity;
@@ -51,33 +51,33 @@ public class WalletActivityController extends BaseController {
 			ActivityViewItem item = new ActivityViewItem();
 			item.setReportID(String.valueOf(act.getReportID()));
 			item.setLogoURL(onlineResourceManager.getActivityTypeLogoURL(act.getType()));
-			item.setText1Th(WalletActivity.getThaiText(act.getType()));
-			item.setText1En(WalletActivity.getThaiText(act.getType()));
+			item.setText1Th(WalletActivity.getTypeInThai(act.getType()));
+			item.setText1En(WalletActivity.getTypeInThai(act.getType()));
 			if (act.getTransactionDate() != null) {
 				item.setText2Th(Utils.formatDate(act.getTransactionDate()));
 				item.setText2En(Utils.formatDate(act.getTransactionDate()));
 			}
-			item.setText3Th(mapMessageAction(act.getAction()));
-			item.setText3En(mapMessageAction(act.getAction()));
+			item.setText3Th(WalletActivity.getActionInThai(act.getAction()));
+			item.setText3En(WalletActivity.getActionInEnglish(act.getAction()));
 
 			item.setText4Th(Utils.formatSignedAmount(act.getTotalAmount()));
 			item.setText4En(Utils.formatSignedAmount(act.getTotalAmount()));
-
-			if (ActivityType.TOPUP_MOBILE.equals(act.getType())
-					|| ActivityType.TRANSFER.equals(act.getType())) {
+			
+			if (TYPE.TOPUP_MOBILE == WalletActivity.getType(act.getType()) 
+					|| TYPE.TRANSFER == WalletActivity.getType(act.getType())) {
 				item.setText5Th(Utils.formatMobileNumber(act.getRef1()));
 				item.setText5En(Utils.formatMobileNumber(act.getRef1()));
-			} else if (ActivityType.ADD_MONEY.equals(act.getType())) {
+			} else if (TYPE.ADD_MONEY == WalletActivity.getType(act.getType())) {
 				if ("debit".equals(act.getAction())) {
-					item.setText5Th(mapBankName(act.getRef1()));
-					item.setText5En(mapBankName(act.getRef1()));
+					item.setText5Th(BankUtil.getThaiBankName(act.getRef1()));
+					item.setText5En(BankUtil.getEnglishBankName(act.getRef1()));
 				}else{
 					item.setText5Th(act.getRef1());
 					item.setText5En(act.getRef1());
 				}
-			} else if (ActivityType.ADD_MONEY.equals(act.getRef1())) {
-				item.setText5Th(ActivityType.DIRECT_DEBIT_ADDMONEY);
-				item.setText5En(ActivityType.DIRECT_DEBIT_ADDMONEY);
+			} else if ("add_money".equalsIgnoreCase(act.getRef1())) {
+				item.setText5Th("เติมเงินด้วยบัญชีธนาคาร");
+				item.setText5En("Direct Debit Topup");
 			} else {
 				item.setText5Th(act.getRef1());
 				item.setText5En(act.getRef1());
@@ -111,7 +111,7 @@ public class WalletActivityController extends BaseController {
 	}
 	
 	private ActivityDetailViewHandler getActivityDetailHandler(String type) {
-		TYPE t = WalletActivity.getEnum(type);
+		TYPE t = WalletActivity.getType(type);
 		switch (t) {
 			case TOPUP_MOBILE:
 				return new TopupMobileActivityDetailViewHandler();
@@ -127,7 +127,7 @@ public class WalletActivityController extends BaseController {
 				throw new IllegalArgumentException("No support handler for '" + type + "' activity type");
 		}
 	}
-
+	/*
 	private String mapBankName(String ref1) {
 		String bankName = "";
 		if ("KTB".equals(ref1)) {
@@ -141,47 +141,7 @@ public class WalletActivityController extends BaseController {
 		}
 		return bankName;
 	 }
-	
-	private String mapMessageAction(String action) {
-		String result = "";
-
-		if ("d.tmvhtopup".equals(action)) {
-			result = ActivityType.TMVH_TOPUP;
-		} else if ("d.tmvtopup".equals(action)) {
-			result = ActivityType.TRMV_TOPUP;
-		} else if ("d.tmvh".equals(action)) {
-			result = ActivityType.TMVH_BILLPAY;
-		} else if ("d.trmv".equals(action)) {
-			result = ActivityType.TRMV_BILLPAY;
-		} else if ("d.catv".equals(action)) {
-			result = ActivityType.CATV_BILLPAY;
-		} else if ("d.dstv".equals(action)) {
-			result = ActivityType.DSTV_BILLPAY;
-		} else if ("d.tr".equals(action)) {
-			result = ActivityType.TR_BILLPAY;
-		} else if ("d.ti".equals(action)) {
-			result = ActivityType.TI_BILLPAY;
-		} else if ("d.tic".equals(action)) {
-			result = ActivityType.TIC_BILLPAY;
-		} else if ("d.tlp".equals(action)) {
-			result = ActivityType.TLP_BILLPAY;
-		} else if ("d.tcg".equals(action)) {
-			result = ActivityType.TCG_BILLPAY;
-		} else if ("promo_direct_debit".equals(action)) {
-			result = ActivityType.DEBIT_ADDMONEY;
-		} else if ("debit".equals(action)) {
-			result = ActivityType.DIRECT_DEBIT;
-		} else if ("debtor".equals(action)) {
-			result = ActivityType.TRANSFER_TXT;
-		} else if ("creditor".equals(action)) {
-			result = ActivityType.RECIEVE_TXT;
-		} else if ("mmcc".equals(action)) {
-			result = ActivityType.CASHCARD;
-		}
-
-		return result;
-	}
-	
+	*/
 	public void setActivityService(ActivityService activityService) {
 		this.activityService = activityService;
 	}

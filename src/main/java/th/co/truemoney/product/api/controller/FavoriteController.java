@@ -30,7 +30,7 @@ public class FavoriteController extends BaseController{
 		
 		Favorite reqFavorite = buildFavorite(request);
 		
-		Favorite respFavorite = favoriteService.addFavorite(reqFavorite);
+		Favorite respFavorite = favoriteService.addFavorite(reqFavorite, accessTokenID);
 		
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("favoriteID", String.valueOf(respFavorite.getFavoriteID()));

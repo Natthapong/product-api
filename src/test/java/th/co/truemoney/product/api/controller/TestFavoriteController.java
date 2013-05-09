@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -24,7 +25,7 @@ public class TestFavoriteController extends BaseTestController{
 	public void addFavoriteSuccess() throws Exception {
 		Favorite favorite = createFavoriteStubbed();
 		
-		when( this.favoriteServiceMock.addFavorite(any(Favorite.class))).thenReturn(favorite);
+		when( this.favoriteServiceMock.addFavorite(any(Favorite.class), anyString())).thenReturn(favorite);
 		Map<String,String> req = new HashMap<String,String>();
 		req.put("amount", "1000");
 		req.put("ref1", "1234567890");
@@ -37,7 +38,7 @@ public class TestFavoriteController extends BaseTestController{
 	
 	@Test
 	public void addFavoriteFail() throws Exception{
-		when( this.favoriteServiceMock.addFavorite(any(Favorite.class)))
+		when( this.favoriteServiceMock.addFavorite(any(Favorite.class), anyString()))
 		.thenThrow(new ServiceInventoryException(400,"","",""));
 		
 		Map<String,String> req = new HashMap<String,String>();

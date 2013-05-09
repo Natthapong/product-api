@@ -29,11 +29,11 @@ public class TestMobileWalletActivityController extends BaseTestController {
 			"/profile/activities/list/%s", fakeAccessToken);
 	
 	@Autowired
-	MobileWalletActivityController controller;
+	WalletActivityController controller;
 	
 	@Before
 	public void setUp() throws Exception {
-		controller = new MobileWalletActivityController();
+		controller = new WalletActivityController();
 	}
 
 	@Test

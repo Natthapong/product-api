@@ -1,6 +1,7 @@
 package th.co.truemoney.product.api.controller;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import th.co.truemoney.product.api.domain.ActivityType;
 import th.co.truemoney.product.api.domain.ActivityViewItem;
 import th.co.truemoney.product.api.domain.ProductResponse;
+import th.co.truemoney.product.api.domain.WalletActivity;
+import th.co.truemoney.product.api.domain.WalletActivity.TYPE;
+import th.co.truemoney.product.api.handler.ActivityDetailViewHandler;
+import th.co.truemoney.product.api.handler.TopupMobileActivityDetailViewHandler;
 import th.co.truemoney.product.api.manager.OnlineResourceManager;
 import th.co.truemoney.product.api.util.Utils;
 import th.co.truemoney.serviceinventory.ewallet.ActivityService;
@@ -24,7 +29,7 @@ import th.co.truemoney.serviceinventory.ewallet.domain.ActivityDetail;
 
 @RequestMapping(value = "/profile/activities")
 @Controller
-public class MobileWalletActivityController extends BaseController {
+public class WalletActivityController extends BaseController {
 
 	@Autowired
 	ActivityService activityService;
@@ -84,21 +89,36 @@ public class MobileWalletActivityController extends BaseController {
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
-
-	 @RequestMapping(value = "/{reportID}/detail/{accessTokenID}", method =RequestMethod.GET)
-	 @ResponseBody
-	 public ProductResponse getActivityDetails(@PathVariable String reportID, @PathVariable String accessTokenID) {
-		 ActivityDetail detail = activityService.getActivityDetail(new Long(reportID), accessTokenID);
-		 Map<String, Object> data = new HashMap<String, Object>();
+	
+	@RequestMapping(value = "/{reportID}/detail/{accessTokenID}", method =RequestMethod.GET)
+	@ResponseBody
+	public ProductResponse getActivityDetails(@PathVariable String reportID, @PathVariable String accessTokenID) {
+		
+		ActivityDetail activity = activityService.getActivityDetail(new Long(reportID), accessTokenID);
+		
+		ActivityDetailViewHandler handler = getActivityDetailHandler(activity.getType());
+		handler.handle(activity);
+		
+		Map<String, Object> data = new HashMap<String, Object>();
+		//data.put("section1", handler.buildSection1());
+		data.put("section1", buildSection1(activity));
+		data.put("section2", buildSection2(activity));
+		data.put("section3", buildSection3(activity));
+		data.put("section4", buildSection4(activity));
 		 
-		 data.put("section1", buildSection1(detail));
-		 data.put("section2", buildSection2(detail));
-		 data.put("section3", buildSection3(detail));
-		 data.put("section4", buildSection4(detail));
-		 
-		 return this.responseFactory.createSuccessProductResonse(data);
-	 }
-	 
+		return this.responseFactory.createSuccessProductResonse(data);
+	}
+	
+	private ActivityDetailViewHandler getActivityDetailHandler(String type) {
+		TYPE t = WalletActivity.getEnum(type);
+		switch (t) {
+			case TOPUP_MOBILE:
+				return new TopupMobileActivityDetailViewHandler();
+			default:
+				return null; //TODO
+		}
+	}
+	
 	 private Map<String, String> buildSection1(ActivityDetail detail) {
 		 String type = detail.getType();
 		 Map<String, String> section1 = new HashMap<String, String>();

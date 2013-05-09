@@ -22,7 +22,7 @@ public class TestMobileWalletActivityDetailController extends
 		BaseTestController {
 
 	@Autowired
-	MobileWalletActivityController controller;
+	WalletActivityController controller;
 	
 	private static final String fakeAccessTokenID = "111111";
 	
@@ -32,9 +32,11 @@ public class TestMobileWalletActivityDetailController extends
 
 	@Test
 	public void getActivityDetailSuccess() throws Exception {
+		ActivityDetail activity = new ActivityDetail();
+		activity.setType("topup_mobile");
 		when(
 				this.activityServiceMock.getActivityDetail(1L,fakeAccessTokenID)
-		).thenReturn(new ActivityDetail());
+		).thenReturn(activity);
 		
 		this.verifySuccess(this.doGET(getActivityDetailURL("1")));
 	}

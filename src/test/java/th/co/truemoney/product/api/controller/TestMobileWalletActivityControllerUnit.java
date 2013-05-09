@@ -32,7 +32,7 @@ public class TestMobileWalletActivityControllerUnit {
 	
 	protected ActivityService activityServiceMock;
 	
-	MobileWalletActivityController controller;
+	WalletActivityController controller;
 	
 	ProductResponseFactory responseFactory;
 	
@@ -76,7 +76,7 @@ public class TestMobileWalletActivityControllerUnit {
 		this.activityServiceMock = mock(ActivityService.class);
 		this.responseFactory = new ProductResponseFactory();
 		this.responseFactory.setMessageManager(mock(MessageManager.class));
-		this.controller = new MobileWalletActivityController();
+		this.controller = new WalletActivityController();
 		this.controller.setActivityService(this.activityServiceMock);
 		this.controller.setResponseFactory(responseFactory);
 		this.controller.setOnlineResourceManager(new OnlineResourceManager());

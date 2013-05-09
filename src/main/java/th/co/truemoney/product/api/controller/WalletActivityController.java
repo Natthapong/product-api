@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -104,10 +103,9 @@ public class WalletActivityController extends BaseController {
 		
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("section1", handler.buildSection1());
-		//data.put("section1", buildSection1(activity));
-		data.put("section2", buildSection2(activity));
-		data.put("section3", buildSection3(activity));
-		data.put("section4", buildSection4(activity));
+		data.put("section2", handler.buildSection2());
+		data.put("section3", handler.buildSection3());
+		data.put("section4", handler.buildSection4());
 		 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
@@ -129,134 +127,8 @@ public class WalletActivityController extends BaseController {
 				throw new IllegalArgumentException("No support handler for '" + type + "' activity type");
 		}
 	}
-	/*
-	 private Map<String, String> buildSection1(ActivityDetail detail) {
-		 String type = detail.getType();
-		 Map<String, String> section1 = new HashMap<String, String>();
-		 
-		 if (ActivityType.TOPUP_MOBILE.equals(type) 
-				 || ActivityType.BILLPAY.equals(type)) {
-			 section1.put("logoURL", onlineResourceManager.getActivityActionLogoURL(detail.getAction()));
-			 section1.put("titleTh", "");
-			 section1.put("titleEn", "");
-		 } else if (ActivityType.ADD_MONEY.equals(type)) {
-			 section1.put("logoURL", onlineResourceManager.getBankLogoURL(detail.getRef1()));
-			 section1.put("titleTh", "บัญชีธนาคาร");
-			 section1.put("titleEn", "bank account");
-		 } else if (ActivityType.TRANSFER.equals(type)) {
-			 String transferTxt = "";
-			 if (ActivityType.TRANSFER_DEBTOR.equals(detail.getAction())) {
-				 transferTxt = ActivityType.TRANSFER_TXT;
-			 } else if (ActivityType.TRANSFER_CREDITOR.equals(detail.getAction())) {
-				 transferTxt = ActivityType.RECIEVE_TXT;
-			 } 
-			 section1.put("titleTh", transferTxt);
-			 section1.put("titleEn", detail.getAction());
-		 } else {
-			 section1.put("titleTh", "คืนค่าธรรมเนียม");
-			 section1.put("titleEn", "kickback");
-		 }
-		 return section1;
-	 }
-	 */
-	 private Map<String, Object> buildSection2(ActivityDetail detail) {
-		 Map<String, Object> section2 = new HashMap<String, Object>();
-		 Map<String, Object> column1 = new HashMap<String, Object>();
-		 Map<String, String> cell1 = new HashMap<String, String>();
-		 Map<String, String> cell2 = new HashMap<String, String>();
-		 if (ActivityType.TOPUP_MOBILE.equals(detail.getType())) {
-			 cell1.put("titleTh", "หมายเลขโทรศัพท์");
-			 cell1.put("titleEn", "mobile number");
-			 cell1.put("value", Utils.formatMobileNumber(detail.getRef1()));
-		 } else if (ActivityType.BONUS.equals(detail.getType())) {
-			 cell1.put("titleTh", "ทำรายการ");
-			 cell1.put("titleEn", "activity");
-			 cell1.put("value", ActivityType.DIRECT_DEBIT_ADDMONEY);
-		 } else if (ActivityType.ADD_MONEY.equals(detail.getType())) {
-			 cell1.put("titleTh", "ธนาคาร");
-			 cell1.put("titleEn", "bank name");
-			 cell1.put("value", mapBankName(detail.getRef1()));
-			 cell2.put("titleTh", "หมายเลขบัญชี");
-			 cell2.put("titleEn", "account number");
-			 cell2.put("value", StringUtils.hasText(detail.getRef2()) ? detail.getRef2() : "-");
-			 column1.put("cell2", cell2);
-		 } else if (ActivityType.TRANSFER.equals(detail.getType())) {
-			 if (ActivityType.TRANSFER_DEBTOR.equals(detail.getAction()))
-				 cell1.put("titleTh", "หมายเลขผู้รับ");
-			 else
-				 cell1.put("titleTh", "หมายเลขผู้ส่ง");
-			 cell1.put("titleEn", "account number");
-			 cell1.put("value", Utils.formatMobileNumber(detail.getRef1()));
-			 if (ActivityType.TRANSFER_DEBTOR.equals(detail.getAction()))
-				 cell2.put("titleTh", "ชื่อผู้รับ");
-			 else
-				 cell2.put("titleTh", "ชื่อผู้ส่ง");
-			 cell2.put("titleEn", "account owner");
-			 cell2.put("value", StringUtils.hasText(detail.getRef2()) ? detail.getRef2() : "-");
-			 column1.put("cell2", cell2);
-		 } else {
-			 cell1.put("titleTh", "รหัสลูกค้า");
-			 cell1.put("titleEn", "customer ID");
-			 cell1.put("value", detail.getRef1());
-			 cell2.put("titleTh", "เลขที่ใบแจ้งค่าบริการ");
-			 cell2.put("titleEn", "invoice number");
-			 cell2.put("value", StringUtils.hasText(detail.getRef2()) ? detail.getRef2() : "-");
-			 column1.put("cell2", cell2);
-		 }
-		 column1.put("cell1", cell1);
-		 section2.put("column1", column1);
-		 return section2;
-	 }
-	 
-	 public Map<String, Object> buildSection3(ActivityDetail detail) {
-		 Map<String, Object> section3 = new HashMap<String, Object>();
-		 Map<String, Object> column31 = new HashMap<String, Object>();
-		 Map<String, Object> column32 = new HashMap<String, Object>();
-		 Map<String, String> cell311 = new HashMap<String, String>();
-		 Map<String, String> cell312 = new HashMap<String, String>();
-		 Map<String, String> cell321 = new HashMap<String, String>();
-		 cell311.put("titleTh", "จำนวนเงิน");
-		 cell311.put("titleEn", "amount");
-		 cell311.put("value", Utils.formatAbsoluteAmount(detail.getAmount()));
-		 column31.put("cell1", cell311);
-		 section3.put("column1", column31);
-		 
-		 if (!(ActivityType.BONUS.equals(detail.getType()) || ActivityType.TRANSFER.equals(detail.getType()))) {
-			 cell312.put("titleTh", "รวมเงินที่ชำระ");
-			 cell312.put("titleEn", "total amount");
-			 cell312.put("value", Utils.formatAbsoluteAmount(detail.getTotalAmount()));
-			 if (!ActivityType.ADD_MONEY.equals(detail.getType())) {
-				 cell321.put("titleTh", "ค่าธรรมเนียม");
-				 cell321.put("titleEn", "total fee");
-				 cell321.put("value", Utils.formatAbsoluteAmount(detail.getTotalFeeAmount()));
-				 column32.put("cell1", cell321);
-			 }
-			 column31.put("cell2", cell312);
-			 section3.put("column2", column32);
-		 }
-		 return section3;
-	 }
-	 
-	 public Map<String, Object> buildSection4(ActivityDetail detail) {
-		 Map<String, Object> section4 = new HashMap<String, Object>();
-		 Map<String, Object> column41 = new HashMap<String, Object>();
-		 Map<String, Object> column42 = new HashMap<String, Object>();
-		 Map<String, String> cell411 = new HashMap<String, String>();
-		 Map<String, String> cell421 = new HashMap<String, String>();
-		 cell411.put("titleTh", "วันที่-เวลา");
-		 cell411.put("titleEn", "transaction date");
-		 cell411.put("value", Utils.formatDateTime(detail.getTransactionDate()));	 
-		 cell421.put("titleTh", "เลขที่อ้างอิง");
-		 cell421.put("titleEn", "transaction ID");
-		 cell421.put("value", detail.getTransactionID());
-		 column41.put("cell1", cell411);
-		 column42.put("cell1", cell421);
-		 section4.put("column1", column41);
-		 section4.put("column2", column42);
-		 return section4;
-	 }
-	 
-	 private String mapBankName(String ref1) {
+
+	private String mapBankName(String ref1) {
 		String bankName = "";
 		if ("KTB".equals(ref1)) {
 			bankName = ActivityType.KTB_ADDMONEY;

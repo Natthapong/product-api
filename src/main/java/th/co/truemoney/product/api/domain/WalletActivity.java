@@ -32,11 +32,12 @@ public class WalletActivity {
 		actionList.put("d.dstv", "True Visions");
 		actionList.put("d.tmvh", "TrueMove H");
 		actionList.put("d.trmv", "TrueMove");
-		actionList.put("d.tlp", "Truelifeplus");
+		actionList.put("d.tlp", "TrueLife Plus");
 		actionList.put("d.tr", "โทรศัพท์บ้านทรู");
 		actionList.put("d.ti", "True Online");
 		actionList.put("d.tic", "True 006");
 		actionList.put("d.tcg", "บิลกลุ่มทรู");
+		actionList.put("d.mea", "การไฟฟ้านครหลวง");
 		actionList.put("mmcc", "บัตรเงินสด");
 		actionList.put("debtor", "ส่งเงิน");
 		actionList.put("debit", "บัญชีธนาคาร");

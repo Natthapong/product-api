@@ -186,10 +186,12 @@ public class TestBillPaymentController extends BaseTestController {
 
                 Bill billInfo = new Bill();
                 billInfo.setServiceFee(sFee);
+                billInfo.setFavoritable(true);
 
                 BillPaymentDraft bill = new BillPaymentDraft();
                 bill.setBillInfo(billInfo);
                 bill.setAmount(new BigDecimal("100.00"));
+
 
                 BillPaymentTransaction bpay = new BillPaymentTransaction();
                 bpay.setConfirmationInfo(new BillPaymentConfirmationInfo());

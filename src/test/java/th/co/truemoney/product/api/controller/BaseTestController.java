@@ -96,6 +96,7 @@ public abstract class BaseTestController {
 		reset(this.topUpMobileServiceMock);
 		reset(this.activityServiceMock);
 		reset(this.favoriteServiceMock);
+   	    reset(this.transactionAuthenServiceMock);
 	}
 
 	ObjectMapper mapper = new ObjectMapper();

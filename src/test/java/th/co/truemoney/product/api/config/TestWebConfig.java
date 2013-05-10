@@ -59,15 +59,15 @@ public class TestWebConfig {
 	public P2PTransferService p2pTransferService() {
 		return Mockito.mock(P2PTransferService.class);
 	}
-
+	
 	@Bean BillPaymentService billPaymentService() {
 		return Mockito.mock(BillPaymentService.class);
 	}
-
+	
 	@Bean TopUpMobileService topUpMobileService() {
 		return Mockito.mock(TopUpMobileService.class);
 	}
-
+	
 	@Bean ActivityService activityService() {
 		return Mockito.mock(ActivityService.class);
 	}
@@ -84,10 +84,10 @@ public class TestWebConfig {
 	public String apiHost() {
 		return "http://localhost:8080";
 	}
-
+	
 	@Bean
 	public ClientCredential appLogin() {
 		return new ClientCredential("f7cb0d495ea6d989", "MOBILE_IPHONE", "IPHONE+1", "iPhone", "iPhone");
 	}
-
+	
 }

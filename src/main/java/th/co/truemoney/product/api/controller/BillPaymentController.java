@@ -164,13 +164,21 @@ public class BillPaymentController extends BaseController {
 	ProductResponse getBillPaymentStatus(
 			@PathVariable String billPaymentID,
 			@PathVariable String accessTokenID) {
+		
+		StopWatch timer = new StopWatch("getBillPaymentStatus ("+accessTokenID+")");
+		timer.start();
 
 		BillPaymentTransaction.Status sts = this.billPaymentService.getBillPaymentStatus(billPaymentID, accessTokenID);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("billPaymentStatus", sts.getStatus());
 
-		return this.responseFactory.createSuccessProductResonse(data);
+		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
+
+		timer.stop();
+		logger.info(timer.shortSummary());
+
+		return response;
 	}
 
 	@RequestMapping(value = "/{billPaymentID}/details/{accessTokenID}", method = RequestMethod.GET)

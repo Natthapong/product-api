@@ -1,5 +1,9 @@
 package th.co.truemoney.product.api.domain;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class FavoriteItem {
 	
 	private String text1Th;
@@ -10,6 +14,9 @@ public class FavoriteItem {
 	private String serviceCode;
 	private String ref1;
 	
+	private int weight;
+	private Date date;
+	
 	public FavoriteItem() {
 		super();
 	}
@@ -17,9 +24,9 @@ public class FavoriteItem {
 	public FavoriteItem(String text1Th, String text2Th, String logoURL, String serviceCode, String ref1) {
 		super();
 		this.text1Th = text1Th;
-		this.text1En = text1En;
+		this.text1En = text1Th;
 		this.text2Th = text2Th;
-		this.text2En = text2En;
+		this.text2En = text2Th;
 		this.logoURL = logoURL;
 		this.serviceCode = serviceCode;
 		this.ref1 = ref1;
@@ -80,6 +87,23 @@ public class FavoriteItem {
 	public void setRef1(String ref1) {
 		this.ref1 = ref1;
 	}
-
 	
+	@JsonIgnore
+	public int getWeight() {
+		return weight;
+	}
+
+	public void setWeight(int weight) {
+		this.weight = weight;
+	}
+	
+	@JsonIgnore
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
 }

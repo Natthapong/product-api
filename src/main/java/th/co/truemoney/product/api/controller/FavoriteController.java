@@ -103,7 +103,7 @@ public class FavoriteController extends BaseController {
 		}
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
-
+	
 	public void setFavoriteService(FavoriteService favoriteService) {
 		this.favoriteService = favoriteService;
 	}

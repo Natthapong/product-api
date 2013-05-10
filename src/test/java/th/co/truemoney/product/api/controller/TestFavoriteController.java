@@ -1,13 +1,16 @@
 package th.co.truemoney.product.api.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import org.junit.Test;
@@ -21,6 +24,7 @@ public class TestFavoriteController extends BaseTestController{
 	private static final String fakeAccessToken = "1111111111";
 	
 	private static final String addFavoriteURL = String.format("/favorite/add/%s",fakeAccessToken);
+	private static final String getFavoriteListURL = String.format("/favorite/%s",fakeAccessToken);
 
 	@Test
 	public void addFavoriteSuccess() throws Exception {
@@ -62,15 +66,30 @@ public class TestFavoriteController extends BaseTestController{
 		favorite.setAmount(new BigDecimal(1000));
 		favorite.setFavoriteID(new Long("1111"));
 		favorite.setRef1("1234567890");
-		favorite.setServiceCode("tmvh");
+		favorite.setServiceCode("d.tmvh");
 		favorite.setServiceType("billpay");
 		
 		return favorite;
 	}
 	
 	@Test
-	public void getFavoriteList(){
+	public void getFavoriteListSucces() throws Exception{
+		List<Favorite> favList = new ArrayList<Favorite>();
+		favList.add(createFavoriteStubbed());
 		
+		when( this.favoriteServiceMock.getFavorites(fakeAccessToken)).thenReturn(favList);
+		
+		this.verifySuccess(this.doGET(getFavoriteListURL))
+		.andExpect(jsonPath("$..weight").doesNotExist())
+		.andExpect(jsonPath("$..date").doesNotExist());
+	}
+	
+	@Test 
+	public void getFavoriteListFail() throws Exception{
+		when( this.favoriteServiceMock.getFavorites(fakeAccessToken))
+		.thenThrow(new ServiceInventoryException(400, "", "", ""));
+		
+		this.verifyFailed(this.doGET(getFavoriteListURL));
 	}
 
 }

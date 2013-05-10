@@ -1,8 +1,11 @@
 package th.co.truemoney.product.api.controller;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +39,8 @@ public class TestFavoriteControllerUnit {
 	
 	private static final String fakeAccessToken = "1111111111";
 	
+	SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm");
+	
 	@Before
 	public void setup() {
 		this.favoriteController = new FavoriteController();
@@ -64,11 +69,11 @@ public class TestFavoriteControllerUnit {
 	}
 	
 	@Test
-	public void getFavoriteList(){
+	public void getFavoriteList() throws ParseException{
 		List<Favorite> favList = new ArrayList<Favorite>();
-		Favorite fav1 = createFavorite("d.tmvh", "billpay", new BigDecimal(100), "89417250");
-		Favorite fav2 = createFavorite("d.tlp", "billpay", new BigDecimal(200), "39402840489");
-		Favorite fav3 = createFavorite("d.mea", "billpay", new BigDecimal(300), "1234567890123");
+		Favorite fav1 = createFavorite("d.tmvh", "billpay", new BigDecimal(100), "89417250", df.parse("10/05/13 10:10"));
+		Favorite fav2 = createFavorite("d.tlp", "billpay", new BigDecimal(200), "39402840489", df.parse("10/05/13 10:10"));
+		Favorite fav3 = createFavorite("d.mea", "billpay", new BigDecimal(300), "1234567890123", df.parse("10/05/13 10:10"));
 		favList.add(fav1);
 		favList.add(fav2);
 		favList.add(fav3);
@@ -113,12 +118,64 @@ public class TestFavoriteControllerUnit {
 		assertEquals("d.mea", item2.getServiceCode());
 	}
 	
-	private Favorite createFavorite(String serviceCode, String serviceType, BigDecimal amount, String ref1) {
+	@Test
+	public void sortOrderSuccess() throws ParseException{
+		List<Favorite> favList = new ArrayList<Favorite>();
+		Favorite fav1_1 = createFavorite("d.tmvh", "billpay", new BigDecimal(100), "89417250", df.parse("01/05/13 10:10"));
+		Favorite fav1_2 = createFavorite("d.tmvh", "billpay", new BigDecimal(100), "89417250", df.parse("02/05/13 10:10"));
+		Favorite fav1_3 = createFavorite("d.tmvh", "billpay", new BigDecimal(100), "89417250", df.parse("03/05/13 10:10"));
+		Favorite fav2 = createFavorite("d.tlp", "billpay", new BigDecimal(200), "39402840489", df.parse("04/05/13 10:10"));
+		Favorite fav3 = createFavorite("d.mea", "billpay", new BigDecimal(300), "1234567890123", df.parse("05/05/13 10:10"));
+		Favorite fav4 = createFavorite("d.trmv", "billpay", new BigDecimal(100), "89417250", df.parse("06/05/13 10:10"));
+		
+		favList.add(fav1_2);
+		favList.add(fav1_1);
+		favList.add(fav2);
+		favList.add(fav4);
+		favList.add(fav1_3);
+		favList.add(fav3);
+		
+		when(favoriteServiceMock.getFavorites(fakeAccessToken)).thenReturn(favList);
+		
+		ProductResponse resp = favoriteController.getFavoriteList(fakeAccessToken);
+		Map<String, Object> data = resp.getData();
+		assertTrue(data.containsKey("groups"));
+		
+		List<FavoriteGroup> favoriteGroupList = (List<FavoriteGroup>) data.get("groups");
+		assertNotNull(favoriteGroupList.size());
+		
+		FavoriteGroup group0 = favoriteGroupList.get(0);
+		assertNotNull(group0.getItems());
+		
+		List<FavoriteItem> items = group0.getItems();
+		assertEquals(6, items.size());
+		
+		FavoriteItem item0 = items.get(0);
+		assertEquals("01/05/13 10:10", df.format(item0.getDate()));
+		
+		FavoriteItem item1 = items.get(0);
+		assertEquals("02/05/13 10:10", df.format(item1.getDate()));
+		
+		FavoriteItem item2 = items.get(0);
+		assertEquals("03/05/13 10:10", df.format(item2.getDate()));
+		
+		FavoriteItem item3 = items.get(0);
+		assertEquals("04/05/13 10:10", df.format(item3.getDate()));
+		
+		FavoriteItem item4 = items.get(0);
+		assertEquals("05/05/13 10:10", df.format(item4.getDate()));
+		
+		FavoriteItem item5 = items.get(0);
+		assertEquals("06/05/13 10:10", df.format(item5.getDate()));
+	}
+	
+	private Favorite createFavorite(String serviceCode, String serviceType, BigDecimal amount, String ref1, Date date) {
 		Favorite fav = new Favorite();
 		fav.setAmount(amount);
 		fav.setRef1(ref1);
 		fav.setServiceCode(serviceCode);
 		fav.setServiceType(serviceType);
+		fav.setDate(date);
 		return fav;
 	}
 }

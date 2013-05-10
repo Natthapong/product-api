@@ -21,7 +21,7 @@ public class FavoriteItem {
 		super();
 	}
 	
-	public FavoriteItem(String text1Th, String text2Th, String logoURL, String serviceCode, String ref1) {
+	public FavoriteItem(String text1Th, String text2Th, String logoURL, String serviceCode, String ref1, Date date) {
 		super();
 		this.text1Th = text1Th;
 		this.text1En = text1Th;
@@ -30,8 +30,9 @@ public class FavoriteItem {
 		this.logoURL = logoURL;
 		this.serviceCode = serviceCode;
 		this.ref1 = ref1;
+		this.date = date;
 	}
-
+	
 	public String getText1Th() {
 		return text1Th;
 	}

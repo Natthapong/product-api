@@ -3,6 +3,9 @@ package th.co.truemoney.product.api.controller;
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,8 +101,9 @@ public class FavoriteController extends BaseController {
 			for (Favorite favorite : favoriteList) {
 				String logo = onlineResourceManager.getActivityActionLogoURL(favorite.getServiceCode());
 				String textServiceCode = WalletActivity.getActionInThai(favorite.getServiceCode());
-				group0.addItems(new FavoriteItem( textServiceCode, favorite.getRef1(), logo, favorite.getServiceCode(), favorite.getRef1()));
+				group0.addItems(new FavoriteItem( textServiceCode, favorite.getRef1(), logo, favorite.getServiceCode(), favorite.getRef1(), favorite.getDate()));
 			}
+			order(group0.getItems());
 		}
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
@@ -112,4 +116,38 @@ public class FavoriteController extends BaseController {
 		this.onlineResourceManager = onlineResourceManager;
 	}
 	
+	private int getWeight(String serviceCode){
+		int weight = 0;
+		if("d.tmvh".equals(serviceCode)){
+			weight=10;
+		}else if("d.trmv".equals(serviceCode)){
+			weight=9;
+		}else if("d.tlp".equals(serviceCode)){
+			weight=8;
+		}else if("d.mea".equals(serviceCode)){
+			weight=7;
+		}
+		
+		return weight;
+	}
+	
+	private void order(List<FavoriteItem> itemList){
+		Collections.sort(itemList,  new Comparator() {
+
+			@Override
+			public int compare(Object o1, Object o2) {
+				int x1 = ((FavoriteItem) o1).getWeight();
+				int x2 = ((FavoriteItem) o1).getWeight();
+				
+				if(x1 - x2 != 0){
+					return x1 - x2;
+				}else{
+					Date d1 = (Date) ((FavoriteItem) o1).getDate();
+					Date d2 = (Date) ((FavoriteItem) o1).getDate();
+					return d1.compareTo(d2);
+				}
+			}
+			
+		});
+	}
 }

@@ -3,6 +3,7 @@ package th.co.truemoney.product.api.controller;
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,22 @@ public class FavoriteController extends BaseController{
 		if (!StringUtils.hasText(request.get("ref1"))) {
 			throw new InvalidParameterException("50008");
 		}
+	}
+
+	@RequestMapping(value="/favorite/{accessTokenID}", method = RequestMethod.GET)
+	@ResponseBody
+	public ProductResponse getFavoriteList(String accessTokenID) {
+		
+		List<Favorite> favoriteList = favoriteService.getFavorites(accessTokenID);
+		
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("groups", favoriteList);
+		
+		return this.responseFactory.createSuccessProductResonse(data);
+	}
+
+	public void setFavoriteService(FavoriteService favoriteService) {
+		this.favoriteService = favoriteService;
 	}
 
 }

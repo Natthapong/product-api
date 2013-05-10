@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import th.co.truemoney.serviceinventory.ewallet.domain.Favorite;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
@@ -65,6 +66,11 @@ public class TestFavoriteController extends BaseTestController{
 		favorite.setServiceType("billpay");
 		
 		return favorite;
+	}
+	
+	@Test
+	public void getFavoriteList(){
+		
 	}
 
 }

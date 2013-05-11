@@ -7,10 +7,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
+import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 
-public class Utils {
+public final class Utils {
 
     private static List<String> trueCorpBills = Arrays.asList("catv", "dstv", "tcg", "ti", "tic", "tlp", "tmvh", "tr", "trmv", "true");
 
@@ -37,15 +37,13 @@ public class Utils {
 
     private static DecimalFormat df = new DecimalFormat("##,##0.00");
 
-    private static SimpleDateFormat dtf1 = new SimpleDateFormat("dd/MM/yy");
-
-    private static SimpleDateFormat dtf2 = new SimpleDateFormat("HH:mm");
-
     public static String formatDate(Date date) {
+        SimpleDateFormat dtf1 = new SimpleDateFormat("dd/MM/yy");
         return  date != null ? dtf1.format(date) : "";
     }
 
     public static String formatDateTime(Date date) {
+        SimpleDateFormat dtf2 = new SimpleDateFormat("HH:mm");
         return (date != null) ? formatDate(date) + " " + dtf2.format(date) : "";
     }
 

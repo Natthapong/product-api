@@ -101,7 +101,8 @@ public class FavoriteController extends BaseController {
 			for (Favorite favorite : favoriteList) {
 				String logo = onlineResourceManager.getActivityActionLogoURL(favorite.getServiceCode());
 				String textServiceCode = WalletActivity.getActionInThai(favorite.getServiceCode());
-				group0.addItems(new FavoriteItem( textServiceCode, favorite.getRef1(), logo, favorite.getServiceCode(), favorite.getRef1(), favorite.getDate(), this.getWeight(favorite.getServiceCode())));
+				group0.addItems(new FavoriteItem( textServiceCode, favorite.getRef1(), logo, favorite.getServiceCode(), 
+						favorite.getRef1(), favorite.getDate(), WalletActivity.getWeightFromServiceCode(favorite.getServiceCode()) ) );
 			}
 			order(group0.getItems());
 		}
@@ -114,21 +115,6 @@ public class FavoriteController extends BaseController {
 	
 	public void setOnlineResourceManager(OnlineResourceManager onlineResourceManager) {
 		this.onlineResourceManager = onlineResourceManager;
-	}
-	
-	private int getWeight(String serviceCode){
-		int weight = 0;
-		if("d.tmvh".equals(serviceCode)){
-			weight=10;
-		}else if("d.trmv".equals(serviceCode)){
-			weight=9;
-		}else if("d.tlp".equals(serviceCode)){
-			weight=8;
-		}else if("d.mea".equals(serviceCode)){
-			weight=7;
-		}
-		
-		return weight;
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })

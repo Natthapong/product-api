@@ -58,7 +58,7 @@ public class BillPaymentController extends BaseController {
 		StopWatch timer = new StopWatch("getBillInformation ("+accessTokenID+")");
 		timer.start();
 
-		Bill billPaymentInfo = billPaymentService.retrieveBillInformation(barcode, accessTokenID);
+		Bill billPaymentInfo = billPaymentService.retrieveBillInformationWithBarcode(barcode, accessTokenID);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 

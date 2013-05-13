@@ -47,7 +47,7 @@ public class TestBillPaymentController extends BaseTestController {
         @Test
         public void getBillInformationSuccess() throws Exception {
                 when(
-                        billPaymentServiceMock.retrieveBillInformation(
+                        billPaymentServiceMock.retrieveBillInformationWithBarcode(
                                 anyString(),
                                 anyString()
                         )
@@ -60,7 +60,7 @@ public class TestBillPaymentController extends BaseTestController {
         @Test
         public void getBillInformationFail() throws Exception {
                 when(
-                        billPaymentServiceMock.retrieveBillInformation(
+                        billPaymentServiceMock.retrieveBillInformationWithBarcode(
                                 anyString(),
                                 anyString()
                         )

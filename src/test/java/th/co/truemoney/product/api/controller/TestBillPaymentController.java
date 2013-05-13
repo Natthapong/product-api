@@ -225,7 +225,7 @@ public class TestBillPaymentController extends BaseTestController {
 
                 this.verifyFailed(this.doGET(getBillPaymentDetailURL));
         }
-
+        
         private Bill createStubbedBillInfo() {
                 Bill billInfo = new Bill();
                 billInfo.setTarget("tcg");

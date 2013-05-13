@@ -98,8 +98,8 @@ public class TestFavoriteControllerUnit {
 		assertEquals(1, favoriteGroupList.size());
 		
 		FavoriteGroup group0 = favoriteGroupList.get(0);
-		assertEquals("รายการบิล", group0.getTiltleTh());
-		assertEquals("BillPay", group0.getTiltleEn());
+		assertEquals("รายการบิล", group0.getTitleTh());
+		assertEquals("BillPay", group0.getTitleEn());
 		assertEquals("billpay", group0.getType());
 		assertNotNull(group0.getItems());
 		

@@ -218,7 +218,7 @@ public class BillPaymentController extends BaseController {
 		data.put("totalFee", totalFee);
 
 		data.put("totalAmount", totalAmount);
-		data.put("sourceOfFund", "eWallet"); //TODO Hard code!!!
+		data.put("sourceOfFund", "Wallet"); //TODO Hard code!!!
 
 		data.put("transactionID", confirmedInfo.getTransactionID());
 		data.put("transactionDate", confirmedInfo.getTransactionDate());
@@ -244,7 +244,7 @@ public class BillPaymentController extends BaseController {
 
 		for (SourceOfFund billPaySourceOfFund : sourceOfFundFees) {
 			JSONObject returnData = new JSONObject();
-			//TODO warning hard code response eWallet only
+			//TODO warning hard code response Wallet only
 			if ("EW".equals(billPaySourceOfFund.getSourceType())) {
 				returnData.put("sourceType", billPaySourceOfFund.getSourceType());
 				returnData.put("sourceFee", billPaySourceOfFund.getFeeRate());

@@ -101,7 +101,7 @@ public class FavoriteController extends BaseController {
 			for (Favorite favorite : favoriteList) {
 				String logo = onlineResourceManager.getActivityActionLogoURL(favorite.getServiceCode());
 				String textServiceCode = WalletActivity.getActionInThai(favorite.getServiceCode());
-				group0.addItems(new FavoriteItem( textServiceCode, favorite.getRef1(), logo, favorite.getServiceCode(), favorite.getRef1(), favorite.getDate()));
+				group0.addItems(new FavoriteItem( textServiceCode, favorite.getRef1(), logo, favorite.getServiceCode(), favorite.getRef1(), favorite.getDate(), this.getWeight(favorite.getServiceCode())));
 			}
 			order(group0.getItems());
 		}
@@ -131,20 +131,23 @@ public class FavoriteController extends BaseController {
 		return weight;
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void order(List<FavoriteItem> itemList){
 		Collections.sort(itemList,  new Comparator() {
 
 			@Override
 			public int compare(Object o1, Object o2) {
-				int x1 = ((FavoriteItem) o1).getWeight();
-				int x2 = ((FavoriteItem) o1).getWeight();
+				FavoriteItem fi1 = (FavoriteItem) o1;
+				FavoriteItem fi2 = (FavoriteItem) o2;
+				int x1 = fi1.getWeight();
+				int x2 = fi2.getWeight();
 				
-				if(x1 - x2 != 0){
-					return x1 - x2;
+				if((x1 - x2) != 0){
+					return x2 - x1;
 				}else{
-					Date d1 = (Date) ((FavoriteItem) o1).getDate();
-					Date d2 = (Date) ((FavoriteItem) o1).getDate();
-					return d1.compareTo(d2);
+					Date d1 = (Date) fi1.getDate();
+					Date d2 = (Date) fi2.getDate();
+					return d2.compareTo(d1);
 				}
 			}
 			

@@ -134,7 +134,7 @@ public class TestFavoriteControllerUnit {
 		Favorite fav1_2 = createFavorite("d.tmvh", "billpay", new BigDecimal(100), "89417250", parseDateTime("02/05/13 10:10"));
 		Favorite fav1_3 = createFavorite("d.tmvh", "billpay", new BigDecimal(100), "89417250", parseDateTime("03/05/13 10:10"));
 		Favorite fav2 = createFavorite("d.tlp", "billpay", new BigDecimal(200), "39402840489", parseDateTime("04/05/13 10:10"));
-		Favorite fav3 = createFavorite("d.mea", "billpay", new BigDecimal(300), "1234567890123", parseDateTime("05/05/13 10:10"));
+		Favorite fav3 = createFavorite("d.tcg", "billpay", new BigDecimal(300), "1234567890123", parseDateTime("05/05/13 10:10"));
 		Favorite fav4 = createFavorite("d.trmv", "billpay", new BigDecimal(100), "89417250", parseDateTime("06/05/13 10:10"));
 		
 		favList.add(fav1_1);
@@ -175,10 +175,10 @@ public class TestFavoriteControllerUnit {
 		assertEquals(9, item3.getWeight());
 		
 		FavoriteItem item4 = items.get(4);
-		assertEquals(8, item4.getWeight());
+		assertEquals(6, item4.getWeight());
 		
 		FavoriteItem item5 = items.get(5);
-		assertEquals(7, item5.getWeight());
+		assertEquals(5, item5.getWeight());
 	}
 	
 	private Favorite createFavorite(String serviceCode, String serviceType, BigDecimal amount, String ref1, Date date) {

@@ -122,10 +122,16 @@ public class FavoriteController extends BaseController {
 			weight=10;
 		}else if("d.trmv".equals(serviceCode)){
 			weight=9;
-		}else if("d.tlp".equals(serviceCode)){
+		}else if("d.tr".equals(serviceCode)){
 			weight=8;
-		}else if("d.mea".equals(serviceCode)){
+		}else if("d.ti".equals(serviceCode)){
 			weight=7;
+		}else if("d.tlp".equals(serviceCode)){
+			weight=6;
+		}else if("d.tcg".equals(serviceCode)){
+			weight=5;
+		}else if("d.tic".equals(serviceCode)){
+			weight=4;
 		}
 		
 		return weight;

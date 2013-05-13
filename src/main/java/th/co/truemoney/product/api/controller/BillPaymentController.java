@@ -64,15 +64,15 @@ public class BillPaymentController extends BaseController {
 
 		data.put("target", billPaymentInfo.getTarget());
 		data.put("logoURL", billPaymentInfo.getLogoURL());
-		data.put("titleTH", billPaymentInfo.getTitleTH());
-		data.put("titleEN", billPaymentInfo.getTitleEN());
+		data.put("titleTh", billPaymentInfo.getTitleTH());
+		data.put("titleEn", billPaymentInfo.getTitleEN());
 
-		data.put("ref1TitleTH", billPaymentInfo.getRef1TitleTH());
-		data.put("ref1TitleEN", billPaymentInfo.getRef1TitleEN());
+		data.put("ref1TitleTh", billPaymentInfo.getRef1TitleTH());
+		data.put("ref1TitleEn", billPaymentInfo.getRef1TitleEN());
 		data.put("ref1", billPaymentInfo.getRef1());
 
-		data.put("ref2TitleTH", billPaymentInfo.getRef2TitleTH());
-		data.put("ref2TitleEN", billPaymentInfo.getRef2TitleEN());
+		data.put("ref2TitleTh", billPaymentInfo.getRef2TitleTH());
+		data.put("ref2TitleEn", billPaymentInfo.getRef2TitleEN());
 		data.put("ref2", billPaymentInfo.getRef2());
 
 		data.put("amount", billPaymentInfo.getAmount());
@@ -203,15 +203,15 @@ public class BillPaymentController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("target", billInfo.getTarget());
 		data.put("logoURL", billInfo.getLogoURL());
-		data.put("titleTH", billInfo.getTitleTH());
-		data.put("titleEN", billInfo.getTitleEN());
+		data.put("titleTh", billInfo.getTitleTH());
+		data.put("titleEn", billInfo.getTitleEN());
 
-		data.put("ref1TitleTH", billInfo.getRef1TitleTH());
-		data.put("ref1TitleEN", billInfo.getRef1TitleEN());
+		data.put("ref1TitleTh", billInfo.getRef1TitleTH());
+		data.put("ref1TitleEn", billInfo.getRef1TitleEN());
 		data.put("ref1", billInfo.getRef1());
 
-		data.put("ref2TitleTH", billInfo.getRef2TitleTH());
-		data.put("ref2TitleEN", billInfo.getRef2TitleEN());
+		data.put("ref2TitleTh", billInfo.getRef2TitleTH());
+		data.put("ref2TitleEn", billInfo.getRef2TitleEN());
 		data.put("ref2", billInfo.getRef2());
 
 		data.put("amount", amount);
@@ -223,8 +223,8 @@ public class BillPaymentController extends BaseController {
 		data.put("transactionID", confirmedInfo.getTransactionID());
 		data.put("transactionDate", confirmedInfo.getTransactionDate());
 
-		data.put("remarkEN", messageManager.getMessageEn("payment.bill.remark"));
-		data.put("remarkTH", messageManager.getMessageTh("payment.bill.remark"));
+		data.put("remarkEn", messageManager.getMessageEn("payment.bill.remark"));
+		data.put("remarkTh", messageManager.getMessageTh("payment.bill.remark"));
 
 		BigDecimal currentBalance = this.profileService.getEwalletBalance(accessTokenID);
 		data.put("currentEwalletBalance", currentBalance);

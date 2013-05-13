@@ -5,32 +5,32 @@ import java.util.List;
 
 public class FavoriteGroup {
 	
-	private String tiltleTh;
-	private String tiltleEn;
+	private String titleTh;
+	private String titleEn;
 	private String type;
 	private List<FavoriteItem> items = new ArrayList<FavoriteItem>();
 
-	public FavoriteGroup(String tiltleTh, String tiltleEn, String type) {
+	public FavoriteGroup(String titleTh, String titleEn, String type) {
 		super();
-		this.tiltleTh = tiltleTh;
-		this.tiltleEn = tiltleEn;
+		this.titleTh = titleTh;
+		this.titleEn = titleEn;
 		this.type = type;
 	}
 
-	public String getTiltleTh() {
-		return tiltleTh;
+	public String getTitleTh() {
+		return titleTh;
 	}
 
-	public void setTiltleTh(String tiltleTh) {
-		this.tiltleTh = tiltleTh;
+	public void setTitleTh(String titleTh) {
+		this.titleTh = titleTh;
 	}
 
-	public String getTiltleEn() {
-		return tiltleEn;
+	public String getTitleEn() {
+		return titleEn;
 	}
 
-	public void setTiltleEn(String tiltleEn) {
-		this.tiltleEn = tiltleEn;
+	public void setTitleEn(String titleEn) {
+		this.titleEn = titleEn;
 	}
 
 	public String getType() {

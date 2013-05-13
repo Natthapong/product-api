@@ -12,6 +12,8 @@ public class WalletActivity {
 	
 	private static Map<String, String> actionList = new HashMap<String, String>();
 	
+	private static Map<String, Integer> serviceCodeList = new HashMap<String, Integer>();
+	
 	static {
 		representThaiText.put(TYPE.TOPUP_MOBILE, "เติมเงินมือถือ");
 		representThaiText.put(TYPE.ADD_MONEY, "เติมเงิน Wallet");
@@ -42,6 +44,14 @@ public class WalletActivity {
 		actionList.put("debtor", "ส่งเงิน");
 		actionList.put("debit", "บัญชีธนาคาร");
 		actionList.put("creditor", "รับเงิน");
+		
+		serviceCodeList.put("d.tmvh", 10);
+		serviceCodeList.put("d.trmv", 9);
+		serviceCodeList.put("d.tr", 8);
+		serviceCodeList.put("d.ti", 7);
+		serviceCodeList.put("d.tlp", 6);
+		serviceCodeList.put("d.tcg", 5);
+		serviceCodeList.put("d.tic", 4);
 	}
 
 	public static enum TYPE {
@@ -85,5 +95,9 @@ public class WalletActivity {
 	
 	public static String getActionInEnglish(String action) {
 		return action; //TODO action description in English add later
+	}
+	
+	public static int getWeightFromServiceCode(String serviceCode){
+		return serviceCodeList.containsKey(serviceCode) ? serviceCodeList.get(serviceCode) : 0;
 	}
 }

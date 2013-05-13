@@ -244,6 +244,57 @@ public class BillPaymentController extends BaseController {
 
 		return response;
 	}
+	
+	@RequestMapping(value = "/favorite/verify/{accessTokenID}", method = RequestMethod.POST)
+	public @ResponseBody
+	ProductResponse verifyAndGetBillPaymentFavoriteInfo(
+			@PathVariable String accessTokenID, @RequestBody Map<String,String> request) {
+		
+		StopWatch timer = new StopWatch("verifyAndGetBillPaymentFavoriteInfo ("+accessTokenID+")");
+		timer.start();
+		
+		Bill billPaymentInfo = billPaymentService.retrieveBillInformationWithBillCode(
+				request.get("billCode"), request.get("ref1"), new BigDecimal(request.get("amount")), accessTokenID);
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("target", billPaymentInfo.getTarget());
+		data.put("logoURL", billPaymentInfo.getLogoURL());
+		
+		if(Utils.isTrueCorpBill(billPaymentInfo.getTarget())){
+			data.put("titleTh", "");
+			data.put("titleEn", "");
+		}else{
+			data.put("titleTh", billPaymentInfo.getTitleTH());
+			data.put("titleEn", billPaymentInfo.getTitleEN());
+		}
+
+		data.put("ref1TitleTh", billPaymentInfo.getRef1TitleTH());
+		data.put("ref1TitleEn", billPaymentInfo.getRef1TitleEN());
+		data.put("ref1", billPaymentInfo.getRef1());
+
+		data.put("ref2TitleTh", billPaymentInfo.getRef2TitleTH());
+		data.put("ref2TitleEn", billPaymentInfo.getRef2TitleEN());
+		data.put("ref2", billPaymentInfo.getRef2());
+
+		data.put("amount", billPaymentInfo.getAmount());
+		data.put("serviceFee", billPaymentInfo.getServiceFee());
+		data.put("partialPaymentAllow", billPaymentInfo.getPartialPayment());
+		data.put("isTrueCorpBill", Utils.isTrueCorpBill(billPaymentInfo.getTarget()));
+
+		data.put("minAmount", billPaymentInfo.getMinAmount());
+		data.put("maxAmount", billPaymentInfo.getMaxAmount());
+
+		data.put("serviceFeeType", billPaymentInfo.getServiceFee().getFeeRateType());
+		data.put("serviceFee", billPaymentInfo.getServiceFee().getFeeRate());
+		data.put("sourceOfFundFee", prepareData(billPaymentInfo.getSourceOfFundFees()));
+		data.put("billID", billPaymentInfo.getID());
+		
+		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
+
+		timer.stop();
+		logger.info(timer.shortSummary());
+
+		return response;
+	}
 
 	private List<JSONObject> prepareData(SourceOfFund[] sourceOfFundFees) {
 		List<JSONObject> realData = new ArrayList<JSONObject>();

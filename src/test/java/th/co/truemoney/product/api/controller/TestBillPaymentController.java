@@ -1,11 +1,5 @@
 package th.co.truemoney.product.api.controller;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +15,13 @@ import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 public class TestBillPaymentController extends BaseTestController {
 
@@ -41,6 +42,8 @@ public class TestBillPaymentController extends BaseTestController {
         private static final String getBillPaymentStatusURL = String.format("/bill-payment/%s/status/%s", fakeBillPaymentID, fakeAccessToken);
 
         private static final String getBillPaymentDetailURL = String.format("/bill-payment/%s/details/%s", fakeBillPaymentID, fakeAccessToken);
+        
+        private static final String getBillPaymentFavoriteInfoURL = String.format("/bill-payment/favorite/verify/%s", fakeAccessToken);
 
         Bill testBillInfo = createStubbedBillInfo();
 
@@ -53,7 +56,9 @@ public class TestBillPaymentController extends BaseTestController {
                         )
                 ).thenReturn(testBillInfo);
 
-                this.verifySuccess(this.doGET(getBarcodeDetailURL))
+                this.verifySuccess(this.doGET(getBarcodeDetailURL)).andDo(print())
+                .andExpect(jsonPath("$.data.titleTh").value(""))
+                .andExpect(jsonPath("$.data.titleEn").value(""))
                 .andExpect(jsonPath("$..isFavoritable").doesNotExist());
         }
 
@@ -226,6 +231,22 @@ public class TestBillPaymentController extends BaseTestController {
                 this.verifyFailed(this.doGET(getBillPaymentDetailURL));
         }
         
+        @Test
+        public void verifyAndGetFavoriteBillInfo() throws Exception{
+        	when( billPaymentServiceMock.retrieveBillInformationWithBillCode(
+        			anyString(), anyString(), any(BigDecimal.class), anyString()))
+        			.thenReturn(createStubbedBillInfo());
+        	
+        	Map<String, String> req = new HashMap<String, String>();
+        	req.put("billCode", "tcg");
+        	req.put("ref1", "010004552");
+        	req.put("amount", "10000");
+        	
+        	this.verifySuccess(this.doPOST(getBillPaymentFavoriteInfoURL, req))
+        	.andExpect(jsonPath("$.data").exists())
+        	.andExpect(jsonPath("$..ref1").value("010004552"));
+        }
+
         private Bill createStubbedBillInfo() {
                 Bill billInfo = new Bill();
                 billInfo.setTarget("tcg");

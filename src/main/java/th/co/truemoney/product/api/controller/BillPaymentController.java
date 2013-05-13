@@ -64,8 +64,14 @@ public class BillPaymentController extends BaseController {
 
 		data.put("target", billPaymentInfo.getTarget());
 		data.put("logoURL", billPaymentInfo.getLogoURL());
-		data.put("titleTh", billPaymentInfo.getTitleTH());
-		data.put("titleEn", billPaymentInfo.getTitleEN());
+		
+		if(Utils.isTrueCorpBill(billPaymentInfo.getTarget())){
+			data.put("titleTh", "");
+			data.put("titleEn", "");
+		}else{
+			data.put("titleTh", billPaymentInfo.getTitleTH());
+			data.put("titleEn", billPaymentInfo.getTitleEN());
+		}
 
 		data.put("ref1TitleTh", billPaymentInfo.getRef1TitleTH());
 		data.put("ref1TitleEn", billPaymentInfo.getRef1TitleEN());

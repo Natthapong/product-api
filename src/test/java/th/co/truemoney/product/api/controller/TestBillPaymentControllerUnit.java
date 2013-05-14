@@ -1,5 +1,14 @@
 package th.co.truemoney.product.api.controller;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
@@ -12,12 +21,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import redis.clients.jedis.Transaction;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.manager.MessageManager;
 import th.co.truemoney.product.api.util.ProductResponseFactory;
+import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
+
 import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
@@ -30,16 +42,26 @@ import static org.mockito.Mockito.mock;
 
 import static org.junit.Assert.*;
 
+import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
+import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
+import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
+import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
+import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
+
+
 public class TestBillPaymentControllerUnit {
 	
 	BillPaymentController billPaymentController;
 	
 	BillPaymentService billPaymentServiceMock;
 	
+	TransactionAuthenService transactionAuthenServiceMock;
+	
 	ProductResponseFactory responseFactory;
 	
 	private static final String fakeAccessTokenID = "111111";
 	
+
 	@Before
 	public void setup(){
 		this.billPaymentController = new BillPaymentController();
@@ -48,11 +70,15 @@ public class TestBillPaymentControllerUnit {
 		this.responseFactory.setMessageManager(mock(MessageManager.class));
 		this.billPaymentController.setBillPaymentService(billPaymentServiceMock);
 		this.billPaymentController.setResponseFactory(responseFactory);
+		
+		this.transactionAuthenServiceMock = mock(TransactionAuthenService.class);
+		this.billPaymentController.setAuthService(transactionAuthenServiceMock);
 	}
+
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void getFavoriteBillInfoSuccess() {
+	public void favoriteBillPayment() {
 		Map<String, String> request = new HashMap<String, String>();
 		request.put("billCode", "tcg");
 		request.put("ref1", "010004552");
@@ -177,7 +203,54 @@ public class TestBillPaymentControllerUnit {
 		assertNotNull(data);
 		
 		assertEquals("OTP_CONFIRMED", String.valueOf(data.get("billPaymentStatus")));
+	}
 		
+	@Test
+	public void confirmBillPaySkipOTPChecking() throws Exception {
+		BillPaymentDraft otpConfirmedDraft = new BillPaymentDraft(null, null, null, null, BillPaymentDraft.Status.OTP_CONFIRMED);
+		when(
+			this.billPaymentServiceMock.getBillPaymentDraftDetail(anyString(), anyString())
+		).thenReturn(otpConfirmedDraft);
+				
+		when(
+			this.billPaymentServiceMock.performPayment(anyString(), anyString())
+		).thenReturn(BillPaymentTransaction.Status.PROCESSING);
+		
+		billPaymentController.confirmBillPayment("", "", new HashMap<String, String>());
+		
+		verify(
+			this.transactionAuthenServiceMock, never()
+		).verifyOTP(anyString(), any(OTP.class), anyString());
+		
+		verify(
+			this.billPaymentServiceMock, times(1)
+		).performPayment(anyString(), anyString());
+	}
+	
+	@Test
+	public void confirmBillPayWithOTPChecking() throws Exception {
+		BillPaymentDraft otpSentDraft = new BillPaymentDraft(null, null, null, null, BillPaymentDraft.Status.OTP_SENT);
+		when(
+			this.billPaymentServiceMock.getBillPaymentDraftDetail(anyString(), anyString())
+		).thenReturn(otpSentDraft);
+				
+		when(
+			this.transactionAuthenServiceMock.verifyOTP(anyString(), any(OTP.class), anyString())
+		).thenReturn(DraftTransaction.Status.OTP_CONFIRMED);
+		
+		when(
+			this.billPaymentServiceMock.performPayment(anyString(), anyString())
+		).thenReturn(BillPaymentTransaction.Status.PROCESSING);
+		
+		billPaymentController.confirmBillPayment("", "", new HashMap<String, String>());
+		
+		verify(
+			this.transactionAuthenServiceMock, times(1)
+		).verifyOTP(anyString(), any(OTP.class), anyString());
+		
+		verify(
+			this.billPaymentServiceMock, times(1)
+		).performPayment(anyString(), anyString());
 	}
 	
 	private Bill createStubbedBillInfo() {

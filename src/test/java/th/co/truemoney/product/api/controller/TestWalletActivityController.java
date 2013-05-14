@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import th.co.truemoney.serviceinventory.ewallet.domain.Activity;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
-public class TestMobileWalletActivityController extends BaseTestController {
+public class TestWalletActivityController extends BaseTestController {
 
 	private static final String fakeAccessToken = "1111111111";
 	private static final String getActivityListURL = String.format(

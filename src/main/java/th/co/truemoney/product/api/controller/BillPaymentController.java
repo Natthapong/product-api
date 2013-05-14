@@ -29,6 +29,7 @@ import th.co.truemoney.serviceinventory.bill.domain.BillPaymentConfirmationInfo;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
+import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
 @Controller
@@ -144,13 +145,20 @@ public class BillPaymentController extends BaseController {
 
 		StopWatch timer = new StopWatch("confirmBillPayment ("+accessTokenID+")");
 		timer.start();
+		
+		BillPaymentDraft draft = billPaymentService.getBillPaymentDraftDetail(billID, accessTokenID);
+		BillPaymentDraft.Status sts = draft.getStatus();
+		
+		if (DraftTransaction.Status.OTP_CONFIRMED != draft.getStatus()) {
+			String otpStr = request.get("otpString");
+			String otpRef = request.get("otpRefCode");
+			String mobile = request.get("mobileNumber");
+			
+			OTP otp = new OTP(mobile, otpRef, otpStr);
 
-		OTP otp = new OTP();
-		otp.setOtpString(request.get("otpString"));
-		otp.setReferenceCode(request.get("otpRefCode"));
-		otp.setMobileNumber(request.get("mobileNumber"));
-
-		BillPaymentDraft.Status sts = authService.verifyOTP(billID, otp, accessTokenID);
+			sts = authService.verifyOTP(billID, otp, accessTokenID);
+		}
+		
 		billPaymentService.performPayment(billID, accessTokenID);
 
 		Map<String, Object> data = new HashMap<String, Object>();
@@ -163,7 +171,7 @@ public class BillPaymentController extends BaseController {
 		logger.info(timer.shortSummary());
 
 		return response;
-		}
+	}
 
 	@RequestMapping(value = "/{billPaymentID}/status/{accessTokenID}", method = RequestMethod.GET)
 	public @ResponseBody

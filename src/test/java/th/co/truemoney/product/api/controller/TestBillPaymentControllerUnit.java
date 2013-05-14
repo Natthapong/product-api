@@ -1,5 +1,13 @@
 package th.co.truemoney.product.api.controller;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -12,14 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
+import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
+import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
 import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
-
-import static org.junit.Assert.*;
+import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
 public class TestBillPaymentControllerUnit extends BaseTestController{
 	
@@ -27,10 +32,10 @@ public class TestBillPaymentControllerUnit extends BaseTestController{
 	BillPaymentController billPaymentController;
 	
 	private static final String fakeAccessTokenID = "111111";
-
+	
 	@SuppressWarnings("unchecked")
 	@Test
-	public void test() {
+	public void favoriteBillPayment() {
 		Map<String, String> request = new HashMap<String, String>();
 		request.put("billCode", "tcg");
 		request.put("ref1", "010004552");
@@ -76,6 +81,29 @@ public class TestBillPaymentControllerUnit extends BaseTestController{
 		assertEquals("EW", sourceOfFundFee.get("sourceType"));
 		
 		assertNotNull(data.containsKey("billPaymentID"));
+	}
+	
+	@Test
+	public void confirmBillPaySkipOTPChecking() throws Exception {
+		BillPaymentDraft otpConfirmedDraft = new BillPaymentDraft(null, null, null, null, BillPaymentDraft.Status.OTP_CONFIRMED);
+		when(
+			this.billPaymentServiceMock.getBillPaymentDraftDetail(anyString(), anyString())
+		).thenReturn(otpConfirmedDraft);
+				
+		when(
+			this.billPaymentServiceMock.performPayment(anyString(), anyString())
+		).thenReturn(BillPaymentTransaction.Status.PROCESSING);
+		
+		Map<String, String> request = new HashMap<String, String>();
+		ProductResponse response = billPaymentController.confirmBillPayment("BILL_ID", "accessTokenID", request);
+		
+		verify(
+			this.transactionAuthenServiceMock, never()
+		).verifyOTP(anyString(), any(OTP.class), anyString());
+		
+		assertEquals("20000", response.getCode());
+		assertEquals("BILL_ID", response.getData().get("billPaymentID"));
+		assertEquals("CONFIRMED", response.getData().get("billPaymentStatus"));
 	}
 	
 	private Bill createStubbedBillInfo() {

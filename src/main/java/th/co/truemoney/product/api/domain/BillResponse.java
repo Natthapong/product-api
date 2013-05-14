@@ -6,7 +6,9 @@ import java.util.Map;
 
 import th.co.truemoney.product.api.util.Utils;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
+import th.co.truemoney.serviceinventory.bill.domain.BillPaymentConfirmationInfo;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
+import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
@@ -16,6 +18,53 @@ public class BillResponse {
 		private OTP  otp;
 		private Bill bill;
 		private BillPaymentDraft paymentDraft;
+		private BillPaymentTransaction paymentTransaction;
+		private BigDecimal walletBalance;
+		
+		public Map<String, Object> buildBillPaymentDetailResponse() {
+			Map<String, Object> response = new HashMap<String, Object>();
+			if (bill != null) {
+				response.put("target", bill.getTarget());
+				response.put("logoURL", bill.getLogoURL());
+				response.put("titleTh", bill.getTitleTH());
+				response.put("titleEn", bill.getTitleEN());
+				
+				response.put("ref1TitleTh", bill.getRef1TitleTH());
+				response.put("ref1TitleEn", bill.getRef1TitleEN());
+				response.put("ref1", bill.getRef1());
+				
+				response.put("ref2TitleTh", bill.getRef2TitleTH());
+				response.put("ref2TitleEn", bill.getRef2TitleEN());
+				response.put("ref2", bill.getRef2());
+				
+				response.put("isFavoritable", String.valueOf(bill.isFavoritable()));
+				response.put("isFavorited", String.valueOf(bill.isFavorited()));
+				
+			}
+			if (paymentDraft != null) {
+				BigDecimal amount = paymentDraft.getAmount();
+				BigDecimal totalFee = Utils.calculateTotalFee(amount, bill.getServiceFee(), bill.getSourceOfFundFees());
+				BigDecimal totalAmount = amount.add(totalFee);
+				
+				response.put("amount", amount);
+				response.put("totalFee", totalFee);
+				
+				response.put("totalAmount", totalAmount);
+				response.put("sourceOfFund", "Wallet"); //TODO Hard code!!!
+				
+			}
+
+			BillPaymentConfirmationInfo paymentConfirm = paymentTransaction.getConfirmationInfo();
+			if (paymentConfirm != null) {
+				response.put("transactionID", paymentConfirm.getTransactionID());
+				response.put("transactionDate", paymentConfirm.getTransactionDate());
+			}
+			if (walletBalance != null) {
+				response.put("currentEwalletBalance", walletBalance);
+			}
+			
+			return response;
+		}
 		
 		public Map<String, Object> buildBillCreateResponse() {
 			Map<String, Object> response = new HashMap<String, Object>();
@@ -93,6 +142,18 @@ public class BillResponse {
 		
 		public Builder setPaymentDraft(BillPaymentDraft paymentDraft) {
 			this.paymentDraft = paymentDraft;
+			return this;
+		}
+		
+		public Builder setPaymentTransaction(BillPaymentTransaction transaction) {
+			this.paymentTransaction = transaction;
+			this.paymentDraft = transaction.getDraftTransaction();
+			this.bill = transaction.getDraftTransaction().getBillInfo();
+			return this;
+		}
+		
+		public Builder setWalletBalance(BigDecimal balance) {
+			this.walletBalance = balance;
 			return this;
 		}
 	}

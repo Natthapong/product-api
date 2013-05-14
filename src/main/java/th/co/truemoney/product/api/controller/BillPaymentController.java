@@ -18,11 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import th.co.truemoney.product.api.domain.BillResponse;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.manager.MessageManager;
-import th.co.truemoney.product.api.util.Utils;
 import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
-import th.co.truemoney.serviceinventory.bill.domain.BillPaymentConfirmationInfo;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
@@ -164,54 +162,21 @@ public class BillPaymentController extends BaseController {
 		StopWatch timer = new StopWatch("getBillPaymentDetail ("+accessTokenID+")");
 		timer.start();
 
-		BillPaymentTransaction tnx = this.billPaymentService.getBillPaymentResult(billPaymentID, accessTokenID);
-
-		BillPaymentConfirmationInfo confirmedInfo = tnx.getConfirmationInfo();
-
-		Bill billInfo = tnx.getDraftTransaction().getBillInfo();
-
-		BigDecimal amount = tnx.getDraftTransaction().getAmount();
-		BigDecimal totalFee = Utils.calculateTotalFee(amount, billInfo.getServiceFee(), billInfo.getSourceOfFundFees());
-		BigDecimal totalAmount = amount.add(totalFee);
-
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("target", billInfo.getTarget());
-		data.put("logoURL", billInfo.getLogoURL());
-		data.put("titleTh", billInfo.getTitleTH());
-		data.put("titleEn", billInfo.getTitleEN());
-
-		data.put("ref1TitleTh", billInfo.getRef1TitleTH());
-		data.put("ref1TitleEn", billInfo.getRef1TitleEN());
-		data.put("ref1", billInfo.getRef1());
-
-		data.put("ref2TitleTh", billInfo.getRef2TitleTH());
-		data.put("ref2TitleEn", billInfo.getRef2TitleEN());
-		data.put("ref2", billInfo.getRef2());
-
-		data.put("amount", amount);
-		data.put("totalFee", totalFee);
-
-		data.put("totalAmount", totalAmount);
-		data.put("sourceOfFund", "Wallet"); //TODO Hard code!!!
-
-		data.put("transactionID", confirmedInfo.getTransactionID());
-		data.put("transactionDate", confirmedInfo.getTransactionDate());
-
+		BillPaymentTransaction txn = this.billPaymentService.getBillPaymentResult(billPaymentID, accessTokenID);
+	
+		BigDecimal currentBalance = this.profileService.getEwalletBalance(accessTokenID);
+		
+		Map<String, Object> data = BillResponse.builder()
+										.setPaymentTransaction(txn)
+										.setWalletBalance(currentBalance)
+										.buildBillPaymentDetailResponse();
 		data.put("remarkEn", messageManager.getMessageEn("payment.bill.remark"));
 		data.put("remarkTh", messageManager.getMessageTh("payment.bill.remark"));
-
-		BigDecimal currentBalance = this.profileService.getEwalletBalance(accessTokenID);
-		data.put("currentEwalletBalance", currentBalance);
-
-		data.put("isFavoritable", String.valueOf(billInfo.isFavoritable()));
-		data.put("isFavorited", String.valueOf(billInfo.isFavorited()));
-
-		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
 
 		timer.stop();
 		logger.info(timer.shortSummary());
 
-		return response;
+		return createResponse(data);
 	}
 	
 	@RequestMapping(value = "/favorite/verify/{accessTokenID}", method = RequestMethod.POST)

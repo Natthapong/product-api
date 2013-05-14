@@ -18,7 +18,7 @@ import th.co.truemoney.product.api.domain.WalletActivity.TYPE;
 import th.co.truemoney.serviceinventory.ewallet.domain.ActivityDetail;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
-public class TestMobileWalletActivityDetailController extends
+public class TestWalletActivityDetailController extends
 		BaseTestController {
 
 	@Autowired

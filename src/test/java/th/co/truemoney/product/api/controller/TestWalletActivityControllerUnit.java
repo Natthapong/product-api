@@ -28,7 +28,7 @@ import th.co.truemoney.serviceinventory.ewallet.ActivityService;
 import th.co.truemoney.serviceinventory.ewallet.domain.Activity;
 
 @RunWith(Parameterized.class)
-public class TestMobileWalletActivityControllerUnit {
+public class TestWalletActivityControllerUnit {
 	
 	protected ActivityService activityServiceMock;
 	
@@ -66,7 +66,7 @@ public class TestMobileWalletActivityControllerUnit {
 	
 	private ActivityViewItem fOutput;
 	
-	public TestMobileWalletActivityControllerUnit(Activity input, ActivityViewItem output) {
+	public TestWalletActivityControllerUnit(Activity input, ActivityViewItem output) {
 		this.fInput = input;
 		this.fOutput = output;
 	}

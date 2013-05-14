@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import th.co.truemoney.product.api.domain.BillResponse;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.manager.MessageManager;
 import th.co.truemoney.product.api.util.Utils;
@@ -60,42 +61,9 @@ public class BillPaymentController extends BaseController {
 		StopWatch timer = new StopWatch("getBillInformation ("+accessTokenID+")");
 		timer.start();
 
-		Bill billPaymentInfo = billPaymentService.retrieveBillInformationWithBarcode(barcode, accessTokenID);
-
-		Map<String, Object> data = new HashMap<String, Object>();
-
-		data.put("target", billPaymentInfo.getTarget());
-		data.put("logoURL", billPaymentInfo.getLogoURL());
+		Bill bill = billPaymentService.retrieveBillInformationWithBarcode(barcode, accessTokenID);
 		
-		if(Utils.isTrueCorpBill(billPaymentInfo.getTarget())){
-			data.put("titleTh", "");
-			data.put("titleEn", "");
-		}else{
-			data.put("titleTh", billPaymentInfo.getTitleTH());
-			data.put("titleEn", billPaymentInfo.getTitleEN());
-		}
-
-		data.put("ref1TitleTh", billPaymentInfo.getRef1TitleTH());
-		data.put("ref1TitleEn", billPaymentInfo.getRef1TitleEN());
-		data.put("ref1", billPaymentInfo.getRef1());
-
-		data.put("ref2TitleTh", billPaymentInfo.getRef2TitleTH());
-		data.put("ref2TitleEn", billPaymentInfo.getRef2TitleEN());
-		data.put("ref2", billPaymentInfo.getRef2());
-
-		data.put("amount", billPaymentInfo.getAmount());
-		data.put("serviceFee", billPaymentInfo.getServiceFee());
-		data.put("partialPaymentAllow", billPaymentInfo.getPartialPayment());
-		data.put("isTrueCorpBill", Utils.isTrueCorpBill(billPaymentInfo.getTarget()));
-
-		data.put("minAmount", billPaymentInfo.getMinAmount());
-		data.put("maxAmount", billPaymentInfo.getMaxAmount());
-
-		data.put("serviceFeeType", billPaymentInfo.getServiceFee().getFeeRateType());
-		data.put("serviceFee", billPaymentInfo.getServiceFee().getFeeRate());
-		data.put("sourceOfFundFee", prepareData(billPaymentInfo.getSourceOfFundFees()));
-		data.put("billID", billPaymentInfo.getID());
-
+		Map<String, Object> data = BillResponse.builder().setBill(bill).build();
 		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
 
 		timer.stop();
@@ -332,7 +300,7 @@ public class BillPaymentController extends BaseController {
 	public void setAuthService(TransactionAuthenService authService) {
 		this.authService = authService;
 	}
-
+	
 	private List<JSONObject> prepareData(SourceOfFund[] sourceOfFundFees) {
 		List<JSONObject> realData = new ArrayList<JSONObject>();
 

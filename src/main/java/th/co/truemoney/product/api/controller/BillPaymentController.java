@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.domain.BillResponse;
-import th.co.truemoney.product.api.domain.BillResponse.TYPE;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.manager.MessageManager;
 import th.co.truemoney.product.api.util.Utils;
@@ -47,7 +46,11 @@ public class BillPaymentController extends BaseController {
 	MessageManager messageManager;
 
 	Logger logger = Logger.getLogger(BillPaymentController.class);
-
+	
+	private ProductResponse createResponse(Map<String, Object> data) {
+		return this.responseFactory.createSuccessProductResonse(data);
+	}
+	
 	@RequestMapping(value = "/barcode/{barcode}/{accessTokenID}", method = RequestMethod.GET)
 	public @ResponseBody
 	ProductResponse getBillInformation(
@@ -59,13 +62,13 @@ public class BillPaymentController extends BaseController {
 
 		Bill bill = billPaymentService.retrieveBillInformationWithBarcode(barcode, accessTokenID);
 		
-		Map<String, Object> data = BillResponse.builder().setBill(bill).build(TYPE.BILL_INFO);
-		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
-
+		Map<String, Object> data = BillResponse.builder()
+										.setBill(bill)
+										.buildBillInfoResponse();
 		timer.stop();
 		logger.info(timer.shortSummary());
 
-		return response;
+		return createResponse(data);
 	}
 
 	@RequestMapping(value = "/create/{accessTokenID}", method = RequestMethod.POST)
@@ -80,26 +83,18 @@ public class BillPaymentController extends BaseController {
 		String billID = (String)request.get("billID");
 		BigDecimal amount = new BigDecimal(request.get("amount").replace(",", ""));
 
-		BillPaymentDraft bill = this.billPaymentService.verifyPaymentAbility(billID, amount, accessTokenID);
-		Bill billInfo = bill.getBillInfo();
-
-		BigDecimal totalFee = Utils.calculateTotalFee(bill.getAmount(), billInfo.getServiceFee(), billInfo.getSourceOfFundFees());
-		BigDecimal totalAmount = bill.getAmount().add(totalFee);
-
-		OTP otp = this.authService.requestOTP(bill.getID(), accessTokenID);
-
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("otpRefCode", otp.getReferenceCode());
-		data.put("mobileNumber", otp.getMobileNumber());
-		data.put("billID", bill.getID());
-		data.put("totalAmount", totalAmount);
-
-		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
-
+		BillPaymentDraft paymentDraft = this.billPaymentService.verifyPaymentAbility(billID, amount, accessTokenID);
+		Bill bill = paymentDraft.getBillInfo();
+		OTP otp = this.authService.requestOTP(paymentDraft.getID(), accessTokenID);
+		
+		Map<String, Object> data = BillResponse.builder()
+										.setOTP(otp)
+										.setBill(bill)
+										.buildBillCreateResponse();
 		timer.stop();
 		logger.info(timer.shortSummary());
 
-		return response;
+		return createResponse(data);
 		}
 
 	@RequestMapping(value = "/{billID}/confirm/{accessTokenID}", method = RequestMethod.PUT)
@@ -239,20 +234,20 @@ public class BillPaymentController extends BaseController {
 			throw new InvalidParameterException("50010");
 		}
 		
-		
 		Bill bill = this.billPaymentService.retrieveBillInformationWithBillCode(
 				billCode, ref1, amount, accessTokenID);
 		
 		BillPaymentDraft paymentDraft = this.billPaymentService.verifyPaymentAbility(
 				bill.getID(), amount, accessTokenID);
 		
-		Map<String, Object> data = BillResponse.builder().setBill(bill).setPaymentDraft(paymentDraft).build(TYPE.FAVORITE);
-		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
-
+		Map<String, Object> data = BillResponse.builder()
+										.setBill(bill)
+										.setPaymentDraft(paymentDraft)
+										.buildBillFavoriteResponse();
 		timer.stop();
 		logger.info(timer.shortSummary());
 
-		return response;
+		return createResponse(data);
 	}
 
 	public void setBillPaymentService(BillPaymentService billPaymentService) {

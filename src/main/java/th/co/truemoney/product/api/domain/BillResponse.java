@@ -1,5 +1,6 @@
 package th.co.truemoney.product.api.domain;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,27 +8,31 @@ import th.co.truemoney.product.api.util.Utils;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
+import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
 public class BillResponse {
 	
-	public enum TYPE {
-		BILL_INFO, FAVORITE
-	}
-	
 	public static class Builder {
-		
+		private OTP  otp;
 		private Bill bill;
 		private BillPaymentDraft paymentDraft;
 		
-		public Map<String, Object> build(TYPE type) {
-			if (TYPE.BILL_INFO == type) {
-				return buildBillInfoResponse();
-			} else {
-				return buildBillFavoriteResponse();
+		public Map<String, Object> buildBillCreateResponse() {
+			Map<String, Object> response = new HashMap<String, Object>();
+			if (otp != null) {
+				response.put("billID", bill.getID());
+				response.put("otpRefCode", otp.getReferenceCode());
+				response.put("mobileNumber", otp.getMobileNumber());
 			}
+			if (bill != null) {
+				BigDecimal totalFee = Utils.calculateTotalFee(bill.getAmount(), bill.getServiceFee(), bill.getSourceOfFundFees());
+				BigDecimal totalAmount = bill.getAmount().add(totalFee);
+				response.put("totalAmount", totalAmount);
+			}
+			return response;
 		}
 		
-		private Map<String, Object> buildBillFavoriteResponse() {
+		public Map<String, Object> buildBillFavoriteResponse() {
 			
 			Map<String, Object> response = buildBillInfoResponse();
 
@@ -38,7 +43,7 @@ public class BillResponse {
 			return response;
 		}
 		
-		private Map<String, Object> buildBillInfoResponse() {
+		public Map<String, Object> buildBillInfoResponse() {
 			Map<String, Object> response = new HashMap<String, Object>();
 			if (bill != null) {
 				boolean truecorpBill = Utils.isTrueCorpBill(bill.getTarget());
@@ -74,6 +79,11 @@ public class BillResponse {
 				}
 			}
 			return response;
+		}
+		
+		public Builder setOTP(OTP otp) {
+			this.otp = otp;
+			return this;
 		}
 		
 		public Builder setBill(Bill bill) {

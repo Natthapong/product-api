@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -24,6 +25,7 @@ import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
 import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
+import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
 public class TestBillPaymentControllerUnit extends BaseTestController{
@@ -94,16 +96,34 @@ public class TestBillPaymentControllerUnit extends BaseTestController{
 			this.billPaymentServiceMock.performPayment(anyString(), anyString())
 		).thenReturn(BillPaymentTransaction.Status.PROCESSING);
 		
-		Map<String, String> request = new HashMap<String, String>();
-		ProductResponse response = billPaymentController.confirmBillPayment("BILL_ID", "accessTokenID", request);
+		billPaymentController.confirmBillPayment("", "", new HashMap<String, String>());
 		
 		verify(
 			this.transactionAuthenServiceMock, never()
 		).verifyOTP(anyString(), any(OTP.class), anyString());
+	}
+	
+	@Test
+	public void confirmBillPayWithOTPChecking() throws Exception {
+		BillPaymentDraft otpSentDraft = new BillPaymentDraft(null, null, null, null, BillPaymentDraft.Status.OTP_SENT);
+		when(
+			this.billPaymentServiceMock.getBillPaymentDraftDetail(anyString(), anyString())
+		).thenReturn(otpSentDraft);
+				
+		when(
+			this.transactionAuthenServiceMock.verifyOTP(anyString(), any(OTP.class), anyString())
+		).thenReturn(DraftTransaction.Status.OTP_CONFIRMED);
 		
-		assertEquals("20000", response.getCode());
-		assertEquals("BILL_ID", response.getData().get("billPaymentID"));
-		assertEquals("CONFIRMED", response.getData().get("billPaymentStatus"));
+		when(
+			this.billPaymentServiceMock.performPayment(anyString(), anyString())
+		).thenReturn(BillPaymentTransaction.Status.PROCESSING);
+		
+		billPaymentController.confirmBillPayment("", "", new HashMap<String, String>());
+		
+		verify(
+			this.transactionAuthenServiceMock, times(1)
+		).verifyOTP(anyString(), any(OTP.class), anyString());
+		
 	}
 	
 	private Bill createStubbedBillInfo() {

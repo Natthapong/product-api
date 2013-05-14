@@ -14,6 +14,7 @@ import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
 import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
+import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 import static org.mockito.Matchers.any;
@@ -237,6 +238,14 @@ public class TestBillPaymentController extends BaseTestController {
         			anyString(), anyString(), any(BigDecimal.class), anyString()))
         			.thenReturn(createStubbedBillInfo());
         	
+        	 when(
+                     billPaymentServiceMock.verifyPaymentAbility(
+                             anyString(),
+                             any(BigDecimal.class),
+                             anyString()
+                     )
+             ).thenReturn(createBillPaymentDraftStubbed());
+        	
         	Map<String, String> req = new HashMap<String, String>();
         	req.put("billCode", "tcg");
         	req.put("ref1", "010004552");
@@ -252,6 +261,8 @@ public class TestBillPaymentController extends BaseTestController {
         	when( billPaymentServiceMock.retrieveBillInformationWithBillCode(
         			anyString(), anyString(), any(BigDecimal.class), anyString()))
         			.thenThrow(new ServiceInventoryException(400, "", "", ""));
+        	
+        	
         	
         	Map<String, String> req = new HashMap<String, String>();
         	req.put("billCode", "tcg");
@@ -298,5 +309,14 @@ public class TestBillPaymentController extends BaseTestController {
                 return billInfo;
         }
 
+        private BillPaymentDraft createBillPaymentDraftStubbed(){
+    		Bill billInfo = new Bill();
+    		billInfo.setAmount(BigDecimal.TEN);
+    		billInfo.setServiceFee(new ServiceFeeInfo("THB", BigDecimal.ONE));
+    	
+    		BillPaymentDraft bill = new BillPaymentDraft("1111111111", billInfo, new BigDecimal(11000), "123567890", Status.OTP_CONFIRMED);
+    	    
+    	    return bill;
+    	}
 
 }

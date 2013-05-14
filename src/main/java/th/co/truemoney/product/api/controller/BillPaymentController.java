@@ -1,6 +1,7 @@
 package th.co.truemoney.product.api.controller;
 
 import java.math.BigDecimal;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -254,8 +255,24 @@ public class BillPaymentController extends BaseController {
 		StopWatch timer = new StopWatch("verifyAndGetBillPaymentFavoriteInfo for favorite bill ("+accessTokenID+")");
 		timer.start();
 		
+		String billCode = request.get("billCode");
+		String ref1 = request.get("ref1");
+		
+		if(billCode == null || billCode == ""){
+			throw new InvalidParameterException("50010");
+		}
+		
+		if(ref1 == null || ref1 == ""){
+			throw new InvalidParameterException("50010");
+		}
+		
+		BigDecimal amount = new BigDecimal(request.get("amount").replace(",", ""));
+		
 		Bill billPaymentInfo = billPaymentService.retrieveBillInformationWithBillCode(
-				request.get("billCode"), request.get("ref1"), new BigDecimal(request.get("amount")), accessTokenID);
+				billCode, ref1, amount, accessTokenID);
+		
+		BillPaymentDraft bill = this.billPaymentService.verifyPaymentAbility(
+				billPaymentInfo.getID(), amount, accessTokenID);
 		
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("billCode", billPaymentInfo.getTarget());
@@ -287,7 +304,10 @@ public class BillPaymentController extends BaseController {
 		data.put("serviceFeeType", billPaymentInfo.getServiceFee().getFeeRateType());
 		data.put("serviceFee", billPaymentInfo.getServiceFee().getFeeRate());
 		data.put("sourceOfFundFee", prepareData(billPaymentInfo.getSourceOfFundFees()));
-		data.put("billPaymentID", billPaymentInfo.getID());
+		
+		data.put("billPaymentStatus", bill.getStatus());
+        
+		data.put("billPaymentID", bill.getTransactionID());
 		
 		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
 
@@ -295,6 +315,10 @@ public class BillPaymentController extends BaseController {
 		logger.info(timer.shortSummary());
 
 		return response;
+	}
+
+	public void setBillPaymentService(BillPaymentService billPaymentService) {
+		this.billPaymentService = billPaymentService;
 	}
 
 	private List<JSONObject> prepareData(SourceOfFund[] sourceOfFundFees) {
@@ -314,5 +338,5 @@ public class BillPaymentController extends BaseController {
 		}
 		return realData;
 	}
-
+	
 }

@@ -1,43 +1,74 @@
 package th.co.truemoney.product.api.controller;
 
 import java.math.BigDecimal;
+import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import net.minidev.json.JSONObject;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import th.co.truemoney.product.api.domain.ProductResponse;
+import th.co.truemoney.product.api.manager.MessageManager;
+import th.co.truemoney.product.api.util.ProductResponseFactory;
+import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
+import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
 import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
+import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
+import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.mock;
 
 import static org.junit.Assert.*;
 
-public class TestBillPaymentControllerUnit extends BaseTestController{
+public class TestBillPaymentControllerUnit {
 	
-	@Autowired
 	BillPaymentController billPaymentController;
 	
+	BillPaymentService billPaymentServiceMock;
+	
+	ProductResponseFactory responseFactory;
+	
 	private static final String fakeAccessTokenID = "111111";
+	
+	@Before
+	public void setup(){
+		this.billPaymentController = new BillPaymentController();
+		this.billPaymentServiceMock = mock(BillPaymentService.class);
+		this.responseFactory = new ProductResponseFactory();
+		this.responseFactory.setMessageManager(mock(MessageManager.class));
+		this.billPaymentController.setBillPaymentService(billPaymentServiceMock);
+		this.billPaymentController.setResponseFactory(responseFactory);
+	}
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void test() {
+	public void getFavoriteBillInfoSuccess() {
 		Map<String, String> request = new HashMap<String, String>();
 		request.put("billCode", "tcg");
 		request.put("ref1", "010004552");
 		request.put("amount", "10000");
 		
-		when(this.billPaymentServiceMock.retrieveBillInformationWithBillCode(anyString(), anyString(), any(BigDecimal.class), anyString()))
+		when(this.billPaymentServiceMock.retrieveBillInformationWithBillCode(
+				anyString(), anyString(), any(BigDecimal.class), anyString()))
 		.thenReturn(createStubbedBillInfo());
+        
+        when(
+                billPaymentServiceMock.verifyPaymentAbility(
+                        anyString(),
+                        any(BigDecimal.class),
+                        anyString()
+                )
+        ).thenReturn(createBillPaymentDraftStubbed());
 		
 		ProductResponse resp = billPaymentController.verifyAndGetBillPaymentFavoriteInfo(fakeAccessTokenID, request);
 		Map<String, Object> data = resp.getData();
@@ -78,6 +109,77 @@ public class TestBillPaymentControllerUnit extends BaseTestController{
 		assertNotNull(data.containsKey("billPaymentID"));
 	}
 	
+	@Test(expected = InvalidParameterException.class)
+	public void getFavoriteBillInfoFailBillCodeNull() {
+		Map<String, String> request = new HashMap<String, String>();
+		request.put("billCode", null);
+		request.put("ref1", "010004552");
+		request.put("amount", "10000");
+		
+		ProductResponse resp = billPaymentController.verifyAndGetBillPaymentFavoriteInfo(fakeAccessTokenID, request);
+		assertEquals("50010", resp.getCode());
+	}
+	
+	@Test(expected = InvalidParameterException.class)
+	public void getFavoriteBillInfoFailBillCodeEmpty() {
+		Map<String, String> request = new HashMap<String, String>();
+		request.put("billCode", "");
+		request.put("ref1", "010004552");
+		request.put("amount", "10000");
+		
+		ProductResponse resp = billPaymentController.verifyAndGetBillPaymentFavoriteInfo(fakeAccessTokenID, request);
+		assertEquals("50010", resp.getCode());
+	}
+	
+	@Test(expected = InvalidParameterException.class)
+	public void getFavoriteBillInfoFailRef1Empty() {
+		Map<String, String> request = new HashMap<String, String>();
+		request.put("billCode", "tcg");
+		request.put("ref1", "");
+		request.put("amount", "10000");
+		
+		ProductResponse resp = billPaymentController.verifyAndGetBillPaymentFavoriteInfo(fakeAccessTokenID, request);
+		assertEquals("50010", resp.getCode());
+	}
+	
+	@Test(expected = InvalidParameterException.class)
+	public void getFavoriteBillInfoFailRef1Null() {
+		Map<String, String> request = new HashMap<String, String>();
+		request.put("billCode", "tcg");
+		request.put("ref1", null);
+		request.put("amount", "10000");
+		
+		ProductResponse resp = billPaymentController.verifyAndGetBillPaymentFavoriteInfo(fakeAccessTokenID, request);
+		assertEquals("50010", resp.getCode());
+	}
+	
+	@Test
+	public void verifyFavoriteBillSuccess(){
+		Map<String, String> request = new HashMap<String, String>();
+		request.put("billCode", "tcg");
+		request.put("ref1", "010004552");
+		request.put("amount", "10000");
+		
+		when(this.billPaymentServiceMock.retrieveBillInformationWithBillCode(
+				anyString(), anyString(), any(BigDecimal.class), anyString()))
+		.thenReturn(createStubbedBillInfo());
+        
+        when(
+                billPaymentServiceMock.verifyPaymentAbility(
+                        anyString(),
+                        any(BigDecimal.class),
+                        anyString()
+                )
+        ).thenReturn(createBillPaymentDraftStubbed());
+		
+		ProductResponse resp = billPaymentController.verifyAndGetBillPaymentFavoriteInfo(fakeAccessTokenID, request);
+		Map<String, Object> data = resp.getData();
+		assertNotNull(data);
+		
+		assertEquals("OTP_CONFIRMED", String.valueOf(data.get("billPaymentStatus")));
+		
+	}
+	
 	private Bill createStubbedBillInfo() {
         Bill billInfo = new Bill();
         billInfo.setTarget("tcg");
@@ -116,7 +218,16 @@ public class TestBillPaymentControllerUnit extends BaseTestController{
         billInfo.setSourceOfFundFees(sourceOfFundFees);
 
         return billInfo;
-}
-
+	}
+	
+	private BillPaymentDraft createBillPaymentDraftStubbed(){
+		Bill billInfo = new Bill();
+		billInfo.setAmount(BigDecimal.TEN);
+		billInfo.setServiceFee(new ServiceFeeInfo("THB", BigDecimal.ONE));
+	
+		BillPaymentDraft bill = new BillPaymentDraft("1111111111", billInfo, new BigDecimal(11000), "123567890", Status.OTP_CONFIRMED);
+	    
+	    return bill;
+	}
 
 }

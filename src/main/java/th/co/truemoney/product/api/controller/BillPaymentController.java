@@ -2,12 +2,8 @@ package th.co.truemoney.product.api.controller;
 
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import net.minidev.json.JSONObject;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.domain.BillResponse;
+import th.co.truemoney.product.api.domain.BillResponse.TYPE;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.manager.MessageManager;
 import th.co.truemoney.product.api.util.Utils;
 import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
-import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentConfirmationInfo;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
@@ -63,7 +59,7 @@ public class BillPaymentController extends BaseController {
 
 		Bill bill = billPaymentService.retrieveBillInformationWithBarcode(barcode, accessTokenID);
 		
-		Map<String, Object> data = BillResponse.builder().setBill(bill).build();
+		Map<String, Object> data = BillResponse.builder().setBill(bill).build(TYPE.BILL_INFO);
 		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
 
 		timer.stop();
@@ -231,6 +227,7 @@ public class BillPaymentController extends BaseController {
 		StopWatch timer = new StopWatch("verifyAndGetBillPaymentFavoriteInfo for favorite bill ("+accessTokenID+")");
 		timer.start();
 		
+		BigDecimal amount = new BigDecimal(request.get("amount").replace(",", ""));
 		String billCode = request.get("billCode");
 		String ref1 = request.get("ref1");
 		
@@ -242,49 +239,14 @@ public class BillPaymentController extends BaseController {
 			throw new InvalidParameterException("50010");
 		}
 		
-		BigDecimal amount = new BigDecimal(request.get("amount").replace(",", ""));
 		
-		Bill billPaymentInfo = billPaymentService.retrieveBillInformationWithBillCode(
+		Bill bill = this.billPaymentService.retrieveBillInformationWithBillCode(
 				billCode, ref1, amount, accessTokenID);
 		
-		BillPaymentDraft bill = this.billPaymentService.verifyPaymentAbility(
-				billPaymentInfo.getID(), amount, accessTokenID);
+		BillPaymentDraft paymentDraft = this.billPaymentService.verifyPaymentAbility(
+				bill.getID(), amount, accessTokenID);
 		
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("billCode", billPaymentInfo.getTarget());
-		data.put("logoURL", billPaymentInfo.getLogoURL());
-		
-		if(Utils.isTrueCorpBill(billPaymentInfo.getTarget())){
-			data.put("titleTh", "");
-			data.put("titleEn", "");
-		}else{
-			data.put("titleTh", billPaymentInfo.getTitleTH());
-			data.put("titleEn", billPaymentInfo.getTitleEN());
-		}
-
-		data.put("ref1TitleTh", billPaymentInfo.getRef1TitleTH());
-		data.put("ref1TitleEn", billPaymentInfo.getRef1TitleEN());
-		data.put("ref1", billPaymentInfo.getRef1());
-
-		data.put("ref2TitleTh", billPaymentInfo.getRef2TitleTH());
-		data.put("ref2TitleEn", billPaymentInfo.getRef2TitleEN());
-		data.put("ref2", billPaymentInfo.getRef2());
-
-		data.put("amount", billPaymentInfo.getAmount());
-		data.put("serviceFee", billPaymentInfo.getServiceFee());
-		data.put("partialPaymentAllow", billPaymentInfo.getPartialPayment());
-
-		data.put("minAmount", billPaymentInfo.getMinAmount());
-		data.put("maxAmount", billPaymentInfo.getMaxAmount());
-
-		data.put("serviceFeeType", billPaymentInfo.getServiceFee().getFeeRateType());
-		data.put("serviceFee", billPaymentInfo.getServiceFee().getFeeRate());
-		data.put("sourceOfFundFee", prepareData(billPaymentInfo.getSourceOfFundFees()));
-		
-		data.put("billPaymentStatus", bill.getStatus());
-        
-		data.put("billPaymentID", bill.getTransactionID());
-		
+		Map<String, Object> data = BillResponse.builder().setBill(bill).setPaymentDraft(paymentDraft).build(TYPE.FAVORITE);
 		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
 
 		timer.stop();
@@ -300,23 +262,4 @@ public class BillPaymentController extends BaseController {
 	public void setAuthService(TransactionAuthenService authService) {
 		this.authService = authService;
 	}
-	
-	private List<JSONObject> prepareData(SourceOfFund[] sourceOfFundFees) {
-		List<JSONObject> realData = new ArrayList<JSONObject>();
-
-		for (SourceOfFund billPaySourceOfFund : sourceOfFundFees) {
-			JSONObject returnData = new JSONObject();
-			//TODO warning hard code response Wallet only
-			if ("EW".equals(billPaySourceOfFund.getSourceType())) {
-				returnData.put("sourceType", billPaySourceOfFund.getSourceType());
-				returnData.put("sourceFee", billPaySourceOfFund.getFeeRate());
-				returnData.put("sourceFeeType", billPaySourceOfFund.getFeeRateType());
-				returnData.put("minSourceFeeAmount", billPaySourceOfFund.getMinFeeAmount());
-				returnData.put("maxSourceFeeAmount", billPaySourceOfFund.getMaxFeeAmount());
-				realData.add(returnData);
-			}
-		}
-		return realData;
-	}
-	
 }

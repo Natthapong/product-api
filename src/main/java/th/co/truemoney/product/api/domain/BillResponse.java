@@ -5,16 +5,40 @@ import java.util.Map;
 
 import th.co.truemoney.product.api.util.Utils;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
+import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 
 public class BillResponse {
 	
+	public enum TYPE {
+		BILL_INFO, FAVORITE
+	}
+	
 	public static class Builder {
 		
 		private Bill bill;
+		private BillPaymentDraft paymentDraft;
 		
-		public Map<String, Object> build() {
+		public Map<String, Object> build(TYPE type) {
+			if (TYPE.BILL_INFO == type) {
+				return buildBillInfoResponse();
+			} else {
+				return buildBillFavoriteResponse();
+			}
+		}
+		
+		private Map<String, Object> buildBillFavoriteResponse() {
 			
+			Map<String, Object> response = buildBillInfoResponse();
+
+			if (paymentDraft != null) {
+				response.put("billPaymentID", paymentDraft.getTransactionID());
+				response.put("billPaymentStatus", paymentDraft.getStatus());
+			}
+			return response;
+		}
+		
+		private Map<String, Object> buildBillInfoResponse() {
 			Map<String, Object> response = new HashMap<String, Object>();
 			if (bill != null) {
 				boolean truecorpBill = Utils.isTrueCorpBill(bill.getTarget());
@@ -35,7 +59,6 @@ public class BillResponse {
 				response.put("maxAmount", bill.getMaxAmount());
 				response.put("serviceFee", bill.getServiceFee().getFeeRate());
 				response.put("serviceFeeType", bill.getServiceFee().getFeeRateType());
-				response.put("isTrueCorpBill", truecorpBill);
 				response.put("partialPaymentAllow", bill.getPartialPayment());
 				
 				SourceOfFund ew = bill.getEwalletSourceOfFund();
@@ -52,12 +75,16 @@ public class BillResponse {
 			}
 			return response;
 		}
-
+		
 		public Builder setBill(Bill bill) {
 			this.bill = bill;
 			return this;
 		}
 		
+		public Builder setPaymentDraft(BillPaymentDraft paymentDraft) {
+			this.paymentDraft = paymentDraft;
+			return this;
+		}
 	}
 	
 	public static Builder builder() {

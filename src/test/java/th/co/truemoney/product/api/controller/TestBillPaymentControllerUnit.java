@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -19,9 +20,7 @@ import net.minidev.json.JSONObject;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import redis.clients.jedis.Transaction;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.manager.MessageManager;
 import th.co.truemoney.product.api.util.ProductResponseFactory;
@@ -29,23 +28,11 @@ import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
-
-import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
-import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
-import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
-import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.mock;
-
-import static org.junit.Assert.*;
-
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
 import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
+import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
 
@@ -100,7 +87,7 @@ public class TestBillPaymentControllerUnit {
 		Map<String, Object> data = resp.getData();
 		assertNotNull(data);
 		
-		assertEquals( "tcg", data.get("billCode"));
+		assertEquals( "tcg", data.get("target"));
 		assertEquals("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png", data.get("logoURL"));
 		assertEquals("", data.get("titleTh"));
 		assertEquals("", data.get("titleEn"));
@@ -123,14 +110,12 @@ public class TestBillPaymentControllerUnit {
 		assertEquals("THB", data.get("serviceFeeType"));
 		assertEquals(new BigDecimal(1000), data.get("serviceFee"));
 		
-		List<JSONObject> sourceOfFundFeeList = (List<JSONObject>) data.get("sourceOfFundFee");
-		assertEquals(1,sourceOfFundFeeList.size());
-		JSONObject sourceOfFundFee = sourceOfFundFeeList.get(0);
-		assertEquals(new BigDecimal(1000), sourceOfFundFee.get("sourceFee"));
+		Map<String, Object> sourceOfFundFee = (Map<String, Object>) data.get("sourceOfFundFee");
+		assertEquals("EW", sourceOfFundFee.get("sourceType"));
 		assertEquals("THB", sourceOfFundFee.get("sourceFeeType"));
+		assertEquals(new BigDecimal(1000), sourceOfFundFee.get("sourceFee"));
 		assertEquals(new BigDecimal(100), sourceOfFundFee.get("minSourceFeeAmount"));
 		assertEquals(new BigDecimal(2500), sourceOfFundFee.get("maxSourceFeeAmount"));
-		assertEquals("EW", sourceOfFundFee.get("sourceType"));
 		
 		assertNotNull(data.containsKey("billPaymentID"));
 	}

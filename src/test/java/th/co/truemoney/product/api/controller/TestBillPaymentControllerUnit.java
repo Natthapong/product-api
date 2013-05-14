@@ -101,6 +101,10 @@ public class TestBillPaymentControllerUnit extends BaseTestController{
 		verify(
 			this.transactionAuthenServiceMock, never()
 		).verifyOTP(anyString(), any(OTP.class), anyString());
+		
+		verify(
+			this.billPaymentServiceMock, times(1)
+		).performPayment(anyString(), anyString());
 	}
 	
 	@Test
@@ -124,6 +128,9 @@ public class TestBillPaymentControllerUnit extends BaseTestController{
 			this.transactionAuthenServiceMock, times(1)
 		).verifyOTP(anyString(), any(OTP.class), anyString());
 		
+		verify(
+			this.billPaymentServiceMock, times(1)
+		).performPayment(anyString(), anyString());
 	}
 	
 	private Bill createStubbedBillInfo() {

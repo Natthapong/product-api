@@ -13,6 +13,7 @@ import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
 import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
+import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
@@ -131,32 +132,38 @@ public class TestBillPaymentController extends BaseTestController {
 
         @Test
         public void confirmBillPaymentSuccess() throws Exception {
-                when(
-                		transactionAuthenServiceMock.verifyOTP(
-                                anyString(),
-                                any(OTP.class),
-                                anyString()
-                        )
-                ).thenReturn(BillPaymentDraft.Status.CREATED);
+        	BillPaymentDraft otpSentDraft = new BillPaymentDraft(null, null, null, null, BillPaymentDraft.Status.OTP_SENT);
+    		when(
+    			this.billPaymentServiceMock.getBillPaymentDraftDetail(anyString(), anyString())
+    		).thenReturn(otpSentDraft);
+    				
+    		when(
+    			this.transactionAuthenServiceMock.verifyOTP(anyString(), any(OTP.class), anyString())
+    		).thenReturn(DraftTransaction.Status.OTP_CONFIRMED);
+    		
+    		when(
+    			this.billPaymentServiceMock.performPayment(anyString(), anyString())
+    		).thenReturn(BillPaymentTransaction.Status.PROCESSING);
+    		
+    		this.verifySuccess(this.doPUT(confirmBillPaymentURL, new HashMap<String, Object>()));
 
-                this.verifySuccess(this.doPUT(confirmBillPaymentURL, new HashMap<String, Object>()));
-
-                Mockito.verify(billPaymentServiceMock).performPayment(anyString(), anyString());
+            Mockito.verify(billPaymentServiceMock).performPayment(anyString(), anyString());
         }
 
         @Test
         public void confirmBillPaymentFail() throws Exception {
-                when(
-                		transactionAuthenServiceMock.verifyOTP(
-                                anyString(),
-                                any(OTP.class),
-                                anyString()
-                        )
-                ).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
+        	BillPaymentDraft otpSentDraft = new BillPaymentDraft(null, null, null, null, BillPaymentDraft.Status.OTP_SENT);
+    		when(
+    			this.billPaymentServiceMock.getBillPaymentDraftDetail(anyString(), anyString())
+    		).thenReturn(otpSentDraft);
+    				
+    		when(
+    			this.transactionAuthenServiceMock.verifyOTP(anyString(), any(OTP.class), anyString())
+    		).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
 
-                this.verifyFailed(this.doPUT(confirmBillPaymentURL, new HashMap<String, Object>()));
+            this.verifyFailed(this.doPUT(confirmBillPaymentURL, new HashMap<String, Object>()));
 
-                Mockito.verify(billPaymentServiceMock, Mockito.never()).performPayment(anyString(), anyString());
+            Mockito.verify(billPaymentServiceMock, Mockito.never()).performPayment(anyString(), anyString());
         }
 
         @Test

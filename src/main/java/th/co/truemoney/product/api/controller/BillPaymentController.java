@@ -236,6 +236,7 @@ public class BillPaymentController extends BaseController {
 		data.put("currentEwalletBalance", currentBalance);
 
 		data.put("isFavoritable", String.valueOf(billInfo.isFavoritable()));
+		data.put("isFavorited", String.valueOf(billInfo.isFavorited()));
 
 		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
 
@@ -250,13 +251,14 @@ public class BillPaymentController extends BaseController {
 	ProductResponse verifyAndGetBillPaymentFavoriteInfo(
 			@PathVariable String accessTokenID, @RequestBody Map<String,String> request) {
 		
-		StopWatch timer = new StopWatch("verifyAndGetBillPaymentFavoriteInfo ("+accessTokenID+")");
+		StopWatch timer = new StopWatch("verifyAndGetBillPaymentFavoriteInfo for favorite bill ("+accessTokenID+")");
 		timer.start();
 		
 		Bill billPaymentInfo = billPaymentService.retrieveBillInformationWithBillCode(
 				request.get("billCode"), request.get("ref1"), new BigDecimal(request.get("amount")), accessTokenID);
+		
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("target", billPaymentInfo.getTarget());
+		data.put("billCode", billPaymentInfo.getTarget());
 		data.put("logoURL", billPaymentInfo.getLogoURL());
 		
 		if(Utils.isTrueCorpBill(billPaymentInfo.getTarget())){
@@ -285,7 +287,7 @@ public class BillPaymentController extends BaseController {
 		data.put("serviceFeeType", billPaymentInfo.getServiceFee().getFeeRateType());
 		data.put("serviceFee", billPaymentInfo.getServiceFee().getFeeRate());
 		data.put("sourceOfFundFee", prepareData(billPaymentInfo.getSourceOfFundFees()));
-		data.put("billID", billPaymentInfo.getID());
+		data.put("billPaymentID", billPaymentInfo.getID());
 		
 		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
 

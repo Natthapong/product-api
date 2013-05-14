@@ -232,7 +232,7 @@ public class TestBillPaymentController extends BaseTestController {
         }
         
         @Test
-        public void verifyAndGetFavoriteBillInfo() throws Exception{
+        public void verifyAndGetFavoriteBillInfoSuccess() throws Exception{
         	when( billPaymentServiceMock.retrieveBillInformationWithBillCode(
         			anyString(), anyString(), any(BigDecimal.class), anyString()))
         			.thenReturn(createStubbedBillInfo());
@@ -245,6 +245,20 @@ public class TestBillPaymentController extends BaseTestController {
         	this.verifySuccess(this.doPOST(getBillPaymentFavoriteInfoURL, req))
         	.andExpect(jsonPath("$.data").exists())
         	.andExpect(jsonPath("$..ref1").value("010004552"));
+        }
+        
+        @Test
+        public void verifyAndGetFavoriteBillInfoFail() throws Exception{
+        	when( billPaymentServiceMock.retrieveBillInformationWithBillCode(
+        			anyString(), anyString(), any(BigDecimal.class), anyString()))
+        			.thenThrow(new ServiceInventoryException(400, "", "", ""));
+        	
+        	Map<String, String> req = new HashMap<String, String>();
+        	req.put("billCode", "tcg");
+        	req.put("ref1", "010004552");
+        	req.put("amount", "10000");
+        	
+        	this.verifyFailed(this.doPOST(getBillPaymentFavoriteInfoURL, req));
         }
 
         private Bill createStubbedBillInfo() {

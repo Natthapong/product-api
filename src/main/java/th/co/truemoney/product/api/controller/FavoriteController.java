@@ -92,7 +92,11 @@ public class FavoriteController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		List<FavoriteGroup> groups = new ArrayList<FavoriteGroup>();
 		data.put("groups", groups);
-
+		
+		if (favoriteList == null) {
+			favoriteList = new ArrayList<Favorite>();
+		}
+		
 		if (favoriteList.size() > 0) {
 			
 			FavoriteGroup group0 = new FavoriteGroup("รายการบิล", "BillPay", "billpay");

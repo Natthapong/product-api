@@ -281,7 +281,7 @@ public class TestBillPaymentController extends BaseTestController {
         private Bill createStubbedBillInfo() {
                 Bill billInfo = new Bill();
                 billInfo.setTarget("tcg");
-                billInfo.setLogoURL("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png");
+                billInfo.setLogoURL("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tcg@2x.png");
                 billInfo.setTitleTH("ค่าใช้บริการบริษัทในกลุ่มทรู");
                 billInfo.setTitleEN("Convergence Postpay");
 
@@ -316,14 +316,8 @@ public class TestBillPaymentController extends BaseTestController {
         }
 
         private BillPaymentDraft createBillPaymentDraftStubbed(){
-    		Bill billInfo = new Bill();
-    		billInfo.setAmount(BigDecimal.TEN);
-    		billInfo.setRef1("010004552");
-    		billInfo.setServiceFee(new ServiceFeeInfo("THB", BigDecimal.ONE));
-    	
-    		BillPaymentDraft bill = new BillPaymentDraft("1111111111", billInfo, new BigDecimal(11000), "123567890", Status.OTP_CONFIRMED);
-    	    
-    	    return bill;
+	    	Bill bill = createStubbedBillInfo();
+    		return new BillPaymentDraft("1111111111", bill, new BigDecimal(11000), "123567890", Status.OTP_CONFIRMED);
     	}
 
 }

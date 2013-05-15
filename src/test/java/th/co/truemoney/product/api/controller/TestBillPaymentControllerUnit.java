@@ -21,7 +21,6 @@ import org.junit.Test;
 
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.manager.MessageManager;
-import th.co.truemoney.product.api.manager.OnlineResourceManager;
 import th.co.truemoney.product.api.util.ProductResponseFactory;
 import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
@@ -56,7 +55,6 @@ public class TestBillPaymentControllerUnit {
 		this.responseFactory.setMessageManager(mock(MessageManager.class));
 		this.billPaymentController.setBillPaymentService(billPaymentServiceMock);
 		this.billPaymentController.setResponseFactory(responseFactory);
-		this.billPaymentController.setOnlineResourceManager(new OnlineResourceManager());
 		this.transactionAuthenServiceMock = mock(TransactionAuthenService.class);
 		this.billPaymentController.setAuthService(transactionAuthenServiceMock);
 	}

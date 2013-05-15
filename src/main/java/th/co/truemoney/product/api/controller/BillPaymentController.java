@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import th.co.truemoney.product.api.domain.BillResponse;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.manager.MessageManager;
-import th.co.truemoney.product.api.manager.OnlineResourceManager;
 import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
@@ -43,9 +42,6 @@ public class BillPaymentController extends BaseController {
 
 	@Autowired
 	MessageManager messageManager;
-	
-	@Autowired
-	OnlineResourceManager onlineResourceManager;
 	
 	Logger logger = Logger.getLogger(BillPaymentController.class);
 	
@@ -209,9 +205,6 @@ public class BillPaymentController extends BaseController {
 										.setBill(bill)
 										.setPaymentDraft(paymentDraft)
 										.buildBillFavoriteResponse();
-		// re-map logo of the bill target
-		data.put("logoURL", onlineResourceManager.getActivityActionLogoURL(bill.getTarget()));
-		
 		timer.stop();
 		logger.info(timer.shortSummary());
 
@@ -228,10 +221,6 @@ public class BillPaymentController extends BaseController {
 
 	public void setAuthService(TransactionAuthenService authService) {
 		this.authService = authService;
-	}
-
-	public void setOnlineResourceManager(OnlineResourceManager onlineResourceManager) {
-		this.onlineResourceManager = onlineResourceManager;
 	}
 	
 }

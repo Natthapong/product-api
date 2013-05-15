@@ -42,47 +42,50 @@ public class WalletActivityController extends BaseController {
 	@RequestMapping(value = "/list/{accessTokenID}", method = RequestMethod.GET)
 	@ResponseBody
 	public ProductResponse getActivityList(@PathVariable String accessTokenID) {
-		List<Activity> activityList = activityService
-				.getActivities(accessTokenID);
+		List<Activity> activityList = activityService.getActivities(accessTokenID);
 
 		List<ActivityViewItem> itemList = new ArrayList<ActivityViewItem>();
-		
 		for (Activity act : activityList) {
+			String type = act.getType();
+			String action = act.getAction();
+			String ref1 = act.getRef1();
+			
+			String logoURL = onlineResourceManager.getActivityTypeLogoURL(type);
+			String txt1En = WalletActivity.getTypeInEnglish(type);
+			String txt1Th = WalletActivity.getTypeInThai(type);
+			String txt2En = Utils.formatDate(act.getTransactionDate());
+			String txt2Th = txt2En;
+			String txt3En = WalletActivity.getActionInEnglish(action);
+			String txt3Th = WalletActivity.getActionInThai(action);
+			String txt4En = Utils.formatSignedAmount(act.getTotalAmount());
+			String txt4Th = txt4En;
+			String txt5En = ref1;
+			String txt5Th = ref1;
+			TYPE t = WalletActivity.getType(type);
+			if (t == TYPE.TOPUP_MOBILE || t == TYPE.TRANSFER) {
+				txt5En = Utils.formatMobileNumber(ref1);
+				txt5Th = txt5En;
+			} else if (t == TYPE.ADD_MONEY && "debit".equals(action)) {
+				txt5En = BankUtil.getEnglishBankName(ref1);
+				txt5Th = BankUtil.getThaiBankName(ref1);
+			} else if ("add_money".equalsIgnoreCase(ref1)) {
+				txt5En = "Direct Debit Topup";
+				txt5Th = "เติมเงินด้วยบัญชีธนาคาร";
+			}
+			
 			ActivityViewItem item = new ActivityViewItem();
 			item.setReportID(String.valueOf(act.getReportID()));
-			item.setLogoURL(onlineResourceManager.getActivityTypeLogoURL(act.getType()));
-			item.setText1Th(WalletActivity.getTypeInThai(act.getType()));
-			item.setText1En(WalletActivity.getTypeInThai(act.getType()));
-			if (act.getTransactionDate() != null) {
-				item.setText2Th(Utils.formatDate(act.getTransactionDate()));
-				item.setText2En(Utils.formatDate(act.getTransactionDate()));
-			}
-			item.setText3Th(WalletActivity.getActionInThai(act.getAction()));
-			item.setText3En(WalletActivity.getActionInEnglish(act.getAction()));
-
-			item.setText4Th(Utils.formatSignedAmount(act.getTotalAmount()));
-			item.setText4En(Utils.formatSignedAmount(act.getTotalAmount()));
-			
-			if (TYPE.TOPUP_MOBILE == WalletActivity.getType(act.getType()) 
-					|| TYPE.TRANSFER == WalletActivity.getType(act.getType())) {
-				item.setText5Th(Utils.formatMobileNumber(act.getRef1()));
-				item.setText5En(Utils.formatMobileNumber(act.getRef1()));
-			} else if (TYPE.ADD_MONEY == WalletActivity.getType(act.getType())) {
-				if ("debit".equals(act.getAction())) {
-					item.setText5Th(BankUtil.getThaiBankName(act.getRef1()));
-					item.setText5En(BankUtil.getEnglishBankName(act.getRef1()));
-				}else{
-					item.setText5Th(act.getRef1());
-					item.setText5En(act.getRef1());
-				}
-			} else if ("add_money".equalsIgnoreCase(act.getRef1())) {
-				item.setText5Th("เติมเงินด้วยบัญชีธนาคาร");
-				item.setText5En("Direct Debit Topup");
-			} else {
-				item.setText5Th(act.getRef1());
-				item.setText5En(act.getRef1());
-			}
-
+			item.setLogoURL(logoURL);
+			item.setText1En(txt1En);
+			item.setText1Th(txt1Th);
+			item.setText2En(txt2En);
+			item.setText2Th(txt2Th);
+			item.setText3En(txt3En);
+			item.setText3Th(txt3Th);
+			item.setText4En(txt4En);
+			item.setText4Th(txt4Th);
+			item.setText5En(txt5En);
+			item.setText5Th(txt5Th);
 			itemList.add(item);
 		}
 

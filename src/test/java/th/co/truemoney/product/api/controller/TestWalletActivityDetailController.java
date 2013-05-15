@@ -55,7 +55,7 @@ public class TestWalletActivityDetailController extends
 
 		ActivityDetail detail = new ActivityDetail();
 		detail.setType(TYPE.TOPUP_MOBILE.name());
-		detail.setAction("d.tmvhtopup");
+		detail.setAction("tmvhtopup_c");
 		detail.setRef1("0897654333");
 		detail.setAmount(new BigDecimal(23455.50));
 		detail.setServiceFee(new BigDecimal(1234.50));
@@ -149,7 +149,7 @@ public class TestWalletActivityDetailController extends
 
 		ActivityDetail detail = new ActivityDetail();
 		detail.setType(TYPE.BILLPAY.name());
-		detail.setAction("d.ti");
+		detail.setAction("ti_c");
 		detail.setRef1("864895245");
 		detail.setRef2("923178945372901");
 		detail.setAmount(new BigDecimal(23455.50));

@@ -28,30 +28,30 @@ public class WalletActivity {
 		representEnglishText.put(TYPE.BONUS, "Promotion");
 		
 		actionList.put("promo_direct_debit", "คืนค่าธรรมเนียม");
-		actionList.put("d.tmvhtopup", "TrueMove H");
-		actionList.put("d.tmvtopup", "TrueMove");
-		actionList.put("d.catv", "True Visions");
-		actionList.put("d.dstv", "True Visions");
-		actionList.put("d.tmvh", "TrueMove H");
-		actionList.put("d.trmv", "TrueMove");
-		actionList.put("d.tlp", "TrueLife Plus");
-		actionList.put("d.tr", "โทรศัพท์บ้านทรู");
-		actionList.put("d.ti", "True Online");
-		actionList.put("d.tic", "True 006");
-		actionList.put("d.tcg", "บิลกลุ่มทรู");
-		actionList.put("d.mea", "การไฟฟ้านครหลวง");
+		actionList.put("tmvhtopup_c", "TrueMove H");
+		actionList.put("tmvtopup_c", "TrueMove");
+		actionList.put("catv_c", "True Visions");
+		actionList.put("dstv_c", "True Visions");
+		actionList.put("tmvh_c", "TrueMove H");
+		actionList.put("trmv_c", "TrueMove");
+		actionList.put("tlp_c", "TrueLife Plus");
+		actionList.put("tr_c", "โทรศัพท์บ้านทรู");
+		actionList.put("ti_c", "True Online");
+		actionList.put("tic_c", "True 006");
+		actionList.put("tcg_c", "บิลกลุ่มทรู");
+		actionList.put("mea_c", "การไฟฟ้านครหลวง");
 		actionList.put("mmcc", "บัตรเงินสด");
 		actionList.put("debtor", "ส่งเงิน");
 		actionList.put("debit", "บัญชีธนาคาร");
 		actionList.put("creditor", "รับเงิน");
 		
-		serviceCodeList.put("d.tmvh", 10);
-		serviceCodeList.put("d.trmv", 9);
-		serviceCodeList.put("d.tr", 8);
-		serviceCodeList.put("d.ti", 7);
-		serviceCodeList.put("d.tlp", 6);
-		serviceCodeList.put("d.tcg", 5);
-		serviceCodeList.put("d.tic", 4);
+		serviceCodeList.put("tmvh_c", 10);
+		serviceCodeList.put("trmv_c", 9);
+		serviceCodeList.put("tr_c", 8);
+		serviceCodeList.put("ti_c", 7);
+		serviceCodeList.put("tlp_c", 6);
+		serviceCodeList.put("tcg_c", 5);
+		serviceCodeList.put("tic_c", 4);
 	}
 
 	public static enum TYPE {

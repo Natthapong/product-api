@@ -238,6 +238,13 @@ public class TestBillPaymentControllerUnit {
 		).performPayment(anyString(), anyString());
 	}
 	
+	@Test
+	public void getBillInformationSuccess(){
+		ProductResponse resp = billPaymentController.getBillInformation("1111111111", fakeAccessTokenID);
+		Map<String, Object> data = resp.getData();
+		assertNotNull(data);
+	}
+	
 	private Bill createStubbedBillInfo() {
         Bill billInfo = new Bill();
         billInfo.setTarget("tcg");

@@ -69,4 +69,8 @@ public final class Utils {
         return String.valueOf(mobileNumber).replaceFirst(
                 "(\\d{3})(\\d{3})(\\d)", "$1-$2-$3");
     }
+    
+    public static String removeSuffix(String s) {
+    	return s == null ? "" : s.replace("_c", "");
+    }
 }

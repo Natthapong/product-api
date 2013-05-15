@@ -4,6 +4,8 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
+import th.co.truemoney.product.api.util.Utils;
+
 public class WalletActivity {
 	
 	private static EnumMap<TYPE, String> representThaiText = new EnumMap<WalletActivity.TYPE, String>(TYPE.class);
@@ -55,7 +57,11 @@ public class WalletActivity {
 	}
 
 	public static enum TYPE {
-		TOPUP_MOBILE, ADD_MONEY, TRANSFER, BILLPAY, BONUS;
+		TOPUP_MOBILE, // top up mobile number using wallet
+		ADD_MONEY, // add money to wallet
+		TRANSFER, // transfer money to/from other wallet
+		BILLPAY, // bill payment using wallet
+		BONUS; // kick back money to wallet
 	}
 	
 	public static WalletActivity.TYPE getType(String s) {
@@ -90,7 +96,7 @@ public class WalletActivity {
 	}
 	
 	public static String getActionInThai(String action) {
-		action = removeSuffix(action);
+		action = Utils.removeSuffix(action);
 		return actionList.containsKey(action) ? actionList.get(action) : "-";
 	}
 	
@@ -99,11 +105,7 @@ public class WalletActivity {
 	}
 	
 	public static int getWeightFromServiceCode(String serviceCode){
-		serviceCode = removeSuffix(serviceCode);
+		serviceCode = Utils.removeSuffix(serviceCode);
 		return serviceCodeList.containsKey(serviceCode) ? serviceCodeList.get(serviceCode) : 0;
-	}
-	
-	private static String removeSuffix(String s) {
-		return s.replace("_c", "");
 	}
 }

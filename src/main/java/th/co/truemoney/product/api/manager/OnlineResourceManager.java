@@ -2,6 +2,8 @@ package th.co.truemoney.product.api.manager;
 
 import org.springframework.stereotype.Component;
 
+import th.co.truemoney.product.api.util.Utils;
+
 @Component
 public class OnlineResourceManager {
 
@@ -16,12 +18,12 @@ public class OnlineResourceManager {
     }
 
     public String getActivityTypeLogoURL(String type) {
-        return LOGO_ACTIVITY_TYPE_URL + removeSuffix(lower(type)) + ".png";
+        return LOGO_ACTIVITY_TYPE_URL + Utils.removeSuffix(lower(type)) + ".png";
     }
 
     public String getActivityActionLogoURL(String action) {
         
-        action = removeSuffix(lower(action));
+        action = Utils.removeSuffix(lower(action));
         action = "tmvhtopup".equals(action) ? "tmvh" : action;
         action = "tmvtopup".equals(action)  ? "trmv" : action;
         
@@ -30,9 +32,5 @@ public class OnlineResourceManager {
     
     private String lower(String str) {
     	return str != null ? str.toLowerCase() : "";
-    }
-
-    private String removeSuffix(String s) {
-    	return s.replace("_c", "");
     }
 }

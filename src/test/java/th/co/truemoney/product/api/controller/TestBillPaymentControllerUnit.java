@@ -16,8 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minidev.json.JSONObject;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -110,12 +108,14 @@ public class TestBillPaymentControllerUnit {
 		assertEquals("THB", data.get("serviceFeeType"));
 		assertEquals(new BigDecimal(1000), data.get("serviceFee"));
 		
-		Map<String, Object> sourceOfFundFee = (Map<String, Object>) data.get("sourceOfFundFee");
-		assertEquals("EW", sourceOfFundFee.get("sourceType"));
-		assertEquals("THB", sourceOfFundFee.get("sourceFeeType"));
-		assertEquals(new BigDecimal(1000), sourceOfFundFee.get("sourceFee"));
-		assertEquals(new BigDecimal(100), sourceOfFundFee.get("minSourceFeeAmount"));
-		assertEquals(new BigDecimal(2500), sourceOfFundFee.get("maxSourceFeeAmount"));
+		List<Map<String, Object>> sofList = (List<Map<String, Object>>) data.get("sourceOfFundFee");
+		Map<String, Object> ew = sofList.get(0);
+		assertNotNull(ew);
+		assertEquals("EW", ew.get("sourceType"));
+		assertEquals("THB", ew.get("sourceFeeType"));
+		assertEquals(new BigDecimal(1000), ew.get("sourceFee"));
+		assertEquals(new BigDecimal(100), ew.get("minSourceFeeAmount"));
+		assertEquals(new BigDecimal(2500), ew.get("maxSourceFeeAmount"));
 		
 		assertNotNull(data.containsKey("billPaymentID"));
 	}

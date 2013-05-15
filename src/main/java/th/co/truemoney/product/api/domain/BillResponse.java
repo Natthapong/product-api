@@ -1,7 +1,9 @@
 package th.co.truemoney.product.api.domain;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import th.co.truemoney.product.api.util.Utils;
@@ -115,16 +117,19 @@ public class BillResponse {
 				response.put("serviceFeeType", bill.getServiceFee().getFeeRateType());
 				response.put("partialPaymentAllow", bill.getPartialPayment());
 				
-				SourceOfFund ew = bill.getEwalletSourceOfFund();
-				if (ew != null) {
-					Map<String, Object> sofFee = new HashMap<String, Object>();
-					sofFee.put("sourceType", ew.getSourceType());
-					sofFee.put("sourceFee", ew.getFeeRate());
-					sofFee.put("sourceFeeType", ew.getFeeRateType());
-					sofFee.put("minSourceFeeAmount", ew.getMinFeeAmount());
-					sofFee.put("maxSourceFeeAmount", ew.getMaxFeeAmount());
-					
-					response.put("sourceOfFundFee", sofFee);					
+				SourceOfFund[] sofs = bill.getSourceOfFundFees();
+				if (sofs != null) {
+					List<Map<String, Object>> sofList = new ArrayList<Map<String,Object>>();
+					for (SourceOfFund sof : sofs) {
+						Map<String, Object> sofFee = new HashMap<String, Object>();
+						sofFee.put("sourceType", sof.getSourceType());
+						sofFee.put("sourceFee", sof.getFeeRate());
+						sofFee.put("sourceFeeType", sof.getFeeRateType());
+						sofFee.put("minSourceFeeAmount", sof.getMinFeeAmount());
+						sofFee.put("maxSourceFeeAmount", sof.getMaxFeeAmount());
+						sofList.add(sofFee);
+					}
+					response.put("sourceOfFundFee", sofList);					
 				}
 			}
 			return response;

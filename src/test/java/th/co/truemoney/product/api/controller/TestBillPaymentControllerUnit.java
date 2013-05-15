@@ -254,7 +254,7 @@ public class TestBillPaymentControllerUnit {
 		assertNotNull(data);
 		
 		assertEquals("tcg", data.get("target"));
-		assertEquals("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png", data.get("logoURL"));
+		assertEquals("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tcg@2x.png", data.get("logoURL"));
 		assertEquals("", data.get("titleTh"));
 		assertEquals("", data.get("titleEn"));
 		

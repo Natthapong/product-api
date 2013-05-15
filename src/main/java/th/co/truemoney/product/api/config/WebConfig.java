@@ -17,7 +17,10 @@ import th.co.truemoney.serviceinventory.ewallet.domain.ClientCredential;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan({"th.co.truemoney.product.api", "th.co.truemoney.serviceinventory.ewallet.client"})
+@ComponentScan({
+	"th.co.truemoney.product.api",
+	"th.co.truemoney.serviceinventory.ewallet.client"
+})
 public class WebConfig extends WebMvcConfigurerAdapter {
 
 	public static final Integer MOBILE_APP_CHANNEL_ID = 40;

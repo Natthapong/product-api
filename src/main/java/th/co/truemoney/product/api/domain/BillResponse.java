@@ -44,11 +44,11 @@ public class BillResponse {
 				
 			}
 			if (paymentDraft != null) {
-				BigDecimal amount = paymentDraft.getAmount();
-				BigDecimal totalFee = Utils.calculateTotalFee(amount, bill.getServiceFee(), bill.getSourceOfFundFees());
-				BigDecimal totalAmount = amount.add(totalFee);
+				BigDecimal payAmount = paymentDraft.getAmount();
+				BigDecimal totalFee = Utils.calculateTotalFee(payAmount, bill.getServiceFee(), bill.getSourceOfFundFees());
+				BigDecimal totalAmount = payAmount.add(totalFee);
 				
-				response.put("amount", amount);
+				response.put("amount", payAmount);
 				response.put("totalFee", totalFee);
 				
 				response.put("totalAmount", totalAmount);
@@ -75,10 +75,13 @@ public class BillResponse {
 				response.put("otpRefCode", otp.getReferenceCode());
 				response.put("mobileNumber", otp.getMobileNumber());
 			}
-			if (bill != null) {
-				BigDecimal totalFee = Utils.calculateTotalFee(bill.getAmount(), bill.getServiceFee(), bill.getSourceOfFundFees());
+			if (paymentDraft != null) {
+				BigDecimal payAmount = paymentDraft.getAmount();
+				BigDecimal totalFee = Utils.calculateTotalFee(payAmount, bill.getServiceFee(), bill.getSourceOfFundFees());
 				BigDecimal totalAmount = bill.getAmount().add(totalFee);
 				response.put("totalAmount", totalAmount);
+			}
+			if (bill != null) {
 			}
 			return response;
 		}
@@ -86,7 +89,7 @@ public class BillResponse {
 		public Map<String, Object> buildBillFavoriteResponse() {
 			
 			Map<String, Object> response = buildBillInfoResponse();
-
+			
 			if (paymentDraft != null) {
 				response.put("billPaymentID", paymentDraft.getTransactionID());
 				response.put("billPaymentStatus", paymentDraft.getStatus());
@@ -146,6 +149,7 @@ public class BillResponse {
 		}
 		
 		public Builder setPaymentDraft(BillPaymentDraft paymentDraft) {
+			this.bill = paymentDraft.getBillInfo();
 			this.paymentDraft = paymentDraft;
 			return this;
 		}

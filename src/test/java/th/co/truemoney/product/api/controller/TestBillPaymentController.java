@@ -318,6 +318,7 @@ public class TestBillPaymentController extends BaseTestController {
         private BillPaymentDraft createBillPaymentDraftStubbed(){
     		Bill billInfo = new Bill();
     		billInfo.setAmount(BigDecimal.TEN);
+    		billInfo.setRef1("010004552");
     		billInfo.setServiceFee(new ServiceFeeInfo("THB", BigDecimal.ONE));
     	
     		BillPaymentDraft bill = new BillPaymentDraft("1111111111", billInfo, new BigDecimal(11000), "123567890", Status.OTP_CONFIRMED);

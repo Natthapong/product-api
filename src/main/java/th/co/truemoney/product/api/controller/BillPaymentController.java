@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import th.co.truemoney.product.api.domain.BillResponse;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.manager.MessageManager;
+import th.co.truemoney.product.api.manager.OnlineResourceManager;
 import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
@@ -42,12 +43,11 @@ public class BillPaymentController extends BaseController {
 
 	@Autowired
 	MessageManager messageManager;
-
-	Logger logger = Logger.getLogger(BillPaymentController.class);
 	
-	private ProductResponse createResponse(Map<String, Object> data) {
-		return this.responseFactory.createSuccessProductResonse(data);
-	}
+	@Autowired
+	OnlineResourceManager onlineResourceManager;
+	
+	Logger logger = Logger.getLogger(BillPaymentController.class);
 	
 	@RequestMapping(value = "/barcode/{barcode}/{accessTokenID}", method = RequestMethod.GET)
 	public @ResponseBody
@@ -82,12 +82,11 @@ public class BillPaymentController extends BaseController {
 		BigDecimal amount = new BigDecimal(request.get("amount").replace(",", ""));
 
 		BillPaymentDraft paymentDraft = this.billPaymentService.verifyPaymentAbility(billID, amount, accessTokenID);
-		Bill bill = paymentDraft.getBillInfo();
 		OTP otp = this.authService.requestOTP(paymentDraft.getID(), accessTokenID);
 		
 		Map<String, Object> data = BillResponse.builder()
 										.setOTP(otp)
-										.setBill(bill)
+										.setPaymentDraft(paymentDraft)
 										.buildBillCreateResponse();
 		timer.stop();
 		logger.info(timer.shortSummary());
@@ -170,6 +169,7 @@ public class BillPaymentController extends BaseController {
 										.setPaymentTransaction(txn)
 										.setWalletBalance(currentBalance)
 										.buildBillPaymentDetailResponse();
+		// remark message that display at the bottom of receipt
 		data.put("remarkEn", messageManager.getMessageEn("payment.bill.remark"));
 		data.put("remarkTh", messageManager.getMessageTh("payment.bill.remark"));
 
@@ -209,10 +209,17 @@ public class BillPaymentController extends BaseController {
 										.setBill(bill)
 										.setPaymentDraft(paymentDraft)
 										.buildBillFavoriteResponse();
+		// re-map logo of the bill target
+		data.put("logoURL", onlineResourceManager.getActivityActionLogoURL(bill.getTarget()));
+		
 		timer.stop();
 		logger.info(timer.shortSummary());
 
 		return createResponse(data);
+	}
+
+	private ProductResponse createResponse(Map<String, Object> data) {
+		return this.responseFactory.createSuccessProductResonse(data);
 	}
 
 	public void setBillPaymentService(BillPaymentService billPaymentService) {
@@ -222,4 +229,10 @@ public class BillPaymentController extends BaseController {
 	public void setAuthService(TransactionAuthenService authService) {
 		this.authService = authService;
 	}
+
+	public void setOnlineResourceManager(OnlineResourceManager onlineResourceManager) {
+		this.onlineResourceManager = onlineResourceManager;
+	}
+	
 }
+

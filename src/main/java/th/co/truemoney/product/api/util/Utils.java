@@ -35,7 +35,6 @@ public final class Utils {
         return totalFee;
     }
 
-    private static DecimalFormat df = new DecimalFormat("##,##0.00");
 
     public static String formatDate(Date date) {
         SimpleDateFormat dtf1 = new SimpleDateFormat("dd/MM/yy");
@@ -48,7 +47,7 @@ public final class Utils {
     }
 
     public static String formatAmount(BigDecimal amount) {
-        return df.format(amount);
+        return new DecimalFormat("##,##0.00").format(amount);
     }
 
     public static String formatAbsoluteAmount(BigDecimal amount) {

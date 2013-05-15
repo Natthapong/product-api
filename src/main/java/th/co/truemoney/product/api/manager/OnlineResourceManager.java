@@ -10,7 +10,7 @@ public class OnlineResourceManager {
     private static final String LOGO_BANK_URL = "https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bank/";
 
     private static final String LOGO_ACTIVITY_TYPE_URL = "https://secure.truemoney-dev.com/m/tmn_webview/images/logo_activity_type/";
-
+    
     public String getBankLogoURL(String bankCode) {
     	return LOGO_BANK_URL + lower(bankCode) + "@2x.png";
     }

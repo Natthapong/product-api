@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.manager.MessageManager;
+import th.co.truemoney.product.api.manager.OnlineResourceManager;
 import th.co.truemoney.product.api.util.ProductResponseFactory;
 import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
@@ -55,7 +56,7 @@ public class TestBillPaymentControllerUnit {
 		this.responseFactory.setMessageManager(mock(MessageManager.class));
 		this.billPaymentController.setBillPaymentService(billPaymentServiceMock);
 		this.billPaymentController.setResponseFactory(responseFactory);
-		
+		this.billPaymentController.setOnlineResourceManager(new OnlineResourceManager());
 		this.transactionAuthenServiceMock = mock(TransactionAuthenService.class);
 		this.billPaymentController.setAuthService(transactionAuthenServiceMock);
 	}
@@ -86,7 +87,7 @@ public class TestBillPaymentControllerUnit {
 		assertNotNull(data);
 		
 		assertEquals( "tcg", data.get("target"));
-		assertEquals("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png", data.get("logoURL"));
+		assertEquals("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tcg@2x.png", data.get("logoURL"));
 		assertEquals("", data.get("titleTh"));
 		assertEquals("", data.get("titleEn"));
 		
@@ -248,7 +249,7 @@ public class TestBillPaymentControllerUnit {
 	private Bill createStubbedBillInfo() {
         Bill billInfo = new Bill();
         billInfo.setTarget("tcg");
-        billInfo.setLogoURL("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png");
+        billInfo.setLogoURL("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tcg@2x.png");
         billInfo.setTitleTH("ค่าใช้บริการบริษัทในกลุ่มทรู");
         billInfo.setTitleEN("Convergence Postpay");
 
@@ -286,13 +287,8 @@ public class TestBillPaymentControllerUnit {
 	}
 	
 	private BillPaymentDraft createBillPaymentDraftStubbed(){
-		Bill billInfo = new Bill();
-		billInfo.setAmount(BigDecimal.TEN);
-		billInfo.setServiceFee(new ServiceFeeInfo("THB", BigDecimal.ONE));
-	
-		BillPaymentDraft bill = new BillPaymentDraft("1111111111", billInfo, new BigDecimal(11000), "123567890", Status.OTP_CONFIRMED);
-	    
-	    return bill;
+		Bill bill = createStubbedBillInfo();
+		return new BillPaymentDraft("1111111111", bill, new BigDecimal(11000), "123567890", Status.OTP_CONFIRMED);
 	}
 
 }

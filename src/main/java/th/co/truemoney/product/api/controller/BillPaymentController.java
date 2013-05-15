@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StopWatch;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +26,7 @@ import th.co.truemoney.serviceinventory.bill.domain.Bill;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
-import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
+import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
 @Controller
@@ -93,7 +94,8 @@ public class BillPaymentController extends BaseController {
 
 	@RequestMapping(value = "/{billID}/confirm/{accessTokenID}", method = RequestMethod.PUT)
 	public @ResponseBody
-	ProductResponse confirmBillPayment(@PathVariable String billID,
+	ProductResponse confirmBillPayment(
+			@PathVariable String billID,
 			@PathVariable String accessTokenID,
 			@RequestBody Map<String, String> request) {
 
@@ -101,30 +103,27 @@ public class BillPaymentController extends BaseController {
 		timer.start();
 		
 		BillPaymentDraft draft = billPaymentService.getBillPaymentDraftDetail(billID, accessTokenID);
-		BillPaymentDraft.Status sts = draft.getStatus();
+		BillPaymentDraft.Status status = draft.getStatus();
 		
-		if (DraftTransaction.Status.OTP_CONFIRMED != draft.getStatus()) {
+		if (status != Status.OTP_CONFIRMED) {
 			String otpStr = request.get("otpString");
 			String otpRef = request.get("otpRefCode");
 			String mobile = request.get("mobileNumber");
 			
 			OTP otp = new OTP(mobile, otpRef, otpStr);
-
-			sts = authService.verifyOTP(billID, otp, accessTokenID);
+			status = authService.verifyOTP(billID, otp, accessTokenID);
 		}
 		
 		billPaymentService.performPayment(billID, accessTokenID);
 
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("billPaymentStatus", sts.getStatus());
+		data.put("billPaymentStatus", status.getStatus());
 		data.put("billPaymentID", billID); //billPaymentID has the same value as billID
-
-		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
 
 		timer.stop();
 		logger.info(timer.shortSummary());
 
-		return response;
+		return createResponse(data);
 	}
 
 	@RequestMapping(value = "/{billPaymentID}/status/{accessTokenID}", method = RequestMethod.GET)
@@ -141,12 +140,10 @@ public class BillPaymentController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("billPaymentStatus", sts.getStatus());
 
-		ProductResponse response = this.responseFactory.createSuccessProductResonse(data);
-
 		timer.stop();
 		logger.info(timer.shortSummary());
 
-		return response;
+		return createResponse(data);
 	}
 
 	@RequestMapping(value = "/{billPaymentID}/details/{accessTokenID}", method = RequestMethod.GET)
@@ -193,19 +190,15 @@ public class BillPaymentController extends BaseController {
 		String billCode = request.get("billCode");
 		String ref1 = request.get("ref1");
 		
-		if(billCode == null || billCode == ""){
-			throw new InvalidParameterException("50010");
+		if (isEmptyString(billCode) || isEmptyString(ref1)) { 
+			throw new InvalidParameterException("50010"); 
 		}
 		
-		if(ref1 == null || ref1 == ""){
-			throw new InvalidParameterException("50010");
-		}
+		Bill bill = billPaymentService.retrieveBillInformationWithBillCode(
+							billCode, ref1, amount, accessTokenID);
 		
-		Bill bill = this.billPaymentService.retrieveBillInformationWithBillCode(
-				billCode, ref1, amount, accessTokenID);
-		
-		BillPaymentDraft paymentDraft = this.billPaymentService.verifyPaymentAbility(
-				bill.getID(), amount, accessTokenID);
+		BillPaymentDraft paymentDraft = billPaymentService.verifyPaymentAbility(
+							bill.getID(), amount, accessTokenID);
 		
 		Map<String, Object> data = BillResponse.builder()
 										.setBill(bill)
@@ -227,6 +220,10 @@ public class BillPaymentController extends BaseController {
 
 	public void setAuthService(TransactionAuthenService authService) {
 		this.authService = authService;
+	}
+	
+	private boolean isEmptyString(String str) {
+		return ! StringUtils.hasText(str);
 	}
 	
 }

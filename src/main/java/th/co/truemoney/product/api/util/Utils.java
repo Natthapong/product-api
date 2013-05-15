@@ -35,15 +35,18 @@ public final class Utils {
         return totalFee;
     }
 
-
     public static String formatDate(Date date) {
-        SimpleDateFormat dtf1 = new SimpleDateFormat("dd/MM/yy");
-        return  date != null ? dtf1.format(date) : "";
+    	if (date == null) {
+    		return "";
+    	}
+        return new SimpleDateFormat("dd/MM/yy").format(date);
     }
 
     public static String formatDateTime(Date date) {
-        SimpleDateFormat dtf2 = new SimpleDateFormat("HH:mm");
-        return (date != null) ? formatDate(date) + " " + dtf2.format(date) : "";
+        if (date == null) {
+        	return "";
+        }
+        return formatDate(date) + " " + new SimpleDateFormat("HH:mm").format(date);
     }
 
     public static String formatAmount(BigDecimal amount) {

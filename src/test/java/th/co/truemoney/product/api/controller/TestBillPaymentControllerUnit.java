@@ -10,6 +10,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.awt.image.RescaleOp;
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import java.util.Map;
 
 import net.minidev.json.JSONObject;
 
+import org.hibernate.validator.internal.util.privilegedactions.GetDeclaredField;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -236,6 +238,13 @@ public class TestBillPaymentControllerUnit {
 		verify(
 			this.billPaymentServiceMock, times(1)
 		).performPayment(anyString(), anyString());
+	}
+	
+	@Test
+	public void getBillInformationSuccess(){
+		ProductResponse resp = billPaymentController.getBillInformation("1111111111", fakeAccessTokenID);
+		Map<String, Object> data = resp.getData();
+		assertNotNull(data);
 	}
 	
 	private Bill createStubbedBillInfo() {

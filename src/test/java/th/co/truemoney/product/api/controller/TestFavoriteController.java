@@ -34,7 +34,7 @@ public class TestFavoriteController extends BaseTestController{
 		Map<String,String> req = new HashMap<String,String>();
 		req.put("amount", "1000");
 		req.put("ref1", "1234567890");
-		req.put("serviceCode", "tmvh");
+		req.put("serviceCode", "tmvh_c");
 		req.put("serviceType", "billpay");
 		
 		this.verifySuccess(this.doPUT(addFavoriteURL, req))
@@ -49,7 +49,7 @@ public class TestFavoriteController extends BaseTestController{
 		Map<String,String> req = new HashMap<String,String>();
 		req.put("amount", "1000");
 		req.put("ref1", "1234567890");
-		req.put("serviceCode", "tmvh");
+		req.put("serviceCode", "tmvh_c");
 		req.put("serviceType", "billpay");
 		
 		this.verifyFailed(this.doPUT(addFavoriteURL, req));
@@ -66,7 +66,7 @@ public class TestFavoriteController extends BaseTestController{
 		favorite.setAmount(new BigDecimal(1000));
 		favorite.setFavoriteID(new Long("1111"));
 		favorite.setRef1("1234567890");
-		favorite.setServiceCode("d.tmvh");
+		favorite.setServiceCode("tmvh_c");
 		favorite.setServiceType("billpay");
 		
 		return favorite;

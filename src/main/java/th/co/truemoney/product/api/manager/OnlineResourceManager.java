@@ -29,13 +29,13 @@ public class OnlineResourceManager {
         }
 
         String logoName = "";
-        String[] splitted = action.split("\\.");
-        if ("tmvhtopup".equals(splitted[1])) {
+        String[] splitted = action.split("_");
+        if ("tmvhtopup".equals(splitted[0])) {
             logoName = "tmvh";
-        } else if ("tmvtopup".equals(splitted[1])) {
+        } else if ("tmvtopup".equals(splitted[0])) {
             logoName = "trmv";
         } else {
-            logoName = splitted[1];
+            logoName = splitted[0];
         }
         return logoBillURL + logoName + "@2x.png";
      }

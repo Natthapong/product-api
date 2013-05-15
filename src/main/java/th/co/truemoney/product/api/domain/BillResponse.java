@@ -26,10 +26,12 @@ public class BillResponse {
 		public Map<String, Object> buildBillPaymentDetailResponse() {
 			Map<String, Object> response = new HashMap<String, Object>();
 			if (bill != null) {
+				boolean truecorpBill = Utils.isTrueCorpBill(bill.getTarget());
+				
 				response.put("target", bill.getTarget());
 				response.put("logoURL", bill.getLogoURL());
-				response.put("titleTh", bill.getTitleTH());
-				response.put("titleEn", bill.getTitleEN());
+				response.put("titleEn", truecorpBill ? "" : bill.getTitleEN());
+				response.put("titleTh", truecorpBill ? "" : bill.getTitleTH());
 				
 				response.put("ref1TitleTh", bill.getRef1TitleTH());
 				response.put("ref1TitleEn", bill.getRef1TitleEN());
@@ -41,7 +43,6 @@ public class BillResponse {
 				
 				response.put("isFavoritable", String.valueOf(bill.isFavoritable()));
 				response.put("isFavorited", String.valueOf(bill.isFavorited()));
-				
 			}
 			if (paymentDraft != null) {
 				BigDecimal payAmount = paymentDraft.getAmount();
@@ -77,7 +78,7 @@ public class BillResponse {
 			if (paymentDraft != null) {
 				BigDecimal payAmount = paymentDraft.getAmount();
 				BigDecimal totalFee = Utils.calculateTotalFee(payAmount, bill.getServiceFee(), bill.getSourceOfFundFees());
-				BigDecimal totalAmount = bill.getAmount().add(totalFee);
+				BigDecimal totalAmount = payAmount.add(totalFee);
 				response.put("billID", paymentDraft.getID());
 				response.put("totalAmount", totalAmount);
 			}

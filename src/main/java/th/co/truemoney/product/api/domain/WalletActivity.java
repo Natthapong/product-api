@@ -90,6 +90,7 @@ public class WalletActivity {
 	}
 	
 	public static String getActionInThai(String action) {
+		action = removeSuffix(action);
 		return actionList.containsKey(action) ? actionList.get(action) : "-";
 	}
 	
@@ -98,6 +99,11 @@ public class WalletActivity {
 	}
 	
 	public static int getWeightFromServiceCode(String serviceCode){
+		serviceCode = removeSuffix(serviceCode);
 		return serviceCodeList.containsKey(serviceCode) ? serviceCodeList.get(serviceCode) : 0;
+	}
+	
+	private static String removeSuffix(String s) {
+		return s.replace("_c", "");
 	}
 }

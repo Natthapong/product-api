@@ -70,13 +70,9 @@ public class TestFavoriteControllerUnit {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void getFavoriteList() throws ParseException{
-//		List<Favorite> favList = new ArrayList<Favorite>();
-		Favorite fav1 = createFavorite("tmvh_c", "billpay", new BigDecimal(100), "89417250", parseDateTime("10/05/13 10:10"));
-		Favorite fav2 = createFavorite("tlp_c", "billpay", new BigDecimal(200), "39402840489", parseDateTime("10/05/13 10:10"));
-		Favorite fav3 = createFavorite("mea_c", "billpay", new BigDecimal(300), "1234567890123", parseDateTime("10/05/13 10:10"));
-//		favList.add(fav1);
-//		favList.add(fav2);
-//		favList.add(fav3);
+		Favorite fav1 = createFavorite("tmvh", "billpay", new BigDecimal(100), "89417250", parseDateTime("10/05/13 10:10"));
+		Favorite fav2 = createFavorite("tlp", "billpay", new BigDecimal(200), "39402840489", parseDateTime("10/05/13 10:10"));
+		Favorite fav3 = createFavorite("mea", "billpay", new BigDecimal(300), "1234567890123", parseDateTime("10/05/13 10:10"));
 		
 		List<Favorite> input = new ArrayList<Favorite>();
 		input.add(fav2);
@@ -130,12 +126,12 @@ public class TestFavoriteControllerUnit {
 	@Test
 	public void sortOrderSuccess() throws ParseException{
 		List<Favorite> favList = new ArrayList<Favorite>();
-		Favorite fav1_1 = createFavorite("tmvh_c", "billpay", new BigDecimal(100), "89417250", parseDateTime("01/05/13 10:10"));
-		Favorite fav1_2 = createFavorite("tmvh_c", "billpay", new BigDecimal(100), "89417250", parseDateTime("02/05/13 10:10"));
-		Favorite fav1_3 = createFavorite("tmvh_c", "billpay", new BigDecimal(100), "89417250", parseDateTime("03/05/13 10:10"));
-		Favorite fav2 = createFavorite("tlp_c", "billpay", new BigDecimal(200), "39402840489", parseDateTime("04/05/13 10:10"));
-		Favorite fav3 = createFavorite("tcg_c", "billpay", new BigDecimal(300), "1234567890123", parseDateTime("05/05/13 10:10"));
-		Favorite fav4 = createFavorite("trmv_c", "billpay", new BigDecimal(100), "89417250", parseDateTime("06/05/13 10:10"));
+		Favorite fav1_1 = createFavorite("tmvh", "billpay", new BigDecimal(100), "89417250", parseDateTime("01/05/13 10:10"));
+		Favorite fav1_2 = createFavorite("tmvh", "billpay", new BigDecimal(100), "89417250", parseDateTime("02/05/13 10:10"));
+		Favorite fav1_3 = createFavorite("tmvh", "billpay", new BigDecimal(100), "89417250", parseDateTime("03/05/13 10:10"));
+		Favorite fav2 = createFavorite("tlp", "billpay", new BigDecimal(200), "39402840489", parseDateTime("04/05/13 10:10"));
+		Favorite fav3 = createFavorite("tcg", "billpay", new BigDecimal(300), "1234567890123", parseDateTime("05/05/13 10:10"));
+		Favorite fav4 = createFavorite("trmv", "billpay", new BigDecimal(100), "89417250", parseDateTime("06/05/13 10:10"));
 		
 		favList.add(fav1_1);
 		favList.add(fav2);

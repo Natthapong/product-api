@@ -27,16 +27,21 @@ public class OnlineResourceManager {
         if (action == null) {
             return "";
         }
-
+        
+        action = removeSuffix(action);
+        
         String logoName = "";
-        String[] splitted = action.split("_");
-        if ("tmvhtopup".equals(splitted[0])) {
+        if ("tmvhtopup".equals(action)) {
             logoName = "tmvh";
-        } else if ("tmvtopup".equals(splitted[0])) {
+        } else if ("tmvtopup".equals(action)) {
             logoName = "trmv";
         } else {
-            logoName = splitted[0];
+            logoName = action;
         }
         return logoBillURL + logoName + "@2x.png";
      }
+    
+    private String removeSuffix(String s) {
+    	return s.replace("_c", "");
+    }
 }

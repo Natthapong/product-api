@@ -86,8 +86,7 @@ public class TestRegisterController {
 					.andExpect(jsonPath("$.messageEn").exists())
 					.andExpect(jsonPath("$.messageTh").exists())
 					.andExpect(jsonPath("$.data").exists())
-					.andExpect(jsonPath("$..email").value("apinya@gmail.com"))
-					.andDo(print());
+					.andExpect(jsonPath("$..email").value("apinya@gmail.com"));
 	}
 
 	@Test
@@ -112,8 +111,7 @@ public class TestRegisterController {
 					.andExpect(jsonPath("$.namespace").value(failedNamespace))
 					.andExpect(jsonPath("$.messageEn").exists())
 					.andExpect(jsonPath("$.messageTh").exists())
-					.andExpect(jsonPath("$.data").exists())
-					.andDo(print());
+					.andExpect(jsonPath("$.data").exists());
 	}
 
 	@Test
@@ -143,8 +141,7 @@ public class TestRegisterController {
 					.andExpect(jsonPath("$.messageEn").exists())
 					.andExpect(jsonPath("$.messageTh").exists())
 					.andExpect(jsonPath("$.data").exists())
-					.andExpect(jsonPath("$..otpRefCode").value("wert"))
-					.andDo(print());
+					.andExpect(jsonPath("$..otpRefCode").value("wert"));
 	}
 
 	@Test
@@ -172,8 +169,7 @@ public class TestRegisterController {
 					.andExpect(jsonPath("$.namespace").value(failedNamespace))
 					.andExpect(jsonPath("$.messageEn").exists())
 					.andExpect(jsonPath("$.messageTh").exists())
-					.andExpect(jsonPath("$.data").exists())
-					.andDo(print());
+					.andExpect(jsonPath("$.data").exists());
 	}
 
 	@Test
@@ -217,8 +213,7 @@ public class TestRegisterController {
 					.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
 					.andExpect(jsonPath("$.messageEn").exists())
 					.andExpect(jsonPath("$.messageTh").exists())
-					.andExpect(jsonPath("$.data").exists())
-					.andDo(print());
+					.andExpect(jsonPath("$.data").exists());
 	}
 
 	@Test
@@ -261,8 +256,7 @@ public class TestRegisterController {
 					.andExpect(jsonPath("$.namespace").value(failedNamespace))
 					.andExpect(jsonPath("$.messageEn").exists())
 					.andExpect(jsonPath("$.messageTh").exists())
-					.andExpect(jsonPath("$.data").exists())
-					.andDo(print());
+					.andExpect(jsonPath("$.data").exists());
 	}
 
 	@Test
@@ -310,8 +304,7 @@ public class TestRegisterController {
 					.andExpect(jsonPath("$.namespace").value(failedNamespace))
 					.andExpect(jsonPath("$.messageEn").exists())
 					.andExpect(jsonPath("$.messageTh").exists())
-					.andExpect(jsonPath("$.data").exists())
-					.andDo(print());
+					.andExpect(jsonPath("$.data").exists());
 	}
 
 	@Test
@@ -359,8 +352,7 @@ public class TestRegisterController {
 					.andExpect(jsonPath("$.namespace").value(failedNamespace))
 					.andExpect(jsonPath("$.messageEn").exists())
 					.andExpect(jsonPath("$.messageTh").exists())
-					.andExpect(jsonPath("$.data").exists())
-					.andDo(print());
+					.andExpect(jsonPath("$.data").exists());
 	}
 
 }

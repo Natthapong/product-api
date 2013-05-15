@@ -127,21 +127,7 @@ public class WalletActivityController extends BaseController {
 				throw new IllegalArgumentException("No support handler for '" + type + "' activity type");
 		}
 	}
-	/*
-	private String mapBankName(String ref1) {
-		String bankName = "";
-		if ("KTB".equals(ref1)) {
-			bankName = ActivityType.KTB_ADDMONEY;
-		} else if ("SCB".equals(ref1)) {
-			bankName = ActivityType.SCB_ADDMONEY;
-		} else if ("BBL".equals(ref1)) {
-			bankName = ActivityType.BBL_ADDMONEY;
-		} else if ("BAY".equals(ref1)) {
-			bankName = ActivityType.BAY_ADDMONEY;
-		}
-		return bankName;
-	 }
-	*/
+	
 	public void setActivityService(ActivityService activityService) {
 		this.activityService = activityService;
 	}

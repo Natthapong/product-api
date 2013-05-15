@@ -58,7 +58,7 @@ public class TestBillPaymentController extends BaseTestController {
                         )
                 ).thenReturn(testBillInfo);
 
-                this.verifySuccess(this.doGET(getBarcodeDetailURL)).andDo(print())
+                this.verifySuccess(this.doGET(getBarcodeDetailURL))
                 .andExpect(jsonPath("$.data.titleTh").value(""))
                 .andExpect(jsonPath("$.data.titleEn").value(""))
                 .andExpect(jsonPath("$..isFavoritable").doesNotExist());
@@ -223,8 +223,7 @@ public class TestBillPaymentController extends BaseTestController {
                 ).thenReturn(new BigDecimal(100.00));
 
                 this.verifySuccess(this.doGET(getBillPaymentDetailURL))
-                .andExpect(jsonPath("$..isFavoritable").value("true"))
-                .andDo(print());
+                .andExpect(jsonPath("$..isFavoritable").value("true"));
         }
 
         @Test

@@ -241,9 +241,49 @@ public class TestBillPaymentControllerUnit {
 	
 	@Test
 	public void getBillInformationSuccess(){
+		
+		when(
+                billPaymentServiceMock.retrieveBillInformationWithBarcode(
+                        anyString(),
+                        anyString()
+                )
+        ).thenReturn(createStubbedBillInfo());
+		
 		ProductResponse resp = billPaymentController.getBillInformation("1111111111", fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		assertNotNull(data);
+		
+		assertEquals("tcg", data.get("target"));
+		assertEquals("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png", data.get("logoURL"));
+		assertEquals("", data.get("titleTh"));
+		assertEquals("", data.get("titleEn"));
+		
+		assertEquals("โทรศัพท์พื้นฐาน", data.get("ref1TitleTh"));
+		assertEquals("Fix Line", data.get("ref1TitleEn"));
+		assertEquals("010004552", data.get("ref1"));
+		
+		assertEquals("รหัสลูกค้า", data.get("ref2TitleTh"));
+		assertEquals("Customer ID", data.get("ref2TitleEn"));
+		assertEquals("010520120200015601", data.get("ref2"));
+		
+		assertEquals(new BigDecimal("10000.00"), data.get("amount"));
+		assertEquals(new BigDecimal(1000), data.get("serviceFee"));
+		assertEquals("Y", data.get("partialPaymentAllow"));
+		
+		assertEquals(new BigDecimal(10), data.get("minAmount"));
+		assertEquals(new BigDecimal(5000), data.get("maxAmount"));
+		
+		assertEquals("THB", data.get("serviceFeeType"));
+		assertEquals(new BigDecimal(1000), data.get("serviceFee"));
+		
+		Map<String, Object> sourceOfFundFee = (Map<String, Object>) data.get("sourceOfFundFee");
+		assertEquals("EW", sourceOfFundFee.get("sourceType"));
+		assertEquals("THB", sourceOfFundFee.get("sourceFeeType"));
+		assertEquals(new BigDecimal(1000), sourceOfFundFee.get("sourceFee"));
+		assertEquals(new BigDecimal(100), sourceOfFundFee.get("minSourceFeeAmount"));
+		assertEquals(new BigDecimal(2500), sourceOfFundFee.get("maxSourceFeeAmount"));
+		
+		assertNotNull(data.containsKey("billPaymentID"));
 	}
 	
 	private Bill createStubbedBillInfo() {

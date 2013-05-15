@@ -71,7 +71,6 @@ public class BillResponse {
 		public Map<String, Object> buildBillCreateResponse() {
 			Map<String, Object> response = new HashMap<String, Object>();
 			if (otp != null) {
-				response.put("billID", bill.getID());
 				response.put("otpRefCode", otp.getReferenceCode());
 				response.put("mobileNumber", otp.getMobileNumber());
 			}
@@ -79,9 +78,8 @@ public class BillResponse {
 				BigDecimal payAmount = paymentDraft.getAmount();
 				BigDecimal totalFee = Utils.calculateTotalFee(payAmount, bill.getServiceFee(), bill.getSourceOfFundFees());
 				BigDecimal totalAmount = bill.getAmount().add(totalFee);
+				response.put("billID", paymentDraft.getID());
 				response.put("totalAmount", totalAmount);
-			}
-			if (bill != null) {
 			}
 			return response;
 		}
@@ -89,8 +87,8 @@ public class BillResponse {
 		public Map<String, Object> buildBillFavoriteResponse() {
 			
 			Map<String, Object> response = buildBillInfoResponse();
-			
 			if (paymentDraft != null) {
+				response.put("billID", paymentDraft.getID());
 				response.put("billPaymentID", paymentDraft.getTransactionID());
 				response.put("billPaymentStatus", paymentDraft.getStatus());
 			}

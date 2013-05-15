@@ -1,7 +1,6 @@
 package th.co.truemoney.product.api.controller;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -15,6 +14,7 @@ import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 import org.junit.Before;
 import org.junit.Test;
@@ -320,7 +320,56 @@ public class TestBillPaymentControllerUnit {
 		assertNotNull(data);
 		
 		
+		assertTrue(data.containsKey("otpRefCode"));
+		assertTrue(data.containsKey("mobileNumber"));
+		assertTrue(data.containsKey("billID"));
+		assertEquals("11", String.valueOf(data.get("totalAmount")));
 	}
+	
+	 @Test
+     public void confirmBillPaymentSuccess() throws Exception {
+		 Map<String, String> request = new HashMap<String, String>();
+			request.put("otpString", "123456");
+			request.put("otpRefCode", "qwer");
+			request.put("mobileNumber", "0891234567");
+			
+     	BillPaymentDraft otpSentDraft = new BillPaymentDraft(null, null, null, null, BillPaymentDraft.Status.OTP_SENT);
+     	
+ 		when(
+ 			this.billPaymentServiceMock.getBillPaymentDraftDetail(anyString(), anyString())
+ 		).thenReturn(otpSentDraft);
+ 				
+ 		when(
+ 			this.transactionAuthenServiceMock.verifyOTP(anyString(), any(OTP.class), anyString())
+ 		).thenReturn(DraftTransaction.Status.OTP_CONFIRMED);
+ 		
+ 		when(
+ 			this.billPaymentServiceMock.performPayment(anyString(), anyString())
+ 		).thenReturn(BillPaymentTransaction.Status.PROCESSING);
+ 		
+ 		ProductResponse resp = billPaymentController.confirmBillPayment("111111", fakeAccessTokenID, request);
+		Map<String, Object> data = resp.getData();
+		assertNotNull(data);
+		
+		assertEquals("CONFIRMED", data.get("billPaymentStatus"));
+		assertTrue(data.containsKey("billPaymentID"));
+	 }
+	 
+	 @Test
+     public void getBillPaymentStatusSuccess() throws Exception {
+             when(
+                     billPaymentServiceMock.getBillPaymentStatus(
+                             anyString(),
+                             anyString()
+                     )
+             ).thenReturn(BillPaymentTransaction.Status.PROCESSING);
+             
+            ProductResponse resp = billPaymentController.getBillPaymentStatus("11111", fakeAccessTokenID);
+     		Map<String, Object> data = resp.getData();
+     		assertNotNull(data);
+     		
+     		assertEquals("PROCESSING", data.get("billPaymentStatus"));                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+     }
 	
 	private Bill createStubbedBillInfo() {
         Bill billInfo = new Bill();

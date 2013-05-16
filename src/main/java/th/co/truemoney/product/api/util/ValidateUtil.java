@@ -4,8 +4,8 @@ import java.util.regex.Pattern;
 
 public class ValidateUtil {
 
-    public static Pattern MOBILE_PATTERN = Pattern.compile("^[0][89][0-9]{8}");
-    public static Pattern EMAIL_PATTERN = Pattern
+	private static Pattern MOBILE_PATTERN = Pattern.compile("^[0][89][0-9]{8}");
+	private static Pattern EMAIL_PATTERN = Pattern
             .compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 

@@ -20,7 +20,7 @@ public class ProductResponseFactory {
     private static final Object[] EMPTY_PARAMS = new Object[0];
 
     @Autowired
-    MessageManager messageManager;
+    private MessageManager messageManager;
 
     public ProductResponse createSuccessProductResonse(Map<String, Object> data) {
         ProductResponse success = new ProductResponse();

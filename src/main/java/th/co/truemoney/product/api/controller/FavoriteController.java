@@ -31,10 +31,10 @@ import th.co.truemoney.serviceinventory.ewallet.domain.Favorite;
 public class FavoriteController extends BaseController {
 
 	@Autowired
-	FavoriteService favoriteService;
+	private FavoriteService favoriteService;
 	
 	@Autowired
-	OnlineResourceManager onlineResourceManager;
+	private OnlineResourceManager onlineResourceManager;
 
 	@RequestMapping(value = "/favorite/add/{accessTokenID}", method = RequestMethod.PUT)
 	@ResponseBody
@@ -137,7 +137,7 @@ public class FavoriteController extends BaseController {
 				}else{
 					Date d1 = (Date) fi1.getDate();
 					Date d2 = (Date) fi2.getDate();
-					return d2.compareTo(d1);
+					return d1.compareTo(d2);
 				}
 			}
 			

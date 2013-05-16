@@ -27,7 +27,7 @@ public class UserActionController extends BaseController {
 	private static final Integer MOBILE_CHANNEL_ID = 40;
 
 	@Autowired
-	TmnProfileService profileService;
+	private TmnProfileService profileService;
 
 	@Autowired
 	private ClientCredential appLogin;

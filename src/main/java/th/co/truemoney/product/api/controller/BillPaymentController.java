@@ -201,7 +201,6 @@ public class BillPaymentController extends BaseController {
 							bill.getID(), amount, accessTokenID);
 		
 		Map<String, Object> data = BillResponse.builder()
-										.setBill(bill)
 										.setPaymentDraft(paymentDraft)
 										.buildBillFavoriteResponse();
 		timer.stop();

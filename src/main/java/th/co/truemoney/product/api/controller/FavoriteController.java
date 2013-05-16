@@ -31,10 +31,10 @@ import th.co.truemoney.serviceinventory.ewallet.domain.Favorite;
 public class FavoriteController extends BaseController {
 
 	@Autowired
-	FavoriteService favoriteService;
+	private FavoriteService favoriteService;
 	
 	@Autowired
-	OnlineResourceManager onlineResourceManager;
+	private OnlineResourceManager onlineResourceManager;
 
 	@RequestMapping(value = "/favorite/add/{accessTokenID}", method = RequestMethod.PUT)
 	@ResponseBody

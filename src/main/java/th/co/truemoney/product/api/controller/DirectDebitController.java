@@ -37,19 +37,19 @@ import th.co.truemoney.serviceinventory.ewallet.domain.Transaction;
 public class DirectDebitController extends BaseController {
 
 	@Autowired
-	DirectDebitSourceOfFundService sourceOfFundService;
+	private DirectDebitSourceOfFundService sourceOfFundService;
 
 	@Autowired
-	TransactionAuthenService authService;
+	private TransactionAuthenService authService;
 
 	@Autowired
-	TopUpService topupService;
+	private TopUpService topupService;
 
 	@Autowired
-	TmnProfileService profileService;
+	private TmnProfileService profileService;
 
 	@Autowired
-	OnlineResourceManager onlineResourceManager;
+	private OnlineResourceManager onlineResourceManager;
 
 	@RequestMapping(value = "/add-money/ewallet/banks/{username}/{accessToken}", method = RequestMethod.GET)
 	@ResponseBody

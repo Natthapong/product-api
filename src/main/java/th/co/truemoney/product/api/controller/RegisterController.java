@@ -24,13 +24,13 @@ import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 public class RegisterController extends BaseController {
 
     @Autowired
-    TmnProfileService profileService;
+    private TmnProfileService profileService;
 
     @Autowired
-    UserActionController userActionController;
+    private UserActionController userActionController;
 
     @Autowired
-    SecurityManager securityManager;
+    private SecurityManager securityManager;
 
     @RequestMapping(value = "/profiles/validate-email", method = RequestMethod.POST)
     @ResponseBody

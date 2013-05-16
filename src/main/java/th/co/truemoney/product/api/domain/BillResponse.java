@@ -51,10 +51,10 @@ public class BillResponse {
 				BigDecimal totalFee = Utils.calculateTotalFee(payAmount, bill.getServiceFee(), bill.getSourceOfFundFees());
 				BigDecimal totalAmount = payAmount.add(totalFee);
 				
-				response.put("amount", payAmount);
-				response.put("totalFee", totalFee);
+				response.put("amount", payAmount.toString());
+				response.put("totalFee", totalFee.toString());
 				
-				response.put("totalAmount", totalAmount);
+				response.put("totalAmount", totalAmount.toString());
 				response.put("sourceOfFund", "Wallet"); //TODO Hard code!!!
 				
 			}
@@ -82,7 +82,7 @@ public class BillResponse {
 				BigDecimal totalFee = Utils.calculateTotalFee(payAmount, bill.getServiceFee(), bill.getSourceOfFundFees());
 				BigDecimal totalAmount = payAmount.add(totalFee);
 				response.put("billID", paymentDraft.getID());
-				response.put("totalAmount", totalAmount);
+				response.put("totalAmount", totalAmount.toString());
 			}
 			return response;
 		}
@@ -118,9 +118,9 @@ public class BillResponse {
 				}
 				response.put("ref2TitleEn", bill.getRef2TitleEN());
 				response.put("ref2TitleTh", bill.getRef2TitleTH());
-				response.put("amount", bill.getAmount());
-				response.put("minAmount", bill.getMinAmount());
-				response.put("maxAmount", bill.getMaxAmount());
+				response.put("amount", bill.getAmount().toString());
+				response.put("minAmount", bill.getMinAmount().toString());
+				response.put("maxAmount", bill.getMaxAmount().toString());
 				response.put("serviceFee", bill.getServiceFee().getFeeRate());
 				response.put("serviceFeeType", bill.getServiceFee().getFeeRateType());
 				response.put("partialPaymentAllow", bill.getPartialPayment());

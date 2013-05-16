@@ -45,18 +45,18 @@ import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 public class BillPaymentController extends BaseController {
 
 	@Autowired
-    BillPaymentService billPaymentService;
+    private BillPaymentService billPaymentService;
 
 	@Autowired
-	TransactionAuthenService authService;
+	private TransactionAuthenService authService;
 
 	@Autowired
-	TmnProfileService profileService;
+	private TmnProfileService profileService;
 
 	@Autowired
-	MessageManager messageManager;
+	private MessageManager messageManager;
 	
-	Logger logger = Logger.getLogger(BillPaymentController.class);
+	private Logger logger = Logger.getLogger(BillPaymentController.class);
 	
 	@RequestMapping(value = "/barcode/{barcode}/{accessTokenID}", method = RequestMethod.GET)
 	public @ResponseBody
@@ -237,6 +237,10 @@ public class BillPaymentController extends BaseController {
 		this.authService = authService;
 	}
 	
+	public void setProfileService(TmnProfileService profileService) {
+		this.profileService = profileService;
+	}
+
 	private boolean isEmptyString(String str) {
 		return ! StringUtils.hasText(str);
 	}

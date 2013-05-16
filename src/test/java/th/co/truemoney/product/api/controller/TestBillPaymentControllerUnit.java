@@ -9,6 +9,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
@@ -25,10 +27,12 @@ import th.co.truemoney.product.api.util.ProductResponseFactory;
 import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
+import th.co.truemoney.serviceinventory.bill.domain.BillPaymentConfirmationInfo;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
 import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
+import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
@@ -41,6 +45,8 @@ public class TestBillPaymentControllerUnit {
 	BillPaymentService billPaymentServiceMock;
 	
 	TransactionAuthenService transactionAuthenServiceMock;
+	
+	TmnProfileService profileServiceMock;
 	
 	ProductResponseFactory responseFactory;
 	
@@ -57,6 +63,8 @@ public class TestBillPaymentControllerUnit {
 		this.billPaymentController.setResponseFactory(responseFactory);
 		this.transactionAuthenServiceMock = mock(TransactionAuthenService.class);
 		this.billPaymentController.setAuthService(transactionAuthenServiceMock);
+		this.profileServiceMock = mock(TmnProfileService.class);
+		this.billPaymentController.setProfileService(profileServiceMock);
 	}
 
 
@@ -370,9 +378,75 @@ public class TestBillPaymentControllerUnit {
      		
      		assertEquals("PROCESSING", data.get("billPaymentStatus"));                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
      }
+	 
+	 @Test
+     public void getBillPaymentDetailSuccess() throws Exception {
+		 Map<String, String> request = new HashMap<String, String>();
+			request.put("billCode", "tcg");
+			request.put("ref1", "010004552");
+			request.put("amount", "10000");
+	 
+         Bill billInfo = createStubbedBillInfo();
+
+         BillPaymentDraft bill = new BillPaymentDraft();
+         bill.setBillInfo(billInfo);
+         bill.setAmount(new BigDecimal("10000"));
+
+         BillPaymentTransaction bpay = new BillPaymentTransaction();
+         bpay.setConfirmationInfo(new BillPaymentConfirmationInfo());
+         bpay.setDraftTransaction(bill);
+
+         when(
+                 billPaymentServiceMock.getBillPaymentResult(
+                         anyString(),
+                         anyString()
+                 )
+         ).thenReturn(bpay);
+         
+         when(
+         		profileServiceMock.getEwalletBalance(
+         				anyString()
+         		)
+         ).thenReturn(new BigDecimal(100.00));
+
+        ProductResponse resp = billPaymentController.getBillPaymentDetail("111111", fakeAccessTokenID);
+ 		Map<String, Object> data = resp.getData();
+ 		assertNotNull(data);
+ 		
+ 		assertEquals( "tcg", data.get("target"));
+ 		assertEquals("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tcg@2x.png", data.get("logoURL"));
+ 		assertEquals("", data.get("titleTh"));
+ 		assertEquals("", data.get("titleEn"));
+ 		
+ 		assertEquals("โทรศัพท์พื้นฐาน", data.get("ref1TitleTh"));
+ 		assertEquals("Fix Line", data.get("ref1TitleEn"));
+ 		assertEquals("010004552", data.get("ref1"));
+ 		
+ 		assertEquals("รหัสลูกค้า", data.get("ref2TitleTh"));
+ 		assertEquals("Customer ID", data.get("ref2TitleEn"));
+ 		assertEquals("010520120200015601", data.get("ref2"));
+ 		
+ 		assertEquals(new BigDecimal(10000), data.get("amount"));
+ 		assertEquals(new BigDecimal(12000), data.get("totalAmount"));
+ 		assertEquals(new BigDecimal(2000), data.get("totalFee"));
+ 		
+ 		assertEquals("Wallet", data.get("sourceOfFund"));
+ 		
+ 		assertTrue(data.containsKey("transactionDate"));
+ 		assertTrue(data.containsKey("transactionID"));
+ 		
+ 		assertFalse(data.containsKey("remarkEn"));
+ 		assertFalse(data.containsKey("remarkTh"));
+             
+ 		assertEquals(new BigDecimal(100), data.get("currentEwalletBalance"));
+ 		assertEquals("false", data.get("isFavoritable"));
+ 		assertEquals("false", data.get("isFavorited"));
+ 		
+     }
 	
 	private Bill createStubbedBillInfo() {
         Bill billInfo = new Bill();
+        billInfo.setID("111111");
         billInfo.setTarget("tcg");
         billInfo.setLogoURL("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tcg@2x.png");
         billInfo.setTitleTH("ค่าใช้บริการบริษัทในกลุ่มทรู");
@@ -389,6 +463,7 @@ public class TestBillPaymentControllerUnit {
         billInfo.setAmount(new BigDecimal("10000"));
 
         billInfo.setFavoritable(false);
+        billInfo.setFavorited(false);
         billInfo.setPartialPayment("Y");
         billInfo.setMinAmount(new BigDecimal(10));
         billInfo.setMaxAmount(new BigDecimal(5000));

@@ -426,9 +426,9 @@ public class TestBillPaymentControllerUnit {
  		assertEquals("Customer ID", data.get("ref2TitleEn"));
  		assertEquals("010520120200015601", data.get("ref2"));
  		
- 		assertEquals(new BigDecimal(10000), data.get("amount"));
- 		assertEquals(new BigDecimal(12000), data.get("totalAmount"));
- 		assertEquals(new BigDecimal(2000), data.get("totalFee"));
+ 		assertEquals("10000", data.get("amount"));
+ 		assertEquals("12000", data.get("totalAmount"));
+ 		assertEquals("2000", data.get("totalFee"));
  		
  		assertEquals("Wallet", data.get("sourceOfFund"));
  		

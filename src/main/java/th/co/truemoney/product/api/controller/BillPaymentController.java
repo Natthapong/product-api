@@ -30,6 +30,16 @@ import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
+/**
+ * Transaction States:
+ *   1. Bill
+ *   2. BillPaymentDraft
+ * 	 3. BillPayTransaction
+ *   4. BillPaymentConfirmation
+ *   
+ *   BillPaymentTransaction.ID == BillPaymentDraft.ID
+ */
+
 @Controller
 @RequestMapping(value = "/bill-payment")
 public class BillPaymentController extends BaseController {
@@ -78,9 +88,9 @@ public class BillPaymentController extends BaseController {
 		timer.start();
 
 		String billID = (String)request.get("billID");
-		BigDecimal amount = new BigDecimal(request.get("amount").replace(",", ""));
+		BigDecimal inputAmount = new BigDecimal(request.get("amount").replace(",", ""));
 
-		BillPaymentDraft paymentDraft = this.billPaymentService.verifyPaymentAbility(billID, amount, accessTokenID);
+		BillPaymentDraft paymentDraft = this.billPaymentService.verifyPaymentAbility(billID, inputAmount, accessTokenID);
 		OTP otp = this.authService.requestOTP(paymentDraft.getID(), accessTokenID);
 		
 		Map<String, Object> data = BillResponse.builder()
@@ -93,17 +103,17 @@ public class BillPaymentController extends BaseController {
 		return createResponse(data);
 		}
 
-	@RequestMapping(value = "/{billID}/confirm/{accessTokenID}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{draftID}/confirm/{accessTokenID}", method = RequestMethod.PUT)
 	public @ResponseBody
 	ProductResponse confirmBillPayment(
-			@PathVariable String billID,
+			@PathVariable String draftID,
 			@PathVariable String accessTokenID,
 			@RequestBody Map<String, String> request) {
 
 		StopWatch timer = new StopWatch("confirmBillPayment ("+accessTokenID+")");
 		timer.start();
 		
-		BillPaymentDraft draft = billPaymentService.getBillPaymentDraftDetail(billID, accessTokenID);
+		BillPaymentDraft draft = billPaymentService.getBillPaymentDraftDetail(draftID, accessTokenID);
 		BillPaymentDraft.Status status = draft.getStatus();
 		
 		if (status != Status.OTP_CONFIRMED) {
@@ -112,14 +122,14 @@ public class BillPaymentController extends BaseController {
 			String mobile = request.get("mobileNumber");
 			
 			OTP otp = new OTP(mobile, otpRef, otpStr);
-			status = authService.verifyOTP(billID, otp, accessTokenID);
+			status = authService.verifyOTP(draftID, otp, accessTokenID);
 		}
 		
-		billPaymentService.performPayment(billID, accessTokenID);
+		billPaymentService.performPayment(draftID, accessTokenID);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("billPaymentStatus", status.getStatus());
-		data.put("billPaymentID", billID); //billPaymentID has the same value as billID
+		data.put("billPaymentID", draftID); //billPaymentID has the same value as draftID
 
 		timer.stop();
 		logger.info(timer.shortSummary());
@@ -186,13 +196,13 @@ public class BillPaymentController extends BaseController {
 		
 		StopWatch timer = new StopWatch("verifyAndGetBillPaymentFavoriteInfo for favorite bill ("+accessTokenID+")");
 		timer.start();
-		String reqAmount = request.get("amount");
+		String inputAmount = request.get("amount");
 		
-		if (ValidateUtil.isEmpty(reqAmount)) {
+		if (ValidateUtil.isEmpty(inputAmount)) {
 			throw new InvalidParameterException("60000");
 		}
 		
-		BigDecimal amount = new BigDecimal(reqAmount.replace(",", ""));
+		BigDecimal amount = new BigDecimal(inputAmount.replace(",", ""));
 		String billCode = request.get("billCode");
 		String ref1 = request.get("ref1");
 		

@@ -45,10 +45,12 @@ public class ProductResponseFactory {
         Object[] parameters = null;
         if (isInvalidAmountException(exception)) {
             Map<String, Object> data = exception.getData();
-            parameters = new Object[]{ data.get("bankNameEn"),
-                                        data.get("bankNameTh"),
-                                        data.get("minAmount"),
-                                        data.get("maxAmount") };
+            if (data != null) {
+            	parameters = new Object[]{ data.get("bankNameEn"),
+            							   data.get("bankNameTh"),
+                                           data.get("minAmount"),
+                                           data.get("maxAmount") };
+            }
         } else if (isCallCenterEnabled(exception)) {
             parameters = new Object[]{ messageManager.getMessageEn("call_center_no") };
         } else {

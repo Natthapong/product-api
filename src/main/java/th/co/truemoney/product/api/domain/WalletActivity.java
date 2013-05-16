@@ -42,6 +42,7 @@ public class WalletActivity {
 		actionList.put("tic", "True 006");
 		actionList.put("tcg", "บิลกลุ่มทรู");
 		actionList.put("mea", "การไฟฟ้านครหลวง");
+		actionList.put("water", "การประปานครหลวง");
 		actionList.put("mmcc", "บัตรเงินสด");
 		actionList.put("debtor", "ส่งเงิน");
 		actionList.put("debit", "บัญชีธนาคาร");

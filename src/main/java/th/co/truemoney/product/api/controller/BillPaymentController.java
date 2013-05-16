@@ -20,6 +20,7 @@ import th.co.truemoney.product.api.domain.BillResponse;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.manager.MessageManager;
 import th.co.truemoney.product.api.util.Utils;
+import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
@@ -185,8 +186,13 @@ public class BillPaymentController extends BaseController {
 		
 		StopWatch timer = new StopWatch("verifyAndGetBillPaymentFavoriteInfo for favorite bill ("+accessTokenID+")");
 		timer.start();
+		String reqAmount = request.get("amount");
 		
-		BigDecimal amount = new BigDecimal(request.get("amount").replace(",", ""));
+		if (ValidateUtil.isEmpty(reqAmount)) {
+			throw new InvalidParameterException("60000");
+		}
+		
+		BigDecimal amount = new BigDecimal(reqAmount.replace(",", ""));
 		String billCode = request.get("billCode");
 		String ref1 = request.get("ref1");
 		

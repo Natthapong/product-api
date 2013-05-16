@@ -77,6 +77,8 @@ public class ProductResponseFactory {
     private final String LESS_THAN_MINIMUM_AMOUNT = "TMN-SERVICE-INVENTORY.20001";
 
     private final String MORE_THAN_MINIMUM_AMOUNT = "TMN-SERVICE-INVENTORY.20002";
+    
+    private final String FAVORITE_BILLPAY_INVALID_AMOUNT = "TMN-SERVICE-INVENTORY.20003";
 
     private final String[] CALL_CENTER_ENABLED = new String[]{"TMN-SERVICE-INVENTORY.1006",
                                                             "TMN-SERVICE-INVENTORY.10002",
@@ -87,7 +89,8 @@ public class ProductResponseFactory {
 
     private boolean isInvalidAmountException(ServiceInventoryException e) {
         return LESS_THAN_MINIMUM_AMOUNT.equals(e.getErrorNamespace() + "." + e.getErrorCode())
-                || MORE_THAN_MINIMUM_AMOUNT.equals(e.getErrorNamespace() + "." + e.getErrorCode());
+                || MORE_THAN_MINIMUM_AMOUNT.equals(e.getErrorNamespace() + "." + e.getErrorCode()) 
+                || FAVORITE_BILLPAY_INVALID_AMOUNT.equals(e.getErrorNamespace() + "." + e.getErrorCode());
     }
 
     private boolean isCallCenterEnabled(ServiceInventoryException e) {

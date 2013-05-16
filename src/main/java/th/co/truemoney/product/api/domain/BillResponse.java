@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.util.StringUtils;
+
 import th.co.truemoney.product.api.util.Utils;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentConfirmationInfo;
@@ -39,7 +41,7 @@ public class BillResponse {
 				
 				response.put("ref2TitleTh", bill.getRef2TitleTH());
 				response.put("ref2TitleEn", bill.getRef2TitleEN());
-				response.put("ref2", bill.getRef2());
+				response.put("ref2", StringUtils.hasText(bill.getRef2()) ? bill.getRef2() : "");
 				
 				response.put("isFavoritable", String.valueOf(bill.isFavoritable()));
 				response.put("isFavorited", String.valueOf(bill.isFavorited()));
@@ -109,7 +111,11 @@ public class BillResponse {
 				response.put("ref1", bill.getRef1());
 				response.put("ref1TitleEn", bill.getRef1TitleEN());
 				response.put("ref1TitleTh", bill.getRef1TitleTH());
-				response.put("ref2", bill.getRef2());
+				if("barcode".equals(bill.getPayWith())){
+					response.put("ref2", StringUtils.hasText(bill.getRef2()) ? bill.getRef2() : "-");
+				}else{
+					response.put("ref2", StringUtils.hasText(bill.getRef2()) ? bill.getRef2() : "");
+				}
 				response.put("ref2TitleEn", bill.getRef2TitleEN());
 				response.put("ref2TitleTh", bill.getRef2TitleTH());
 				response.put("amount", bill.getAmount());

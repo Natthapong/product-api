@@ -137,7 +137,7 @@ public class FavoriteController extends BaseController {
 				}else{
 					Date d1 = (Date) fi1.getDate();
 					Date d2 = (Date) fi2.getDate();
-					return d2.compareTo(d1);
+					return d1.compareTo(d2);
 				}
 			}
 			

@@ -30,7 +30,7 @@ public class WalletActivity {
 		representEnglishText.put(TYPE.BONUS, "Promotion");
 		
 		actionList.put("promo_direct_debit", "คืนค่าธรรมเนียม");
-		actionList.put("tmvhtopup", "TrueMove H");
+		actionList.put("tmhtopup", "TrueMove H");
 		actionList.put("tmvtopup", "TrueMove");
 		actionList.put("catv", "True Visions");
 		actionList.put("dstv", "True Visions");

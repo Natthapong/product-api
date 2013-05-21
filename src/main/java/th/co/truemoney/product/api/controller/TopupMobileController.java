@@ -41,13 +41,13 @@ public class TopupMobileController extends BaseController {
 	private static final BigDecimal topupMinAmount = BigDecimal.TEN;
 	private static final BigDecimal topupMaxAmount = new BigDecimal(1000);
 	
-	private String mobileNumber = "";
+	private String mobileNumberReqParam = "mobileNumber";
 
 	@RequestMapping(value = "/draft/verifyAndCreate/{accessTokenID}", method = RequestMethod.POST)
 	@ResponseBody
 	public ProductResponse verifyAndCreate(@PathVariable String accessTokenID,
 			@RequestBody Map<String, String> request) {
-		setMobileNumber(request.get("mobileNumber"));
+		String mobileNumber = request.get(mobileNumberReqParam);
 
 		String amount = request.get("amount");
 
@@ -72,7 +72,7 @@ public class TopupMobileController extends BaseController {
 
 		data.put("logoURL", topUpMobileInfo.getLogo());
 		data.put(
-				"mobileNumber",
+				mobileNumberReqParam,
 				String.valueOf(topUpMobileInfo.getMobileNumber()).replaceFirst(
 						"(\\d{3})(\\d{3})(\\d)", "$1-$2-$3"));
 		data.put("amount", topUpMobileInfo.getAmount());
@@ -99,7 +99,7 @@ public class TopupMobileController extends BaseController {
 		BigDecimal topUpAmount = topUpMobileInfo.getAmount();
 
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("mobileNumber", otp.getMobileNumber());
+		data.put(mobileNumberReqParam, otp.getMobileNumber());
 		data.put("refCode", otp.getReferenceCode());
 		data.put(
 				"totalAmount",
@@ -118,7 +118,7 @@ public class TopupMobileController extends BaseController {
 			@RequestBody Map<String, String> request) {
 
 		OTP otp = new OTP();
-		otp.setMobileNumber(request.get("mobileNumber"));
+		otp.setMobileNumber(request.get(mobileNumberReqParam));
 		otp.setOtpString(request.get("otpString"));
 		otp.setReferenceCode(request.get("refCode"));
 
@@ -161,7 +161,7 @@ public class TopupMobileController extends BaseController {
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put(
-				"mobileNumber",
+				mobileNumberReqParam,
 				String.valueOf(
 						transaction.getDraftTransaction().getTopUpMobileInfo()
 								.getMobileNumber()).replaceFirst(
@@ -220,10 +220,6 @@ public class TopupMobileController extends BaseController {
 			throw new InvalidParameterException("60000");
 		}
 
-	}
-
-	public void setMobileNumber(String mobileNumber) {
-		this.mobileNumber = mobileNumber;
 	}
 
 }

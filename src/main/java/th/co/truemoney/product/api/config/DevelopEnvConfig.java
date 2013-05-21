@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Profile("dev")
-public class DevEnvConfig {
+@Profile("develop")
+public class DevelopEnvConfig {
 
 	@Bean @Qualifier("apiHost")
 	public String apiHost() {

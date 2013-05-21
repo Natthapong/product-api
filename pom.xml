@@ -224,36 +224,47 @@
                         </execution> -->
                 </executions>
             </plugin>
+            <plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-war-plugin</artifactId>
+		        <version>2.3</version>
+		        <configuration>
+		          <webResources>
+			        <resource>
+			          <filtering>true</filtering>
+			          <directory>src/main/webapp</directory>
+			          <includes>
+			            <include>**/web.xml</include>
+			          </includes>
+			        </resource>
+			      </webResources>
+			       <warSourceDirectory>src/main/webapp</warSourceDirectory>
+		      	   <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+		        </configuration>
+			</plugin>
         </plugins>
     </build>
 
     <profiles>
         <profile>
             <id>local</id>
+            <properties>
+                <spring.profiles.active>local</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>develop</id>
             <activation>
                   <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <spring.profiles.active>local</spring.profiles.active>
-                <tomcat.manager>http://localhost:8080/manager</tomcat.manager>
-                <tomcat.manager.username>tomcat</tomcat.manager.username>
-                <tomcat.manager.password>tomcat</tomcat.manager.password>
+                <spring.profiles.active>develop</spring.profiles.active>
             </properties>
         </profile>
         <profile>
-            <id>dev1</id>
+            <id>production</id>
             <properties>
-                <tomcat.manager>http://10.217.202.11:8080/manager</tomcat.manager>
-                <tomcat.manager.username>tomcat</tomcat.manager.username>
-                <tomcat.manager.password>tomcat</tomcat.manager.password>
-            </properties>
-        </profile>
-        <profile>
-            <id>dev2</id>
-            <properties>
-                <tomcat.manager>http://10.217.202.12:8080/manager</tomcat.manager>
-                <tomcat.manager.username>tomcat</tomcat.manager.username>
-                <tomcat.manager.password>tomcat</tomcat.manager.password>
+                <spring.profiles.active>production</spring.profiles.active>
             </properties>
         </profile>
     </profiles>

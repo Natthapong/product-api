@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Profile;
 
 @Configuration
 @Profile("local")
-public class LocalEnvConfig {
+public class LocalEnvConfig  extends BaseEnvConfig {
 
 	@Bean @Qualifier("apiHost")
 	public String apiHost() {

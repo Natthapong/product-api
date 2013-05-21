@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Profile;
 
 @Configuration
 @Profile("dev")
-public class DevelopEnvConfig {
+public class DevelopEnvConfig extends BaseEnvConfig {
 
 	@Bean @Qualifier("apiHost")
 	public String apiHost() {

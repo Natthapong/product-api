@@ -28,7 +28,7 @@ import th.co.truemoney.serviceinventory.transfer.P2PTransferService;
 	"th.co.truemoney.product.api.manager",
 	"th.co.truemoney.product.api.handler",
 	"th.co.truemoney.product.api.util"})
-public class TestWebConfig {
+public class TestWebConfig extends BaseEnvConfig {
 
 	@Bean
     public MessageSource messageSource() {

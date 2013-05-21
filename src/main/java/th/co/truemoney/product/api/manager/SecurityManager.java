@@ -17,18 +17,17 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.MessageSourceAware;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SecurityManager implements MessageSourceAware {
+public class SecurityManager {
 
 	@Autowired
-	private MessageSource messageSource;
+	private Environment env;
 	
 	public String getPublicKey() {
-		return this.messageSource.getMessage("publicKey", null, null);
+		return env.getProperty("publicKey");
 	}
 	
 	public String encryptRSA(String password) {
@@ -87,11 +86,6 @@ public class SecurityManager implements MessageSourceAware {
 					16);
 		}
 		return des_byte;
-	}
-
-	@Override
-	public void setMessageSource(MessageSource messageSource) {
-		this.messageSource = messageSource;
 	}
 
 }

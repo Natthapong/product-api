@@ -3,13 +3,16 @@ package th.co.truemoney.product.api.handler;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import th.co.truemoney.product.api.manager.OnlineResourceManager;
 import th.co.truemoney.product.api.util.Utils;
 import th.co.truemoney.serviceinventory.ewallet.domain.ActivityDetail;
 
 public abstract class GeneralActivityDetailViewHandler implements ActivityDetailViewHandler {
 	
-	protected OnlineResourceManager onlineResourceManager = new OnlineResourceManager();
+	@Autowired
+	protected OnlineResourceManager onlineResourceManager;
 	
 	protected ActivityDetail activity;
 	

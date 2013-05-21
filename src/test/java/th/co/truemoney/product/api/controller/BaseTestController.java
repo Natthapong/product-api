@@ -70,7 +70,7 @@ public abstract class BaseTestController {
 
 	@Autowired
 	protected TransactionAuthenService transactionAuthenServiceMock;
-
+	
 	@Before
 	public void setup() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();

@@ -26,6 +26,7 @@ import th.co.truemoney.serviceinventory.transfer.P2PTransferService;
 @ComponentScan({
 	"th.co.truemoney.product.api.controller",
 	"th.co.truemoney.product.api.manager",
+	"th.co.truemoney.product.api.handler",
 	"th.co.truemoney.product.api.util"})
 public class TestWebConfig {
 
@@ -79,7 +80,7 @@ public class TestWebConfig {
 	@Bean TransactionAuthenService transactionAuthenService() {
 		return Mockito.mock(TransactionAuthenService.class);
 	}
-
+	
 	@Bean @Qualifier("apiHost")
 	public String apiHost() {
 		return "http://localhost:8080";

@@ -3,8 +3,11 @@ package th.co.truemoney.product.api.handler;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
+
 import th.co.truemoney.product.api.util.Utils;
 
+@Component
 public class TopupMobileActivityDetailViewHandler extends GeneralActivityDetailViewHandler {
 	
 	@Override

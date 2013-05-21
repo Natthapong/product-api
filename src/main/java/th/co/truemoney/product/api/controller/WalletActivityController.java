@@ -113,19 +113,31 @@ public class WalletActivityController extends BaseController {
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	
+	@Autowired
+	private TopupMobileActivityDetailViewHandler topupMobileActivityDetailViewHandler;
+	@Autowired
+	private AddMoneyActivityDetailViewHandler addMoneyActivityDetailViewHandler;
+	@Autowired
+	private TransferActivityDetailViewHandler transferActivityDetailViewHandler;
+	@Autowired
+	private BillPayActivityDetailViewHandler billPayActivityDetailViewHandler;
+	@Autowired
+	private BonusActivityDetailViewHandler bonusActivityDetailViewHandler;
+	
+	
 	private ActivityDetailViewHandler getActivityDetailHandler(String type) {
 		TYPE t = WalletActivity.getType(type);
 		switch (t) {
 			case TOPUP_MOBILE:
-				return new TopupMobileActivityDetailViewHandler();
+				return topupMobileActivityDetailViewHandler;
 			case ADD_MONEY:
-				return new AddMoneyActivityDetailViewHandler();
+				return addMoneyActivityDetailViewHandler;
 			case TRANSFER:
-				return new TransferActivityDetailViewHandler();
+				return transferActivityDetailViewHandler;
 			case BILLPAY:
-				return new BillPayActivityDetailViewHandler();
+				return billPayActivityDetailViewHandler;
 			case BONUS:
-				return new BonusActivityDetailViewHandler();
+				return bonusActivityDetailViewHandler;
 			default:
 				throw new IllegalArgumentException("No support handler for '" + type + "' activity type");
 		}

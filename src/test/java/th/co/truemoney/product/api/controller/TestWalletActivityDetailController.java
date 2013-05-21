@@ -72,7 +72,7 @@ public class TestWalletActivityDetailController extends
 		assertTrue(section1.containsKey("logoURL"));
 		assertTrue(section1.containsKey("titleTh"));
 		assertTrue(section1.containsKey("titleEn"));
-		assertEquals("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png", section1.get("logoURL"));
+		assertEquals("http://localhost:8080/m/tmn_webview/images/logo_bill/tmvh@2x.png", section1.get("logoURL"));
 		assertEquals("", section1.get("titleTh"));
 		assertEquals("", section1.get("titleEn"));
 
@@ -167,7 +167,7 @@ public class TestWalletActivityDetailController extends
 		assertTrue(section1.containsKey("logoURL"));
 		assertTrue(section1.containsKey("titleTh"));
 		assertTrue(section1.containsKey("titleEn"));
-		assertEquals("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/ti@2x.png", section1.get("logoURL"));
+		assertEquals("http://localhost:8080/m/tmn_webview/images/logo_bill/ti@2x.png", section1.get("logoURL"));
 		assertEquals("", section1.get("titleTh"));
 		assertEquals("", section1.get("titleEn"));
 

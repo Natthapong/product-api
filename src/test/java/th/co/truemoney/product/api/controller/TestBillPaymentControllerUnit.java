@@ -105,12 +105,12 @@ public class TestBillPaymentControllerUnit {
 		assertEquals("Customer ID", data.get("ref2TitleEn"));
 		assertEquals("010520120200015601", data.get("ref2"));
 		
-		assertEquals(new BigDecimal("10000.00"), data.get("amount"));
+		assertEquals("10000.00", data.get("amount"));
 		assertEquals(new BigDecimal(1000), data.get("serviceFee"));
 		assertEquals("Y", data.get("partialPaymentAllow"));
 		
-		assertEquals(new BigDecimal(10), data.get("minAmount"));
-		assertEquals(new BigDecimal(5000), data.get("maxAmount"));
+		assertEquals("10", data.get("minAmount"));
+		assertEquals("5000", data.get("maxAmount"));
 		
 		assertEquals("THB", data.get("serviceFeeType"));
 		assertEquals(new BigDecimal(1000), data.get("serviceFee"));
@@ -272,12 +272,12 @@ public class TestBillPaymentControllerUnit {
 		assertEquals("Customer ID", data.get("ref2TitleEn"));
 		assertEquals("010520120200015601", data.get("ref2"));
 		
-		assertEquals(new BigDecimal("10000.00"), data.get("amount"));
+		assertEquals("10000.00", data.get("amount"));
 		assertEquals(new BigDecimal(1000), data.get("serviceFee"));
 		assertEquals("Y", data.get("partialPaymentAllow"));
 		
-		assertEquals(new BigDecimal(10), data.get("minAmount"));
-		assertEquals(new BigDecimal(5000), data.get("maxAmount"));
+		assertEquals("10", data.get("minAmount"));
+		assertEquals("5000", data.get("maxAmount"));
 		
 		assertEquals("THB", data.get("serviceFeeType"));
 		assertEquals(new BigDecimal(1000), data.get("serviceFee"));
@@ -359,7 +359,7 @@ public class TestBillPaymentControllerUnit {
 		Map<String, Object> data = resp.getData();
 		assertNotNull(data);
 		
-		assertEquals("CONFIRMED", data.get("billPaymentStatus"));
+		assertEquals("PROCESSING", data.get("billPaymentStatus"));
 		assertTrue(data.containsKey("billPaymentID"));
 	 }
 	 
@@ -426,9 +426,9 @@ public class TestBillPaymentControllerUnit {
  		assertEquals("Customer ID", data.get("ref2TitleEn"));
  		assertEquals("010520120200015601", data.get("ref2"));
  		
- 		assertEquals(new BigDecimal(10000), data.get("amount"));
- 		assertEquals(new BigDecimal(12000), data.get("totalAmount"));
- 		assertEquals(new BigDecimal(2000), data.get("totalFee"));
+ 		assertEquals("10000", data.get("amount"));
+ 		assertEquals("12000", data.get("totalAmount"));
+ 		assertEquals("2000", data.get("totalFee"));
  		
  		assertEquals("Wallet", data.get("sourceOfFund"));
  		

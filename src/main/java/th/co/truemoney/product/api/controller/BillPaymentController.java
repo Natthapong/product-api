@@ -114,21 +114,21 @@ public class BillPaymentController extends BaseController {
 		timer.start();
 		
 		BillPaymentDraft draft = billPaymentService.getBillPaymentDraftDetail(draftID, accessTokenID);
-		BillPaymentDraft.Status status = draft.getStatus();
+		BillPaymentDraft.Status draftStatus = draft.getStatus();
 		
-		if (status != Status.OTP_CONFIRMED) {
+		if (draftStatus != Status.OTP_CONFIRMED) {
 			String otpStr = request.get("otpString");
 			String otpRef = request.get("otpRefCode");
 			String mobile = request.get("mobileNumber");
 			
 			OTP otp = new OTP(mobile, otpRef, otpStr);
-			status = authService.verifyOTP(draftID, otp, accessTokenID);
+			draftStatus = authService.verifyOTP(draftID, otp, accessTokenID);
 		}
 		
-		billPaymentService.performPayment(draftID, accessTokenID);
+		BillPaymentTransaction.Status transactionStatus = billPaymentService.performPayment(draftID, accessTokenID);
 
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("billPaymentStatus", status.getStatus());
+		data.put("billPaymentStatus", transactionStatus.getStatus());
 		data.put("billPaymentID", draftID); //billPaymentID has the same value as draftID
 
 		timer.stop();

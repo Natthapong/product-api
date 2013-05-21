@@ -1,5 +1,10 @@
 package th.co.truemoney.product.api.controller;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,16 +19,9 @@ import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
 import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
-import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
+import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 public class TestBillPaymentController extends BaseTestController {
 
@@ -277,7 +275,7 @@ public class TestBillPaymentController extends BaseTestController {
         	
         	this.verifyFailed(this.doPOST(getBillPaymentFavoriteInfoURL, req));
         }
-
+                
         private Bill createStubbedBillInfo() {
                 Bill billInfo = new Bill();
                 billInfo.setTarget("tcg");

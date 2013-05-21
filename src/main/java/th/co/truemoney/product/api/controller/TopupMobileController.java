@@ -36,16 +36,18 @@ public class TopupMobileController extends BaseController {
 	private TransactionAuthenService authService;
 
 	@Autowired
-	TmnProfileService profileService;
+	private TmnProfileService profileService;
 
-	private static final BigDecimal topupMinAmount = new BigDecimal(10);
+	private static final BigDecimal topupMinAmount = BigDecimal.TEN;
 	private static final BigDecimal topupMaxAmount = new BigDecimal(1000);
+	
+	private String mobileNumber = "";
 
 	@RequestMapping(value = "/draft/verifyAndCreate/{accessTokenID}", method = RequestMethod.POST)
 	@ResponseBody
 	public ProductResponse verifyAndCreate(@PathVariable String accessTokenID,
 			@RequestBody Map<String, String> request) {
-		String mobileNumber = request.get("mobileNumber");
+		setMobileNumber(request.get("mobileNumber"));
 
 		String amount = request.get("amount");
 
@@ -218,6 +220,10 @@ public class TopupMobileController extends BaseController {
 			throw new InvalidParameterException("60000");
 		}
 
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
 	}
 
 }

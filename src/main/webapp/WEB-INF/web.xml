@@ -16,7 +16,7 @@
 
 	<context-param>
 		<param-name>spring.profiles.default</param-name>
-		<param-value>develop</param-value>
+		<param-value>dev</param-value>
 	</context-param>
 
 	<listener>

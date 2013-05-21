@@ -253,18 +253,18 @@
             </properties>
         </profile>
         <profile>
-            <id>develop</id>
+            <id>dev</id>
             <activation>
                   <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <spring.profiles.active>develop</spring.profiles.active>
+                <spring.profiles.active>dev</spring.profiles.active>
             </properties>
         </profile>
         <profile>
-            <id>production</id>
+            <id>prod</id>
             <properties>
-                <spring.profiles.active>production</spring.profiles.active>
+                <spring.profiles.active>prod</spring.profiles.active>
             </properties>
         </profile>
     </profiles>

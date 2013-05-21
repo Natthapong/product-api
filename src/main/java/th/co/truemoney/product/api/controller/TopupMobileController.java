@@ -212,7 +212,7 @@ public class TopupMobileController extends BaseController {
 
 	private void checkTopupAmount(BigDecimal amount) {
 
-		if (!(amount.remainder(new BigDecimal(10))).equals(BigDecimal.ZERO)) {
+		if (!(amount.remainder(BigDecimal.TEN)).equals(BigDecimal.ZERO)) {
 			throw new InvalidParameterException("60000");
 		} else if ((amount.compareTo(topupMinAmount)) == -1) {
 			throw new InvalidParameterException("60000");

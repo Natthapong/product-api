@@ -34,10 +34,10 @@ import th.co.truemoney.serviceinventory.ewallet.domain.ActivityDetail;
 public class WalletActivityController extends BaseController {
 
 	@Autowired
-	ActivityService activityService;
+	private ActivityService activityService;
 	
 	@Autowired
-	OnlineResourceManager onlineResourceManager;
+	private OnlineResourceManager onlineResourceManager;
 
 	@RequestMapping(value = "/list/{accessTokenID}", method = RequestMethod.GET)
 	@ResponseBody

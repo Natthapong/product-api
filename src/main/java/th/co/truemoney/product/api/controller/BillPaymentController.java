@@ -122,7 +122,7 @@ public class BillPaymentController extends BaseController {
 			String mobile = request.get("mobileNumber");
 			
 			OTP otp = new OTP(mobile, otpRef, otpStr);
-			draftStatus = authService.verifyOTP(draftID, otp, accessTokenID);
+			authService.verifyOTP(draftID, otp, accessTokenID);
 		}
 		
 		BillPaymentTransaction.Status transactionStatus = billPaymentService.performPayment(draftID, accessTokenID);

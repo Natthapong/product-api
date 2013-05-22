@@ -16,7 +16,7 @@
 
 	<context-param>
 		<param-name>spring.profiles.default</param-name>
-		<param-value>prod</param-value>
+		<param-value>${tmn.environment}</param-value>
 	</context-param>
 
 	<listener>

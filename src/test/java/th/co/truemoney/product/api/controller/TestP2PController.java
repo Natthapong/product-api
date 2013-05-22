@@ -105,7 +105,8 @@ public class TestP2PController extends BaseTestController {
 				any(String.class))
 			).thenReturn(transferDraft);
 
-		this.verifySuccess(this.doPUT(verifyTransferURL, new HashMap<String, Object>()));
+		this.verifySuccess(this.doPUT(verifyTransferURL, new HashMap<String, Object>()))
+		.andExpect(jsonPath("$..mobileNumber").value("089-999-9999"));
 	}
 
 	@Test

@@ -45,7 +45,13 @@ public class TestBillPaymentController extends BaseTestController {
         
         private static final String getBillPaymentFavoriteInfoURL = String.format("/bill-payment/favorite/verify/%s", fakeAccessToken);
 
-        Bill testBillInfo = createStubbedBillInfo();
+        private static String getKeyInBillPaymentInfoURL(String billCode){ 
+        	return String.format("/bill-payment/info/%s/%s", billCode, fakeAccessToken);
+        }
+
+        private static final String getKeyInBillPaymentURL = String.format("/bill-payment/key-in/%s", fakeAccessToken);
+
+        Bill testBillInfo = createStubbedBillInfo("tcg");
 
         @Test
         public void getBillInformationSuccess() throws Exception {
@@ -240,7 +246,7 @@ public class TestBillPaymentController extends BaseTestController {
         public void verifyAndGetFavoriteBillInfoSuccess() throws Exception{
         	when( billPaymentServiceMock.retrieveBillInformationWithBillCode(
         			anyString(), anyString(), any(BigDecimal.class), anyString()))
-        			.thenReturn(createStubbedBillInfo());
+        			.thenReturn(createStubbedBillInfo("tcg"));
         	
         	 when(
                      billPaymentServiceMock.verifyPaymentAbility(
@@ -275,10 +281,50 @@ public class TestBillPaymentController extends BaseTestController {
         	
         	this.verifyFailed(this.doPOST(getBillPaymentFavoriteInfoURL, req));
         }
+        
+        @Test
+        public void getKeyInBillInformationTCGSuccess() throws Exception {
+                when(
+                        billPaymentServiceMock.retrieveBillInformationWithKeyin(anyString(), anyString())
+                ).thenReturn(testBillInfo);
+
+                this.verifySuccess(this.doGET(getKeyInBillPaymentInfoURL("tcg")))
+                .andExpect(jsonPath("$..ref1TitleTh").exists())
+                .andExpect(jsonPath("$..ref1TitleEn").exists())
+                .andExpect(jsonPath("$..ref2TitleTh").doesNotExist())
+                .andExpect(jsonPath("$..ref2TitleEn").doesNotExist())
+                .andExpect(jsonPath("$..target").value("tcg"));
+        }
+        
+        @Test
+        public void getKeyInBillInformationCATVSuccess() throws Exception {
+                when(
+                        billPaymentServiceMock.retrieveBillInformationWithKeyin(anyString(), anyString())
+                ).thenReturn(createStubbedBillInfo("catv"));
+
+                this.verifySuccess(this.doGET(getKeyInBillPaymentInfoURL("catv")))
+                .andExpect(jsonPath("$..ref1TitleTh").exists())
+                .andExpect(jsonPath("$..ref1TitleEn").exists())
+                .andExpect(jsonPath("$..ref2TitleTh").exists())
+                .andExpect(jsonPath("$..ref2TitleEn").exists())
+                .andExpect(jsonPath("$..target").value("catv"));
+        }
+
+        @Test
+        public void getKeyInBillInformationFail() throws Exception {
+                when(
+                        billPaymentServiceMock.retrieveBillInformationWithKeyin(
+                                anyString(),
+                                anyString()
+                        )
+                ).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
+
+                this.verifyFailed(this.doGET(getKeyInBillPaymentInfoURL("tmvh_c")));
+        }
                 
-        private Bill createStubbedBillInfo() {
+        private Bill createStubbedBillInfo(String target) {
                 Bill billInfo = new Bill();
-                billInfo.setTarget("tcg");
+                billInfo.setTarget(target);
                 billInfo.setLogoURL("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tcg@2x.png");
                 billInfo.setTitleTH("ค่าใช้บริการบริษัทในกลุ่มทรู");
                 billInfo.setTitleEN("Convergence Postpay");
@@ -314,7 +360,7 @@ public class TestBillPaymentController extends BaseTestController {
         }
 
         private BillPaymentDraft createBillPaymentDraftStubbed(){
-	    	Bill bill = createStubbedBillInfo();
+	    	Bill bill = createStubbedBillInfo("tcg");
     		return new BillPaymentDraft("1111111111", bill, new BigDecimal(11000), "123567890", Status.OTP_CONFIRMED);
     	}
 

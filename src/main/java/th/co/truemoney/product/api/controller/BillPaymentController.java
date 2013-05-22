@@ -224,6 +224,27 @@ public class BillPaymentController extends BaseController {
 
 		return createResponse(data);
 	}
+	
+	@RequestMapping(value = "/info/{billCode}/{accessTokenID}", method = RequestMethod.GET)
+	public @ResponseBody
+	ProductResponse getKeyInBillInformation(
+			@PathVariable String accessTokenID, @PathVariable String billCode) {
+		
+		Bill bill = billPaymentService.retrieveBillInformationWithKeyin(billCode, accessTokenID);
+		
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("ref1TitleTh", bill.getRef1TitleTH());
+		data.put("ref1TitleEn", bill.getRef1TitleEN());
+		
+		if("catv".equals(Utils.removeSuffix(bill.getTarget())) || "dstv".equals(Utils.removeSuffix(bill.getTarget())) ){
+			data.put("ref2TitleTh", bill.getRef2TitleTH());
+			data.put("ref2TitleEn", bill.getRef2TitleEN());
+        }
+		
+		data.put("target", bill.getTarget());
+		
+		return createResponse(data);
+	}
 
 	private ProductResponse createResponse(Map<String, Object> data) {
 		return this.responseFactory.createSuccessProductResonse(data);

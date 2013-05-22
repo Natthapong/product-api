@@ -443,6 +443,23 @@ public class TestBillPaymentControllerUnit {
  		assertEquals("false", data.get("isFavorited"));
  		
      }
+	 
+	 @Test
+	 public void getKeyInBillInformation(){
+		 when(billPaymentServiceMock.retrieveBillInformationWithKeyin(anyString(), anyString()))
+		 .thenReturn(createStubbedBillInfo());
+		 
+		 ProductResponse resp = billPaymentController.getKeyInBillInformation(fakeAccessTokenID, "tcg");
+		 
+		 Map<String, Object> data = resp.getData();
+	 	 assertNotNull(data);
+	 		
+	 	 assertEquals( "tcg", data.get("target"));
+	 	 assertEquals("โทรศัพท์พื้นฐาน", data.get("ref1TitleTh"));
+	 	 assertEquals("Fix Line", data.get("ref1TitleEn"));
+	 	 assertFalse(data.containsKey("ref2TitleTh"));
+	 	 assertFalse(data.containsKey("ref2TitleEn"));
+	 }
 	
 	private Bill createStubbedBillInfo() {
         Bill billInfo = new Bill();

@@ -57,7 +57,7 @@ public class TestP2PController extends BaseTestController {
 				anyString())
 			).thenReturn(transferDraft);
 
-		this.verifySuccess(this.doPOST(transferMoneyURL, data));
+		this.verifySuccess(this.doPOST(transferMoneyURL, data)).andExpect(jsonPath("$..mobileNumber").value("089-999-9999"));
 	}
 
 	@Test
@@ -105,8 +105,7 @@ public class TestP2PController extends BaseTestController {
 				any(String.class))
 			).thenReturn(transferDraft);
 
-		this.verifySuccess(this.doPUT(verifyTransferURL, new HashMap<String, Object>()))
-		.andExpect(jsonPath("$..mobileNumber").value("089-999-9999"));
+		this.verifySuccess(this.doPUT(verifyTransferURL, new HashMap<String, Object>()));
 	}
 
 	@Test

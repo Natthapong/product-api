@@ -1,17 +1,17 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>th.co.truemoney.product</groupId>
     <artifactId>product-api</artifactId>
     <packaging>war</packaging>
-    <version>0.9-SNAPSHOT</version>
+    <version>0.9</version>
     <name>product-api Maven Webapp</name>
     <url>http://maven.apache.org</url>
     <scm>
 	<connection>scm:git:git@bitbucket.org:tmnkaizen/product-api.git</connection>
 	<url>scm:git:git@bitbucket.org:tmnkaizen/product-api.git</url>
 	<developerConnection>scm:git:git@bitbucket.org:tmnkaizen/product-api.git</developerConnection>
-    </scm>
+      <tag>product-api-0.9</tag>
+  </scm>
 
     <properties>
         <java-version>1.6</java-version>
@@ -25,12 +25,12 @@
         <dependency>
             <groupId>th.co.truemoney.serviceinventory</groupId>
             <artifactId>service-inventory-client</artifactId>
-            <version>0.9-SNAPSHOT</version>
+            <version>0.9-RELEASE</version>
         </dependency>
         <dependency>
             <groupId>th.co.truemoney.serviceinventory</groupId>
             <artifactId>service-inventory-api</artifactId>
-            <version>0.9-SNAPSHOT</version>
+            <version>0.9-RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

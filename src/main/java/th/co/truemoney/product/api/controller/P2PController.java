@@ -52,7 +52,8 @@ public class P2PController extends BaseController {
 		P2PTransferDraft transaction = p2pTransferService.createAndVerifyTransferDraft(mobileNumber, amount, accessToken);
 
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("mobileNumber", transaction.getMobileNumber());
+		data.put("mobileNumber", String.valueOf(transaction.getMobileNumber()).replaceFirst(
+				"(\\d{3})(\\d{3})(\\d)", "$1-$2-$3"));
 		data.put("recipientName", transaction.getFullname());
 		data.put("amount", transaction.getAmount());
 		data.put("draftTransactionID", transaction.getID());

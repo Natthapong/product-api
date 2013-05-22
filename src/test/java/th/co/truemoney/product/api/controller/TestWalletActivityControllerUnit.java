@@ -30,16 +30,16 @@ import th.co.truemoney.serviceinventory.ewallet.domain.Activity;
 @RunWith(Parameterized.class)
 public class TestWalletActivityControllerUnit {
 	
-	protected ActivityService activityServiceMock;
+	ActivityService activityServiceMock;
 	
 	WalletActivityController controller;
 	
 	ProductResponseFactory responseFactory;
 	
-	static SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+	SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 	
 	@Parameters
-	public static Iterable<Object[]> data() throws ParseException {
+	public Iterable<Object[]> data() throws ParseException {
 		return Arrays.asList(new Object[][] {
 				{ new Activity(1L, "topup_mobile", df.parse("10-03-2013"), "tmvhtopup_c", "0812345678"), new ActivityViewItem(String.valueOf(1L), "เติมเงินมือถือ", "10/03/13", "TrueMove H", "081-234-5678") },
 				{ new Activity(1L, "topup_mobile", df.parse("10-03-2013"), "tmvtopup_c", "0812345678"), new ActivityViewItem(String.valueOf(1L), "เติมเงินมือถือ", "10/03/13",  "TrueMove", "081-234-5678") },

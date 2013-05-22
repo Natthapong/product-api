@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,13 +45,9 @@ public class TestTopupMobileController extends BaseTestController {
 	@Autowired
 	TopupMobileController controller;
 
-	private Map<String, String> request;
+	private Map<String, String> request = new HashMap<String, String>();
+	
 	private String accessToken = "accessToken";
-
-	@Before
-	public void setUp() throws Exception {
-		request = new HashMap<String, String>();
-	}
 
 	@Test
 	public void failToVerifyTopUpWhenMobileIsIncorrectFormat() {

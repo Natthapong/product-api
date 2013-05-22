@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,12 +22,7 @@ public class TestWalletActivityController extends BaseTestController {
 			"/profile/activities/list/%s", fakeAccessToken);
 
 	@Autowired
-	WalletActivityController controller;
-
-	@Before
-	public void setUp() throws Exception {
-		controller = new WalletActivityController();
-	}
+	WalletActivityController controller = new WalletActivityController();
 
 	@Test
 	public void getActivityListSuccess() throws Exception {

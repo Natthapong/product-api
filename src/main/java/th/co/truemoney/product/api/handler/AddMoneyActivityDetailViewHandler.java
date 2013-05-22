@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import th.co.truemoney.product.api.util.BankUtil;
+import th.co.truemoney.product.api.util.Utils;
 
 @Component
 public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailViewHandler {
@@ -40,11 +41,15 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 
 	@Override
 	public Map<String, Object> buildSection3() {
-		Map<String, Object> section3 = super.buildSection3();
-		Map<String, Object> column2 = (Map<String, Object>)section3.get("column2");
-		if (column2.containsKey("cell1")) {
-			column2.remove("cell1");
-		}
+		Map<String, Object> section3 = new HashMap<String, Object>();
+		Map<String, Object> column31 = new HashMap<String, Object>();
+		Map<String, String> cell311 = new HashMap<String, String>();
+		
+		cell311.put("titleTh", "ยอดเงินเข้า Wallet");
+		cell311.put("titleEn", "total amount");
+		cell311.put("value", Utils.formatAbsoluteAmount(activity.getTotalAmount()));
+		column31.put("cell1", cell311);
+		section3.put("column1", column31);
 		return section3;
 	}
 }

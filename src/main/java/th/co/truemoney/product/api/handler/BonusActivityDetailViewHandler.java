@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+import th.co.truemoney.product.api.util.Utils;
+
 @Component
 public class BonusActivityDetailViewHandler extends
 		GeneralActivityDetailViewHandler {
@@ -32,14 +34,15 @@ public class BonusActivityDetailViewHandler extends
 
 	@Override
 	public Map<String, Object> buildSection3() {
-		Map<String, Object> section3 = super.buildSection3();
-		Map<String, Object> column1 = (Map<String, Object>)section3.get("column1");
-		if (column1.containsKey("cell2")) {
-			column1.remove("cell2");
-		}
-		if (section3.containsKey("column2")) {
-			section3.remove("column2");
-		}
+		Map<String, Object> section3 = new HashMap<String, Object>();
+		Map<String, Object> column31 = new HashMap<String, Object>();
+		Map<String, String> cell311 = new HashMap<String, String>();
+		
+		cell311.put("titleTh", "ยอดเงินเข้า Wallet");
+		cell311.put("titleEn", "total amount");
+		cell311.put("value", Utils.formatAbsoluteAmount(activity.getTotalAmount()));
+		column31.put("cell1", cell311);
+		section3.put("column1", column31);
 		return section3;
 	}
 

@@ -11,6 +11,6 @@ public class ProductionEnvConfig  extends BaseEnvConfig {
 	
 	@Bean @Qualifier("apiHost")
 	public String apiHost() {
-		return "https://secure.truemoney-dev.com"; //TODO
+		return "https://api.truemoney.co.th";
 	}
 }

@@ -347,7 +347,7 @@ public class TestBillPaymentController extends BaseTestController {
         	req.put("amount", "100.00");
         	
             when(
-                    billPaymentServiceMock.retrieveBillInformationWithBillCode(
+                    billPaymentServiceMock.updateBillInformation(
                     		anyString(), anyString(), any(BigDecimal.class), anyString())
             ).thenReturn(createStubbedBillInfo("catv"));
 
@@ -356,14 +356,17 @@ public class TestBillPaymentController extends BaseTestController {
         
         @Test
         public void getKeyInBillPaymentFail() throws Exception {
+        	Map<String, String> req = new HashMap<String, String>();
+        	req.put("ref1", "1234567890");
+        	req.put("ref2", "1234567890");
+        	req.put("target", "catv");
+        	req.put("amount", "100.00");
                 when(
-                        billPaymentServiceMock.retrieveBillInformationWithKeyin(
-                                anyString(),
-                                anyString()
-                        )
+                        billPaymentServiceMock.updateBillInformation(
+                        		anyString(), anyString(), any(BigDecimal.class), anyString())
                 ).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
 
-                this.verifyFailed(this.doGET(getKeyInBillPaymentInfoURL("tmvh_c")));
+                this.verifyFailed(this.doGET(getKeyInBillPaymentURL, req));
         }
                 
         private Bill createStubbedBillInfo(String target) {

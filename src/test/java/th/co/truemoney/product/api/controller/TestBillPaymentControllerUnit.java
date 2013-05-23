@@ -474,7 +474,7 @@ public class TestBillPaymentControllerUnit {
 	     	bill.setRef2("");
 	     	bill.setPayWith("keyin");
 			when(
-	                billPaymentServiceMock.retrieveBillInformationWithBillCode(
+	                billPaymentServiceMock.updateBillInformation(
 	                        anyString(),anyString(), any(BigDecimal.class), anyString()
 	                )
 	        ).thenReturn(bill);

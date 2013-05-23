@@ -257,8 +257,12 @@ public class BillPaymentController extends BaseController {
 		}
 		
 		BigDecimal amount = new BigDecimal(inputAmount.replace(",", ""));
+		String ref2 = "";
+		if(request.containsKey("ref2")){
+			ref2 = request.get("ref2");
+		}
 		
-		Bill bill = billPaymentService.updateBillInformation(request.get("target"), request.get("ref1"), amount, accessTokenID);
+		Bill bill = billPaymentService.updateBillInformation(request.get("target"), request.get("ref1"), ref2, amount, accessTokenID);
 		
 		Map<String, Object> data = BillResponse.builder()
 				.setBill(bill)

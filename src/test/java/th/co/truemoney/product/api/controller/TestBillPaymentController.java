@@ -348,7 +348,7 @@ public class TestBillPaymentController extends BaseTestController {
         	
             when(
                     billPaymentServiceMock.updateBillInformation(
-                    		anyString(), anyString(), any(BigDecimal.class), anyString())
+                    		anyString(), anyString(), anyString(), any(BigDecimal.class), anyString())
             ).thenReturn(createStubbedBillInfo("catv"));
 
             this.verifySuccess(this.doPOST(getKeyInBillPaymentURL,req));
@@ -363,7 +363,7 @@ public class TestBillPaymentController extends BaseTestController {
         	req.put("amount", "100.00");
                 when(
                         billPaymentServiceMock.updateBillInformation(
-                        		anyString(), anyString(), any(BigDecimal.class), anyString())
+                        		anyString(), anyString(), anyString(), any(BigDecimal.class), anyString())
                 ).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
 
                 this.verifyFailed(this.doPOST(getKeyInBillPaymentURL, req));

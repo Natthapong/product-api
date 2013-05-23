@@ -228,7 +228,7 @@ public class TestP2PController extends BaseTestController {
 
 
 		this.verifySuccess(this.doGET(getTransferDetailURL))
-				.andExpect(jsonPath("$..mobileNumber").exists())
+				.andExpect(jsonPath("$..mobileNumber").value("089-999-9999"))
 				.andExpect(jsonPath("$..amount").exists())
 				.andExpect(jsonPath("$..recipientName").exists())
 				.andExpect(jsonPath("$..transactionID").exists())

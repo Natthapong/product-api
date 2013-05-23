@@ -62,7 +62,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
 	@Bean
 	public ClientCredential appLogin() {
-		return new ClientCredential("f7cb0d495ea6d989", "MOBILE_IPHONE", "IPHONE+1", "ios_app", "ios_app");
+		return new ClientCredential("f7cb0d495ea6d989", "MOBILE_IPHONE", "IPHONE+1", "IOS_APP", "IOS_APP");
 	}
 
 }

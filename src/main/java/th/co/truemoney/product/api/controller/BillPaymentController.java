@@ -246,7 +246,7 @@ public class BillPaymentController extends BaseController {
 		return createResponse(data);
 	}
 	
-	@RequestMapping(value = "/key-in/{accessTokenID}", method = RequestMethod.GET)
+	@RequestMapping(value = "/key-in/{accessTokenID}", method = RequestMethod.POST)
 	public @ResponseBody
 	ProductResponse getKeyInBillPayment(
 			@PathVariable String accessTokenID, @RequestBody Map<String,String> request) {

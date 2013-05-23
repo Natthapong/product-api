@@ -335,7 +335,7 @@ public class TestBillPaymentController extends BaseTestController {
                     		anyString(), anyString(), any(BigDecimal.class), anyString())
             ).thenReturn(testBillInfo);
 
-            this.verifySuccess(this.doGET(getKeyInBillPaymentURL, req));
+            this.verifySuccess(this.doPOST(getKeyInBillPaymentURL, req));
         }
         
         @Test
@@ -351,7 +351,7 @@ public class TestBillPaymentController extends BaseTestController {
                     		anyString(), anyString(), any(BigDecimal.class), anyString())
             ).thenReturn(createStubbedBillInfo("catv"));
 
-            this.verifySuccess(this.doGET(getKeyInBillPaymentURL,req));
+            this.verifySuccess(this.doPOST(getKeyInBillPaymentURL,req));
         }
         
         @Test
@@ -366,7 +366,7 @@ public class TestBillPaymentController extends BaseTestController {
                         		anyString(), anyString(), any(BigDecimal.class), anyString())
                 ).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
 
-                this.verifyFailed(this.doGET(getKeyInBillPaymentURL, req));
+                this.verifyFailed(this.doPOST(getKeyInBillPaymentURL, req));
         }
                 
         private Bill createStubbedBillInfo(String target) {

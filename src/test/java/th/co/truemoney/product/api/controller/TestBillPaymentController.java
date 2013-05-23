@@ -1,10 +1,5 @@
 package th.co.truemoney.product.api.controller;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +17,12 @@ import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 public class TestBillPaymentController extends BaseTestController {
 
@@ -309,9 +310,52 @@ public class TestBillPaymentController extends BaseTestController {
                 .andExpect(jsonPath("$..ref2TitleEn").exists())
                 .andExpect(jsonPath("$..target").value("catv"));
         }
-
+        
         @Test
         public void getKeyInBillInformationFail() throws Exception {
+                when(
+                        billPaymentServiceMock.retrieveBillInformationWithKeyin(
+                                anyString(),
+                                anyString()
+                        )
+                ).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
+
+                this.verifyFailed(this.doGET(getKeyInBillPaymentInfoURL("tmvh_c")));
+        }
+
+        @Test
+        public void getKeyInBillPaymentTCGSuccess() throws Exception {
+        	Map<String, String> req = new HashMap<String, String>();
+        	req.put("ref1", "1234567890");
+        	req.put("target", "tcg");
+        	req.put("amount", "100.00");
+        	
+            when(
+                    billPaymentServiceMock.retrieveBillInformationWithBillCode(
+                    		anyString(), anyString(), any(BigDecimal.class), anyString())
+            ).thenReturn(testBillInfo);
+
+            this.verifySuccess(this.doGET(getKeyInBillPaymentURL, req));
+        }
+        
+        @Test
+        public void getKeyInBillPaymentCATVSuccess() throws Exception {
+        	Map<String, String> req = new HashMap<String, String>();
+        	req.put("ref1", "1234567890");
+        	req.put("ref2", "1234567890");
+        	req.put("target", "catv");
+        	req.put("amount", "100.00");
+        	
+            when(
+                    billPaymentServiceMock.retrieveBillInformationWithBillCode(
+                    		anyString(), anyString(), any(BigDecimal.class), anyString())
+            ).thenReturn(createStubbedBillInfo("catv"));
+
+            this.verifySuccess(this.doGET(getKeyInBillPaymentURL,req));
+        }
+        
+        @Test
+        public void getKeyInBillPaymentFail() throws Exception {
                 when(
                         billPaymentServiceMock.retrieveBillInformationWithKeyin(
                                 anyString(),

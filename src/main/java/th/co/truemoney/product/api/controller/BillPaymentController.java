@@ -245,6 +245,28 @@ public class BillPaymentController extends BaseController {
 		
 		return createResponse(data);
 	}
+	
+	@RequestMapping(value = "/key-in/{accessTokenID}", method = RequestMethod.GET)
+	public @ResponseBody
+	ProductResponse getKeyInBillPayment(
+			@PathVariable String accessTokenID, @RequestBody Map<String,String> request) {
+		String inputAmount = request.get("amount");
+		
+		if (ValidateUtil.isEmpty(inputAmount)) {
+			throw new InvalidParameterException("60000");
+		}
+		
+		BigDecimal amount = new BigDecimal(inputAmount.replace(",", ""));
+		
+		Bill bill = billPaymentService.retrieveBillInformationWithBillCode(
+				request.get("target"), request.get("ref1"), amount, accessTokenID);
+		
+		Map<String, Object> data = BillResponse.builder()
+				.setBill(bill)
+				.buildBillInfoResponse();
+
+		return createResponse(data);
+	}
 
 	private ProductResponse createResponse(Map<String, Object> data) {
 		return this.responseFactory.createSuccessProductResonse(data);

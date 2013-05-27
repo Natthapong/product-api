@@ -21,6 +21,13 @@ public class GenericController {
 		return new ModelAndView("forward:/WEB-INF/pages/generic.jsp").addObject("apiHost", apiHost);
 	}
 
+	@RequestMapping(value = "/bill-payment/key-in/list", method = RequestMethod.GET)
+	public
+	ModelAndView getKeyInBillList(HttpServletResponse response) {
+		response.setContentType("application/json;charset=UTF-8");
+		return new ModelAndView("forward:/WEB-INF/pages/keyin.jsp").addObject("apiHost", apiHost);
+	}
+	
 	public void setApiHost(String apiHost) {
 		this.apiHost = apiHost;
 	}

@@ -304,6 +304,8 @@ public class TestBillPaymentController extends BaseTestController {
                 .andExpect(jsonPath("$..ref2TitleEn").doesNotExist())
                 .andExpect(jsonPath("$..minAmount").exists())
                 .andExpect(jsonPath("$..maxAmount").exists())
+                .andExpect(jsonPath("$..ref1Type").value("none"))
+                .andExpect(jsonPath("$..ref2Type").value("none"))
                 .andExpect(jsonPath("$..target").value("tcg"));
         }
         
@@ -320,6 +322,8 @@ public class TestBillPaymentController extends BaseTestController {
                 .andExpect(jsonPath("$..ref2TitleEn").exists())
                 .andExpect(jsonPath("$..minAmount").exists())
                 .andExpect(jsonPath("$..maxAmount").exists())
+                .andExpect(jsonPath("$..ref1Type").value("none"))
+                .andExpect(jsonPath("$..ref2Type").value("none"))
                 .andExpect(jsonPath("$..target").value("catv"));
         }
         

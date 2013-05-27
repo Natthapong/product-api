@@ -462,7 +462,9 @@ public class TestBillPaymentControllerUnit {
 	 	 assertFalse(data.containsKey("ref2TitleTh"));
 	 	 assertFalse(data.containsKey("ref2TitleEn"));
 	 	 assertTrue(data.containsKey("minAmount"));
-	 	assertTrue(data.containsKey("maxAmount"));
+	 	 assertTrue(data.containsKey("maxAmount"));
+	 	 assertTrue(data.containsKey("ref1Type"));
+	 	assertTrue(data.containsKey("ref2Type"));
 	 }
 	 
 	 @SuppressWarnings("unchecked")

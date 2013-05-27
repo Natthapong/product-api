@@ -239,11 +239,18 @@ public class BillPaymentController extends BaseController {
 		data.put("maxAmount", bill.getMaxAmount());
 		data.put("ref1TitleTh", bill.getRef1TitleTH());
 		data.put("ref1TitleEn", bill.getRef1TitleEN());
+		data.put("ref1Type", "none");
+		data.put("ref2Type", "none");
 		
 		if("catv".equals(Utils.removeSuffix(bill.getTarget())) || "dstv".equals(Utils.removeSuffix(bill.getTarget())) ){
 			data.put("ref2TitleTh", bill.getRef2TitleTH());
 			data.put("ref2TitleEn", bill.getRef2TitleEN());
         }
+		
+		if("tmvh".equals(Utils.removeSuffix(bill.getTarget())) || "trmv".equals(Utils.removeSuffix(bill.getTarget())) ){
+			data.put("ref1Type", "mobile");
+		}
+		
 		return createResponse(data);
 	}
 	

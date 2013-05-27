@@ -45,6 +45,8 @@ public class TestBillPaymentController extends BaseTestController {
         private static final String getBillPaymentDetailURL = String.format("/bill-payment/%s/details/%s", fakeBillPaymentID, fakeAccessToken);
         
         private static final String getBillPaymentFavoriteInfoURL = String.format("/bill-payment/favorite/verify/%s", fakeAccessToken);
+        
+        private static final String getKeyInBillListURL = "/bill-payment/key-in/list";
 
         private static String getKeyInBillPaymentInfoURL(String billCode){ 
         	return String.format("/bill-payment/info/%s/%s", billCode, fakeAccessToken);
@@ -284,6 +286,12 @@ public class TestBillPaymentController extends BaseTestController {
         }
         
         @Test
+        public void getKeyInBillInformationListSuccess() throws Exception {
+        	//this.verifySuccess()
+        	this.doGET(getKeyInBillListURL);
+        }
+        
+        @Test
         public void getKeyInBillInformationTCGSuccess() throws Exception {
                 when(
                         billPaymentServiceMock.retrieveBillInformationWithKeyin(anyString(), anyString())
@@ -294,6 +302,8 @@ public class TestBillPaymentController extends BaseTestController {
                 .andExpect(jsonPath("$..ref1TitleEn").exists())
                 .andExpect(jsonPath("$..ref2TitleTh").doesNotExist())
                 .andExpect(jsonPath("$..ref2TitleEn").doesNotExist())
+                .andExpect(jsonPath("$..minAmount").exists())
+                .andExpect(jsonPath("$..maxAmount").exists())
                 .andExpect(jsonPath("$..target").value("tcg"));
         }
         
@@ -308,6 +318,8 @@ public class TestBillPaymentController extends BaseTestController {
                 .andExpect(jsonPath("$..ref1TitleEn").exists())
                 .andExpect(jsonPath("$..ref2TitleTh").exists())
                 .andExpect(jsonPath("$..ref2TitleEn").exists())
+                .andExpect(jsonPath("$..minAmount").exists())
+                .andExpect(jsonPath("$..maxAmount").exists())
                 .andExpect(jsonPath("$..target").value("catv"));
         }
         

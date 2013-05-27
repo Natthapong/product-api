@@ -233,6 +233,7 @@ public class BillPaymentController extends BaseController {
 		Bill bill = billPaymentService.retrieveBillInformationWithKeyin(billCode, accessTokenID);
 		
 		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("billID", bill.getID());
 		data.put("target", bill.getTarget());
 		data.put("minAmount", bill.getMinAmount());
 		data.put("maxAmount", bill.getMaxAmount());
@@ -243,8 +244,6 @@ public class BillPaymentController extends BaseController {
 			data.put("ref2TitleTh", bill.getRef2TitleTH());
 			data.put("ref2TitleEn", bill.getRef2TitleEN());
         }
-		
-		
 		return createResponse(data);
 	}
 	
@@ -264,7 +263,7 @@ public class BillPaymentController extends BaseController {
 			ref2 = request.get("ref2");
 		}
 		
-		Bill bill = billPaymentService.updateBillInformation(request.get("target"), request.get("ref1"), ref2, amount, accessTokenID);
+		Bill bill = billPaymentService.updateBillInformation(request.get("billID"), request.get("ref1"), ref2, amount, accessTokenID);
 		
 		Map<String, Object> data = BillResponse.builder()
 				.setBill(bill)

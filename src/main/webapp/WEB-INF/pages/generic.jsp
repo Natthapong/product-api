@@ -83,6 +83,8 @@
 
 "payment.bill.favorite.verify.url" : "${apiHost}/api/v1/bill-payment/favorite/verify/%@?",
 
+"payment.bill.keyin.list.url" : "${apiHost}/api/v1/bill-payment/key-in/list?",
+
 "payment.bill.keyin.info.url" : "${apiHost}/api/v1/bill-payment/info/%@/%@?",
 
 "payment.bill.keyin.input.url" : "${apiHost}/api/v1/bill-payment/key-in/%@?"

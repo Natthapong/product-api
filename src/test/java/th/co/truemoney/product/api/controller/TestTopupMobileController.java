@@ -193,7 +193,7 @@ public class TestTopupMobileController extends BaseTestController {
 
 		Map<String, Object> reqBody = new HashMap<String, Object>();
 		reqBody.put("otpString", "123456");
-		reqBody.put("refCode", "QWE");
+		reqBody.put("otpRefCode", "QWE");
 
 		this.verifySuccess(this.doPUT(confirmOTPURL, reqBody))
 				.andExpect(jsonPath("data").exists())
@@ -212,7 +212,7 @@ public class TestTopupMobileController extends BaseTestController {
 
 		Map<String, Object> reqBody = new HashMap<String, Object>();
 		reqBody.put("otpString", "123456");
-		reqBody.put("refCode", "QWE");
+		reqBody.put("otpRefCode", "QWE");
 
 		this.verifyFailed(this.doPUT(confirmOTPURL, reqBody));
 
@@ -230,7 +230,7 @@ public class TestTopupMobileController extends BaseTestController {
 
 		Map<String, Object> reqBody = new HashMap<String, Object>();
 		reqBody.put("otpString", "123456");
-		reqBody.put("refCode", "QWE");
+		reqBody.put("otpRefCode", "QWE");
 
 		this.verifySuccess(this.doGET(checkStatusURL, reqBody))
 				.andExpect(jsonPath("data").exists())
@@ -247,7 +247,7 @@ public class TestTopupMobileController extends BaseTestController {
 
 		Map<String, Object> reqBody = new HashMap<String, Object>();
 		reqBody.put("otpString", "123456");
-		reqBody.put("refCode", "QWE");
+		reqBody.put("otpRefCode", "QWE");
 
 		this.verifyFailed(this.doGET(checkStatusURL, reqBody));
 	}

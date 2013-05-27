@@ -100,7 +100,8 @@ public class TopupMobileController extends BaseController {
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put(mobileNumberReqParam, otp.getMobileNumber());
-		data.put("refCode", otp.getReferenceCode());
+		data.put("otpRefCode", otp.getReferenceCode());
+		data.put("amount", topUpAmount);
 		data.put(
 				"totalAmount",
 				calculateTotalAmount(topUpAmount, topUpMobileInfo
@@ -120,7 +121,7 @@ public class TopupMobileController extends BaseController {
 		OTP otp = new OTP();
 		otp.setMobileNumber(request.get(mobileNumberReqParam));
 		otp.setOtpString(request.get("otpString"));
-		otp.setReferenceCode(request.get("refCode"));
+		otp.setReferenceCode(request.get("otpRefCode"));
 
 		TopUpMobileDraft.Status status = authService.verifyOTP(draftTransactionID, otp, accessTokenID);
 

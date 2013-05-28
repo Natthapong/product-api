@@ -242,7 +242,6 @@ public class BillPaymentController extends BaseController {
 		data.put("ref1TitleEn", bill.getRef1TitleEN());
 		data.put("ref1Type", "none");
 		data.put("ref2Type", "none");
-		data.put("dueDate", bill.getDueDate());
 		
 		if("catv".equals(Utils.removeSuffix(bill.getTarget())) || "dstv".equals(Utils.removeSuffix(bill.getTarget())) ){
 			data.put("ref2TitleTh", bill.getRef2TitleTH());

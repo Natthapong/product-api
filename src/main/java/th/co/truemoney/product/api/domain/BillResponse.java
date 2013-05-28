@@ -1,6 +1,7 @@
 package th.co.truemoney.product.api.domain;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -99,6 +100,7 @@ public class BillResponse {
 		}
 		
 		public Map<String, Object> buildBillInfoResponse() {
+			SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 			Map<String, Object> response = new HashMap<String, Object>();
 			if (bill != null) {
 				boolean truecorpBill = Utils.isTrueCorpBill(bill.getTarget());
@@ -124,7 +126,7 @@ public class BillResponse {
 				response.put("serviceFee", bill.getServiceFee().getFeeRate());
 				response.put("serviceFeeType", bill.getServiceFee().getFeeRateType());
 				response.put("partialPaymentAllow", bill.getPartialPayment());
-				response.put("dueDate", bill.getDueDate());
+				response.put("dueDate", bill.getDueDate() != null ? df.format(bill.getDueDate()) : "");
 				
 				SourceOfFund[] sofs = bill.getSourceOfFundFees();
 				if (sofs != null) {

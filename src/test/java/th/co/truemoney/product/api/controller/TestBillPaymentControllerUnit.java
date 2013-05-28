@@ -2,6 +2,8 @@ package th.co.truemoney.product.api.controller;
 
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,7 @@ import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
+import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -53,7 +56,6 @@ public class TestBillPaymentControllerUnit {
 	
 	private static final String fakeAccessTokenID = "111111";
 	
-
 	@Before
 	public void setup(){
 		this.billPaymentController = new BillPaymentController();
@@ -71,7 +73,7 @@ public class TestBillPaymentControllerUnit {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void favoriteBillPayment() {
+	public void favoriteBillPayment() throws Exception {
 		Map<String, String> request = new HashMap<String, String>();
 		request.put("billCode", "tcg");
 		request.put("ref1", "010004552");
@@ -126,6 +128,7 @@ public class TestBillPaymentControllerUnit {
 		assertEquals(new BigDecimal(2500), ew.get("maxSourceFeeAmount"));
 		
 		assertNotNull(data.containsKey("billPaymentID"));
+		assertEquals("30/08/2013", data.get("dueDate").toString());
 	}
 	
 	@Test(expected = InvalidParameterException.class)
@@ -173,7 +176,7 @@ public class TestBillPaymentControllerUnit {
 	}
 	
 	@Test
-	public void verifyFavoriteBillSuccess(){
+	public void verifyFavoriteBillSuccess() throws Exception{
 		Map<String, String> request = new HashMap<String, String>();
 		request.put("billCode", "tcg");
 		request.put("ref1", "010004552");
@@ -248,7 +251,7 @@ public class TestBillPaymentControllerUnit {
 	
 	@SuppressWarnings("unchecked")
 	@Test
-	public void getBillInformationSuccess(){
+	public void getBillInformationSuccess() throws ServiceInventoryException, ParseException{
 		
 		when(
                 billPaymentServiceMock.retrieveBillInformationWithBarcode(
@@ -294,6 +297,7 @@ public class TestBillPaymentControllerUnit {
 		assertEquals(new BigDecimal(2500), ew.get("maxSourceFeeAmount"));
 		
 		assertNotNull(data.containsKey("billPaymentID"));
+		  assertEquals("30/08/2013", data.get("dueDate").toString());
 	}
 	
 	@Test
@@ -447,7 +451,7 @@ public class TestBillPaymentControllerUnit {
      }
 	 
 	 @Test
-	 public void getKeyInBillInformation(){
+	 public void getKeyInBillInformation() throws ServiceInventoryException, ParseException{
 		 when(billPaymentServiceMock.retrieveBillInformationWithKeyin(anyString(), anyString()))
 		 .thenReturn(createStubbedBillInfo());
 		 
@@ -464,12 +468,12 @@ public class TestBillPaymentControllerUnit {
 	 	 assertTrue(data.containsKey("minAmount"));
 	 	 assertTrue(data.containsKey("maxAmount"));
 	 	 assertTrue(data.containsKey("ref1Type"));
-	 	assertTrue(data.containsKey("ref2Type"));
+	 	 assertTrue(data.containsKey("ref2Type"));
 	 }
 	 
 	 @SuppressWarnings("unchecked")
 	@Test
-		public void getKeyInBillPaymentInformationSuccess(){
+		public void getKeyInBillPaymentInformationSuccess() throws ParseException{
 			Map<String, String> req = new HashMap<String, String>();
 	     	req.put("ref1", "010004552");
 	     	req.put("target", "tcg");
@@ -520,9 +524,12 @@ public class TestBillPaymentControllerUnit {
 			assertEquals(new BigDecimal(2500), ew.get("maxSourceFeeAmount"));
 			
 			assertNotNull(data.containsKey("billPaymentID"));
+			
+			assertEquals("30/08/2013", data.get("dueDate").toString());
 		}
 	
-	private Bill createStubbedBillInfo() {
+	private Bill createStubbedBillInfo() throws ParseException {
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         Bill billInfo = new Bill();
         billInfo.setID("111111");
         billInfo.setTarget("tcg");
@@ -546,6 +553,8 @@ public class TestBillPaymentControllerUnit {
         billInfo.setMinAmount(new BigDecimal(10));
         billInfo.setMaxAmount(new BigDecimal(5000));
 
+        billInfo.setDueDate(df.parse("30/08/2013"));
+        
         ServiceFeeInfo serviceFee = new ServiceFeeInfo();
         serviceFee.setFeeRate(new BigDecimal("1000"));
         serviceFee.setFeeRateType("THB");
@@ -564,7 +573,7 @@ public class TestBillPaymentControllerUnit {
         return billInfo;
 	}
 	
-	private BillPaymentDraft createBillPaymentDraftStubbed(){
+	private BillPaymentDraft createBillPaymentDraftStubbed() throws Exception{
 		Bill bill = createStubbedBillInfo();
 		return new BillPaymentDraft("1111111111", bill, new BigDecimal(11000), "123567890", Status.OTP_CONFIRMED);
 	}

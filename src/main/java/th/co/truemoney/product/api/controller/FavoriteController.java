@@ -39,12 +39,11 @@ public class FavoriteController extends BaseController {
 	@RequestMapping(value = "/favorite/add/{accessTokenID}", method = RequestMethod.PUT)
 	@ResponseBody
 	public ProductResponse addFavorite(@PathVariable String accessTokenID,
-			@RequestBody Map<String, String> request) {
+			                           @RequestBody Map<String, String> request) {
 
 		Favorite reqFavorite = buildFavorite(request);
 
-		Favorite respFavorite = favoriteService.addFavorite(reqFavorite,
-				accessTokenID);
+		Favorite respFavorite = favoriteService.addFavorite(reqFavorite, accessTokenID);
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("favoriteID", String.valueOf(respFavorite.getFavoriteID()));
@@ -55,21 +54,18 @@ public class FavoriteController extends BaseController {
 		validate(request);
 
 		Favorite reqFavorite = new Favorite();
+		reqFavorite.setRef1(request.get("ref1"));
 		reqFavorite.setServiceCode(request.get("serviceCode"));
 		reqFavorite.setServiceType(request.get("serviceType"));
-		reqFavorite.setRef1(request.get("ref1"));
 		reqFavorite.setAmount(new BigDecimal(request.get("amount")));
 		return reqFavorite;
 	}
 
 	private void validate(Map<String, String> request) {
 		String amount = request.get("amount");
-		if (!StringUtils.hasText(amount)) {
-			throw new InvalidParameterException("50005");
-		}
 		try {
 			new BigDecimal(amount);
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			throw new InvalidParameterException("50005");
 		}
 		if (!StringUtils.hasText(request.get("serviceCode"))) {
@@ -87,29 +83,27 @@ public class FavoriteController extends BaseController {
 	@ResponseBody
 	public ProductResponse getFavoriteList(@PathVariable String accessTokenID) {
 
-		List<Favorite> favoriteList = favoriteService.getFavorites(accessTokenID);
-
 		Map<String, Object> data = new HashMap<String, Object>();
 		List<FavoriteGroup> groups = new ArrayList<FavoriteGroup>();
 		data.put("groups", groups);
-		
-		if (favoriteList == null) {
-			favoriteList = new ArrayList<Favorite>();
-		}
-		
-		if (favoriteList.size() > 0) {
-			
+
+		List<Favorite> favoriteList = favoriteService.getFavorites(accessTokenID);
+		if (favoriteList != null && favoriteList.size() > 0) {
 			FavoriteGroup group0 = new FavoriteGroup("รายการบิล", "BillPay", "billpay");
 			groups.add(group0);
-		
+			
 			for (Favorite favorite : favoriteList) {
-				String logo = onlineResourceManager.getActivityActionLogoURL(favorite.getServiceCode());
-				String textServiceCode = WalletActivity.getActionInThai(favorite.getServiceCode());
-				group0.addItems(new FavoriteItem( textServiceCode, favorite.getRef1(), logo, favorite.getServiceCode(), 
-						favorite.getRef1(), favorite.getDate(), WalletActivity.getWeightFromServiceCode(favorite.getServiceCode()) ) );
+				String reference1  = favorite.getRef1();
+				String serviceCode = favorite.getServiceCode();
+				String serviceName = WalletActivity.getActionInThai(serviceCode);
+				String logoURL = onlineResourceManager.getActivityActionLogoURL(serviceCode);
+				Integer serviceSortWeight = WalletActivity.getWeightFromServiceCode(serviceCode);
+				group0.addItems(new FavoriteItem( serviceName, reference1, logoURL, serviceCode, 
+						                          reference1, favorite.getDate(), serviceSortWeight));
 			}
 			order(group0.getItems());
 		}
+		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	

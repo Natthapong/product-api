@@ -4,7 +4,7 @@
     "category": [
         {
             "categoryID": 1,
-            "categoryLogo": "${apiHost}/m/tmn_webview/images/logo_bill_type/true.png",
+            "categoryLogo": "${apiHost}/m/tmn_webview/images/logo_bill_type/true@2x.png",
             "categoryTitleTh": "บิลทรู",
             "categoryTitleEn": "True Bill",
             "items": [
@@ -68,14 +68,14 @@
         },
         {
             "categoryID": 2,
-            "categoryLogo": "${apiHost}/m/tmn_webview/images/logo_bill_type/utility.png",
+            "categoryLogo": "${apiHost}/m/tmn_webview/images/logo_bill_type/utility@2x.png",
             "categoryTitleTh": "สาธารณูปโภค",
             "categoryTitleEn": "Utility",
             "items": []
         },
         {
             "categoryID": 3,
-            "categoryLogo": "${apiHost}/m/tmn_webview/images/logo_bill_type/credit.png",
+            "categoryLogo": "${apiHost}/m/tmn_webview/images/logo_bill_type/credit@2x.png",
             "categoryTitleTh": "บัตรเครดิต/สินเชื่อส่วนบุคคล",
             "categoryTitleEn": "Credit Card/Personal Loan",
             "items": [
@@ -153,7 +153,7 @@
                     "serviceCode": "PW",
                     "titleTh": "เพาวเวอร์บาย คาร์ด",
                     "titleEn": "เพาวเวอร์บาย คาร์ด",
-                    "logo": "",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/pw@2x.png",
                     "enabled": false
                 },
                 {
@@ -167,7 +167,7 @@
                     "serviceCode": "HSBC",
                     "titleTh": "บัตรเครดิต HSBC",
                     "titleEn": "บัตรเครดิต HSBC",
-                    "logo": "",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/hsbc@2x.png",
                     "enabled": false
                 },
                 {
@@ -230,21 +230,21 @@
         },
         {
             "categoryID": 4,
-            "categoryLogo": "${apiHost}/m/tmn_webview/images/logo_bill_type/leasing.png",
+            "categoryLogo": "${apiHost}/m/tmn_webview/images/logo_bill_type/leasing@2x.png",
             "categoryTitleTh": "ลีสซิ่ง",
             "categoryTitleEn": "Leasing",
             "items": []
         },
         {
             "categoryID": 5,
-            "categoryLogo": "${apiHost}/m/tmn_webview/images/logo_bill_type/insurance.png",
+            "categoryLogo": "${apiHost}/m/tmn_webview/images/logo_bill_type/insurance@2x.png",
             "categoryTitleTh": "ประกันภัย",
             "categoryTitleEn": "Insurance",
             "items": []
         },
         {
             "categoryID": 6,
-            "categoryLogo": "${apiHost}/m/tmn_webview/images/logo_bill_type/others.png",
+            "categoryLogo": "${apiHost}/m/tmn_webview/images/logo_bill_type/others@2x.png",
             "categoryTitleTh": "อื่นๆ",
             "categoryTitleEn": "Others",
             "items": []

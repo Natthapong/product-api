@@ -266,7 +266,8 @@ public class TestBillPaymentController extends BaseTestController {
         	
         	this.verifySuccess(this.doPOST(getBillPaymentFavoriteInfoURL, req))
         	.andExpect(jsonPath("$.data").exists())
-        	.andExpect(jsonPath("$..ref1").value("010004552"));
+        	.andExpect(jsonPath("$..ref1").value("010004552"))
+        	.andExpect(jsonPath("$..dueDate").exists());
         }
         
         @Test
@@ -306,7 +307,8 @@ public class TestBillPaymentController extends BaseTestController {
                 .andExpect(jsonPath("$..maxAmount").exists())
                 .andExpect(jsonPath("$..ref1Type").value("none"))
                 .andExpect(jsonPath("$..ref2Type").value("none"))
-                .andExpect(jsonPath("$..target").value("tcg"));
+                .andExpect(jsonPath("$..target").value("tcg"))
+                .andExpect(jsonPath("$..dueDate").exists());
         }
         
         @Test
@@ -324,7 +326,8 @@ public class TestBillPaymentController extends BaseTestController {
                 .andExpect(jsonPath("$..maxAmount").exists())
                 .andExpect(jsonPath("$..ref1Type").value("none"))
                 .andExpect(jsonPath("$..ref2Type").value("none"))
-                .andExpect(jsonPath("$..target").value("catv"));
+                .andExpect(jsonPath("$..target").value("catv"))
+                .andExpect(jsonPath("$..dueDate").exists());
         }
         
         @Test
@@ -375,14 +378,16 @@ public class TestBillPaymentController extends BaseTestController {
         	Map<String, String> req = new HashMap<String, String>();
         	req.put("ref1", "1234567890");
         	req.put("ref2", "1234567890");
-        	req.put("target", "catv");
+        	req.put("target", "tmvh");
         	req.put("amount", "100.00");
                 when(
                         billPaymentServiceMock.updateBillInformation(
                         		anyString(), anyString(), anyString(), any(BigDecimal.class), anyString())
                 ).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
 
-                this.verifyFailed(this.doPOST(getKeyInBillPaymentURL, req));
+                this.verifyFailed(this.doPOST(getKeyInBillPaymentURL, req))
+                .andExpect(jsonPath("$code").value("70000"))
+                .andExpect(jsonPath("$namespace").value("TMN-PRODUCT"));
         }
                 
         private Bill createStubbedBillInfo(String target) {

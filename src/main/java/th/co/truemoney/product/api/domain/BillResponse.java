@@ -124,6 +124,7 @@ public class BillResponse {
 				response.put("serviceFee", bill.getServiceFee().getFeeRate());
 				response.put("serviceFeeType", bill.getServiceFee().getFeeRateType());
 				response.put("partialPaymentAllow", bill.getPartialPayment());
+				response.put("dueDate", bill.getDueDate());
 				
 				SourceOfFund[] sofs = bill.getSourceOfFundFees();
 				if (sofs != null) {

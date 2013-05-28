@@ -29,6 +29,7 @@ import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
+import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 /**
  * Transaction States:
@@ -241,6 +242,7 @@ public class BillPaymentController extends BaseController {
 		data.put("ref1TitleEn", bill.getRef1TitleEN());
 		data.put("ref1Type", "none");
 		data.put("ref2Type", "none");
+		data.put("dueDate", bill.getDueDate());
 		
 		if("catv".equals(Utils.removeSuffix(bill.getTarget())) || "dstv".equals(Utils.removeSuffix(bill.getTarget())) ){
 			data.put("ref2TitleTh", bill.getRef2TitleTH());
@@ -259,7 +261,7 @@ public class BillPaymentController extends BaseController {
 	ProductResponse getKeyInBillPayment(
 			@PathVariable String accessTokenID, @RequestBody Map<String,String> request) {
 		String inputAmount = request.get("amount");
-		
+		String target = request.get("target");
 		if (ValidateUtil.isEmpty(inputAmount)) {
 			throw new InvalidParameterException("60000");
 		}
@@ -269,8 +271,14 @@ public class BillPaymentController extends BaseController {
 		if(request.containsKey("ref2")){
 			ref2 = request.get("ref2");
 		}
-		
-		Bill bill = billPaymentService.updateBillInformation(request.get("billID"), request.get("ref1"), ref2, amount, accessTokenID);
+		Bill bill = new Bill();
+		try{
+			bill = billPaymentService.updateBillInformation(request.get("billID"), request.get("ref1"), ref2, amount, accessTokenID);
+		}catch(Exception e){
+			if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target))){
+				throw new ServiceInventoryException(500,"70000","","TMN-PRODUCT");
+			}
+		}
 		
 		Map<String, Object> data = BillResponse.builder()
 				.setBill(bill)

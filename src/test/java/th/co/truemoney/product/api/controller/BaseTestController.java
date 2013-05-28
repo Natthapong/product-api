@@ -5,6 +5,7 @@ import static org.mockito.Mockito.reset;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -125,6 +126,12 @@ public abstract class BaseTestController {
 
 	protected ResultActions doPUT(String url, Object reqBody) throws Exception {
 		return this.mockMvc.perform(put(url).contentType(
+				MediaType.APPLICATION_JSON).content(
+				mapper.writeValueAsBytes(reqBody)));
+	}
+	
+	protected ResultActions doDELETE(String url, Object reqBody) throws Exception {
+		return this.mockMvc.perform(delete(url).contentType(
 				MediaType.APPLICATION_JSON).content(
 				mapper.writeValueAsBytes(reqBody)));
 	}

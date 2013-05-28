@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import th.co.truemoney.serviceinventory.ewallet.domain.Favorite;
@@ -25,6 +26,7 @@ public class TestFavoriteController extends BaseTestController{
 	
 	private static final String addFavoriteURL = String.format("/favorite/add/%s",fakeAccessToken);
 	private static final String getFavoriteListURL = String.format("/favorite/%s",fakeAccessToken);
+	private static final String removeFavoriteURL = String.format("/favorite/remove/%s",fakeAccessToken);
 
 	@Test
 	public void addFavoriteSuccess() throws Exception {
@@ -73,7 +75,7 @@ public class TestFavoriteController extends BaseTestController{
 	}
 	
 	@Test
-	public void getFavoriteListSucces() throws Exception{
+	public void getFavoriteListSuccess() throws Exception{
 		List<Favorite> favList = new ArrayList<Favorite>();
 		favList.add(createFavoriteStubbed());
 		
@@ -90,6 +92,28 @@ public class TestFavoriteController extends BaseTestController{
 		.thenThrow(new ServiceInventoryException(400, "", "", ""));
 		
 		this.verifyFailed(this.doGET(getFavoriteListURL));
+	}
+	
+	@Test
+	public void removeFavoriteSuccess() throws Exception{
+		Map<String, String> reqBody = new HashMap<String, String>();
+		reqBody.put("billCode", "tmvh");
+		reqBody.put("ref1", "1111111");
+		
+		this.verifySuccess(this.doDELETE(removeFavoriteURL, reqBody));
+	}
+	
+	@Test 
+	public void removeFavoriteFail() throws Exception{
+		Map<String, String> reqBody = new HashMap<String, String>();
+		reqBody.put("billCode", "tmvh");
+		reqBody.put("ref1", "1111111");
+		
+		Mockito.doThrow(new ServiceInventoryException(400, "", "", ""))
+		.when(this.favoriteServiceMock)
+		.deleteFavorite(anyString(), anyString(), anyString());
+		
+		this.verifyFailed(this.doDELETE(removeFavoriteURL, reqBody));
 	}
 
 }

@@ -242,12 +242,13 @@ public class BillPaymentController extends BaseController {
 		data.put("ref1Type", "none");
 		data.put("ref2Type", "none");
 		
-		if("catv".equals(Utils.removeSuffix(bill.getTarget())) || "dstv".equals(Utils.removeSuffix(bill.getTarget())) ){
+		String serviceCode = Utils.removeSuffix(bill.getTarget());
+		if("catv".equals(serviceCode) || "dstv".equals(serviceCode)) {
 			data.put("ref2TitleTh", bill.getRef2TitleTH());
 			data.put("ref2TitleEn", bill.getRef2TitleEN());
         }
 		
-		if("tmvh".equals(Utils.removeSuffix(bill.getTarget())) || "trmv".equals(Utils.removeSuffix(bill.getTarget())) ){
+		if("tmvh".equals(serviceCode) || "trmv".equals(serviceCode)) {
 			data.put("ref1Type", "mobile");
 		}
 		
@@ -265,17 +266,15 @@ public class BillPaymentController extends BaseController {
 		}
 		
 		BigDecimal amount = new BigDecimal(inputAmount.replace(",", ""));
-		String ref2 = "";
-		if(request.containsKey("ref2")){
-			ref2 = request.get("ref2");
-		}
+		String billID = request.get("billID");
+		String ref1 = request.get("ref1");
+		String ref2 = request.containsKey("ref2") ? request.get("ref2") : "";
 		
-		Bill bill = billPaymentService.updateBillInformation(request.get("billID"), request.get("ref1"), ref2, amount, accessTokenID);
+		Bill bill = billPaymentService.updateBillInformation(billID, ref1, ref2, amount, accessTokenID);
 		
 		Map<String, Object> data = BillResponse.builder()
 				.setBill(bill)
 				.buildBillInfoResponse();
-
 		return createResponse(data);
 	}
 

@@ -248,8 +248,14 @@ public class BillPaymentController extends BaseController {
 			data.put("ref2TitleEn", bill.getRef2TitleEN());
         }
 		
-		if("tmvh".equals(Utils.removeSuffix(bill.getTarget())) || "trmv".equals(Utils.removeSuffix(bill.getTarget())) ){
+		if("tmvh".equals(Utils.removeSuffix(bill.getTarget()))){
 			data.put("ref1Type", "mobile");
+			data.put("ref1TitleTh", "หมายเลขโทรศัพท์ทรูมูฟ เอช");
+			data.put("ref1TitleEn", "หมายเลขโทรศัพท์ทรูมูฟ เอช");
+		}else if("trmv".equals(Utils.removeSuffix(bill.getTarget())) ){
+			data.put("ref1Type", "mobile");
+			data.put("ref1TitleTh", "หมายเลขโทรศัพท์ทรูมูฟ");
+			data.put("ref1TitleEn", "หมายเลขโทรศัพท์ทรูมูฟ");
 		}
 		
 		return createResponse(data);
@@ -282,6 +288,12 @@ public class BillPaymentController extends BaseController {
 		Map<String, Object> data = BillResponse.builder()
 				.setBill(bill)
 				.buildBillInfoResponse();
+		
+		if("tmvh".equals(Utils.removeSuffix(bill.getTarget())) || "trmv".equals(Utils.removeSuffix(bill.getTarget())) ){
+			data.put("ref1", String.valueOf(bill.getRef1()).replaceFirst(
+					"(\\d{3})(\\d{3})(\\d)", "$1-$2-$3"));
+		}
+		
 
 		return createResponse(data);
 	}

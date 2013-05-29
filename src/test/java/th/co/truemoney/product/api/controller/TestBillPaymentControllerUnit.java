@@ -473,12 +473,75 @@ public class TestBillPaymentControllerUnit {
 	 
 	 @SuppressWarnings("unchecked")
 	@Test
-		public void getKeyInBillPaymentInformationSuccess() throws ParseException{
+	public void getKeyInBillPaymentInformationTCGSuccess() throws ParseException {
+		Map<String, String> req = new HashMap<String, String>();
+		req.put("ref1", "010004552");
+		req.put("target", "tcg");
+		req.put("amount", "10000.00");
+		Bill bill = createStubbedBillInfo();
+		bill.setRef2("");
+		bill.setPayWith("keyin");
+		when(
+				billPaymentServiceMock.updateBillInformation(anyString(),
+						anyString(), anyString(), any(BigDecimal.class),
+						anyString())).thenReturn(bill);
+
+		ProductResponse resp = billPaymentController.getKeyInBillPayment(
+				fakeAccessTokenID, req);
+		Map<String, Object> data = resp.getData();
+		assertNotNull(data);
+
+		assertEquals("tcg", data.get("target"));
+		assertEquals(
+				"https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tcg@2x.png",
+				data.get("logoURL"));
+		assertEquals("", data.get("titleTh"));
+		assertEquals("", data.get("titleEn"));
+
+		assertEquals("โทรศัพท์พื้นฐาน", data.get("ref1TitleTh"));
+		assertEquals("Fix Line", data.get("ref1TitleEn"));
+		assertEquals("010004552", data.get("ref1"));
+
+		assertEquals("รหัสลูกค้า", data.get("ref2TitleTh"));
+		assertEquals("Customer ID", data.get("ref2TitleEn"));
+		assertEquals("", data.get("ref2"));
+
+		assertEquals("10000.00", data.get("amount"));
+		assertEquals(new BigDecimal(1000), data.get("serviceFee"));
+		assertEquals("Y", data.get("partialPaymentAllow"));
+
+		assertEquals("10", data.get("minAmount"));
+		assertEquals("5000", data.get("maxAmount"));
+
+		assertEquals("THB", data.get("serviceFeeType"));
+		assertEquals(new BigDecimal(1000), data.get("serviceFee"));
+
+		List<Map<String, Object>> sofList = (List<Map<String, Object>>) data
+				.get("sourceOfFundFee");
+		Map<String, Object> ew = sofList.get(0);
+		assertNotNull(ew);
+		assertEquals("EW", ew.get("sourceType"));
+		assertEquals("THB", ew.get("sourceFeeType"));
+		assertEquals(new BigDecimal(1000), ew.get("sourceFee"));
+		assertEquals(new BigDecimal(100), ew.get("minSourceFeeAmount"));
+		assertEquals(new BigDecimal(2500), ew.get("maxSourceFeeAmount"));
+
+		assertNotNull(data.containsKey("billPaymentID"));
+
+		assertEquals("30/08/2013", data.get("dueDate").toString());
+	}
+	 
+	 @SuppressWarnings("unchecked")
+	@Test
+		public void getKeyInBillPaymentInformationTMVHSuccess() throws ParseException{
 			Map<String, String> req = new HashMap<String, String>();
-	     	req.put("ref1", "010004552");
-	     	req.put("target", "tcg");
+	     	req.put("ref1", "0891234567");
+	     	req.put("target", "tmvh");
 	     	req.put("amount", "10000.00");
 	     	Bill bill = createStubbedBillInfo();
+	     	bill.setLogoURL("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png");
+	     	bill.setRef1("0891234567");
+	     	bill.setTarget("tmvh");
 	     	bill.setRef2("");
 	     	bill.setPayWith("keyin");
 			when(
@@ -491,18 +554,12 @@ public class TestBillPaymentControllerUnit {
 			Map<String, Object> data = resp.getData();
 			assertNotNull(data);
 			
-			assertEquals("tcg", data.get("target"));
-			assertEquals("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tcg@2x.png", data.get("logoURL"));
+			assertEquals("tmvh", data.get("target"));
+			assertEquals("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png", data.get("logoURL"));
 			assertEquals("", data.get("titleTh"));
 			assertEquals("", data.get("titleEn"));
 			
-			assertEquals("โทรศัพท์พื้นฐาน", data.get("ref1TitleTh"));
-			assertEquals("Fix Line", data.get("ref1TitleEn"));
-			assertEquals("010004552", data.get("ref1"));
-			
-			assertEquals("รหัสลูกค้า", data.get("ref2TitleTh"));
-			assertEquals("Customer ID", data.get("ref2TitleEn"));
-			assertEquals("", data.get("ref2"));
+			assertEquals("089-123-4567", data.get("ref1"));
 			
 			assertEquals("10000.00", data.get("amount"));
 			assertEquals(new BigDecimal(1000), data.get("serviceFee"));

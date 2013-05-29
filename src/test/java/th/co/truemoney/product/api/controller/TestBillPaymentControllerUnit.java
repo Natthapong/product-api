@@ -102,7 +102,7 @@ public class TestBillPaymentControllerUnit {
 		
 		assertEquals("โทรศัพท์พื้นฐาน", data.get("ref1TitleTh"));
 		assertEquals("Fix Line", data.get("ref1TitleEn"));
-		assertEquals("021234567", data.get("ref1"));
+		assertEquals("02-123-4567", data.get("ref1"));
 		
 		assertEquals("รหัสลูกค้า", data.get("ref2TitleTh"));
 		assertEquals("Customer ID", data.get("ref2TitleEn"));
@@ -426,7 +426,7 @@ public class TestBillPaymentControllerUnit {
  		
  		assertEquals("โทรศัพท์พื้นฐาน", data.get("ref1TitleTh"));
  		assertEquals("Fix Line", data.get("ref1TitleEn"));
- 		assertEquals("021234567", data.get("ref1"));
+ 		assertEquals("02-123-4567", data.get("ref1"));
  		
  		assertEquals("รหัสลูกค้า", data.get("ref2TitleTh"));
  		assertEquals("Customer ID", data.get("ref2TitleEn"));

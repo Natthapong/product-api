@@ -121,19 +121,25 @@ public class TestBillPaymentController extends BaseTestController {
 
         @Test
         public void createBillPaymentFail() throws Exception {
+        	Map<String, Object> data = new HashMap<String, Object>();
+        	data.put("target", "mea");
+        	data.put("amount", "1234.55");
+        	data.put("dueDate", "10/05/2013");
+        	
                 when(
                         billPaymentServiceMock.verifyPaymentAbility(
                                 anyString(),
                                 any(BigDecimal.class),
                                 anyString()
                         )
-                ).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
+                ).thenThrow(new ServiceInventoryException(500, "1012", "", "TMN-SERVICE-INVENTORY", "", data));
 
                 Map<String, Object> params = new HashMap<String, Object>();
-                params.put("target", "tmvh");
-                params.put("amount", new Double(1000.00));
+                params.put("target", "mea");
+                params.put("amount", new Double(1234.55));
                 params.put("ref1", "");
                 params.put("ref2", "");
+                params.put("billID", "111111");
                 params.put("serviceFeeAmount", new Double(10.00));
 
                 this.verifyFailed(this.doPOST(createBillPaymentURL, params));

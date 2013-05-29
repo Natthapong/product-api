@@ -2,6 +2,9 @@ package th.co.truemoney.product.api.controller;
 
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,8 +93,28 @@ public class BillPaymentController extends BaseController {
 
 		String billID = (String)request.get("billID");
 		BigDecimal inputAmount = new BigDecimal(request.get("amount").replace(",", ""));
-
-		BillPaymentDraft paymentDraft = this.billPaymentService.verifyPaymentAbility(billID, inputAmount, accessTokenID);
+		
+		BillPaymentDraft paymentDraft = new BillPaymentDraft();
+				
+		try{
+			paymentDraft = this.billPaymentService.verifyPaymentAbility(billID, inputAmount, accessTokenID);
+		}catch(ServiceInventoryException e){
+			System.out.println("Before if "+e.getData().get("target").toString()+" code = "+e.getErrorCode());
+			if("mea".equals(Utils.removeSuffix(e.getData().get("target").toString())) && "1012".equals(e.getErrorCode())){
+				Map<String, Object> data = new HashMap<String, Object>();
+				DecimalFormat decimalFormat = new DecimalFormat("#,###.##");
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+				
+				data.put("amount", decimalFormat.format(Double.parseDouble(e.getData().get("amount").toString())));
+				data.put("dueDate", dateFormat.format(new Date(e.getData().get("dueDate").toString())));//TODO format dd/MM/yyyy
+				
+				e.setData(data);
+				System.out.println("In if");
+				throw new ServiceInventoryException(500, "80000", "", "TMN-PRODUCT");
+			}
+			System.out.println("After if");
+		}
+		
 		OTP otp = this.authService.requestOTP(paymentDraft.getID(), accessTokenID);
 		
 		Map<String, Object> data = BillResponse.builder()
@@ -183,6 +206,14 @@ public class BillPaymentController extends BaseController {
 			data.put("remarkEn", messageManager.getMessageEn("payment.bill.remark"));
 			data.put("remarkTh", messageManager.getMessageTh("payment.bill.remark"));
 		}
+		
+		if(ValidateUtil.isMobileNumber(bill.getRef1())){
+			String formattedMobileNumber = Utils.formatMobileNumber(bill.getRef1());
+			data.put("ref1", formattedMobileNumber);
+		}else if(ValidateUtil.isTelNumber(bill.getRef1())){
+			String formattedTelNumber = Utils.formatTelNumber(bill.getRef1());
+			data.put("ref1", formattedTelNumber);
+		}
 
 		timer.stop();
 		logger.info(timer.shortSummary());
@@ -220,6 +251,15 @@ public class BillPaymentController extends BaseController {
 		Map<String, Object> data = BillResponse.builder()
 										.setPaymentDraft(paymentDraft)
 										.buildBillFavoriteResponse();
+		
+		if(ValidateUtil.isMobileNumber(bill.getRef1())){
+			String formattedMobileNumber = Utils.formatMobileNumber(bill.getRef1());
+			data.put("ref1", formattedMobileNumber);
+		}else if(ValidateUtil.isTelNumber(bill.getRef1())){
+			String formattedTelNumber = Utils.formatTelNumber(bill.getRef1());
+			data.put("ref1", formattedTelNumber);
+		}
+		
 		timer.stop();
 		logger.info(timer.shortSummary());
 
@@ -293,12 +333,6 @@ public class BillPaymentController extends BaseController {
 		}
 
 		Map<String, Object> data = BillResponse.builder().setBill(bill).buildBillInfoResponse();
-		
-//		String serviceCode = Utils.removeSuffix(bill.getTarget()); 
-//		if("tmvh".equals(serviceCode) || "trmv".equals(serviceCode)){
-//			String formattedMobileNumber = Utils.formatMobileNumber(bill.getRef1());
-//			data.put("ref1", formattedMobileNumber);
-//		}
 		
 		if(ValidateUtil.isMobileNumber(bill.getRef1())){
 			String formattedMobileNumber = Utils.formatMobileNumber(bill.getRef1());

@@ -49,9 +49,16 @@ public class ProductResponseFactory {
             	parameters = new Object[]{ data.get("bankNameEn"),
             							   data.get("bankNameTh"),
                                            data.get("minAmount"),
-                                           data.get("maxAmount") };
+                                           data.get("maxAmount")
+                                           };
             }
-        } else if (isCallCenterEnabled(exception)) {
+        }else if (isOverdueException(exception)) {
+        	Map<String, Object> data = exception.getData();
+            if (data != null) {
+            parameters = new Object[]{ data.get("amount"),
+                    				   data.get("dueDate") };
+            }
+        }else if (isCallCenterEnabled(exception)) {
             parameters = new Object[]{ messageManager.getMessageEn("call_center_no") };
         } else {
             parameters = EMPTY_PARAMS;
@@ -75,7 +82,9 @@ public class ProductResponseFactory {
                         exception.getErrorCode(), parameters));
         return error;
     }
-
+    
+    private final String OVERDUE_BILLPAY = "TMN-PRODUCT.80000";
+    
     private final String LESS_THAN_MINIMUM_AMOUNT = "TMN-SERVICE-INVENTORY.20001";
 
     private final String MORE_THAN_MINIMUM_AMOUNT = "TMN-SERVICE-INVENTORY.20002";
@@ -98,6 +107,11 @@ public class ProductResponseFactory {
     private boolean isCallCenterEnabled(ServiceInventoryException e) {
         return Arrays.asList(CALL_CENTER_ENABLED).contains(e.getErrorNamespace() + "." + e.getErrorCode());
     }
+    
+    private boolean isOverdueException(ServiceInventoryException e) {
+        return OVERDUE_BILLPAY.equals(e.getErrorNamespace() + "." + e.getErrorCode());
+    }
+    
 
     public void setMessageManager(MessageManager messageManager) {
         this.messageManager = messageManager;

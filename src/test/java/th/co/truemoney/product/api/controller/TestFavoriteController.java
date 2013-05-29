@@ -83,7 +83,8 @@ public class TestFavoriteController extends BaseTestController{
 		
 		this.verifySuccess(this.doGET(getFavoriteListURL))
 		.andExpect(jsonPath("$..weight").doesNotExist())
-		.andExpect(jsonPath("$..date").doesNotExist());
+		.andExpect(jsonPath("$..date").doesNotExist())
+		.andExpect(jsonPath("$..ref1TitleTh").value("รหัสลูกค้า/หมายเลขโทรศัพท์"));
 	}
 	
 	@Test 

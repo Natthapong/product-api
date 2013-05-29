@@ -24,6 +24,7 @@ import th.co.truemoney.product.api.domain.FavoriteItem;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.domain.WalletActivity;
 import th.co.truemoney.product.api.manager.OnlineResourceManager;
+import th.co.truemoney.product.api.util.Utils;
 import th.co.truemoney.serviceinventory.ewallet.FavoriteService;
 import th.co.truemoney.serviceinventory.ewallet.domain.Favorite;
 
@@ -98,8 +99,13 @@ public class FavoriteController extends BaseController {
 				String serviceName = WalletActivity.getActionInThai(serviceCode);
 				String logoURL = onlineResourceManager.getActivityActionLogoURL(serviceCode);
 				Integer serviceSortWeight = WalletActivity.getWeightFromServiceCode(serviceCode);
-				group0.addItems(new FavoriteItem( serviceName, reference1, logoURL, serviceCode, 
-						                          reference1, favorite.getDate(), serviceSortWeight));
+				FavoriteItem favoriteItem =new FavoriteItem( serviceName, reference1, logoURL, serviceCode, 
+                        reference1, favorite.getDate(), serviceSortWeight);
+				String ref1Title = findRef1Title(serviceCode);
+				favoriteItem.setRef1TitleTh(ref1Title);
+				favoriteItem.setRef1TitleEn(ref1Title);
+				group0.addItems(favoriteItem);
+				
 			}
 			order(group0.getItems());
 		}
@@ -123,6 +129,18 @@ public class FavoriteController extends BaseController {
 	
 	public void setOnlineResourceManager(OnlineResourceManager onlineResourceManager) {
 		this.onlineResourceManager = onlineResourceManager;
+	}
+	
+	private String findRef1Title(String target){
+		String title = "";
+		if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target)) || 
+				"tlp".equals(Utils.removeSuffix(target)) || "ti".equals(Utils.removeSuffix(target)) ||
+				"tic".equals(Utils.removeSuffix(target)) ){
+			title = "รหัสลูกค้า/หมายเลขโทรศัพท์";
+		}else if("tr".equals(Utils.removeSuffix(target))){
+			title = "เลขที่อ้างอิง 1/หมายเลขโทรศัพท์";
+		}
+		return title;
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })

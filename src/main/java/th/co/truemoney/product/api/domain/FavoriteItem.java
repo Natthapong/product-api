@@ -13,6 +13,8 @@ public class FavoriteItem {
 	private String logoURL;
 	private String serviceCode;
 	private String ref1;
+	private String ref1TitleEn;
+	private String ref1TitleTh;
 	
 	private int weight;
 	private Date date;
@@ -106,6 +108,22 @@ public class FavoriteItem {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public String getRef1TitleEn() {
+		return ref1TitleEn;
+	}
+
+	public void setRef1TitleEn(String ref1TitleEn) {
+		this.ref1TitleEn = ref1TitleEn;
+	}
+
+	public String getRef1TitleTh() {
+		return ref1TitleTh;
+	}
+
+	public void setRef1TitleTh(String ref1TitleTh) {
+		this.ref1TitleTh = ref1TitleTh;
 	}
 
 }

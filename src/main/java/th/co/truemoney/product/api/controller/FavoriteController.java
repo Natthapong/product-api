@@ -107,6 +107,16 @@ public class FavoriteController extends BaseController {
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	
+	@RequestMapping(value = "/favorite/remove/{accessTokenID}", method = RequestMethod.DELETE)
+	@ResponseBody
+	public ProductResponse removeFavorite(@PathVariable String accessTokenID,
+			                           @RequestBody Map<String, String> request) {
+		favoriteService.deleteFavorite(request.get("billCode"), request.get("ref1"), accessTokenID);
+
+		Map<String, Object> data = new HashMap<String, Object>();
+		return this.responseFactory.createSuccessProductResonse(data);
+	}
+	
 	public void setFavoriteService(FavoriteService favoriteService) {
 		this.favoriteService = favoriteService;
 	}

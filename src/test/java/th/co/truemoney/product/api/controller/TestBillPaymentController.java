@@ -1,6 +1,8 @@
 package th.co.truemoney.product.api.controller;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,8 +56,6 @@ public class TestBillPaymentController extends BaseTestController {
 
         private static final String getKeyInBillPaymentURL = String.format("/bill-payment/key-in/%s", fakeAccessToken);
 
-        Bill testBillInfo = createStubbedBillInfo("tcg");
-
         @Test
         public void getBillInformationSuccess() throws Exception {
                 when(
@@ -63,12 +63,13 @@ public class TestBillPaymentController extends BaseTestController {
                                 anyString(),
                                 anyString()
                         )
-                ).thenReturn(testBillInfo);
+                ).thenReturn(createStubbedBillInfo("tcg"));
 
                 this.verifySuccess(this.doGET(getBarcodeDetailURL))
                 .andExpect(jsonPath("$.data.titleTh").value(""))
                 .andExpect(jsonPath("$.data.titleEn").value(""))
-                .andExpect(jsonPath("$..isFavoritable").doesNotExist());
+                .andExpect(jsonPath("$..isFavoritable").doesNotExist())
+                .andExpect(jsonPath("$..dueDate").value("30/08/2013"));
         }
 
         @Test
@@ -266,7 +267,8 @@ public class TestBillPaymentController extends BaseTestController {
         	
         	this.verifySuccess(this.doPOST(getBillPaymentFavoriteInfoURL, req))
         	.andExpect(jsonPath("$.data").exists())
-        	.andExpect(jsonPath("$..ref1").value("010004552"));
+        	.andExpect(jsonPath("$..ref1").value("010004552"))
+        	.andExpect(jsonPath("$..dueDate").value("30/08/2013"));
         }
         
         @Test
@@ -295,7 +297,7 @@ public class TestBillPaymentController extends BaseTestController {
         public void getKeyInBillInformationTCGSuccess() throws Exception {
                 when(
                         billPaymentServiceMock.retrieveBillInformationWithKeyin(anyString(), anyString())
-                ).thenReturn(testBillInfo);
+                ).thenReturn(createStubbedBillInfo("tcg"));
 
                 this.verifySuccess(this.doGET(getKeyInBillPaymentInfoURL("tcg")))
                 .andExpect(jsonPath("$..ref1TitleTh").exists())
@@ -346,12 +348,13 @@ public class TestBillPaymentController extends BaseTestController {
         	req.put("target", "tcg");
         	req.put("amount", "100.00");
         	
-            when(
-                    billPaymentServiceMock.retrieveBillInformationWithBillCode(
-                    		anyString(), anyString(), any(BigDecimal.class), anyString())
-            ).thenReturn(testBillInfo);
+        	when(
+                    billPaymentServiceMock.updateBillInformation(
+                    		anyString(), anyString(), anyString(), any(BigDecimal.class), anyString())
+            ).thenReturn(createStubbedBillInfo("tcg"));
 
-            this.verifySuccess(this.doPOST(getKeyInBillPaymentURL, req));
+            this.verifySuccess(this.doPOST(getKeyInBillPaymentURL, req))
+            .andExpect(jsonPath("$..dueDate").value("30/08/2013"));
         }
         
         @Test
@@ -367,7 +370,8 @@ public class TestBillPaymentController extends BaseTestController {
                     		anyString(), anyString(), anyString(), any(BigDecimal.class), anyString())
             ).thenReturn(createStubbedBillInfo("catv"));
 
-            this.verifySuccess(this.doPOST(getKeyInBillPaymentURL,req));
+            this.verifySuccess(this.doPOST(getKeyInBillPaymentURL,req))
+            .andExpect(jsonPath("$..dueDate").value("30/08/2013"));
         }
         
         @Test
@@ -375,17 +379,20 @@ public class TestBillPaymentController extends BaseTestController {
         	Map<String, String> req = new HashMap<String, String>();
         	req.put("ref1", "1234567890");
         	req.put("ref2", "1234567890");
-        	req.put("target", "catv");
+        	req.put("target", "tmvh");
         	req.put("amount", "100.00");
                 when(
                         billPaymentServiceMock.updateBillInformation(
                         		anyString(), anyString(), anyString(), any(BigDecimal.class), anyString())
                 ).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
 
-                this.verifyFailed(this.doPOST(getKeyInBillPaymentURL, req));
+                this.verifyFailed(this.doPOST(getKeyInBillPaymentURL, req))
+                .andExpect(jsonPath("$code").value("70000"))
+                .andExpect(jsonPath("$namespace").value("TMN-PRODUCT"));
         }
                 
-        private Bill createStubbedBillInfo(String target) {
+        private Bill createStubbedBillInfo(String target) throws ParseException {
+        	 	SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
                 Bill billInfo = new Bill();
                 billInfo.setTarget(target);
                 billInfo.setLogoURL("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tcg@2x.png");
@@ -403,6 +410,8 @@ public class TestBillPaymentController extends BaseTestController {
                 billInfo.setAmount(new BigDecimal("10000"));
 
                 billInfo.setFavoritable(false);
+                
+                billInfo.setDueDate(df.parse("30/08/2013"));
 
                 ServiceFeeInfo serviceFee = new ServiceFeeInfo();
                 serviceFee.setFeeRate(new BigDecimal("1000"));
@@ -422,7 +431,7 @@ public class TestBillPaymentController extends BaseTestController {
                 return billInfo;
         }
 
-        private BillPaymentDraft createBillPaymentDraftStubbed(){
+        private BillPaymentDraft createBillPaymentDraftStubbed() throws ParseException{
 	    	Bill bill = createStubbedBillInfo("tcg");
     		return new BillPaymentDraft("1111111111", bill, new BigDecimal(11000), "123567890", Status.OTP_CONFIRMED);
     	}

@@ -29,6 +29,7 @@ import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
+import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 /**
  * Transaction States:
@@ -243,14 +244,19 @@ public class BillPaymentController extends BaseController {
 		data.put("ref2Type", "none");
 		
 		String serviceCode = Utils.removeSuffix(bill.getTarget());
+		if("tmvh".equals(serviceCode)){
+			data.put("ref1Type", "mobile");
+			data.put("ref1TitleTh", "หมายเลขโทรศัพท์ทรูมูฟ เอช");
+			data.put("ref1TitleEn", "หมายเลขโทรศัพท์ทรูมูฟ เอช");
+		} else if("trmv".equals(serviceCode)){
+			data.put("ref1Type", "mobile");
+			data.put("ref1TitleTh", "หมายเลขโทรศัพท์ทรูมูฟ");
+			data.put("ref1TitleEn", "หมายเลขโทรศัพท์ทรูมูฟ");
+		}
 		if("catv".equals(serviceCode) || "dstv".equals(serviceCode)) {
 			data.put("ref2TitleTh", bill.getRef2TitleTH());
 			data.put("ref2TitleEn", bill.getRef2TitleEN());
         }
-		
-		if("tmvh".equals(serviceCode) || "trmv".equals(serviceCode)) {
-			data.put("ref1Type", "mobile");
-		}
 		
 		return createResponse(data);
 	}
@@ -260,7 +266,7 @@ public class BillPaymentController extends BaseController {
 	ProductResponse getKeyInBillPayment(
 			@PathVariable String accessTokenID, @RequestBody Map<String,String> request) {
 		String inputAmount = request.get("amount");
-		
+		String target = request.get("target");
 		if (ValidateUtil.isEmpty(inputAmount)) {
 			throw new InvalidParameterException("60000");
 		}
@@ -270,11 +276,23 @@ public class BillPaymentController extends BaseController {
 		String ref1 = request.get("ref1");
 		String ref2 = request.containsKey("ref2") ? request.get("ref2") : "";
 		
-		Bill bill = billPaymentService.updateBillInformation(billID, ref1, ref2, amount, accessTokenID);
+		Bill bill = new Bill();
+		try{
+			bill = billPaymentService.updateBillInformation(billID, ref1, ref2, amount, accessTokenID);
+		}catch(Exception e){
+			if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target))){
+				throw new ServiceInventoryException(500,"70000","","TMN-PRODUCT");
+			}
+		}
+
+		Map<String, Object> data = BillResponse.builder().setBill(bill).buildBillInfoResponse();
 		
-		Map<String, Object> data = BillResponse.builder()
-				.setBill(bill)
-				.buildBillInfoResponse();
+		String serviceCode = Utils.removeSuffix(bill.getTarget()); 
+		if("tmvh".equals(serviceCode) || "trmv".equals(serviceCode)){
+			String formattedMobileNumber = Utils.formatMobileNumber(bill.getRef1());
+			data.put("ref1", formattedMobileNumber);
+		}
+		
 		return createResponse(data);
 	}
 

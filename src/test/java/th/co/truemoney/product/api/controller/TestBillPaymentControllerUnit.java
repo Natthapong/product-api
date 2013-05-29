@@ -76,7 +76,7 @@ public class TestBillPaymentControllerUnit {
 	public void favoriteBillPayment() throws Exception {
 		Map<String, String> request = new HashMap<String, String>();
 		request.put("billCode", "tcg");
-		request.put("ref1", "010004552");
+		request.put("ref1", "021234567");
 		request.put("amount", "10000");
 		
 		when(this.billPaymentServiceMock.retrieveBillInformationWithBillCode(
@@ -102,7 +102,7 @@ public class TestBillPaymentControllerUnit {
 		
 		assertEquals("โทรศัพท์พื้นฐาน", data.get("ref1TitleTh"));
 		assertEquals("Fix Line", data.get("ref1TitleEn"));
-		assertEquals("010004552", data.get("ref1"));
+		assertEquals("021234567", data.get("ref1"));
 		
 		assertEquals("รหัสลูกค้า", data.get("ref2TitleTh"));
 		assertEquals("Customer ID", data.get("ref2TitleEn"));
@@ -271,7 +271,7 @@ public class TestBillPaymentControllerUnit {
 		
 		assertEquals("โทรศัพท์พื้นฐาน", data.get("ref1TitleTh"));
 		assertEquals("Fix Line", data.get("ref1TitleEn"));
-		assertEquals("010004552", data.get("ref1"));
+		assertEquals("021234567", data.get("ref1"));
 		
 		assertEquals("รหัสลูกค้า", data.get("ref2TitleTh"));
 		assertEquals("Customer ID", data.get("ref2TitleEn"));
@@ -426,7 +426,7 @@ public class TestBillPaymentControllerUnit {
  		
  		assertEquals("โทรศัพท์พื้นฐาน", data.get("ref1TitleTh"));
  		assertEquals("Fix Line", data.get("ref1TitleEn"));
- 		assertEquals("010004552", data.get("ref1"));
+ 		assertEquals("021234567", data.get("ref1"));
  		
  		assertEquals("รหัสลูกค้า", data.get("ref2TitleTh"));
  		assertEquals("Customer ID", data.get("ref2TitleEn"));
@@ -475,7 +475,7 @@ public class TestBillPaymentControllerUnit {
 	@Test
 	public void getKeyInBillPaymentInformationTCGSuccess() throws ParseException {
 		Map<String, String> req = new HashMap<String, String>();
-		req.put("ref1", "010004552");
+		req.put("ref1", "021234567");
 		req.put("target", "tcg");
 		req.put("amount", "10000.00");
 		Bill bill = createStubbedBillInfo();
@@ -500,7 +500,7 @@ public class TestBillPaymentControllerUnit {
 
 		assertEquals("โทรศัพท์พื้นฐาน", data.get("ref1TitleTh"));
 		assertEquals("Fix Line", data.get("ref1TitleEn"));
-		assertEquals("010004552", data.get("ref1"));
+		assertEquals("02-123-4567", data.get("ref1"));
 
 		assertEquals("รหัสลูกค้า", data.get("ref2TitleTh"));
 		assertEquals("Customer ID", data.get("ref2TitleEn"));
@@ -596,7 +596,7 @@ public class TestBillPaymentControllerUnit {
 
         billInfo.setRef1TitleTH("โทรศัพท์พื้นฐาน");
         billInfo.setRef1TitleEN("Fix Line");
-        billInfo.setRef1("010004552");
+        billInfo.setRef1("021234567");
 
         billInfo.setRef2TitleTH("รหัสลูกค้า");
         billInfo.setRef2TitleEN("Customer ID");

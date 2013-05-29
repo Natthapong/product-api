@@ -57,5 +57,23 @@ public class TestValidateUtil {
 		assertFalse(ValidateUtil.checkEmail(""));
 	}
 
+	@Test
+	public void testIsMobileNumber08Success() {
+		assertTrue(ValidateUtil.isMobileNumber("0868185055"));
+	}
 	
+	@Test
+	public void testIsMobileNumber03Success() {
+		assertTrue(ValidateUtil.isMobileNumber("0368185055"));
+	}
+	
+	@Test
+	public void testIsMobileNumberNot02() {
+		assertFalse(ValidateUtil.isMobileNumber("0168185055"));
+	}
+	
+	@Test
+	public void testIsMobileNumberWrongLenght() {
+		assertFalse(ValidateUtil.isMobileNumber("016818555"));
+	}
 }

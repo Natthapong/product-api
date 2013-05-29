@@ -13,4 +13,14 @@ public class TestUtils {
 		assertEquals("12,345.50", Utils.formatAmount(new BigDecimal(12345.50)));
 		assertEquals("0.00", Utils.formatAmount(new BigDecimal(0)));
 	}
+	
+	@Test
+	public void testFormatMobileNumber() {
+		assertEquals("089-123-4567", Utils.formatMobileNumber("0891234567"));
+	}
+	
+	@Test
+	public void testFormatTelNumber() {
+		assertEquals("02-123-4567", Utils.formatTelNumber("021234567"));
+	}
 }

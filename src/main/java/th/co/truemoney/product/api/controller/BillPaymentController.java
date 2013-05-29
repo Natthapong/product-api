@@ -252,10 +252,17 @@ public class BillPaymentController extends BaseController {
 			data.put("ref1Type", "mobile");
 			data.put("ref1TitleTh", "หมายเลขโทรศัพท์ทรูมูฟ");
 			data.put("ref1TitleEn", "หมายเลขโทรศัพท์ทรูมูฟ");
+		} else if("tr".equals(serviceCode) || "ti".equals(serviceCode)||
+				"tlp".equals(serviceCode)|| "tic".equals(serviceCode)){
+			data.put("ref1TitleTh", "หมายเลขโทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก");
+			data.put("ref1TitleEn", "หมายเลขโทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก");
 		}
+		
 		if("catv".equals(serviceCode) || "dstv".equals(serviceCode)) {
-			data.put("ref2TitleTh", bill.getRef2TitleTH());
-			data.put("ref2TitleEn", bill.getRef2TitleEN());
+			data.put("ref1TitleTh", "หมายเลขสมาชิกทรูวิชั่นส์");
+			data.put("ref1TitleEn", "หมายเลขสมาชิกทรูวิชั่นส์");
+			data.put("ref2TitleTh", "เลขที่ใบแจ้งค่าบริการ");
+			data.put("ref2TitleEn", "เลขที่ใบแจ้งค่าบริการ");
         }
 		
 		return createResponse(data);
@@ -287,10 +294,18 @@ public class BillPaymentController extends BaseController {
 
 		Map<String, Object> data = BillResponse.builder().setBill(bill).buildBillInfoResponse();
 		
-		String serviceCode = Utils.removeSuffix(bill.getTarget()); 
-		if("tmvh".equals(serviceCode) || "trmv".equals(serviceCode)){
+//		String serviceCode = Utils.removeSuffix(bill.getTarget()); 
+//		if("tmvh".equals(serviceCode) || "trmv".equals(serviceCode)){
+//			String formattedMobileNumber = Utils.formatMobileNumber(bill.getRef1());
+//			data.put("ref1", formattedMobileNumber);
+//		}
+		
+		if(ValidateUtil.isMobileNumber(bill.getRef1())){
 			String formattedMobileNumber = Utils.formatMobileNumber(bill.getRef1());
 			data.put("ref1", formattedMobileNumber);
+		}else if(ValidateUtil.isTelNumber(bill.getRef1())){
+			String formattedTelNumber = Utils.formatTelNumber(bill.getRef1());
+			data.put("ref1", formattedTelNumber);
 		}
 		
 		return createResponse(data);

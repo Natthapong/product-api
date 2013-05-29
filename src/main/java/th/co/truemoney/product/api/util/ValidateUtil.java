@@ -8,6 +8,26 @@ public class ValidateUtil {
 	private static Pattern EMAIL_PATTERN = Pattern
             .compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+	
+	private static Pattern MOBILE_FORMAT_PATTERN = Pattern.compile("^[0][3-9][0-9]{8}");
+	private static Pattern TELEPHONE_PATTERN = Pattern.compile("^[0][2][0-9]{7}");
+		
+
+    public static boolean isMobileNumber(String mobileNumber) {
+        if (ValidateUtil.isEmpty(mobileNumber)) {
+            return false;
+        } else {
+            return MOBILE_FORMAT_PATTERN.matcher(mobileNumber).matches();
+        }
+    }
+    
+    public static boolean isTelNumber(String telNumber) {
+        if (ValidateUtil.isEmpty(telNumber)) {
+            return false;
+        } else {
+            return TELEPHONE_PATTERN.matcher(telNumber).matches();
+        }
+    }
 
     public static boolean checkMobileNumber(String mobileNumber) {
         if (isEmpty(mobileNumber)) {

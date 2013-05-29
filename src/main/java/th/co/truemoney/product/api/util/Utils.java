@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
@@ -64,10 +65,15 @@ public final class Utils {
         }
         return formattedAmount;
     }
-
+    
     public static String formatMobileNumber(String mobileNumber) {
         return String.valueOf(mobileNumber).replaceFirst(
                 "(\\d{3})(\\d{3})(\\d)", "$1-$2-$3");
+    }
+    
+    public static String formatTelNumber(String telNumber) {
+        return String.valueOf(telNumber).replaceFirst(
+                "(\\d{2})(\\d{3})(\\d)", "$1-$2-$3");
     }
     
     public static String removeSuffix(String s) {

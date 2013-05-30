@@ -136,10 +136,12 @@ public class FavoriteController extends BaseController {
 		String title = "";
 		if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target)) || 
 				"tlp".equals(Utils.removeSuffix(target)) || "ti".equals(Utils.removeSuffix(target)) ||
-				"tic".equals(Utils.removeSuffix(target)) ){
+				"tic".equals(Utils.removeSuffix(target)) || "tcg".equals(Utils.removeSuffix(target))){
 			title = "รหัสลูกค้า/หมายเลขโทรศัพท์";
 		}else if("tr".equals(Utils.removeSuffix(target))){
 			title = "เลขที่อ้างอิง 1/หมายเลขโทรศัพท์";
+		}else if("mea".equals(Utils.removeSuffix(target))){
+			title = "บัญชีแสดงสัญญาเลขที่";
 		}
 		return title;
 	}

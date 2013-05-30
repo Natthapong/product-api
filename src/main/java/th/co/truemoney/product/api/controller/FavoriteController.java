@@ -133,11 +133,12 @@ public class FavoriteController extends BaseController {
 	
 	private String findRef1Title(String target){
 		String title = "";
-		if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target)) || 
-				"tlp".equals(Utils.removeSuffix(target)) || "ti".equals(Utils.removeSuffix(target)) ||
-				"tic".equals(Utils.removeSuffix(target)) ){
+		String serviceCode = Utils.removeSuffix(target);
+		if("tmvh".equals(serviceCode) || "trmv".equals(serviceCode) 
+				|| "tlp".equals(serviceCode) || "ti".equals(serviceCode) 
+				|| "tic".equals(serviceCode)){
 			title = "รหัสลูกค้า/หมายเลขโทรศัพท์";
-		}else if("tr".equals(Utils.removeSuffix(target))){
+		} else if("tr".equals(serviceCode)){
 			title = "เลขที่อ้างอิง 1/หมายเลขโทรศัพท์";
 		}
 		return title;

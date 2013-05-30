@@ -123,8 +123,17 @@ public class BillResponse {
 				response.put("amount", bill.getAmount().toString());
 				response.put("minAmount", bill.getMinAmount().toString());
 				response.put("maxAmount", bill.getMaxAmount().toString());
-				response.put("serviceFee", bill.getServiceFee().getFeeRate());
-				response.put("serviceFeeType", bill.getServiceFee().getFeeRateType());
+				
+				BigDecimal serviceFeeRate = BigDecimal.ZERO;
+				String serviceFeeType = "";
+				if (bill.getServiceFee() != null) {
+					serviceFeeRate = bill.getServiceFee().getFeeRate();
+					serviceFeeType = bill.getServiceFee().getFeeRateType();
+					
+				}
+				response.put("serviceFee", serviceFeeRate);
+				response.put("serviceFeeType", serviceFeeType);
+				
 				response.put("partialPaymentAllow", bill.getPartialPayment());
 				response.put("dueDate", bill.getDueDate() != null ? df.format(bill.getDueDate()) : "");
 				

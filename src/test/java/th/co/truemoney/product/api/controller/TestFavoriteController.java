@@ -6,19 +6,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Test;
+import org.mockito.Mockito;
+
+import th.co.truemoney.serviceinventory.ewallet.domain.Favorite;
+import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import th.co.truemoney.serviceinventory.ewallet.domain.Favorite;
-import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 public class TestFavoriteController extends BaseTestController{
 	

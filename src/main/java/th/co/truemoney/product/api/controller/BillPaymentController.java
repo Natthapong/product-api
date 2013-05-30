@@ -315,10 +315,11 @@ public class BillPaymentController extends BaseController {
 		Bill bill = new Bill();
 		try{
 			bill = billPaymentService.updateBillInformation(billID, ref1, ref2, amount, accessTokenID);
-		}catch(Exception e){
+		}catch(ServiceInventoryException e){
 			if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target))){
 				throw new ServiceInventoryException(500,"70000","","TMN-PRODUCT");
 			}
+			throw e;
 		}
 
 		Map<String, Object> data = BillResponse.builder().setBill(bill).buildBillInfoResponse();

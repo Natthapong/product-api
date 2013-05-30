@@ -26,6 +26,8 @@ import static org.mockito.Mockito.when;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+import static org.hamcrest.Matchers.containsString;
+
 public class TestBillPaymentController extends BaseTestController {
 
         private static final String fakeAccessToken = "111111111111";
@@ -83,6 +85,26 @@ public class TestBillPaymentController extends BaseTestController {
 
                 this.verifyFailed(this.doGET(getBarcodeDetailURL));
         }
+        
+        @Test
+        public void getBillInformationOverdueMEAFail() throws Exception {
+        	Map<String, Object> data = new HashMap<String, Object>();
+        	data.put("target", "mea");
+        	data.put("amount", "1234.55");
+        	data.put("dueDate", "10/05/2013");
+
+                when(
+                        billPaymentServiceMock.retrieveBillInformationWithBarcode(
+                                anyString(),
+                                anyString()
+                        )
+                ).thenThrow(new ServiceInventoryException(500, "1012", "", "TMN-SERVICE-INVENTORY", "", data));
+
+                this.verifyFailed(this.doGET(getBarcodeDetailURL))
+                //.andExpect(jsonPath("$.messageTh").value(containsString("การไฟฟ้านครหลวง")))
+                .andExpect(jsonPath("$.messageTh").value(containsString("10/05/2013")))
+                .andExpect(jsonPath("$.messageTh").value(containsString("1,234.55")));
+        }
 
         @Test
         public void createBillPaymentSuccess() throws Exception {
@@ -121,18 +143,13 @@ public class TestBillPaymentController extends BaseTestController {
 
         @Test
         public void createBillPaymentFail() throws Exception {
-        	Map<String, Object> data = new HashMap<String, Object>();
-        	data.put("target", "mea");
-        	data.put("amount", "1234.55");
-        	data.put("dueDate", "10/05/2013");
-        	
                 when(
                         billPaymentServiceMock.verifyPaymentAbility(
                                 anyString(),
                                 any(BigDecimal.class),
                                 anyString()
                         )
-                ).thenThrow(new ServiceInventoryException(500, "1012", "", "TMN-SERVICE-INVENTORY", "", data));
+                ).thenThrow(new ServiceInventoryException(400, "", "", ""));
 
                 Map<String, Object> params = new HashMap<String, Object>();
                 params.put("target", "mea");

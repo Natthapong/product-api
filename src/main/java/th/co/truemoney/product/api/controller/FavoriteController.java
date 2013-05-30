@@ -102,8 +102,8 @@ public class FavoriteController extends BaseController {
 				FavoriteItem favoriteItem =new FavoriteItem( serviceName, reference1, logoURL, serviceCode, 
                         reference1, favorite.getDate(), serviceSortWeight);
 				String ref1Title = findRef1Title(serviceCode);
-				favoriteItem.setRef1TitleTh(ref1Title);
-				favoriteItem.setRef1TitleEn(ref1Title);
+				favoriteItem.setText2En(ref1Title);
+				favoriteItem.setText2Th(ref1Title);
 				group0.addItems(favoriteItem);
 				
 			}
@@ -117,7 +117,8 @@ public class FavoriteController extends BaseController {
 	@ResponseBody
 	public ProductResponse removeFavorite(@PathVariable String accessTokenID,
 			                           @RequestBody Map<String, String> request) {
-		favoriteService.deleteFavorite(request.get("billCode"), request.get("ref1"), accessTokenID);
+		favoriteService.deleteFavorite(request.get("serviceCode"), request.get("ref1"), accessTokenID);
+		System.out.println("serviceCode = "+request.get("serviceCode"));
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		return this.responseFactory.createSuccessProductResonse(data);
@@ -140,6 +141,8 @@ public class FavoriteController extends BaseController {
 			title = "รหัสลูกค้า/หมายเลขโทรศัพท์";
 		} else if("tr".equals(serviceCode)){
 			title = "เลขที่อ้างอิง 1/หมายเลขโทรศัพท์";
+		}else if("mea".equals(Utils.removeSuffix(target))){
+			title = "บัญชีแสดงสัญญาเลขที่";
 		}
 		return title;
 	}

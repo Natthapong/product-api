@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 
 import th.co.truemoney.product.api.domain.WalletActivity;
 import th.co.truemoney.product.api.util.Utils;
+import th.co.truemoney.product.api.util.ValidateUtil;
 
 @Component
 public class BillPayActivityDetailViewHandler extends
@@ -32,8 +33,8 @@ public class BillPayActivityDetailViewHandler extends
 		 Map<String, String> cell1 = new HashMap<String, String>();
 		 Map<String, String> cell2 = new HashMap<String, String>();
 		 String action = Utils.removeSuffix(activity.getAction());
-		 String ref1TitleTh = "รหัสลูกค้า";
-		 String ref1TitleEn = "customer ID";
+		 String ref1TitleTh = "รหัสลูกค้า/หมายเลขโทรศัพท์";
+		 String ref1TitleEn = "Account/Mobile Number";
 		 String ref1Value = activity.getRef1();
 		 String ref2TitleTh = "เลขที่ใบแจ้งค่าบริการ";
 		 String ref2TitleEn = "invoice number";
@@ -45,6 +46,14 @@ public class BillPayActivityDetailViewHandler extends
 		 } else if ("water".equals(action)) {
 			 ref1TitleTh = "รหัสสาขา + ทะเบียนผู้ใช้น้ำ";
 			 ref2TitleTh = "เลขที่ใบแจ้งหนี้";
+		 }else if("tr".equals(action)){
+			 ref1TitleTh = "เลขที่อ้างอิง 1/หมายเลขโทรศัพท์";
+		 }
+		 
+		 if(ValidateUtil.isMobileNumber(ref1Value)){
+			 ref1Value = Utils.formatMobileNumber(ref1Value);
+		 }else if(ValidateUtil.isTelNumber(ref1Value)){
+			 ref1Value = Utils.formatTelNumber(ref1Value);
 		 }
 		 
 		 cell1.put("titleTh", ref1TitleTh);

@@ -2,9 +2,6 @@ package th.co.truemoney.product.api.controller;
 
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,8 +67,19 @@ public class BillPaymentController extends BaseController {
 
 		StopWatch timer = new StopWatch("getBillInformation ("+accessTokenID+")");
 		timer.start();
-
-		Bill bill = billPaymentService.retrieveBillInformationWithBarcode(barcode, accessTokenID);
+		Bill bill = new Bill();
+		
+		try{
+			bill = billPaymentService.retrieveBillInformationWithBarcode(barcode, accessTokenID);
+		}catch(ServiceInventoryException e){
+			if("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace())&& "1012".equals(e.getErrorCode())){
+				e.setErrorCode("80000");
+				e.setErrorNamespace("TMN-PRODUCT");
+				throw e;
+			}else{
+				throw e;
+			}
+	}
 		
 		Map<String, Object> data = BillResponse.builder()
 										.setBill(bill)
@@ -94,26 +102,7 @@ public class BillPaymentController extends BaseController {
 		String billID = (String)request.get("billID");
 		BigDecimal inputAmount = new BigDecimal(request.get("amount").replace(",", ""));
 		
-		BillPaymentDraft paymentDraft = new BillPaymentDraft();
-				
-		try{
-			paymentDraft = this.billPaymentService.verifyPaymentAbility(billID, inputAmount, accessTokenID);
-		}catch(ServiceInventoryException e){
-			System.out.println("Before if "+e.getData().get("target").toString()+" code = "+e.getErrorCode());
-			if("mea".equals(Utils.removeSuffix(e.getData().get("target").toString())) && "1012".equals(e.getErrorCode())){
-				Map<String, Object> data = new HashMap<String, Object>();
-				DecimalFormat decimalFormat = new DecimalFormat("#,###.##");
-				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-				
-				data.put("amount", decimalFormat.format(Double.parseDouble(e.getData().get("amount").toString())));
-				data.put("dueDate", dateFormat.format(new Date(e.getData().get("dueDate").toString())));//TODO format dd/MM/yyyy
-				
-				e.setData(data);
-				System.out.println("In if");
-				throw new ServiceInventoryException(500, "80000", "", "TMN-PRODUCT");
-			}
-			System.out.println("After if");
-		}
+		BillPaymentDraft paymentDraft = this.billPaymentService.verifyPaymentAbility(billID, inputAmount, accessTokenID);
 		
 		OTP otp = this.authService.requestOTP(paymentDraft.getID(), accessTokenID);
 		
@@ -286,16 +275,16 @@ public class BillPaymentController extends BaseController {
 		String serviceCode = Utils.removeSuffix(bill.getTarget());
 		if("tmvh".equals(serviceCode)){
 			data.put("ref1Type", "mobile");
-			data.put("ref1TitleTh", "หมายเลขโทรศัพท์ทรูมูฟ เอช");
-			data.put("ref1TitleEn", "หมายเลขโทรศัพท์ทรูมูฟ เอช");
+			data.put("ref1TitleTh", "เบอร์โทรศัพท์ทรูมูฟ เอช");
+			data.put("ref1TitleEn", "เบอร์โทรศัพท์ทรูมูฟ เอช");
 		} else if("trmv".equals(serviceCode)){
 			data.put("ref1Type", "mobile");
-			data.put("ref1TitleTh", "หมายเลขโทรศัพท์ทรูมูฟ");
-			data.put("ref1TitleEn", "หมายเลขโทรศัพท์ทรูมูฟ");
+			data.put("ref1TitleTh", "เบอร์โทรศัพท์ทรูมูฟ");
+			data.put("ref1TitleEn", "เบอร์โทรศัพท์ทรูมูฟ");
 		} else if("tr".equals(serviceCode) || "ti".equals(serviceCode)||
 				"tlp".equals(serviceCode)|| "tic".equals(serviceCode)){
-			data.put("ref1TitleTh", "หมายเลขโทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก");
-			data.put("ref1TitleEn", "หมายเลขโทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก");
+			data.put("ref1TitleTh", "เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก");
+			data.put("ref1TitleEn", "เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก");
 		}
 		
 		if("catv".equals(serviceCode) || "dstv".equals(serviceCode)) {

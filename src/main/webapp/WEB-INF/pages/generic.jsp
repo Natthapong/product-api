@@ -87,7 +87,11 @@
 
 "payment.bill.keyin.list.url" : "${apiHost}/api/v1/bill-payment/key-in/list?",
 
+"payment.bill.keyin.list.presscon.url" : "${apiHost}/api/v1/bill-payment/key-in/list/press-con?",
+
 "payment.bill.keyin.info.url" : "${apiHost}/api/v1/bill-payment/info/%@/%@?",
 
-"payment.bill.keyin.input.url" : "${apiHost}/api/v1/bill-payment/key-in/%@?"
+"payment.bill.keyin.input.url" : "${apiHost}/api/v1/bill-payment/key-in/%@?",
+
+"canRegister" : "true"
 }

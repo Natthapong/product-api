@@ -10,11 +10,11 @@ public class FavoriteItem {
 	private String text1En;
 	private String text2Th;
 	private String text2En;
+	private String text3Th;
+	private String text3En;
 	private String logoURL;
 	private String serviceCode;
 	private String ref1;
-	private String ref1TitleEn;
-	private String ref1TitleTh;
 	
 	private int weight;
 	private Date date;
@@ -23,12 +23,12 @@ public class FavoriteItem {
 		super();
 	}
 	
-	public FavoriteItem(String text1Th, String text2Th, String logoURL, String serviceCode, String ref1, Date date, int weight) {
+	public FavoriteItem(String text1Th, String text3Th, String logoURL, String serviceCode, String ref1, Date date, int weight) {
 		super();
 		this.text1Th = text1Th;
 		this.text1En = text1Th;
-		this.text2Th = text2Th;
-		this.text2En = text2Th;
+		this.text3Th = text3Th;
+		this.text3En = text3Th;
 		this.logoURL = logoURL;
 		this.serviceCode = serviceCode;
 		this.ref1 = ref1;
@@ -66,6 +66,22 @@ public class FavoriteItem {
 
 	public void setText2En(String text2En) {
 		this.text2En = text2En;
+	}
+	
+	public String getText3Th() {
+		return text3Th;
+	}
+
+	public void setText3Th(String text3Th) {
+		this.text3Th = text3Th;
+	}
+
+	public String getText3En() {
+		return text3En;
+	}
+
+	public void setText3En(String text3En) {
+		this.text3En = text3En;
 	}
 
 	public String getLogoURL() {
@@ -108,22 +124,6 @@ public class FavoriteItem {
 
 	public void setDate(Date date) {
 		this.date = date;
-	}
-
-	public String getRef1TitleEn() {
-		return ref1TitleEn;
-	}
-
-	public void setRef1TitleEn(String ref1TitleEn) {
-		this.ref1TitleEn = ref1TitleEn;
-	}
-
-	public String getRef1TitleTh() {
-		return ref1TitleTh;
-	}
-
-	public void setRef1TitleTh(String ref1TitleTh) {
-		this.ref1TitleTh = ref1TitleTh;
 	}
 
 }

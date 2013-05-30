@@ -2,9 +2,6 @@ package th.co.truemoney.product.api.controller;
 
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -76,12 +73,9 @@ public class BillPaymentController extends BaseController {
 			bill = billPaymentService.retrieveBillInformationWithBarcode(barcode, accessTokenID);
 		}catch(ServiceInventoryException e){
 			if("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace())&& "1012".equals(e.getErrorCode())){
-				Map<String, Object> data = new HashMap<String, Object>();
-				data.put("amount", e.getData().get("amount"));
-				data.put("dueDate", e.getData().get("dueDate"));
-				
-				e.setData(data);
-				throw new ServiceInventoryException(500, "80000", "", "TMN-PRODUCT");
+				e.setErrorCode("80000");
+				e.setErrorNamespace("TMN-PRODUCT");
+				throw e;
 			}else{
 				throw e;
 			}

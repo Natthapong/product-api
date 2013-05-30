@@ -90,7 +90,7 @@ public class TestBillPaymentController extends BaseTestController {
         public void getBillInformationOverdueMEAFail() throws Exception {
         	Map<String, Object> data = new HashMap<String, Object>();
         	data.put("target", "mea");
-        	data.put("amount", "1234.55");
+        	data.put("amount", new BigDecimal(1234.55));
         	data.put("dueDate", "10/05/2013");
 
                 when(

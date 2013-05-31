@@ -47,7 +47,7 @@ public class TestProductResponseFactory {
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("target", "mea");
     	data.put("amount", new BigDecimal(1234.55));
-    	data.put("dueDate", "10/05/2013");
+    	data.put("dueDate", "10/05/13");
     	
     	ServiceInventoryException overdueBillPayException = new ServiceInventoryException();
 		overdueBillPayException.setErrorNamespace("TMN-PRODUCT");
@@ -56,7 +56,7 @@ public class TestProductResponseFactory {
 		
 		ProductResponse response = responseFactory.createErrorProductResponse(overdueBillPayException);
 		assertThat(response.getMessageTh(), Matchers.containsString("1,234.55"));
-		assertThat(response.getMessageTh(), Matchers.containsString("10/05/2013"));
+		assertThat(response.getMessageTh(), Matchers.containsString("10/05/13"));
 	}
 	
 

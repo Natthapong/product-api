@@ -2,6 +2,7 @@ package th.co.truemoney.product.api.controller;
 
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,11 +76,13 @@ public class BillPaymentController extends BaseController {
 			if("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace())&& "1012".equals(e.getErrorCode())){
 				e.setErrorCode("80000");
 				e.setErrorNamespace("TMN-PRODUCT");
+				Date dueDate = new Date((Long)e.getData().get("dueDate"));
+				e.getData().put("dueDate",Utils.formatDate(dueDate));
 				throw e;
 			}else{
 				throw e;
 			}
-	}
+		}
 		
 		Map<String, Object> data = BillResponse.builder()
 										.setBill(bill)

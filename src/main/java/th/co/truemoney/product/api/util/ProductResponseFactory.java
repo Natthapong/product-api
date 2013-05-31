@@ -55,8 +55,8 @@ public class ProductResponseFactory {
         }else if (isOverdueException(exception)) {
         	Map<String, Object> data = exception.getData();
             if (data != null) {
-            parameters = new Object[]{ data.get("amount"),
-                    				   data.get("dueDate") };
+            parameters = new Object[]{ data.get("dueDate"),
+                    				   data.get("amount") };
             }
         }else if (isCallCenterEnabled(exception)) {
             parameters = new Object[]{ messageManager.getMessageEn("call_center_no") };

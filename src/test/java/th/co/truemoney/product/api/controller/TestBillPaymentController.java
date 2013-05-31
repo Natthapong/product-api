@@ -1,8 +1,10 @@
 package th.co.truemoney.product.api.controller;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -88,10 +90,13 @@ public class TestBillPaymentController extends BaseTestController {
         
         @Test
         public void getBillInformationOverdueMEAFail() throws Exception {
+        	String strDate = "20/05/2013";
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            Date dateStr = formatter.parse(strDate);
         	Map<String, Object> data = new HashMap<String, Object>();
         	data.put("target", "mea");
         	data.put("amount", new BigDecimal(1234.55));
-        	data.put("dueDate", "10/05/2013");
+        	data.put("dueDate", dateStr.getTime());
 
                 when(
                         billPaymentServiceMock.retrieveBillInformationWithBarcode(
@@ -102,7 +107,7 @@ public class TestBillPaymentController extends BaseTestController {
 
                 this.verifyFailed(this.doGET(getBarcodeDetailURL))
                 //.andExpect(jsonPath("$.messageTh").value(containsString("การไฟฟ้านครหลวง")))
-                .andExpect(jsonPath("$.messageTh").value(containsString("10/05/2013")))
+                .andExpect(jsonPath("$.messageTh").value(containsString("20/05/13")))
                 .andExpect(jsonPath("$.messageTh").value(containsString("1,234.55")));
         }
 

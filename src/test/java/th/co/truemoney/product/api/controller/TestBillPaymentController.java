@@ -1,7 +1,6 @@
 package th.co.truemoney.product.api.controller;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,7 +26,6 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-
 import static org.hamcrest.Matchers.containsString;
 
 public class TestBillPaymentController extends BaseTestController {

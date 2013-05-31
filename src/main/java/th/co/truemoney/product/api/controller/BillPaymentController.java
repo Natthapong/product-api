@@ -73,11 +73,13 @@ public class BillPaymentController extends BaseController {
 		try{
 			bill = billPaymentService.retrieveBillInformationWithBarcode(barcode, accessTokenID);
 		}catch(ServiceInventoryException e){
-			if("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace())&& "1012".equals(e.getErrorCode())){
+			if("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace()) && "1012".equals(e.getErrorCode())){
+				String targetTitle = getTargetTitle(Utils.removeSuffix(e.getData().get("target").toString()));
 				e.setErrorCode("80000");
 				e.setErrorNamespace("TMN-PRODUCT");
 				Date dueDate = new Date((Long)e.getData().get("dueDate"));
 				e.getData().put("dueDate",Utils.formatDate(dueDate));
+				e.getData().put("targetTitle",targetTitle);
 				throw e;
 			}else{
 				throw e;
@@ -319,8 +321,10 @@ public class BillPaymentController extends BaseController {
 		try{
 			bill = billPaymentService.updateBillInformation(billID, ref1, ref2, amount, accessTokenID);
 		}catch(ServiceInventoryException e){
-			if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target))){
-				throw new ServiceInventoryException(500,"70000","","TMN-PRODUCT");
+			if("PCS.PCS-30024".equals(String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode()))){
+				if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target))){
+					throw new ServiceInventoryException(500,"70000","","TMN-PRODUCT");
+				}
 			}
 			throw e;
 		}
@@ -356,6 +360,16 @@ public class BillPaymentController extends BaseController {
 
 	private boolean isEmptyString(String str) {
 		return ! StringUtils.hasText(str);
+	}
+	
+	private String getTargetTitle(String target){
+		String result = "";
+		if("mea".equals(target)){
+			result = "การไฟฟ้านครหลวง";
+		}else if("water".equals(target)){
+			result = "การประปานครหลวง";
+		}
+		return result;
 	}
 	
 }

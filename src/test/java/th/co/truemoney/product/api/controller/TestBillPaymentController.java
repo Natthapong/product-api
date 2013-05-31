@@ -104,7 +104,30 @@ public class TestBillPaymentController extends BaseTestController {
                 ).thenThrow(new ServiceInventoryException(500, "1012", "", "TMN-SERVICE-INVENTORY", "", data));
 
                 this.verifyFailed(this.doGET(getBarcodeDetailURL))
-                //.andExpect(jsonPath("$.messageTh").value(containsString("การไฟฟ้านครหลวง")))
+                .andExpect(jsonPath("$.messageTh").value(containsString("การไฟฟ้านครหลวง")))
+                .andExpect(jsonPath("$.messageTh").value(containsString("20/05/13")))
+                .andExpect(jsonPath("$.messageTh").value(containsString("1,234.55")));
+        }
+        
+        @Test
+        public void getBillInformationOverdueWATERFail() throws Exception {
+        	String strDate = "20/05/2013";
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            Date dateStr = formatter.parse(strDate);
+        	Map<String, Object> data = new HashMap<String, Object>();
+        	data.put("target", "water");
+        	data.put("amount", new BigDecimal(1234.55));
+        	data.put("dueDate", dateStr.getTime());
+
+                when(
+                        billPaymentServiceMock.retrieveBillInformationWithBarcode(
+                                anyString(),
+                                anyString()
+                        )
+                ).thenThrow(new ServiceInventoryException(500, "1012", "", "TMN-SERVICE-INVENTORY", "", data));
+
+                this.verifyFailed(this.doGET(getBarcodeDetailURL))
+                .andExpect(jsonPath("$.messageTh").value(containsString("การประปานครหลวง")))
                 .andExpect(jsonPath("$.messageTh").value(containsString("20/05/13")))
                 .andExpect(jsonPath("$.messageTh").value(containsString("1,234.55")));
         }
@@ -405,12 +428,27 @@ public class TestBillPaymentController extends BaseTestController {
         	Map<String, String> req = new HashMap<String, String>();
         	req.put("ref1", "1234567890");
         	req.put("ref2", "1234567890");
+        	req.put("target", "tic");
+        	req.put("amount", "100.00");
+                when(
+                        billPaymentServiceMock.updateBillInformation(
+                        		anyString(), anyString(), anyString(), any(BigDecimal.class), anyString())
+                ).thenThrow(new ServiceInventoryException(500, "", "", ""));
+
+                this.verifyFailed(this.doPOST(getKeyInBillPaymentURL, req));
+        }
+        
+        @Test
+        public void getKeyInBillPaymentTMVHFail() throws Exception {
+        	Map<String, String> req = new HashMap<String, String>();
+        	req.put("ref1", "1234567890");
+        	req.put("ref2", "1234567890");
         	req.put("target", "tmvh");
         	req.put("amount", "100.00");
                 when(
                         billPaymentServiceMock.updateBillInformation(
                         		anyString(), anyString(), anyString(), any(BigDecimal.class), anyString())
-                ).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
+                ).thenThrow(new ServiceInventoryException(500, "PCS-30024", "", "PCS"));
 
                 this.verifyFailed(this.doPOST(getKeyInBillPaymentURL, req))
                 .andExpect(jsonPath("$code").value("70000"))

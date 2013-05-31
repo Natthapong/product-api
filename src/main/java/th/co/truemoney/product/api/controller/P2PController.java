@@ -89,9 +89,12 @@ public class P2PController extends BaseController {
 	public ProductResponse confirmTransferOTP(
 			@PathVariable String transactionID, 
 			@PathVariable String accessToken, 
-			@RequestBody OTP otp)
+			@RequestBody Map<String, String> request)
 		throws ServiceInventoryException {
-				
+		OTP otp = new OTP();
+		otp.setMobileNumber(request.get("mobileNumber"));
+		otp.setOtpString(request.get("otpString"));
+		otp.setReferenceCode(request.get("otpRefCode"));
 		Status status = authService.verifyOTP(transactionID, otp, accessToken);
 		transferService.performTransfer(transactionID, accessToken);
 

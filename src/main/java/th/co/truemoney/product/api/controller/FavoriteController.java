@@ -25,6 +25,7 @@ import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.domain.WalletActivity;
 import th.co.truemoney.product.api.manager.OnlineResourceManager;
 import th.co.truemoney.product.api.util.Utils;
+import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.ewallet.FavoriteService;
 import th.co.truemoney.serviceinventory.ewallet.domain.Favorite;
 
@@ -99,7 +100,14 @@ public class FavoriteController extends BaseController {
 				String serviceName = WalletActivity.getActionInThai(serviceCode);
 				String logoURL = onlineResourceManager.getActivityActionLogoURL(serviceCode);
 				Integer serviceSortWeight = WalletActivity.getWeightFromServiceCode(serviceCode);
-				FavoriteItem favoriteItem =new FavoriteItem( serviceName, reference1, logoURL, serviceCode, 
+				String formattedMobileNumber = favorite.getRef1();
+				if(ValidateUtil.isMobileNumber(reference1)){
+					formattedMobileNumber = Utils.formatMobileNumber(reference1);
+				}else if(ValidateUtil.isTelNumber(reference1)){
+					formattedMobileNumber = Utils.formatTelNumber(reference1);
+				}
+				
+				FavoriteItem favoriteItem =new FavoriteItem( serviceName, formattedMobileNumber, logoURL, serviceCode, 
                         reference1, favorite.getDate(), serviceSortWeight);
 				String ref1Title = findRef1Title(serviceCode);
 				favoriteItem.setText2En(ref1Title);
@@ -137,7 +145,7 @@ public class FavoriteController extends BaseController {
 		String serviceCode = Utils.removeSuffix(target);
 		if("tmvh".equals(serviceCode) || "trmv".equals(serviceCode) 
 				|| "tlp".equals(serviceCode) || "ti".equals(serviceCode) 
-				|| "tic".equals(serviceCode)){
+				|| "tic".equals(serviceCode)|| "tcg".equals(serviceCode)){
 			title = "รหัสลูกค้า/หมายเลขโทรศัพท์";
 		} else if("tr".equals(serviceCode)){
 			title = "เลขที่อ้างอิง 1/หมายเลขโทรศัพท์";

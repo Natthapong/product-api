@@ -65,7 +65,7 @@ public class TestFavoriteController extends BaseTestController{
 		Favorite favorite = new Favorite();
 		favorite.setAmount(new BigDecimal(1000));
 		favorite.setFavoriteID(new Long("1111"));
-		favorite.setRef1("1234567890");
+		favorite.setRef1("0891234567");
 		favorite.setServiceCode("tmvh_c");
 		favorite.setServiceType("billpay");
 		
@@ -82,7 +82,9 @@ public class TestFavoriteController extends BaseTestController{
 		this.verifySuccess(this.doGET(getFavoriteListURL))
 		.andExpect(jsonPath("$..weight").doesNotExist())
 		.andExpect(jsonPath("$..date").doesNotExist())
-		.andExpect(jsonPath("$..text2Th").value("รหัสลูกค้า/หมายเลขโทรศัพท์"));
+		.andExpect(jsonPath("$..text2Th").value("รหัสลูกค้า/หมายเลขโทรศัพท์"))
+		.andExpect(jsonPath("$..text3Th").value("089-123-4567"))
+		.andExpect(jsonPath("$..ref1").value("0891234567"));
 	}
 	
 	@Test 

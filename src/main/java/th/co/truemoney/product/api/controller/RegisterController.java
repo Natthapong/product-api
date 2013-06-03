@@ -102,7 +102,7 @@ public class RegisterController extends BaseController {
             return profileService.validateEmail(MOBILE_APP_CHANNEL_ID, email);
         } catch (ServiceInventoryException e) {
             String errorcode = String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode());
-            if (errorcode.equals("next.18")) {
+            if (errorcode.equals("core.18")) {
                 throw new ServiceInventoryException(400, "10000", "Email is already in used.", "TMN-PRODUCT");
             }
             throw e;
@@ -115,7 +115,7 @@ public class RegisterController extends BaseController {
             return profileService.createProfile(MOBILE_APP_CHANNEL_ID, tmnProfile);
         } catch (ServiceInventoryException e) {
             String errorcode = String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode());
-            if (errorcode.equals("next.18")) {
+            if (errorcode.equals("core.18")) {
                 throw new ServiceInventoryException(400, "10001",
                         "Mobile number is already in used.", "TMN-PRODUCT");
             }

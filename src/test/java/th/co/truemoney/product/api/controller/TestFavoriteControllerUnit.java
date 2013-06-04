@@ -17,6 +17,7 @@ import th.co.truemoney.product.api.domain.FavoriteItem;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.manager.MessageManager;
 import th.co.truemoney.product.api.manager.OnlineResourceManager;
+import th.co.truemoney.product.api.util.BillReferenceUtil;
 import th.co.truemoney.product.api.util.ProductResponseFactory;
 import th.co.truemoney.serviceinventory.ewallet.FavoriteService;
 import th.co.truemoney.serviceinventory.ewallet.domain.Favorite;
@@ -48,6 +49,7 @@ public class TestFavoriteControllerUnit {
 		this.favoriteController.setFavoriteService(favoriteServiceMock);
 		this.favoriteController.setResponseFactory(responseFactory);
 		this.favoriteController.setOnlineResourceManager(new OnlineResourceManager());
+		this.favoriteController.setBillReferenceUtil(new BillReferenceUtil());
 	}
 	
 	public void tearDown() {

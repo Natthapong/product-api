@@ -84,7 +84,8 @@ public class TestFavoriteController extends BaseTestController{
 		.andExpect(jsonPath("$..date").doesNotExist())
 		.andExpect(jsonPath("$..text2Th").value("รหัสลูกค้า/หมายเลขโทรศัพท์"))
 		.andExpect(jsonPath("$..text3Th").value("089-123-4567"))
-		.andExpect(jsonPath("$..ref1").value("0891234567"));
+		.andExpect(jsonPath("$..ref1").value("0891234567"))
+		.andExpect(jsonPath("$..isInquiryOnline").value(false));
 	}
 	
 	@Test 

@@ -2,6 +2,7 @@ package th.co.truemoney.product.api.domain;
 
 import java.util.Date;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class FavoriteItem {
@@ -15,6 +16,7 @@ public class FavoriteItem {
 	private String logoURL;
 	private String serviceCode;
 	private String ref1;
+	private Boolean isInquiryOnline = false;
 	
 	private int weight;
 	private Date date;
@@ -126,4 +128,12 @@ public class FavoriteItem {
 		this.date = date;
 	}
 
+	public Boolean getIsInquiryOnline() {
+		return isInquiryOnline;
+	}
+
+	public void setIsInquiryOnline(Boolean isInquiryOnline) {
+		this.isInquiryOnline = isInquiryOnline;
+	}
+	
 }

@@ -24,6 +24,7 @@ import th.co.truemoney.product.api.domain.FavoriteItem;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.domain.WalletActivity;
 import th.co.truemoney.product.api.manager.OnlineResourceManager;
+import th.co.truemoney.product.api.util.BillReferenceUtil;
 import th.co.truemoney.product.api.util.Utils;
 import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.ewallet.FavoriteService;
@@ -37,7 +38,10 @@ public class FavoriteController extends BaseController {
 	
 	@Autowired
 	private OnlineResourceManager onlineResourceManager;
-
+	
+	@Autowired
+	private BillReferenceUtil billReferenceUtil;
+	
 	@RequestMapping(value = "/favorite/add/{accessTokenID}", method = RequestMethod.PUT)
 	@ResponseBody
 	public ProductResponse addFavorite(@PathVariable String accessTokenID,
@@ -100,6 +104,8 @@ public class FavoriteController extends BaseController {
 				String serviceName = WalletActivity.getActionInThai(serviceCode);
 				String logoURL = onlineResourceManager.getActivityActionLogoURL(serviceCode);
 				Integer serviceSortWeight = WalletActivity.getWeightFromServiceCode(serviceCode);
+				System.out.println(favorite.getServiceCode());
+				Boolean inquiryStatus = billReferenceUtil.isOnlineInquiry(serviceCode);
 				String formattedMobileNumber = favorite.getRef1();
 				if(ValidateUtil.isMobileNumber(reference1)){
 					formattedMobileNumber = Utils.formatMobileNumber(reference1);
@@ -112,6 +118,7 @@ public class FavoriteController extends BaseController {
 				String ref1Title = findRef1Title(serviceCode);
 				favoriteItem.setText2En(ref1Title);
 				favoriteItem.setText2Th(ref1Title);
+				favoriteItem.setIsInquiryOnline(inquiryStatus);
 				group0.addItems(favoriteItem);
 				
 			}
@@ -176,5 +183,9 @@ public class FavoriteController extends BaseController {
 			}
 			
 		});
+	}
+
+	public void setBillReferenceUtil(BillReferenceUtil billReferenceUtil) {
+		this.billReferenceUtil = billReferenceUtil;
 	}
 }

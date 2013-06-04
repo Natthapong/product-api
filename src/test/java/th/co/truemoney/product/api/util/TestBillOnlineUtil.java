@@ -15,8 +15,8 @@ public class TestBillOnlineUtil {
 	}
 	
 	@Test
-	public void sucessGetBillOnlineProperty(){
-		assertEquals(false, billReferenceUtil.isOnlineInquiry("mea"));
+	public void successGetBillOnlineProperty(){
+		assertEquals(true, billReferenceUtil.isOnlineInquiry("mea"));
 	}
 	
 	@Test

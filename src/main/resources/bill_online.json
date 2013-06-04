@@ -1,7 +1,7 @@
 {
     "catv":
     {
-    	"ref1Type" : "none";
+    	"ref1Type" : "none",
         "ref1TitleEn" : "หมายเลขสมาชิกทรูวิชั่นส์",
         "ref1TitleTh" : "หมายเลขสมาชิกทรูวิชั่นส์",
         "ref2TitleEn" : "เลขที่ใบแจ้งค่าบริการ",
@@ -12,7 +12,7 @@
     },
     "dstv":
     {
-    	"ref1Type" : "none";
+    	"ref1Type" : "none",
         "ref1TitleEn" : "หมายเลขสมาชิกทรูวิชั่นส์",
         "ref1TitleTh" : "หมายเลขสมาชิกทรูวิชั่นส์",
         "ref2TitleEn" : "เลขที่ใบแจ้งค่าบริการ",
@@ -23,7 +23,7 @@
     },
     "tmvh":
     {
-    	"ref1Type" : "mobile";
+    	"ref1Type" : "mobile",
         "ref1TitleEn" : "เบอร์โทรศัพท์ทรูมูฟ เอช",
         "ref1TitleTh" : "เบอร์โทรศัพท์ทรูมูฟ เอช",
         "ref2TitleEn" : "",
@@ -34,7 +34,7 @@
     },
     "trmv":
     {
-    	"ref1Type" : "mobile";
+    	"ref1Type" : "mobile",
       	"ref1TitleEn" : "เบอร์โทรศัพท์ทรูมูฟ",
         "ref1TitleTh" : "เบอร์โทรศัพท์ทรูมูฟ",
         "ref2TitleEn" : "",
@@ -45,7 +45,7 @@
     },
     "tlp":
     {
-    	"ref1Type" : "none";
+    	"ref1Type" : "none",
         "ref1TitleEn" : "เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก",
         "ref1TitleTh" : "เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก",
         "ref2TitleEn" : "",
@@ -56,7 +56,7 @@
     },
     "tr":
     {
-    	"ref1Type" : "none";
+    	"ref1Type" : "none",
         "ref1TitleEn" : "เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก",
         "ref1TitleTh" : "เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก",
         "ref2TitleEn" : "",
@@ -67,7 +67,7 @@
     },
     "ti":
     {
-    	"ref1Type" : "none";
+    	"ref1Type" : "none",
         "ref1TitleEn" : "เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก",
         "ref1TitleTh" : "เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก",
         "ref2TitleEn" : "",
@@ -78,7 +78,7 @@
     },
     "tic":
     {
-    	"ref1Type" : "none";
+    	"ref1Type" : "none",
         "ref1TitleEn" : "เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก",
         "ref1TitleTh" : "เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก",
         "ref2TitleEn" : "",
@@ -89,7 +89,7 @@
     },
     "tcg":
     {
-    	"ref1Type" : "none";
+    	"ref1Type" : "none",
         "ref1TitleEn" : "เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก",
         "ref1TitleTh" : "เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก",
         "ref2TitleEn" : "",
@@ -100,7 +100,7 @@
     },
     "mea":
     {
-    	"ref1Type" : "none";
+    	"ref1Type" : "none",
         "ref1TitleEn" : "บัญชีแสดงสัญญาเลขที่",
         "ref1TitleTh" : "บัญชีแสดงสัญญาเลขที่",
         "ref2TitleEn" : "เลขที่ใบแจ้งหนี้",
@@ -111,7 +111,7 @@
     },
     "water":
     {
-    	"ref1Type" : "none";
+    	"ref1Type" : "none",
         "ref1TitleEn" : "รหัสสาขา + ทะเบียนผู้ใช้น้ำ",
         "ref1TitleTh" : "รหัสสาขา + ทะเบียนผู้ใช้น้ำ",
         "ref2TitleEn" : "เลขที่ใบแจ้งหนี้",

@@ -341,6 +341,13 @@ public class BillPaymentController extends BaseController {
 		
 		return createResponse(data);
 	}
+	
+	@RequestMapping(value = "/inquiry/{billCode}/{accessTokenID}", method = RequestMethod.GET)
+	public @ResponseBody
+	ProductResponse getInquiryBillInformation(@PathVariable String billCode,@PathVariable String accessTokenID,@RequestBody Map<String, String> request){
+		Map<String, Object> data = new HashMap<String, Object>();
+		return createResponse(data);
+	}
 
 	private ProductResponse createResponse(Map<String, Object> data) {
 		return this.responseFactory.createSuccessProductResonse(data);

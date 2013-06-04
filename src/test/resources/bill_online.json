@@ -1,0 +1,90 @@
+{
+    "catv":
+    {
+        "ref1Title" : "test",
+        "ref2Title" : "test",
+        "isOnlineInquiry" : false,
+        "min" : 12.00,
+        "max" : 1000.00
+    },
+    "dstv":
+    {
+        "ref1Title" : "test",
+        "ref2Title" : "test",
+        "isOnlineInquiry" : false,
+        "min" : 12.00,
+        "max" : 1000.00
+    },
+    "tmvh":
+    {
+        "ref1Title" : "test",
+        "ref2Title" : "test",
+        "isOnlineInquiry" : false,
+        "min" : 12.00,
+        "max" : 1000.00
+    },
+    "trmv":
+    {
+        "ref1Title" : "test",
+        "ref2Title" : "test",
+        "isOnlineInquiry" : false,
+        "min" : 12.00,
+        "max" : 1000.00
+    },
+    "tlp":
+    {
+        "ref1Title" : "test",
+        "ref2Title" : "test",
+        "isOnlineInquiry" : false,
+        "min" : 12.00,
+        "max" : 1000.00
+    },
+    "tr":
+    {
+        "ref1Title" : "test",
+        "ref2Title" : "test",
+        "isOnlineInquiry" : false,
+        "min" : 12.00,
+        "max" : 1000.00
+    },
+    "ti":
+    {
+        "ref1Title" : "test",
+        "ref2Title" : "test",
+        "isOnlineInquiry" : false,
+        "min" : 12.00,
+        "max" : 1000.00
+    },
+    "tic":
+    {
+        "ref1Title" : "test",
+        "ref2Title" : "test",
+        "isOnlineInquiry" : false,
+        "min" : 12.00,
+        "max" : 1000.00
+    },
+    "tcg":
+    {
+        "ref1Title" : "test",
+        "ref2Title" : "test",
+        "isOnlineInquiry" : false,
+        "min" : 12.00,
+        "max" : 1000.00
+    },
+    "mea":
+    {
+        "ref1Title" : "test",
+        "ref2Title" : "test",
+        "isOnlineInquiry" : false,
+        "min" : 12.00,
+        "max" : 1000.00
+    },
+    "water":
+    {
+        "ref1Title" : "test",
+        "ref2Title" : "test",
+        "isOnlineInquiry" : false,
+        "min" : 12.00,
+        "max" : 1000.00
+    }
+}

@@ -57,6 +57,8 @@ public class TestBillPaymentController extends BaseTestController {
         }
 
         private static final String getKeyInBillPaymentURL = String.format("/bill-payment/key-in/%s", fakeAccessToken);
+        
+        private static final String getInquiryBillInfoURL = String.format("/bill-payment/inquiry/%s", fakeAccessToken);
 
         @Test
         public void getBillInformationSuccess() throws Exception {
@@ -453,6 +455,13 @@ public class TestBillPaymentController extends BaseTestController {
                 this.verifyFailed(this.doPOST(getKeyInBillPaymentURL, req))
                 .andExpect(jsonPath("$code").value("70000"))
                 .andExpect(jsonPath("$namespace").value("TMN-PRODUCT"));
+        }
+        
+        @Test
+        public void getInquiryBillInformationSuccess() throws Exception {
+        	Map<String, String> req = new HashMap<String, String>();
+
+            this.verifySuccess(this.doPOST(getInquiryBillInfoURL,req));
         }
                 
         private Bill createStubbedBillInfo(String target) throws ParseException {

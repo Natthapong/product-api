@@ -37,11 +37,16 @@ public class ProductResponseFactory {
     }
 
     public ProductResponse createErrorProductResponse(ServiceInventoryException exception) {
-        ProductResponse error = new ProductResponse();
+    	
+    	if ("ENGINE".equals(exception.getErrorNamespace())) {
+        	exception.setErrorNamespace("SIENGINE");
+        }
+    	
+    	ProductResponse error = new ProductResponse();
         error.setCode(exception.getErrorCode());
         error.setNamespace(exception.getErrorNamespace());
         error.setOriginalMessage(exception.getErrorDescription());
-
+        
         Object[] parameters = null;
         if (isInvalidAmountException(exception)) {
             Map<String, Object> data = exception.getData();

@@ -58,7 +58,7 @@ public class TestBillPaymentController extends BaseTestController {
 
         private static final String getKeyInBillPaymentURL = String.format("/bill-payment/key-in/%s", fakeAccessToken);
         
-        private static final String getInquiryBillInfoURL = String.format("/bill-payment/inquiry/%s/%s", "tmvh", fakeAccessToken);
+        private static final String getInquiryBillInfoURL = String.format("/bill-payment/inquiry/%s", fakeAccessToken);
 
         @Test
         public void getBillInformationSuccess() throws Exception {
@@ -461,7 +461,7 @@ public class TestBillPaymentController extends BaseTestController {
         public void getInquiryBillInformationSuccess() throws Exception {
         	Map<String, String> req = new HashMap<String, String>();
 
-            this.verifySuccess(this.doGET(getInquiryBillInfoURL,req));
+            this.verifySuccess(this.doPOST(getInquiryBillInfoURL,req));
         }
                 
         private Bill createStubbedBillInfo(String target) throws ParseException {

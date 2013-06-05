@@ -69,7 +69,7 @@ public class BillPaymentController extends BaseController {
 
 		StopWatch timer = new StopWatch("getBillInformation ("+accessTokenID+")");
 		timer.start();
-		Bill bill = new Bill();
+		Bill bill;
 		
 		try{
 			bill = billPaymentService.retrieveBillInformationWithBarcode(barcode, accessTokenID);
@@ -292,12 +292,7 @@ public class BillPaymentController extends BaseController {
 			throw new InvalidParameterException("60000");
 		}
 		
-		BigDecimal amount = new BigDecimal(inputAmount.replace(",", ""));
-		String billID = request.get("billID");
-		String ref1 = request.get("ref1");
-		String ref2 = request.containsKey("ref2") ? request.get("ref2") : "";
-		
-		Bill bill = new Bill();
+		Bill bill;
 		try{
 			bill = billPaymentService.retrieveBillInformationWithKeyin(target, accessTokenID);
 		}catch(ServiceInventoryException e){

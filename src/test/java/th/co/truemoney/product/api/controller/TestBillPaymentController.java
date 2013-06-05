@@ -14,6 +14,7 @@ import th.co.truemoney.serviceinventory.bill.domain.Bill;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentConfirmationInfo;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
+import th.co.truemoney.serviceinventory.bill.domain.OutStandingBill;
 import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
@@ -458,10 +459,78 @@ public class TestBillPaymentController extends BaseTestController {
         }
         
         @Test
-        public void getInquiryBillInformationSuccess() throws Exception {
+        public void getInquiryMeaBillInformationSuccess() throws Exception {
         	Map<String, String> req = new HashMap<String, String>();
+        	req.put("ref1", "0891234567");
+    		req.put("ref2", "010520120200015601");
+    		req.put("target", "mea");
+    		
+    		OutStandingBill outStandingBill = new OutStandingBill();
+    		outStandingBill.setOutStandingBalance(new BigDecimal(2000));
+    		
+    		Bill bill = createStubbedBillInfo("mea");
+    		bill.setAmount(outStandingBill.getOutStandingBalance());
+    		
+    		when( 
+    				billPaymentServiceMock.retrieveBillOutStandingOnline(anyString(), 
+    						anyString(), anyString(), 
+    						anyString())).thenReturn(outStandingBill);
+    		
+    		when(
+    				billPaymentServiceMock.retrieveBillInformationWithBillCode(anyString(),
+    						anyString(), any(BigDecimal.class),
+    						anyString())).thenReturn(bill);
 
-            this.verifySuccess(this.doPOST(getInquiryBillInfoURL,req));
+            this.verifySuccess(this.doPOST(getInquiryBillInfoURL, req))
+            .andExpect(jsonPath("$..dueDate").value("30/08/2013"))
+            .andExpect(jsonPath("$..maxAmount").exists())
+            .andExpect(jsonPath("$..amount").value("2000.00"))
+            .andExpect(jsonPath("$..target").value("mea"));;
+        }
+        
+        @Test
+        public void getInquiryMeaBillInformationFail() throws Exception {
+        	Map<String, String> req = new HashMap<String, String>();
+        	req.put("ref1", "0891234567");
+    		req.put("ref2", "010520120200015601");
+    		req.put("target", "mea");
+    		
+    		OutStandingBill outStandingBill = new OutStandingBill();
+    		outStandingBill.setOutStandingBalance(new BigDecimal(2000));
+    		
+    		Bill bill = createStubbedBillInfo("mea");
+    		bill.setAmount(outStandingBill.getOutStandingBalance());
+    		
+    		when( 
+    				billPaymentServiceMock.retrieveBillOutStandingOnline(anyString(), 
+    						anyString(), anyString(), 
+    						anyString()))
+    						.thenThrow(new ServiceInventoryException(500, "PCS-30024", "", "PCS"));
+    		
+    		this.verifyFailed(this.doPOST(getInquiryBillInfoURL, req))
+            .andExpect(jsonPath("$code").value("90000"))
+            .andExpect(jsonPath("$namespace").value("TMN-PRODUCT"));
+        }
+        
+        @Test
+        public void getInquiryBillInformationFail() throws Exception {
+        	Map<String, String> req = new HashMap<String, String>();
+        	req.put("ref1", "0891234567");
+    		req.put("ref2", "010520120200015601");
+    		req.put("target", "mea");
+    		
+    		OutStandingBill outStandingBill = new OutStandingBill();
+    		outStandingBill.setOutStandingBalance(new BigDecimal(2000));
+    		
+    		Bill bill = createStubbedBillInfo("mea");
+    		bill.setAmount(outStandingBill.getOutStandingBalance());
+    		
+    		when( 
+    				billPaymentServiceMock.retrieveBillOutStandingOnline(anyString(), 
+    						anyString(), anyString(), 
+    						anyString())).thenThrow(new ServiceInventoryException(500, "", "", ""));
+
+    		this.verifyFailed(this.doPOST(getInquiryBillInfoURL, req));
         }
                 
         private Bill createStubbedBillInfo(String target) throws ParseException {

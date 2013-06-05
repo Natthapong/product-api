@@ -27,6 +27,7 @@ import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
+import th.co.truemoney.serviceinventory.bill.domain.OutStandingBill;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
@@ -330,23 +331,53 @@ public class BillPaymentController extends BaseController {
 		}
 
 		Map<String, Object> data = BillResponse.builder().setBill(bill).buildBillInfoResponse();
-		
-		if(ValidateUtil.isMobileNumber(bill.getRef1())){
-			String formattedMobileNumber = Utils.formatMobileNumber(bill.getRef1());
-			data.put("ref1", formattedMobileNumber);
-		}else if(ValidateUtil.isTelNumber(bill.getRef1())){
-			String formattedTelNumber = Utils.formatTelNumber(bill.getRef1());
-			data.put("ref1", formattedTelNumber);
-		}
-		
+				
+		String formattedMobileNumber = parseMobileAndTelNumber(bill.getRef1());
+		data.put("ref1", formattedMobileNumber);
+				
 		return createResponse(data);
 	}
 	
 	@RequestMapping(value = "/inquiry/{accessTokenID}", method = RequestMethod.POST)
 	public @ResponseBody
-	ProductResponse getInquiryBillInformation(@PathVariable String accessTokenID,@RequestBody Map<String, String> request){
-		Map<String, Object> data = new HashMap<String, Object>();
+	ProductResponse getBillOnlineInformation(@PathVariable String accessTokenID,@RequestBody Map<String, String> request){
+		// get 
+		String target = request.get("target");
+		String ref1 = request.get("ref1");
+		String ref2 = request.containsKey("ref2") ? request.get("ref2") : "";
+		
+		OutStandingBill outStandingBill = new OutStandingBill();
+		Bill bill = new Bill();
+		try{
+			outStandingBill = billPaymentService.retrieveBillOutStandingOnline(target, ref1, ref2, accessTokenID);
+			bill = billPaymentService.retrieveBillInformationWithBillCode(target, ref1, outStandingBill.getOutStandingBalance(), accessTokenID);
+			
+		}catch(ServiceInventoryException e){
+			if("PCS.PCS-30024".equals(String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode()))){
+				if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target))){
+					throw new ServiceInventoryException(500,"70000","","TMN-PRODUCT");
+				} else if("mea".equals(Utils.removeSuffix(target))) {
+					throw new ServiceInventoryException(500,"90000","","TMN-PRODUCT");
+				}
+			}
+			throw e;
+		}
+
+		Map<String, Object> data = BillResponse.builder().setBill(bill).buildBillInfoResponse();		
+		String formattedMobileNumber = parseMobileAndTelNumber(bill.getRef1());
+		data.put("ref1", formattedMobileNumber);
+			
 		return createResponse(data);
+	}
+	
+	private String parseMobileAndTelNumber(String mobileNumber) {
+		String formattedNumber = "";
+		if(ValidateUtil.isMobileNumber(mobileNumber)){
+			formattedNumber = Utils.formatMobileNumber(mobileNumber);			
+		}else if(ValidateUtil.isTelNumber(mobileNumber)){
+			formattedNumber = Utils.formatTelNumber(mobileNumber);			
+		}
+		return formattedNumber;
 	}
 
 	private ProductResponse createResponse(Map<String, Object> data) {

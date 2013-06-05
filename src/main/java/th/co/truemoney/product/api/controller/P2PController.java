@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,9 +70,16 @@ public class P2PController extends BaseController {
 	@ResponseBody
 	public ProductResponse verifyTransfer(
 			@PathVariable String draftTransactionID, 
-			@PathVariable String accessToken)
+			@PathVariable String accessToken,
+			@RequestBody Map<String, String> request)
 		throws ServiceInventoryException {
-
+		
+		String personalMessage = request.get("personalMessage");
+		
+		if(StringUtils.hasLength(personalMessage) == true){
+			transferService.setPersonalMessage(draftTransactionID, personalMessage, accessToken);
+		}
+		
 		OTP otp = authService.requestOTP(draftTransactionID, accessToken);
 		P2PTransferDraft transaction = transferService.getTransferDraftDetails(draftTransactionID, accessToken);
 
@@ -141,7 +149,7 @@ public class P2PController extends BaseController {
 		data.put("transactionID", info.getTransactionID());
 		data.put("transactionDate", info.getTransactionDate());
 		data.put("mobileNumber", Utils.formatMobileNumber(draftTxn.getMobileNumber()));
-
+		data.put("personalMessage", draftTxn.getMessage());
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 

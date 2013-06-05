@@ -461,8 +461,8 @@ public class TestBillPaymentControllerUnit {
 	 	 assertNotNull(data);
 	 		
 	 	 assertEquals( "tcg", data.get("target"));
-	 	 assertEquals("โทรศัพท์พื้นฐาน", data.get("ref1TitleTh"));
-	 	 assertEquals("Fix Line", data.get("ref1TitleEn"));
+	 	 assertEquals("เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก", data.get("ref1TitleTh"));
+	 	 assertEquals("เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก", data.get("ref1TitleEn"));
 	 	 assertFalse(data.containsKey("ref2TitleTh"));
 	 	 assertFalse(data.containsKey("ref2TitleEn"));
 	 	 assertTrue(data.containsKey("minAmount"));
@@ -473,7 +473,7 @@ public class TestBillPaymentControllerUnit {
 	 
 	 @SuppressWarnings("unchecked")
 	@Test
-	public void getKeyInBillPaymentInformationTCGSuccess() throws ParseException {
+	public void getKeyInBillPaymentInformationTCGSuccess() throws Exception {
 		Map<String, String> req = new HashMap<String, String>();
 		req.put("ref1", "021234567");
 		req.put("target", "tcg");
@@ -481,10 +481,13 @@ public class TestBillPaymentControllerUnit {
 		Bill bill = createStubbedBillInfo();
 		bill.setRef2("");
 		bill.setPayWith("keyin");
+		
+		BillPaymentDraft billPaymentDraft = createBillPaymentDraftStubbed();
+		billPaymentDraft.setBillInfo(bill);
+		when( billPaymentServiceMock.retrieveBillInformationWithKeyin(anyString(), anyString())).thenReturn(bill);
 		when(
-				billPaymentServiceMock.updateBillInformation(anyString(),
-						anyString(), anyString(), any(BigDecimal.class),
-						anyString())).thenReturn(bill);
+                billPaymentServiceMock.verifyPaymentAbility(anyString(), any(BigDecimal.class), anyString())
+        ).thenReturn(billPaymentDraft);
 
 		ProductResponse resp = billPaymentController.getKeyInBillPayment(
 				fakeAccessTokenID, req);
@@ -533,7 +536,7 @@ public class TestBillPaymentControllerUnit {
 	 
 	 @SuppressWarnings("unchecked")
 	@Test
-		public void getKeyInBillPaymentInformationTMVHSuccess() throws ParseException{
+		public void getKeyInBillPaymentInformationTMVHSuccess() throws Exception{
 			Map<String, String> req = new HashMap<String, String>();
 	     	req.put("ref1", "0891234567");
 	     	req.put("target", "tmvh");
@@ -544,11 +547,13 @@ public class TestBillPaymentControllerUnit {
 	     	bill.setTarget("tmvh");
 	     	bill.setRef2("");
 	     	bill.setPayWith("keyin");
+	     	
+	     	BillPaymentDraft billPaymentDraft = createBillPaymentDraftStubbed();
+			billPaymentDraft.setBillInfo(bill);
+			when( billPaymentServiceMock.retrieveBillInformationWithKeyin(anyString(), anyString())).thenReturn(bill);
 			when(
-	                billPaymentServiceMock.updateBillInformation(
-	                        anyString(), anyString(), anyString(), any(BigDecimal.class), anyString()
-	                )
-	        ).thenReturn(bill);
+	                billPaymentServiceMock.verifyPaymentAbility(anyString(), any(BigDecimal.class), anyString())
+	        ).thenReturn(billPaymentDraft);
 			
 			ProductResponse resp = billPaymentController.getKeyInBillPayment(fakeAccessTokenID, req);
 			Map<String, Object> data = resp.getData();

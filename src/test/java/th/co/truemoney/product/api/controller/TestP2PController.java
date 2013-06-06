@@ -2,6 +2,7 @@ package th.co.truemoney.product.api.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -99,7 +100,7 @@ public class TestP2PController extends BaseTestController {
 				any(String.class),
 				any(String.class))
 			).thenReturn(otp);
-
+		
 		when(p2pTransferServiceMock.getTransferDraftDetails(
 				any(String.class),
 				any(String.class))
@@ -108,6 +109,74 @@ public class TestP2PController extends BaseTestController {
 		this.verifySuccess(this.doPUT(verifyTransferURL, new HashMap<String, Object>()));
 	}
 
+	@Test
+	public void verifyTransferWithPersonalMessageSuccess() throws Exception {
+		OTP otp = new OTP();
+		otp.setOtpString("123456");
+		otp.setMobileNumber("0899999999");
+		otp.setReferenceCode("qwer");
+
+		P2PTransferDraft transferDraft = new P2PTransferDraft();
+		transferDraft.setAccessTokenID(fakeAccessToken);
+		transferDraft.setAmount(new BigDecimal(100.00));
+		transferDraft.setFullname("Apinya Ukachoke");
+		transferDraft.setID("11111");
+		transferDraft.setMobileNumber("0899999999");
+		transferDraft.setOtpReferenceCode("qwer");
+		transferDraft.setMessage("Hello,World");
+
+		when(transactionAuthenServiceMock.requestOTP(
+				any(String.class),
+				any(String.class))
+			).thenReturn(otp);
+		
+		when(p2pTransferServiceMock.getTransferDraftDetails(
+				any(String.class),
+				any(String.class))
+			).thenReturn(transferDraft);
+		
+		Mockito.doNothing().when(p2pTransferServiceMock).setPersonalMessage(anyString(), anyString(), anyString());
+		
+		this.verifySuccess(this.doPUT(verifyTransferURL, new HashMap<String, Object>()));
+	}
+	
+
+	@Test
+	public void verifyTransferWithPersonalMessageFail() throws Exception {
+		OTP otp = new OTP();
+		otp.setOtpString("123456");
+		otp.setMobileNumber("0899999999");
+		otp.setReferenceCode("qwer");
+
+		P2PTransferDraft transferDraft = new P2PTransferDraft();
+		transferDraft.setAccessTokenID(fakeAccessToken);
+		transferDraft.setAmount(new BigDecimal(100.00));
+		transferDraft.setFullname("Apinya Ukachoke");
+		transferDraft.setID("11111");
+		transferDraft.setMobileNumber("0899999999");
+		transferDraft.setOtpReferenceCode("qwer");
+		transferDraft.setMessage("Hello,World");
+
+		when(transactionAuthenServiceMock.requestOTP(
+				any(String.class),
+				any(String.class))
+			).thenReturn(otp);
+		
+		when(p2pTransferServiceMock.getTransferDraftDetails(
+				any(String.class),
+				any(String.class))
+			).thenReturn(transferDraft);
+		
+		Mockito.doThrow(new ServiceInventoryException(500, "", "", "TMN-PRODUCT")).when(p2pTransferServiceMock).setPersonalMessage(anyString(), anyString(), anyString());
+		
+		Map<String,String> parameters =  new HashMap<String, String>();
+		parameters.put("personalMessage", "hello");
+		
+		this.verifyFailed(this.doPUT(verifyTransferURL,parameters));
+	}
+	
+	
+	
 	@Test
 	public void verifyTransferFail() throws Exception {
 		P2PTransferDraft transferDraft = new P2PTransferDraft();
@@ -200,6 +269,7 @@ public class TestP2PController extends BaseTestController {
 
 	@Test
 	public void getTransferDetailSuccess() throws Exception {
+		// mock data
 		P2PTransferDraft transferDraft = new P2PTransferDraft();
 		transferDraft.setAccessTokenID(fakeAccessToken);
 		transferDraft.setAmount(new BigDecimal(100.00));
@@ -208,7 +278,8 @@ public class TestP2PController extends BaseTestController {
 		transferDraft.setMobileNumber("0899999999");
 		transferDraft.setOtpReferenceCode("qwer");
 		transferDraft.setStatus(P2PTransferDraft.Status.OTP_CONFIRMED);
-
+		transferDraft.setMessage("Hello world");
+		
 		P2PTransferTransaction transaction = new P2PTransferTransaction(transferDraft);
 		transaction.setStatus(Transaction.Status.SUCCESS);
 
@@ -233,7 +304,8 @@ public class TestP2PController extends BaseTestController {
 				.andExpect(jsonPath("$..recipientName").exists())
 				.andExpect(jsonPath("$..transactionID").exists())
 				.andExpect(jsonPath("$..transactionDate").exists())
-				.andExpect(jsonPath("$..currentBalance").exists());
+				.andExpect(jsonPath("$..currentBalance").exists())
+				.andExpect(jsonPath("$..personalMessage").exists());
 	}
 
 	@Test

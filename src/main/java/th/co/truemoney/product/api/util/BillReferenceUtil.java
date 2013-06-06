@@ -13,9 +13,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Component
 public class BillReferenceUtil {
 
+	@SuppressWarnings("rawtypes")
 	private Map<String, Map> billConfigList;
 	private final String isOnlineInquiry = "isOnlineInquiry";
 	
+	@SuppressWarnings("rawtypes")
 	public BillReferenceUtil(){
 		try {
 			JsonFactory factory = new JsonFactory();
@@ -32,8 +34,14 @@ public class BillReferenceUtil {
 		}
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public Boolean isOnlineInquiry(String billCode){
 		Map inquiryStatus =  (Map) billConfigList.get(billCode);
 		return (inquiryStatus == null) ? false : (Boolean) inquiryStatus.get(isOnlineInquiry);
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public Map<String, String> getBillInfoResponse(String billCode) {
+		return (Map) billConfigList.get(billCode);
 	}
 }

@@ -472,21 +472,21 @@ public class TestBillPaymentControllerUnit {
 		Map<String, Object> data = resp.getData();
 		assertNotNull(data);
 
-		assertEquals("tcg", data.get("target"));
-		assertEquals("โทรศัพท์พื้นฐาน", data.get("ref1TitleTh"));
-		assertEquals("Fix Line", data.get("ref1TitleEn"));
-		assertFalse(data.containsKey("ref2TitleTh"));
-		assertFalse(data.containsKey("ref2TitleEn"));
-		assertTrue(data.containsKey("minAmount"));
-		assertTrue(data.containsKey("maxAmount"));
-		assertTrue(data.containsKey("ref1Type"));
-		assertTrue(data.containsKey("ref2Type"));
+		assertEquals( "tcg", data.get("target"));
+        assertEquals("เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก", data.get("ref1TitleTh"));
+        assertEquals("เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก", data.get("ref1TitleEn"));
+        assertFalse(data.containsKey("ref2TitleTh"));
+        assertFalse(data.containsKey("ref2TitleEn"));
+        assertTrue(data.containsKey("minAmount"));
+        assertTrue(data.containsKey("maxAmount"));
+        assertTrue(data.containsKey("ref1Type"));
+        assertTrue(data.containsKey("ref2Type"));
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void getKeyInBillPaymentInformationTCGSuccess()
-			throws ParseException {
+			throws Exception {
 		Map<String, String> req = new HashMap<String, String>();
 		req.put("ref1", "021234567");
 		req.put("target", "tcg");
@@ -494,10 +494,13 @@ public class TestBillPaymentControllerUnit {
 		Bill bill = createStubbedBillInfo();
 		bill.setRef2("");
 		bill.setPayWith("keyin");
+		
+		BillPaymentDraft billPaymentDraft = createBillPaymentDraftStubbed();
+		billPaymentDraft.setBillInfo(bill);
+		when( billPaymentServiceMock.retrieveBillInformationWithKeyin(anyString(), anyString())).thenReturn(bill);
 		when(
-				billPaymentServiceMock.updateBillInformation(anyString(),
-						anyString(), anyString(), any(BigDecimal.class),
-						anyString())).thenReturn(bill);
+                billPaymentServiceMock.verifyPaymentAbility(anyString(), any(BigDecimal.class), anyString())
+        ).thenReturn(billPaymentDraft);
 
 		ProductResponse resp = billPaymentController.getKeyInBillPayment(
 				fakeAccessTokenID, req);
@@ -546,49 +549,47 @@ public class TestBillPaymentControllerUnit {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void getKeyInBillPaymentInformationTMVHSuccess()
-			throws ParseException {
+	public void getKeyInBillPaymentInformationTMVHSuccess() throws Exception{
 		Map<String, String> req = new HashMap<String, String>();
-		req.put("ref1", "0891234567");
-		req.put("target", "tmvh");
-		req.put("amount", "10000.00");
-		Bill bill = createStubbedBillInfo();
-		bill.setLogoURL("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png");
-		bill.setRef1("0891234567");
-		bill.setTarget("tmvh");
-		bill.setRef2("");
-		bill.setPayWith("keyin");
+     	req.put("ref1", "0891234567");
+     	req.put("target", "tmvh");
+     	req.put("amount", "10000.00");
+     	Bill bill = createStubbedBillInfo();
+     	bill.setLogoURL("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png");
+     	bill.setRef1("0891234567");
+     	bill.setTarget("tmvh");
+     	bill.setRef2("");
+     	bill.setPayWith("keyin");
+     	
+     	BillPaymentDraft billPaymentDraft = createBillPaymentDraftStubbed();
+		billPaymentDraft.setBillInfo(bill);
+		when( billPaymentServiceMock.retrieveBillInformationWithKeyin(anyString(), anyString())).thenReturn(bill);
 		when(
-				billPaymentServiceMock.updateBillInformation(anyString(),
-						anyString(), anyString(), any(BigDecimal.class),
-						anyString())).thenReturn(bill);
-
-		ProductResponse resp = billPaymentController.getKeyInBillPayment(
-				fakeAccessTokenID, req);
+                billPaymentServiceMock.verifyPaymentAbility(anyString(), any(BigDecimal.class), anyString())
+        ).thenReturn(billPaymentDraft);
+		
+		ProductResponse resp = billPaymentController.getKeyInBillPayment(fakeAccessTokenID, req);
 		Map<String, Object> data = resp.getData();
 		assertNotNull(data);
-
+		
 		assertEquals("tmvh", data.get("target"));
-		assertEquals(
-				"https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png",
-				data.get("logoURL"));
+		assertEquals("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png", data.get("logoURL"));
 		assertEquals("", data.get("titleTh"));
 		assertEquals("", data.get("titleEn"));
-
+		
 		assertEquals("089-123-4567", data.get("ref1"));
-
+		
 		assertEquals("10000.00", data.get("amount"));
 		assertEquals(new BigDecimal(1000), data.get("serviceFee"));
 		assertEquals("Y", data.get("partialPaymentAllow"));
-
+		
 		assertEquals("10", data.get("minAmount"));
 		assertEquals("5000", data.get("maxAmount"));
-
+		
 		assertEquals("THB", data.get("serviceFeeType"));
 		assertEquals(new BigDecimal(1000), data.get("serviceFee"));
-
-		List<Map<String, Object>> sofList = (List<Map<String, Object>>) data
-				.get("sourceOfFundFee");
+		
+		List<Map<String, Object>> sofList = (List<Map<String, Object>>) data.get("sourceOfFundFee");
 		Map<String, Object> ew = sofList.get(0);
 		assertNotNull(ew);
 		assertEquals("EW", ew.get("sourceType"));
@@ -596,9 +597,9 @@ public class TestBillPaymentControllerUnit {
 		assertEquals(new BigDecimal(1000), ew.get("sourceFee"));
 		assertEquals(new BigDecimal(100), ew.get("minSourceFeeAmount"));
 		assertEquals(new BigDecimal(2500), ew.get("maxSourceFeeAmount"));
-
+		
 		assertNotNull(data.containsKey("billPaymentID"));
-
+		
 		assertEquals("30/08/2013", data.get("dueDate").toString());
 	}
 
@@ -679,8 +680,8 @@ public class TestBillPaymentControllerUnit {
 		assertEquals("mea", data.get("target"));
 		assertEquals("ค่าใช้บริการบริษัทในกลุ่มทรู", data.get("titleTh"));
 		assertEquals("Convergence Postpay", data.get("titleEn"));		
-	}
-
+	}		
+	
 	private Bill createStubbedBillInfo() throws ParseException {
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		Bill billInfo = new Bill();

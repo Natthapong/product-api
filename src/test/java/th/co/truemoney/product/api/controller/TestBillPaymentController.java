@@ -383,14 +383,7 @@ public class TestBillPaymentController extends BaseTestController {
         
         @Test
         public void getKeyInBillInformationFail() throws Exception {
-                when(
-                        billPaymentServiceMock.retrieveBillInformationWithKeyin(
-                                anyString(),
-                                anyString()
-                        )
-                ).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
-
-                this.verifyFailed(this.doGET(getKeyInBillPaymentInfoURL("tmvh_c")));
+                this.verifyFailed(this.doGET(getKeyInBillPaymentInfoURL("tmhh_c")));
         }
 
         @Test
@@ -401,9 +394,12 @@ public class TestBillPaymentController extends BaseTestController {
         	req.put("amount", "100.00");
         	
         	when(
-                    billPaymentServiceMock.updateBillInformation(
-                    		anyString(), anyString(), anyString(), any(BigDecimal.class), anyString())
+                    billPaymentServiceMock.retrieveBillInformationWithKeyin(anyString(), anyString())
             ).thenReturn(createStubbedBillInfo("tcg"));
+        	
+        	when(
+                    billPaymentServiceMock.verifyPaymentAbility(anyString(), any(BigDecimal.class), anyString())
+            ).thenReturn(createBillPaymentDraftStubbed());
 
             this.verifySuccess(this.doPOST(getKeyInBillPaymentURL, req))
             .andExpect(jsonPath("$..dueDate").value("30/08/2013"));
@@ -418,9 +414,12 @@ public class TestBillPaymentController extends BaseTestController {
         	req.put("amount", "100.00");
         	
             when(
-                    billPaymentServiceMock.updateBillInformation(
-                    		anyString(), anyString(), anyString(), any(BigDecimal.class), anyString())
+                    billPaymentServiceMock.retrieveBillInformationWithKeyin(anyString(), anyString())
             ).thenReturn(createStubbedBillInfo("catv"));
+            
+            when(
+                    billPaymentServiceMock.verifyPaymentAbility(anyString(), any(BigDecimal.class), anyString())
+            ).thenReturn(createBillPaymentDraftStubbed());
 
             this.verifySuccess(this.doPOST(getKeyInBillPaymentURL,req))
             .andExpect(jsonPath("$..dueDate").value("30/08/2013"));
@@ -433,10 +432,14 @@ public class TestBillPaymentController extends BaseTestController {
         	req.put("ref2", "1234567890");
         	req.put("target", "tic");
         	req.put("amount", "100.00");
-                when(
-                        billPaymentServiceMock.updateBillInformation(
-                        		anyString(), anyString(), anyString(), any(BigDecimal.class), anyString())
-                ).thenThrow(new ServiceInventoryException(500, "", "", ""));
+        	
+            when(
+                    billPaymentServiceMock.retrieveBillInformationWithKeyin(anyString(), anyString())
+            ).thenThrow(new ServiceInventoryException(500, "", "", ""));
+            
+            when(
+                    billPaymentServiceMock.verifyPaymentAbility(anyString(), any(BigDecimal.class), anyString())
+            ).thenReturn(createBillPaymentDraftStubbed());
 
                 this.verifyFailed(this.doPOST(getKeyInBillPaymentURL, req));
         }
@@ -449,9 +452,12 @@ public class TestBillPaymentController extends BaseTestController {
         	req.put("target", "tmvh");
         	req.put("amount", "100.00");
                 when(
-                        billPaymentServiceMock.updateBillInformation(
-                        		anyString(), anyString(), anyString(), any(BigDecimal.class), anyString())
+                        billPaymentServiceMock.retrieveBillInformationWithKeyin(anyString(), anyString())
                 ).thenThrow(new ServiceInventoryException(500, "PCS-30024", "", "PCS"));
+                
+                when(
+                        billPaymentServiceMock.verifyPaymentAbility(anyString(), any(BigDecimal.class), anyString())
+                ).thenReturn(createBillPaymentDraftStubbed());
 
                 this.verifyFailed(this.doPOST(getKeyInBillPaymentURL, req))
                 .andExpect(jsonPath("$code").value("70000"))

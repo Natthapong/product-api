@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import th.co.truemoney.product.api.domain.BillResponse;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.manager.MessageManager;
+import th.co.truemoney.product.api.util.BillReferenceUtil;
 import th.co.truemoney.product.api.util.Utils;
 import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
@@ -69,7 +70,7 @@ public class BillPaymentController extends BaseController {
 
 		StopWatch timer = new StopWatch("getBillInformation ("+accessTokenID+")");
 		timer.start();
-		Bill bill = new Bill();
+		Bill bill;
 		
 		try{
 			bill = billPaymentService.retrieveBillInformationWithBarcode(barcode, accessTokenID);
@@ -265,41 +266,20 @@ public class BillPaymentController extends BaseController {
 	public @ResponseBody
 	ProductResponse getKeyInBillInformation(
 			@PathVariable String accessTokenID, @PathVariable String billCode) {
-		
-		Bill bill = billPaymentService.retrieveBillInformationWithKeyin(billCode, accessTokenID);
-		
+		BillReferenceUtil billReferenceUtil = new BillReferenceUtil();
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("billID", bill.getID());
-		data.put("target", bill.getTarget());
-		data.put("minAmount", bill.getMinAmount());
-		data.put("maxAmount", bill.getMaxAmount());
-		data.put("ref1TitleTh", bill.getRef1TitleTH());
-		data.put("ref1TitleEn", bill.getRef1TitleEN());
-		data.put("ref1Type", "none");
-		data.put("ref2Type", "none");
+		Map<String, String> placeHolderMessages = billReferenceUtil.getBillInfoResponse(Utils.removeSuffix(billCode));
+		if (placeHolderMessages == null) {
+			throw new ServiceInventoryException(400, "30000", "", "TMN-PRODUCT");
+		}else{
+			data.putAll(placeHolderMessages);
+			data.put("target", billCode);
 		
-		String serviceCode = Utils.removeSuffix(bill.getTarget());
-		if("tmvh".equals(serviceCode)){
-			data.put("ref1Type", "mobile");
-			data.put("ref1TitleTh", "เบอร์โทรศัพท์ทรูมูฟ เอช");
-			data.put("ref1TitleEn", "เบอร์โทรศัพท์ทรูมูฟ เอช");
-		} else if("trmv".equals(serviceCode)){
-			data.put("ref1Type", "mobile");
-			data.put("ref1TitleTh", "เบอร์โทรศัพท์ทรูมูฟ");
-			data.put("ref1TitleEn", "เบอร์โทรศัพท์ทรูมูฟ");
-		} else if("tr".equals(serviceCode) || "ti".equals(serviceCode)||
-				"tlp".equals(serviceCode)|| "tic".equals(serviceCode)){
-			data.put("ref1TitleTh", "เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก");
-			data.put("ref1TitleEn", "เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก");
+			if(data.get("ref2TitleTh").equals("")){
+				data.remove("ref2TitleTh");
+				data.remove("ref2TitleEn");
+			}
 		}
-		
-		if("catv".equals(serviceCode) || "dstv".equals(serviceCode)) {
-			data.put("ref1TitleTh", "หมายเลขสมาชิกทรูวิชั่นส์");
-			data.put("ref1TitleEn", "หมายเลขสมาชิกทรูวิชั่นส์");
-			data.put("ref2TitleTh", "เลขที่ใบแจ้งค่าบริการ");
-			data.put("ref2TitleEn", "เลขที่ใบแจ้งค่าบริการ");
-        }
-		
 		return createResponse(data);
 	}
 	
@@ -313,14 +293,9 @@ public class BillPaymentController extends BaseController {
 			throw new InvalidParameterException("60000");
 		}
 		
-		BigDecimal amount = new BigDecimal(inputAmount.replace(",", ""));
-		String billID = request.get("billID");
-		String ref1 = request.get("ref1");
-		String ref2 = request.containsKey("ref2") ? request.get("ref2") : "";
-		
-		Bill bill = new Bill();
+		Bill bill;
 		try{
-			bill = billPaymentService.updateBillInformation(billID, ref1, ref2, amount, accessTokenID);
+			bill = billPaymentService.retrieveBillInformationWithKeyin(target, accessTokenID);
 		}catch(ServiceInventoryException e){
 			if("PCS.PCS-30024".equals(String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode()))){
 				if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target))){
@@ -330,11 +305,14 @@ public class BillPaymentController extends BaseController {
 			throw e;
 		}
 
-		Map<String, Object> data = BillResponse.builder().setBill(bill).buildBillInfoResponse();
+		BillPaymentDraft paymentDraft = billPaymentService.verifyPaymentAbility(bill.getID(), bill.getAmount(), accessTokenID);
+		Map<String, Object> data = BillResponse.builder()
+				.setPaymentDraft(paymentDraft)
+				.buildBillInfoResponse();
 				
-		String formattedMobileNumber = parseMobileAndTelNumber(bill.getRef1());
-		data.put("ref1", formattedMobileNumber);
-				
+		String formattedMobileNumber = parseMobileAndTelNumber(paymentDraft.getBillInfo().getRef1());
+		data.put("ref1", formattedMobileNumber);				
+
 		return createResponse(data);
 	}
 	

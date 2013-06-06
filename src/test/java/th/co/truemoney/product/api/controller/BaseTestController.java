@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import th.co.truemoney.product.api.config.TestWebConfig;
+import th.co.truemoney.product.api.handler.TransferActivityDetailViewHandler;
 import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.ewallet.ActivityService;
@@ -71,6 +72,9 @@ public abstract class BaseTestController {
 
 	@Autowired
 	protected TransactionAuthenService transactionAuthenServiceMock;
+	
+	@Autowired
+	protected TransferActivityDetailViewHandler transferActivityDetailViewMock;
 	
 	@Before
 	public void setup() {

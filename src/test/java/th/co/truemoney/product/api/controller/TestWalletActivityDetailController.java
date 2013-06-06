@@ -2,12 +2,15 @@ package th.co.truemoney.product.api.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Ignore;
@@ -49,6 +52,38 @@ public class TestWalletActivityDetailController extends
 		this.verifyFailed(this.doGET(getActivityDetailURL("2")));
 	}
 
+	@Test
+	public void getActivityPersonalMessageSuccess() throws Exception
+	{
+		ActivityDetail activity = new ActivityDetail();
+		activity.setType(TYPE.TRANSFER.name());
+		activity.setPersonalMessage("Hello World");
+		
+		when(this.activityServiceMock.getActivityDetail(3L, fakeAccessTokenID)).thenReturn(activity);
+		
+		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), fakeAccessTokenID);
+		Map<String,Object> respData = resp.getData();
+		Map<String,Object> data = (Map<String,Object>)respData.get("personalMessage");
+		assertEquals(data.get("value"),"Hello World");
+		
+	}
+	
+	@Test
+	public void getActivityPersonalMessageFail() throws Exception
+	{
+		ActivityDetail activity = new ActivityDetail();
+		activity.setType(TYPE.TOPUP_MOBILE.name());
+		activity.setPersonalMessage("Hello World");
+		
+		when(this.activityServiceMock.getActivityDetail(3L, fakeAccessTokenID)).thenReturn(activity);
+		
+		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), fakeAccessTokenID);
+		Map<String,Object> respData = resp.getData();
+		assertNull(respData.get("personalMessage"));
+		
+		
+	}	
+	
 	@Test
 	public void getTopupTMHActivityDetails() throws Exception{
 

@@ -37,7 +37,7 @@ public class BillReferenceUtil {
 	@SuppressWarnings("rawtypes")
 	public Boolean isOnlineInquiry(String billCode){
 		Map inquiryStatus =  (Map) billConfigList.get(billCode);
-		return (inquiryStatus == null) ? false : (Boolean) inquiryStatus.get(isOnlineInquiry);
+		return (inquiryStatus == null) ? false : (Boolean) inquiryStatus.get("isInquiryOnline");
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.exception.ProductAPIException;
+import th.co.truemoney.product.api.util.Utils;
 import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
@@ -66,17 +67,15 @@ public class TopupMobileController extends BaseController {
 						amount), accessTokenID);
 		TopUpMobile topUpMobileInfo = draft.getTopUpMobileInfo();
 		BigDecimal topUpAmount = topUpMobileInfo.getAmount();
-
+		BigDecimal sofFee = topUpMobileInfo.getEwalletSourceOfFund().getFeeRate();
+		BigDecimal svcFee = topUpMobileInfo.getServiceFee().getFeeRate();
+		
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("draftTransactionID", draft.getID());
-
 		data.put("logoURL", topUpMobileInfo.getLogo());
-		data.put(
-				mobileNumberReqParam,
-				String.valueOf(topUpMobileInfo.getMobileNumber()).replaceFirst(
-						"(\\d{3})(\\d{3})(\\d)", "$1-$2-$3"));
+		data.put(mobileNumberReqParam, Utils.formatMobileNumber(topUpMobileInfo.getMobileNumber()));
 		data.put("amount", topUpMobileInfo.getAmount());
-		data.put("fee", calculateTotalFee(topUpMobileInfo.getServiceFee().getFeeRate(),topUpMobileInfo.getEwalletSourceOfFund().getFeeRate()));
+		data.put("fee", calculateTotalFee(svcFee, sofFee));
 		data.put(
 				"totalAmount",
 				calculateTotalAmount(topUpAmount, topUpMobileInfo
@@ -159,23 +158,21 @@ public class TopupMobileController extends BaseController {
 		TopUpMobile topUpMobileInfo = transaction.getDraftTransaction()
 				.getTopUpMobileInfo();
 		BigDecimal topUpAmount = topUpMobileInfo.getAmount();
-
+		String mobileNumber = transaction.getDraftTransaction().getTopUpMobileInfo().getMobileNumber();
+		String txnDate = transaction.getConfirmationInfo().getTransactionDate();
+		String txnID = transaction.getConfirmationInfo().getTransactionID();
+		String sof = topUpMobileInfo.getEwalletSourceOfFund().getSourceType();
+		BigDecimal sofFee = topUpMobileInfo.getEwalletSourceOfFund().getFeeRate();
+		BigDecimal svcFee = topUpMobileInfo.getServiceFee().getFeeRate();
+		
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put(
-				mobileNumberReqParam,
-				String.valueOf(
-						transaction.getDraftTransaction().getTopUpMobileInfo()
-								.getMobileNumber()).replaceFirst(
-						"(\\d{3})(\\d{3})(\\d)", "$1-$2-$3"));
-		data.put("transactionDate", transaction.getConfirmationInfo()
-				.getTransactionDate());
-		data.put("transactionID", transaction.getConfirmationInfo()
-				.getTransactionID());
+		data.put(mobileNumberReqParam, Utils.formatMobileNumber(mobileNumber));
+		data.put("transactionDate", txnDate);
+		data.put("transactionID", txnID);
 		data.put("amount", topUpAmount);
 		data.put("logoURL", topUpMobileInfo.getLogo());
-		data.put("sourceOfFund", topUpMobileInfo.getEwalletSourceOfFund()
-				.getSourceType());
-		data.put("fee", calculateTotalFee(topUpMobileInfo.getServiceFee().getFeeRate(),topUpMobileInfo.getEwalletSourceOfFund().getFeeRate()));
+		data.put("sourceOfFund", sof);
+		data.put("fee", calculateTotalFee(svcFee, sofFee));
 		data.put(
 				"totalAmount",
 				calculateTotalAmount(topUpAmount, topUpMobileInfo

@@ -326,10 +326,11 @@ public class BillPaymentController extends BaseController {
 		
 		OutStandingBill outStandingBill = new OutStandingBill();
 		Bill bill = new Bill();
-		try{
+		try{			
+			bill = billPaymentService.retrieveBillInformationWithBillCode(target, ref1, new BigDecimal(0), accessTokenID);
 			outStandingBill = billPaymentService.retrieveBillOutStandingOnline(target, ref1, ref2, accessTokenID);
-			bill = billPaymentService.retrieveBillInformationWithBillCode(target, ref1, outStandingBill.getOutStandingBalance(), accessTokenID);
-			
+			bill.setAmount(outStandingBill.getOutStandingBalance());
+			System.out.println("billonline detail: "+bill.toString());
 		}catch(ServiceInventoryException e){
 			if("PCS.PCS-30024".equals(String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode()))){
 				if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target))){

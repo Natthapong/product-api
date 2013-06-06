@@ -7,9 +7,9 @@
         "ref1TitleTh" : "หมายเลขสมาชิกทรูวิชั่นส์",
         "ref2TitleEn" : "เลขที่ใบแจ้งค่าบริการ",
         "ref2TitleTh" : "เลขที่ใบแจ้งค่าบริการ",
-        "isOnlineInquiry" : false,
-        "minAmount" : 12.00,
-        "maxAmount" : 1000.00
+        "isInquiryOnline" : false,
+        "minAmount" : 145.52,
+        "maxAmount" : 10000.00
     },
     "dstv":
     {
@@ -19,9 +19,9 @@
         "ref1TitleTh" : "หมายเลขสมาชิกทรูวิชั่นส์",
         "ref2TitleEn" : "เลขที่ใบแจ้งค่าบริการ",
         "ref2TitleTh" : "เลขที่ใบแจ้งค่าบริการ",
-        "isOnlineInquiry" : false,
-        "minAmount" : 12.00,
-        "maxAmount" : 1000.00
+        "isInquiryOnline" : false,
+        "minAmount" : 145.052,
+        "maxAmount" : 10000.00
     },
     "tmvh":
     {
@@ -31,9 +31,9 @@
         "ref1TitleTh" : "เบอร์โทรศัพท์ทรูมูฟ เอช",
         "ref2TitleEn" : "",
         "ref2TitleTh" : "",
-        "isOnlineInquiry" : true,
-        "minAmount" : 12.00,
-        "maxAmount" : 1000.00
+        "isInquiryOnline" : true,
+        "minAmount" : 100.00,
+        "maxAmount" : 30000.00
     },
     "trmv":
     {
@@ -43,9 +43,9 @@
         "ref1TitleTh" : "เบอร์โทรศัพท์ทรูมูฟ",
         "ref2TitleEn" : "",
         "ref2TitleTh" : "",
-        "isOnlineInquiry" : true,
-        "minAmount" : 12.00,
-        "maxAmount" : 1000.00
+        "isInquiryOnline" : true,
+        "minAmount" : 100.00,
+        "maxAmount" : 30000.00
     },
     "tlp":
     {
@@ -55,9 +55,9 @@
         "ref1TitleTh" : "เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก",
         "ref2TitleEn" : "",
         "ref2TitleTh" : "",
-        "isOnlineInquiry" : true,
-        "minAmount" : 12.00,
-        "maxAmount" : 1000.00
+        "isInquiryOnline" : true,
+        "minAmount" : 100.00,
+        "maxAmount" : 30000.00
     },
     "tr":
     {
@@ -67,9 +67,9 @@
         "ref1TitleTh" : "เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก",
         "ref2TitleEn" : "",
         "ref2TitleTh" : "",
-        "isOnlineInquiry" : true,
-        "minAmount" : 12.00,
-        "maxAmount" : 1000.00
+        "isInquiryOnline" : true,
+        "minAmount" : 100.00,
+        "maxAmount" : 30000.00
     },
     "ti":
     {
@@ -79,9 +79,9 @@
         "ref1TitleTh" : "เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก",
         "ref2TitleEn" : "",
         "ref2TitleTh" : "",
-        "isOnlineInquiry" : true,
-        "minAmount" : 12.00,
-        "maxAmount" : 1000.00
+        "isInquiryOnline" : true,
+        "minAmount" : 100.00,
+        "maxAmount" : 30000.00
     },
     "tic":
     {
@@ -91,9 +91,9 @@
         "ref1TitleTh" : "เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก",
         "ref2TitleEn" : "",
         "ref2TitleTh" : "",
-        "isOnlineInquiry" : true,
-        "minAmount" : 12.00,
-        "maxAmount" : 1000.00
+        "isInquiryOnline" : true,
+        "minAmount" : 100.00,
+        "maxAmount" : 30000.00
     },
     "tcg":
     {
@@ -103,9 +103,9 @@
         "ref1TitleTh" : "เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก",
         "ref2TitleEn" : "",
         "ref2TitleTh" : "",
-        "isOnlineInquiry" : true,
-        "minAmount" : 12.00,
-        "maxAmount" : 1000.00
+        "isInquiryOnline" : true,
+        "minAmount" : 100.00,
+        "maxAmount" : 30000.00
     },
     "mea":
     {
@@ -115,9 +115,9 @@
         "ref1TitleTh" : "บัญชีแสดงสัญญาเลขที่",
         "ref2TitleEn" : "เลขที่ใบแจ้งหนี้",
         "ref2TitleTh" : "เลขที่ใบแจ้งหนี้",
-        "isOnlineInquiry" : true,
-        "minAmount" : 0,
-        "maxAmount" : 0
+        "isInquiryOnline" : true,
+        "minAmount" : 0.00,
+        "maxAmount" : 0.00
     },
     "water":
     {
@@ -127,8 +127,8 @@
         "ref1TitleTh" : "รหัสสาขา + ทะเบียนผู้ใช้น้ำ",
         "ref2TitleEn" : "เลขที่ใบแจ้งหนี้",
         "ref2TitleTh" : "เลขที่ใบแจ้งหนี้",
-        "isOnlineInquiry" : false,
-        "minAmount" : 12.00,
-        "maxAmount" : 1000.00
+        "isInquiryOnline" : false,
+        "minAmount" : 0.00,
+        "maxAmount" : 0.00
     }
 }

@@ -109,6 +109,11 @@ public class WalletActivityController extends BaseController {
 		data.put("section2", handler.buildSection2());
 		data.put("section3", handler.buildSection3());
 		data.put("section4", handler.buildSection4());
+		
+		if (activity.getType().equals(TYPE.TRANSFER.name()))
+		{
+			data.put("personalMessage", transferActivityDetailViewHandler.buildPersonalMessage(activity.getPersonalMessage()) );
+		}
 		 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}

@@ -8,8 +8,8 @@
         "ref2TitleEn" : "เลขที่ใบแจ้งค่าบริการ",
         "ref2TitleTh" : "เลขที่ใบแจ้งค่าบริการ",
         "isOnlineInquiry" : false,
-        "minAmount" : 12.00,
-        "maxAmount" : 1000.00
+        "minAmount" : 145.52,
+        "maxAmount" : 10000.00
     },
     "dstv":
     {
@@ -20,8 +20,8 @@
         "ref2TitleEn" : "เลขที่ใบแจ้งค่าบริการ",
         "ref2TitleTh" : "เลขที่ใบแจ้งค่าบริการ",
         "isOnlineInquiry" : false,
-        "minAmount" : 12.00,
-        "maxAmount" : 1000.00
+        "minAmount" : 145.052,
+        "maxAmount" : 10000.00
     },
     "tmvh":
     {
@@ -32,8 +32,8 @@
         "ref2TitleEn" : "",
         "ref2TitleTh" : "",
         "isOnlineInquiry" : true,
-        "minAmount" : 12.00,
-        "maxAmount" : 1000.00
+        "minAmount" : 100.00,
+        "maxAmount" : 30000.00
     },
     "trmv":
     {
@@ -44,8 +44,8 @@
         "ref2TitleEn" : "",
         "ref2TitleTh" : "",
         "isOnlineInquiry" : true,
-        "minAmount" : 12.00,
-        "maxAmount" : 1000.00
+        "minAmount" : 100.00,
+        "maxAmount" : 30000.00
     },
     "tlp":
     {
@@ -56,8 +56,8 @@
         "ref2TitleEn" : "",
         "ref2TitleTh" : "",
         "isOnlineInquiry" : true,
-        "minAmount" : 12.00,
-        "maxAmount" : 1000.00
+        "minAmount" : 100.00,
+        "maxAmount" : 30000.00
     },
     "tr":
     {
@@ -68,8 +68,8 @@
         "ref2TitleEn" : "",
         "ref2TitleTh" : "",
         "isOnlineInquiry" : true,
-        "minAmount" : 12.00,
-        "maxAmount" : 1000.00
+        "minAmount" : 100.00,
+        "maxAmount" : 30000.00
     },
     "ti":
     {
@@ -80,8 +80,8 @@
         "ref2TitleEn" : "",
         "ref2TitleTh" : "",
         "isOnlineInquiry" : true,
-        "minAmount" : 12.00,
-        "maxAmount" : 1000.00
+        "minAmount" : 100.00,
+        "maxAmount" : 30000.00
     },
     "tic":
     {
@@ -92,8 +92,8 @@
         "ref2TitleEn" : "",
         "ref2TitleTh" : "",
         "isOnlineInquiry" : true,
-        "minAmount" : 12.00,
-        "maxAmount" : 1000.00
+        "minAmount" : 100.00,
+        "maxAmount" : 30000.00
     },
     "tcg":
     {
@@ -104,8 +104,8 @@
         "ref2TitleEn" : "",
         "ref2TitleTh" : "",
         "isOnlineInquiry" : true,
-        "minAmount" : 12.00,
-        "maxAmount" : 1000.00
+        "minAmount" : 100.00,
+        "maxAmount" : 30000.00
     },
     "mea":
     {
@@ -116,8 +116,8 @@
         "ref2TitleEn" : "เลขที่ใบแจ้งหนี้",
         "ref2TitleTh" : "เลขที่ใบแจ้งหนี้",
         "isOnlineInquiry" : true,
-        "minAmount" : 0,
-        "maxAmount" : 0
+        "minAmount" : 0.00,
+        "maxAmount" : 0.00
     },
     "water":
     {
@@ -128,7 +128,7 @@
         "ref2TitleEn" : "เลขที่ใบแจ้งหนี้",
         "ref2TitleTh" : "เลขที่ใบแจ้งหนี้",
         "isOnlineInquiry" : false,
-        "minAmount" : 12.00,
-        "maxAmount" : 1000.00
+        "minAmount" : 0.00,
+        "maxAmount" : 0.00
     }
 }

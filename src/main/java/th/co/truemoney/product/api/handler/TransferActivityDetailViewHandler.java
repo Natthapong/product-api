@@ -62,6 +62,9 @@ public class TransferActivityDetailViewHandler extends GeneralActivityDetailView
     public Map<String,Object> buildPersonalMessage(String personalMessageValue)
     {
     	Map<String, Object> personalMessageData = new HashMap<String, Object>();
+    	if(personalMessageValue == null){
+    		personalMessageValue = "";
+    	}
     	personalMessageData.put("value",personalMessageValue);
     	return personalMessageData;
     }

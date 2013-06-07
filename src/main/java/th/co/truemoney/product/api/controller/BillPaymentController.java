@@ -238,7 +238,7 @@ public class BillPaymentController extends BaseController {
 		if (isEmptyString(billCode) || isEmptyString(ref1)) { 
 			throw new InvalidParameterException("50010"); 
 		}
-		
+
 		Bill bill = billPaymentService.retrieveBillInformationWithBillCode(
 							billCode, ref1, ref2, amount, accessTokenID);
 		
@@ -329,7 +329,6 @@ public class BillPaymentController extends BaseController {
 		Bill bill = new Bill();
 		try{
 			outStandingBill = billPaymentService.retrieveBillOutStandingOnline(target, ref1, ref2, accessTokenID);
-			//bill = billPaymentService.retrieveBillInformationWithBillCode(target, ref1, outStandingBill.getOutStandingBalance(), accessTokenID);
 			bill.setAmount(outStandingBill.getOutStandingBalance());
 			bill.setDueDate(outStandingBill.getDueDate());
 			bill.setRef1(outStandingBill.getRef1() != null ? outStandingBill.getRef1() : ref1);

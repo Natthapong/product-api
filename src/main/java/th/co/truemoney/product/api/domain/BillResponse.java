@@ -113,11 +113,7 @@ public class BillResponse {
 				response.put("ref1", bill.getRef1());
 				response.put("ref1TitleEn", bill.getRef1TitleEN());
 				response.put("ref1TitleTh", bill.getRef1TitleTH());
-				if("barcode".equals(bill.getPayWith())){
-					response.put("ref2", StringUtils.hasText(bill.getRef2()) ? bill.getRef2() : "-");
-				}else{
-					response.put("ref2", StringUtils.hasText(bill.getRef2()) ? bill.getRef2() : "");
-				}
+				response.put("ref2", StringUtils.hasText(bill.getRef2()) ? bill.getRef2() : "");
 				response.put("ref2TitleEn", bill.getRef2TitleEN());
 				response.put("ref2TitleTh", bill.getRef2TitleTH());
 				response.put("amount", bill.getAmount().toString());

@@ -35,10 +35,11 @@ public class TestBillPaymentControllerFlow extends BaseTestController {
     	
     	String token = "a-123-456-789";
     	String ref1 = "0894432213";
+    	String ref2 = "";
     	String billCode = "tmvh";
     	String transactionID = "id_from_verification";
     	
-    	Bill bill = new Bill("111", billCode, ref1, "", billAmount);
+    	Bill bill = new Bill("111", billCode, ref1, ref2, billAmount);
     	bill.setServiceFee(new ServiceFeeInfo("THB", serviceFee));
 
     	BillPaymentDraft otpConfirmedDraft = 
@@ -55,6 +56,7 @@ public class TestBillPaymentControllerFlow extends BaseTestController {
     		billPaymentServiceMock.retrieveBillInformationWithBillCode(
     				eq(billCode), 
     				eq(ref1), 
+    				eq(ref2),
     				eq(topupAmount), 
     				eq(token))
     	).thenReturn(bill);

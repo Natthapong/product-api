@@ -233,13 +233,14 @@ public class BillPaymentController extends BaseController {
 		BigDecimal amount = new BigDecimal(inputAmount.replace(",", ""));
 		String billCode = request.get("billCode");
 		String ref1 = request.get("ref1");
+		String ref2 = request.containsKey("ref2") ? request.get("ref2") : "";
 		
 		if (isEmptyString(billCode) || isEmptyString(ref1)) { 
 			throw new InvalidParameterException("50010"); 
 		}
 		
 		Bill bill = billPaymentService.retrieveBillInformationWithBillCode(
-							billCode, ref1, amount, accessTokenID);
+							billCode, ref1, ref2, amount, accessTokenID);
 		
 		BillPaymentDraft paymentDraft = billPaymentService.verifyPaymentAbility(
 							bill.getID(), amount, accessTokenID);
@@ -326,10 +327,14 @@ public class BillPaymentController extends BaseController {
 		
 		OutStandingBill outStandingBill = new OutStandingBill();
 		Bill bill = new Bill();
-		try{			
-			bill = billPaymentService.retrieveBillInformationWithBillCode(target, ref1, new BigDecimal(0), accessTokenID);
+		try{
 			outStandingBill = billPaymentService.retrieveBillOutStandingOnline(target, ref1, ref2, accessTokenID);
+			//bill = billPaymentService.retrieveBillInformationWithBillCode(target, ref1, outStandingBill.getOutStandingBalance(), accessTokenID);
 			bill.setAmount(outStandingBill.getOutStandingBalance());
+			bill.setDueDate(outStandingBill.getDueDate());
+			bill.setRef1(outStandingBill.getRef1() != null ? outStandingBill.getRef1() : ref1);
+			bill.setRef2(outStandingBill.getRef2() != null ? outStandingBill.getRef2() : ref2);
+			bill.setTarget(target);
 		}catch(ServiceInventoryException e){
 			if("PCS.PCS-30024".equals(String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode()))){
 				if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target))){

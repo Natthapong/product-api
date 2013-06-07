@@ -110,7 +110,7 @@ public class WalletActivityController extends BaseController {
 		data.put("section3", handler.buildSection3());
 		data.put("section4", handler.buildSection4());
 		
-		if (activity.getType().equals(TYPE.TRANSFER.name()))
+		if (TYPE.TRANSFER.name().equalsIgnoreCase(activity.getType()))
 		{
 			data.put("personalMessage", transferActivityDetailViewHandler.buildPersonalMessage(activity.getPersonalMessage()) );
 		}else{

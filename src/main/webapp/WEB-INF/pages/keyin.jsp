@@ -10,56 +10,56 @@
             "items": [
                 {
                     "serviceCode": "tmvh",
-                    "titleTh": "TrueMove H",
+                    "titleTh": "ทรูมูฟ เอช",
                     "titleEn": "TrueMove H",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_bill/tmvh@2x.png",
                     "enabled": true
                 },
                 {
                     "serviceCode": "trmv",
-                    "titleTh": "TrueMove",
+                    "titleTh": "ทรูมูฟ",
                     "titleEn": "TrueMove",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_bill/trmv@2x.png",
                     "enabled": true
                 },
                 {
                     "serviceCode": "tr",
-                    "titleTh": "True Fixed Line",
+                    "titleTh": "โทรศัพท์บ้านทรู",
                     "titleEn": "True Fixed Line",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_bill/tr@2x.png",
                     "enabled": true
                 },
                 {
                     "serviceCode": "ti",
-                    "titleTh": "True Online",
+                    "titleTh": "ทรูออนไลน์",
                     "titleEn": "True Online",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_bill/ti@2x.png",
                     "enabled": true
                 },
                 {
                     "serviceCode": "tlp",
-                    "titleTh": "TrueLife Plus",
+                    "titleTh": "ทรูไลฟ์ พลัส",
                     "titleEn": "TrueLife Plus",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_bill/tlp@2x.png",
                     "enabled": true
                 },
                 {
                     "serviceCode": "dstv",
-                    "titleTh": "TrueVisions - Satellite",
+                    "titleTh": "ทรูวิชั่นส์ ระบบจานดาวเทียม",
                     "titleEn": "TrueVisions - Satellite",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_bill/dstv@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "catv",
-                    "titleTh": "TrueVisions - Cable",
+                    "titleTh": "ทรูวิชั่นส์ ระบบเคเบิ้ล",
                     "titleEn": "TrueVisions - Cable",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_bill/catv@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "tic",
-                    "titleTh": "True 006",
+                    "titleTh": "ทรู 006",
                     "titleEn": "True 006",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_bill/tic@2x.png",
                     "enabled": true

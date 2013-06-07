@@ -263,6 +263,45 @@ public class BillPaymentController extends BaseController {
         return createResponse(data);
     }
 
+    @RequestMapping(value = "/bill/{billInfoID}/verify/{accessTokenID}", method = RequestMethod.POST)
+    public @ResponseBody
+    ProductResponse verifyBillPayment(
+            @PathVariable String billInfoID,
+            @PathVariable String accessTokenID,
+            @RequestBody Map<String, String> request) {
+
+        StopWatch timer = new StopWatch("verifyBillPayment for favorite bill ("+accessTokenID+")");
+        timer.start();
+        String inputAmount = request.get("amount");
+
+        if (ValidateUtil.isEmpty(inputAmount)) {
+            throw new InvalidParameterException("60000");
+        }
+
+        BigDecimal amount = new BigDecimal(inputAmount.replace(",", ""));
+        BillPaymentDraft paymentDraft = billPaymentService.verifyPaymentAbility(
+                billInfoID, amount, accessTokenID);
+
+        Map<String, Object> data = BillResponse.builder()
+                                        .setPaymentDraft(paymentDraft)
+                                        .buildBillFavoriteResponse();
+
+        Bill bill = paymentDraft.getBillInfo();
+        if(ValidateUtil.isMobileNumber(bill.getRef1())){
+            String formattedMobileNumber = Utils.formatMobileNumber(bill.getRef1());
+            data.put("ref1", formattedMobileNumber);
+        }else if(ValidateUtil.isTelNumber(bill.getRef1())){
+            String formattedTelNumber = Utils.formatTelNumber(bill.getRef1());
+            data.put("ref1", formattedTelNumber);
+        }
+
+        timer.stop();
+        logger.info(timer.shortSummary());
+
+        return createResponse(data);
+    }
+
+
     @RequestMapping(value = "/info/{billCode}/{accessTokenID}", method = RequestMethod.GET)
     public @ResponseBody
     ProductResponse getKeyInBillInformation(

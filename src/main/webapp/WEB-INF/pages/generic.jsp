@@ -93,7 +93,7 @@
 
 "payment.bill.keyin.input.url" : "${apiHost}/api/v1/bill-payment/key-in/%@?",
 
-"payment.bill.inquiry.info.url" : "${apiHost}/api/v1/bill-payment/inquiry/%@?",
+"payment.bill.favorite.info.url" : "${apiHost}/api/v1/bill-payment/favorite/bill/%@?",
 
 "canRegister" : "true"
 }

@@ -28,7 +28,7 @@ import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
-import th.co.truemoney.serviceinventory.bill.domain.OutStandingBill;
+import th.co.truemoney.serviceinventory.bill.domain.InquiryOutstandingBillType;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
@@ -40,7 +40,7 @@ import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
  *   2. BillPaymentDraft
  * 	 3. BillPayTransaction
  *   4. BillPaymentConfirmation
- *   
+ *
  *   BillPaymentTransaction.ID == BillPaymentDraft.ID
  */
 
@@ -48,348 +48,343 @@ import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 @RequestMapping(value = "/bill-payment")
 public class BillPaymentController extends BaseController {
 
-	@Autowired
+    @Autowired
     private BillPaymentService billPaymentService;
 
-	@Autowired
-	private TransactionAuthenService authService;
+    @Autowired
+    private TransactionAuthenService authService;
 
-	@Autowired
-	private TmnProfileService profileService;
+    @Autowired
+    private TmnProfileService profileService;
 
-	@Autowired
-	private MessageManager messageManager;
-	
-	private Logger logger = Logger.getLogger(BillPaymentController.class);
-	
-	@RequestMapping(value = "/barcode/{barcode}/{accessTokenID}", method = RequestMethod.GET)
-	public @ResponseBody
-	ProductResponse getBillInformation(
-			@PathVariable String barcode,
-			@PathVariable String accessTokenID) {
+    @Autowired
+    private MessageManager messageManager;
 
-		StopWatch timer = new StopWatch("getBillInformation ("+accessTokenID+")");
-		timer.start();
-		Bill bill;
-		
-		try{
-			bill = billPaymentService.retrieveBillInformationWithBarcode(barcode, accessTokenID);
-		}catch(ServiceInventoryException e){
-			if("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace()) && "1012".equals(e.getErrorCode())){
-				String targetTitle = getTargetTitle(Utils.removeSuffix(e.getData().get("target").toString()));
-				e.setErrorCode("80000");
-				e.setErrorNamespace("TMN-PRODUCT");
-				Date dueDate = new Date((Long)e.getData().get("dueDate"));
-				e.getData().put("dueDate",Utils.formatDate(dueDate));
-				e.getData().put("targetTitle",targetTitle);
-				throw e;
-			}else{
-				throw e;
-			}
-		}
-		
-		Map<String, Object> data = BillResponse.builder()
-										.setBill(bill)
-										.buildBillInfoResponse();
-		timer.stop();
-		logger.info(timer.shortSummary());
+    private Logger logger = Logger.getLogger(BillPaymentController.class);
 
-		return createResponse(data);
-	}
+    @RequestMapping(value = "/barcode/{barcode}/{accessTokenID}", method = RequestMethod.GET)
+    public @ResponseBody
+    ProductResponse getBillInformation(
+            @PathVariable String barcode,
+            @PathVariable String accessTokenID) {
 
-	@RequestMapping(value = "/create/{accessTokenID}", method = RequestMethod.POST)
-	public @ResponseBody
-	ProductResponse createBillPayment(
-			@PathVariable String accessTokenID,
-			@RequestBody Map<String, String> request) {
+        StopWatch timer = new StopWatch("getBillInformation ("+accessTokenID+")");
+        timer.start();
+        Bill bill;
 
-		StopWatch timer = new StopWatch("createBillPayment ("+accessTokenID+")");
-		timer.start();
+        try{
+            bill = billPaymentService.retrieveBillInformationWithBarcode(barcode, accessTokenID);
+        }catch(ServiceInventoryException e){
+            if("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace()) && "1012".equals(e.getErrorCode())){
+                String targetTitle = getTargetTitle(Utils.removeSuffix(e.getData().get("target").toString()));
+                e.setErrorCode("80000");
+                e.setErrorNamespace("TMN-PRODUCT");
+                Date dueDate = new Date((Long)e.getData().get("dueDate"));
+                e.getData().put("dueDate",Utils.formatDate(dueDate));
+                e.getData().put("targetTitle",targetTitle);
+                throw e;
+            }else{
+                throw e;
+            }
+        }
 
-		String billID = (String)request.get("billID");
-		BigDecimal inputAmount = new BigDecimal(request.get("amount").replace(",", ""));
-		
-		BillPaymentDraft paymentDraft = this.billPaymentService.verifyPaymentAbility(billID, inputAmount, accessTokenID);
-		
-		OTP otp = this.authService.requestOTP(paymentDraft.getID(), accessTokenID);
-		
-		Map<String, Object> data = BillResponse.builder()
-										.setOTP(otp)
-										.setPaymentDraft(paymentDraft)
-										.buildBillCreateResponse();
-		timer.stop();
-		logger.info(timer.shortSummary());
+        Map<String, Object> data = BillResponse.builder()
+                                        .setBill(bill)
+                                        .buildBillInfoResponse();
+        timer.stop();
+        logger.info(timer.shortSummary());
 
-		return createResponse(data);
-		}
+        return createResponse(data);
+    }
 
-	@RequestMapping(value = "/{draftID}/confirm/{accessTokenID}", method = RequestMethod.PUT)
-	public @ResponseBody
-	ProductResponse confirmBillPayment(
-			@PathVariable String draftID,
-			@PathVariable String accessTokenID,
-			@RequestBody Map<String, String> request) {
+    @RequestMapping(value = "/create/{accessTokenID}", method = RequestMethod.POST)
+    public @ResponseBody
+    ProductResponse createBillPayment(
+            @PathVariable String accessTokenID,
+            @RequestBody Map<String, String> request) {
 
-		StopWatch timer = new StopWatch("confirmBillPayment ("+accessTokenID+")");
-		timer.start();
-		
-		BillPaymentDraft draft = billPaymentService.getBillPaymentDraftDetail(draftID, accessTokenID);
-		BillPaymentDraft.Status draftStatus = draft.getStatus();
-		
-		if (draftStatus != Status.OTP_CONFIRMED) {
-			String otpStr = request.get("otpString");
-			String otpRef = request.get("otpRefCode");
-			String mobile = request.get("mobileNumber");
-			
-			OTP otp = new OTP(mobile, otpRef, otpStr);
-			authService.verifyOTP(draftID, otp, accessTokenID);
-		}
-		
-		BillPaymentTransaction.Status transactionStatus = billPaymentService.performPayment(draftID, accessTokenID);
+        StopWatch timer = new StopWatch("createBillPayment ("+accessTokenID+")");
+        timer.start();
 
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("billPaymentStatus", transactionStatus.getStatus());
-		data.put("billPaymentID", draftID); //billPaymentID has the same value as draftID
+        String billID = (String)request.get("billID");
+        BigDecimal inputAmount = new BigDecimal(request.get("amount").replace(",", ""));
 
-		timer.stop();
-		logger.info(timer.shortSummary());
+        BillPaymentDraft paymentDraft = this.billPaymentService.verifyPaymentAbility(billID, inputAmount, accessTokenID);
 
-		return createResponse(data);
-	}
+        OTP otp = this.authService.requestOTP(paymentDraft.getID(), accessTokenID);
 
-	@RequestMapping(value = "/{billPaymentID}/status/{accessTokenID}", method = RequestMethod.GET)
-	public @ResponseBody
-	ProductResponse getBillPaymentStatus(
-			@PathVariable String billPaymentID,
-			@PathVariable String accessTokenID) {
-		
-		StopWatch timer = new StopWatch("getBillPaymentStatus ("+accessTokenID+")");
-		timer.start();
+        Map<String, Object> data = BillResponse.builder()
+                                        .setOTP(otp)
+                                        .setPaymentDraft(paymentDraft)
+                                        .buildBillCreateResponse();
+        timer.stop();
+        logger.info(timer.shortSummary());
 
-		BillPaymentTransaction.Status sts = this.billPaymentService.getBillPaymentStatus(billPaymentID, accessTokenID);
+        return createResponse(data);
+        }
 
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("billPaymentStatus", sts.getStatus());
+    @RequestMapping(value = "/{draftID}/confirm/{accessTokenID}", method = RequestMethod.PUT)
+    public @ResponseBody
+    ProductResponse confirmBillPayment(
+            @PathVariable String draftID,
+            @PathVariable String accessTokenID,
+            @RequestBody Map<String, String> request) {
 
-		timer.stop();
-		logger.info(timer.shortSummary());
+        StopWatch timer = new StopWatch("confirmBillPayment ("+accessTokenID+")");
+        timer.start();
 
-		return createResponse(data);
-	}
+        BillPaymentDraft draft = billPaymentService.getBillPaymentDraftDetail(draftID, accessTokenID);
+        BillPaymentDraft.Status draftStatus = draft.getStatus();
 
-	@RequestMapping(value = "/{billPaymentID}/details/{accessTokenID}", method = RequestMethod.GET)
-	public @ResponseBody
-	ProductResponse getBillPaymentDetail(
-			@PathVariable String billPaymentID,
-			@PathVariable String accessTokenID) {
+        if (draftStatus != Status.OTP_CONFIRMED) {
+            String otpStr = request.get("otpString");
+            String otpRef = request.get("otpRefCode");
+            String mobile = request.get("mobileNumber");
 
-		StopWatch timer = new StopWatch("getBillPaymentDetail ("+accessTokenID+")");
-		timer.start();
+            OTP otp = new OTP(mobile, otpRef, otpStr);
+            authService.verifyOTP(draftID, otp, accessTokenID);
+        }
 
-		BillPaymentTransaction txn = this.billPaymentService.getBillPaymentResult(billPaymentID, accessTokenID);
-	
-		BigDecimal currentBalance = this.profileService.getEwalletBalance(accessTokenID);
-		
-		Map<String, Object> data = BillResponse.builder()
-										.setPaymentTransaction(txn)
-										.setWalletBalance(currentBalance)
-										.buildBillPaymentDetailResponse();
-		
-		Bill bill = txn.getDraftTransaction().getBillInfo();
-		String target = Utils.removeSuffix(bill.getTarget());
-		if ("tmvh".equals(target) || "trmv".equals(target)) {
-			// remark message that display at the bottom of receipt
-			data.put("remarkEn", messageManager.getMessageEn("payment.bill.remark"));
-			data.put("remarkTh", messageManager.getMessageTh("payment.bill.remark"));
-		}
-		
-		if(ValidateUtil.isMobileNumber(bill.getRef1())){
-			String formattedMobileNumber = Utils.formatMobileNumber(bill.getRef1());
-			data.put("ref1", formattedMobileNumber);
-		}else if(ValidateUtil.isTelNumber(bill.getRef1())){
-			String formattedTelNumber = Utils.formatTelNumber(bill.getRef1());
-			data.put("ref1", formattedTelNumber);
-		}
+        BillPaymentTransaction.Status transactionStatus = billPaymentService.performPayment(draftID, accessTokenID);
 
-		timer.stop();
-		logger.info(timer.shortSummary());
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("billPaymentStatus", transactionStatus.getStatus());
+        data.put("billPaymentID", draftID); //billPaymentID has the same value as draftID
 
-		return createResponse(data);
-	}
-	
-	@RequestMapping(value = "/favorite/verify/{accessTokenID}", method = RequestMethod.POST)
-	public @ResponseBody
-	ProductResponse verifyAndGetBillPaymentFavoriteInfo(
-			@PathVariable String accessTokenID, @RequestBody Map<String,String> request) {
-		
-		StopWatch timer = new StopWatch("verifyAndGetBillPaymentFavoriteInfo for favorite bill ("+accessTokenID+")");
-		timer.start();
-		String inputAmount = request.get("amount");
-		
-		if (ValidateUtil.isEmpty(inputAmount)) {
-			throw new InvalidParameterException("60000");
-		}
-		
-		BigDecimal amount = new BigDecimal(inputAmount.replace(",", ""));
-		String billCode = request.get("billCode");
-		String ref1 = request.get("ref1");
-		String ref2 = request.containsKey("ref2") ? request.get("ref2") : "";
-		
-		if (isEmptyString(billCode) || isEmptyString(ref1)) { 
-			throw new InvalidParameterException("50010"); 
-		}
+        timer.stop();
+        logger.info(timer.shortSummary());
 
-		Bill bill = billPaymentService.retrieveBillInformationWithFavorite(
-							billCode, ref1, ref2, amount, accessTokenID);
-		
-		BillPaymentDraft paymentDraft = billPaymentService.verifyPaymentAbility(
-							bill.getID(), amount, accessTokenID);
-		
-		Map<String, Object> data = BillResponse.builder()
-										.setPaymentDraft(paymentDraft)
-										.buildBillFavoriteResponse();
-		
-		if(ValidateUtil.isMobileNumber(bill.getRef1())){
-			String formattedMobileNumber = Utils.formatMobileNumber(bill.getRef1());
-			data.put("ref1", formattedMobileNumber);
-		}else if(ValidateUtil.isTelNumber(bill.getRef1())){
-			String formattedTelNumber = Utils.formatTelNumber(bill.getRef1());
-			data.put("ref1", formattedTelNumber);
-		}
-		
-		timer.stop();
-		logger.info(timer.shortSummary());
+        return createResponse(data);
+    }
 
-		return createResponse(data);
-	}
-	
-	@RequestMapping(value = "/info/{billCode}/{accessTokenID}", method = RequestMethod.GET)
-	public @ResponseBody
-	ProductResponse getKeyInBillInformation(
-			@PathVariable String accessTokenID, @PathVariable String billCode) {
-		BillReferenceUtil billReferenceUtil = new BillReferenceUtil();
-		Map<String, Object> data = new HashMap<String, Object>();
-		Map<String, String> placeHolderMessages = billReferenceUtil.getBillInfoResponse(Utils.removeSuffix(billCode));
-		if (placeHolderMessages == null) {
-			throw new ServiceInventoryException(400, "30000", "", "TMN-PRODUCT");
-		}else{
-			data.putAll(placeHolderMessages);
-			data.put("target", billCode);
-		
-			if(data.get("ref2TitleTh").equals("")){
-				data.remove("ref2TitleTh");
-				data.remove("ref2TitleEn");
-			}
-		}
-		return createResponse(data);
-	}
-	
-	@RequestMapping(value = "/key-in/{accessTokenID}", method = RequestMethod.POST)
-	public @ResponseBody
-	ProductResponse getKeyInBillPayment(
-			@PathVariable String accessTokenID, @RequestBody Map<String,String> request) {
-		String inputAmount = request.get("amount");
-		String target = request.get("target");
-		if (ValidateUtil.isEmpty(inputAmount)) {
-			throw new InvalidParameterException("60000");
-		}
-		
-		Bill bill;
-		try{
-			bill = billPaymentService.retrieveBillInformationWithKeyin(target, accessTokenID);
-		}catch(ServiceInventoryException e){
-			if("PCS.PCS-30024".equals(String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode()))){
-				if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target))){
-					throw new ServiceInventoryException(500,"70000","","TMN-PRODUCT");
-				}
-			}
-			throw e;
-		}
+    @RequestMapping(value = "/{billPaymentID}/status/{accessTokenID}", method = RequestMethod.GET)
+    public @ResponseBody
+    ProductResponse getBillPaymentStatus(
+            @PathVariable String billPaymentID,
+            @PathVariable String accessTokenID) {
 
-		BillPaymentDraft paymentDraft = billPaymentService.verifyPaymentAbility(bill.getID(), bill.getAmount(), accessTokenID);
-		Map<String, Object> data = BillResponse.builder()
-				.setPaymentDraft(paymentDraft)
-				.buildBillInfoResponse();
-				
-		String formattedMobileNumber = parseMobileAndTelNumber(paymentDraft.getBillInfo().getRef1());
-		data.put("ref1", formattedMobileNumber);				
+        StopWatch timer = new StopWatch("getBillPaymentStatus ("+accessTokenID+")");
+        timer.start();
 
-		return createResponse(data);
-	}
-	
-	@RequestMapping(value = "/inquiry/{accessTokenID}", method = RequestMethod.POST)
-	public @ResponseBody
-	ProductResponse getBillOnlineInformation(@PathVariable String accessTokenID,@RequestBody Map<String, String> request){
-		// get 
-		String target = request.get("target");
-		String ref1 = request.get("ref1");
-		String ref2 = request.containsKey("ref2") ? request.get("ref2") : "";
-		
-		OutStandingBill outStandingBill = new OutStandingBill();
-		Bill bill = new Bill();
-		try{
-			outStandingBill = billPaymentService.retrieveBillOutStandingOnline(target, ref1, ref2, accessTokenID);
-			bill.setAmount(outStandingBill.getOutStandingBalance());
-			bill.setDueDate(outStandingBill.getDueDate());
-			bill.setRef1(outStandingBill.getRef1() != null ? outStandingBill.getRef1() : ref1);
-			bill.setRef2(outStandingBill.getRef2() != null ? outStandingBill.getRef2() : ref2);
-			bill.setTarget(target);
-		}catch(ServiceInventoryException e){
-			if("PCS.PCS-30024".equals(String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode()))){
-				if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target))){
-					throw new ServiceInventoryException(500,"70000","","TMN-PRODUCT");
-				} else if("mea".equals(Utils.removeSuffix(target))) {
-					throw new ServiceInventoryException(500,"90000","","TMN-PRODUCT");
-				}
-			}
-			throw e;
-		}
+        BillPaymentTransaction.Status sts = this.billPaymentService.getBillPaymentStatus(billPaymentID, accessTokenID);
 
-		Map<String, Object> data = BillResponse.builder().setBill(bill).buildBillInfoResponse();		
-		String formattedMobileNumber = parseMobileAndTelNumber(bill.getRef1());
-		data.put("ref1", formattedMobileNumber);
-		return createResponse(data);
-	}
-	
-	private String parseMobileAndTelNumber(String mobileNumber) {
-		String formattedNumber = mobileNumber;
-		if(ValidateUtil.isMobileNumber(mobileNumber)){
-			formattedNumber = Utils.formatMobileNumber(mobileNumber);			
-		}else if(ValidateUtil.isTelNumber(mobileNumber)){
-			formattedNumber = Utils.formatTelNumber(mobileNumber);			
-		}
-		return formattedNumber;
-	}
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("billPaymentStatus", sts.getStatus());
 
-	private ProductResponse createResponse(Map<String, Object> data) {
-		return this.responseFactory.createSuccessProductResonse(data);
-	}
+        timer.stop();
+        logger.info(timer.shortSummary());
 
-	public void setBillPaymentService(BillPaymentService billPaymentService) {
-		this.billPaymentService = billPaymentService;
-	}
+        return createResponse(data);
+    }
 
-	public void setAuthService(TransactionAuthenService authService) {
-		this.authService = authService;
-	}
-	
-	public void setProfileService(TmnProfileService profileService) {
-		this.profileService = profileService;
-	}
+    @RequestMapping(value = "/{billPaymentID}/details/{accessTokenID}", method = RequestMethod.GET)
+    public @ResponseBody
+    ProductResponse getBillPaymentDetail(
+            @PathVariable String billPaymentID,
+            @PathVariable String accessTokenID) {
 
-	private boolean isEmptyString(String str) {
-		return ! StringUtils.hasText(str);
-	}
-	
-	private String getTargetTitle(String target){
-		String result = "";
-		if("mea".equals(target)){
-			result = "การไฟฟ้านครหลวง";
-		}else if("water".equals(target)){
-			result = "การประปานครหลวง";
-		}
-		return result;
-	}
-	
+        StopWatch timer = new StopWatch("getBillPaymentDetail ("+accessTokenID+")");
+        timer.start();
+
+        BillPaymentTransaction txn = this.billPaymentService.getBillPaymentResult(billPaymentID, accessTokenID);
+
+        BigDecimal currentBalance = this.profileService.getEwalletBalance(accessTokenID);
+
+        Map<String, Object> data = BillResponse.builder()
+                                        .setPaymentTransaction(txn)
+                                        .setWalletBalance(currentBalance)
+                                        .buildBillPaymentDetailResponse();
+
+        Bill bill = txn.getDraftTransaction().getBillInfo();
+        String target = Utils.removeSuffix(bill.getTarget());
+        if ("tmvh".equals(target) || "trmv".equals(target)) {
+            // remark message that display at the bottom of receipt
+            data.put("remarkEn", messageManager.getMessageEn("payment.bill.remark"));
+            data.put("remarkTh", messageManager.getMessageTh("payment.bill.remark"));
+        }
+
+        if(ValidateUtil.isMobileNumber(bill.getRef1())){
+            String formattedMobileNumber = Utils.formatMobileNumber(bill.getRef1());
+            data.put("ref1", formattedMobileNumber);
+        }else if(ValidateUtil.isTelNumber(bill.getRef1())){
+            String formattedTelNumber = Utils.formatTelNumber(bill.getRef1());
+            data.put("ref1", formattedTelNumber);
+        }
+
+        timer.stop();
+        logger.info(timer.shortSummary());
+
+        return createResponse(data);
+    }
+
+    @RequestMapping(value = "/favorite/verify/{accessTokenID}", method = RequestMethod.POST)
+    public @ResponseBody
+    ProductResponse verifyAndGetBillPaymentFavoriteInfo(
+            @PathVariable String accessTokenID, @RequestBody Map<String,String> request) {
+
+        StopWatch timer = new StopWatch("verifyAndGetBillPaymentFavoriteInfo for favorite bill ("+accessTokenID+")");
+        timer.start();
+        String inputAmount = request.get("amount");
+
+        if (ValidateUtil.isEmpty(inputAmount)) {
+            throw new InvalidParameterException("60000");
+        }
+
+        BigDecimal amount = new BigDecimal(inputAmount.replace(",", ""));
+        String billCode = request.get("billCode");
+        String ref1 = request.get("ref1");
+        String ref2 = request.containsKey("ref2") ? request.get("ref2") : "";
+
+        if (isEmptyString(billCode) || isEmptyString(ref1)) {
+            throw new InvalidParameterException("50010");
+        }
+
+        Bill bill = billPaymentService.retrieveBillInformationWithFavorite(
+                            billCode, ref1, ref2, amount, accessTokenID);
+
+        BillPaymentDraft paymentDraft = billPaymentService.verifyPaymentAbility(
+                            bill.getID(), amount, accessTokenID);
+
+        Map<String, Object> data = BillResponse.builder()
+                                        .setPaymentDraft(paymentDraft)
+                                        .buildBillFavoriteResponse();
+
+        if(ValidateUtil.isMobileNumber(bill.getRef1())){
+            String formattedMobileNumber = Utils.formatMobileNumber(bill.getRef1());
+            data.put("ref1", formattedMobileNumber);
+        }else if(ValidateUtil.isTelNumber(bill.getRef1())){
+            String formattedTelNumber = Utils.formatTelNumber(bill.getRef1());
+            data.put("ref1", formattedTelNumber);
+        }
+
+        timer.stop();
+        logger.info(timer.shortSummary());
+
+        return createResponse(data);
+    }
+
+    @RequestMapping(value = "/info/{billCode}/{accessTokenID}", method = RequestMethod.GET)
+    public @ResponseBody
+    ProductResponse getKeyInBillInformation(
+            @PathVariable String accessTokenID, @PathVariable String billCode) {
+        BillReferenceUtil billReferenceUtil = new BillReferenceUtil();
+        Map<String, Object> data = new HashMap<String, Object>();
+        Map<String, String> placeHolderMessages = billReferenceUtil.getBillInfoResponse(Utils.removeSuffix(billCode));
+        if (placeHolderMessages == null) {
+            throw new ServiceInventoryException(400, "30000", "", "TMN-PRODUCT");
+        }else{
+            data.putAll(placeHolderMessages);
+            data.put("target", billCode);
+
+            if(data.get("ref2TitleTh").equals("")){
+                data.remove("ref2TitleTh");
+                data.remove("ref2TitleEn");
+            }
+        }
+        return createResponse(data);
+    }
+
+    @RequestMapping(value = "/key-in/{accessTokenID}", method = RequestMethod.POST)
+    public @ResponseBody
+    ProductResponse getKeyInBillPayment(
+            @PathVariable String accessTokenID, @RequestBody Map<String,String> request) {
+        String inputAmount = request.get("amount");
+        String target = request.get("target");
+        if (ValidateUtil.isEmpty(inputAmount)) {
+            throw new InvalidParameterException("60000");
+        }
+
+        Bill bill;
+        try{
+            bill = billPaymentService.retrieveBillInformationWithKeyin(target, accessTokenID);
+        }catch(ServiceInventoryException e){
+            if("PCS.PCS-30024".equals(String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode()))){
+                if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target))){
+                    throw new ServiceInventoryException(500,"70000","","TMN-PRODUCT");
+                }
+            }
+            throw e;
+        }
+
+        BillPaymentDraft paymentDraft = billPaymentService.verifyPaymentAbility(bill.getID(), bill.getAmount(), accessTokenID);
+        Map<String, Object> data = BillResponse.builder()
+                .setPaymentDraft(paymentDraft)
+                .buildBillInfoResponse();
+
+        String formattedMobileNumber = parseMobileAndTelNumber(paymentDraft.getBillInfo().getRef1());
+        data.put("ref1", formattedMobileNumber);
+
+        return createResponse(data);
+    }
+
+    @RequestMapping(value = "/favorite/bill/{accessTokenID}", method = RequestMethod.POST)
+    public @ResponseBody
+    ProductResponse getFavoriteBillInformation(@PathVariable String accessTokenID,@RequestBody Map<String, String> request){
+        // get
+        String target = request.get("target");
+        String ref1 = request.get("ref1");
+        String ref2 = request.containsKey("ref2") ? request.get("ref2") : "";
+        String inquiryType = request.get("inquiry");
+
+        Bill bill = null;
+        try{
+            bill = billPaymentService.retrieveBillInformationWithBillCode(target, ref1, ref2, InquiryOutstandingBillType.valueFromString(inquiryType), accessTokenID);
+        }catch(ServiceInventoryException e){
+            if("PCS.PCS-30024".equals(String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode()))){
+                if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target))){
+                    throw new ServiceInventoryException(500,"70000","","TMN-PRODUCT");
+                } else if("mea".equals(Utils.removeSuffix(target))) {
+                    throw new ServiceInventoryException(500,"90000","","TMN-PRODUCT");
+                }
+            }
+            throw e;
+        }
+
+        Map<String, Object> data = BillResponse.builder().setBill(bill).buildBillInfoResponse();
+        String formattedMobileNumber = parseMobileAndTelNumber(bill.getRef1());
+        data.put("ref1", formattedMobileNumber);
+        return createResponse(data);
+    }
+
+    private String parseMobileAndTelNumber(String mobileNumber) {
+        String formattedNumber = mobileNumber;
+        if(ValidateUtil.isMobileNumber(mobileNumber)){
+            formattedNumber = Utils.formatMobileNumber(mobileNumber);
+        }else if(ValidateUtil.isTelNumber(mobileNumber)){
+            formattedNumber = Utils.formatTelNumber(mobileNumber);
+        }
+        return formattedNumber;
+    }
+
+    private ProductResponse createResponse(Map<String, Object> data) {
+        return this.responseFactory.createSuccessProductResonse(data);
+    }
+
+    public void setBillPaymentService(BillPaymentService billPaymentService) {
+        this.billPaymentService = billPaymentService;
+    }
+
+    public void setAuthService(TransactionAuthenService authService) {
+        this.authService = authService;
+    }
+
+    public void setProfileService(TmnProfileService profileService) {
+        this.profileService = profileService;
+    }
+
+    private boolean isEmptyString(String str) {
+        return ! StringUtils.hasText(str);
+    }
+
+    private String getTargetTitle(String target){
+        String result = "";
+        if("mea".equals(target)){
+            result = "การไฟฟ้านครหลวง";
+        }else if("water".equals(target)){
+            result = "การประปานครหลวง";
+        }
+        return result;
+    }
+
 }
 

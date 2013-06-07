@@ -95,5 +95,7 @@
 
 "payment.bill.favorite.info.url" : "${apiHost}/api/v1/bill-payment/favorite/bill/%@?",
 
+"payment.bill.verify.url" : "${apiHost}/api/v1/bill-payment/bill/%@/verify/%@?",
+
 "canRegister" : "true"
 }

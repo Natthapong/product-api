@@ -38,7 +38,13 @@ public class BillPayActivityDetailViewHandler extends
 		 String ref1Value = activity.getRef1();
 		 String ref2TitleTh = "เลขที่ใบแจ้งค่าบริการ";
 		 String ref2TitleEn = "invoice number";
-		 String ref2Value = activity.getRef2().trim();
+		 
+		 String ref2Value = activity.getRef2();
+		 if (ref2Value != null) {
+			 ref2Value = ref2Value.trim();
+		 } else {
+			 ref2Value = "";
+		 }
 		 
 		 if ("mea".equals(action)) {
 			 ref1TitleTh = "บัญชีแสดงสัญญาเลขที่";
@@ -66,11 +72,11 @@ public class BillPayActivityDetailViewHandler extends
 		 cell2.put("value", ref2Value);
 		 column1.put("cell2", cell2);
 
-		 if( !StringUtils.hasText(ref2Value.trim())){
+		 if( !StringUtils.hasText(ref2Value)){
 			 column1.remove("cell2");
 		 }
 		 
-		 if(ref2Value.equals("-")){
+		 if("-".equals(ref2Value)){
 			 column1.remove("cell2");
 		 }
 		 

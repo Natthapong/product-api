@@ -53,7 +53,7 @@ public class TestBillPaymentControllerFlow extends BaseTestController {
     	String billPaymentID = returnedBillID;
 
     	when (
-    		billPaymentServiceMock.retrieveBillInformationWithBillCode(
+    		billPaymentServiceMock.retrieveBillInformationWithFavorite(
     				eq(billCode), 
     				eq(ref1), 
     				eq(ref2),

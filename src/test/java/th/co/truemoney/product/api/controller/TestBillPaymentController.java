@@ -300,7 +300,7 @@ public class TestBillPaymentController extends BaseTestController {
         
         @Test
         public void verifyAndGetFavoriteBillInfoSuccess() throws Exception{
-        	when( billPaymentServiceMock.retrieveBillInformationWithBillCode(
+        	when( billPaymentServiceMock.retrieveBillInformationWithFavorite(
         			anyString(), anyString(), anyString(), any(BigDecimal.class), anyString()))
         			.thenReturn(createStubbedBillInfo("tcg"));
         	
@@ -325,7 +325,7 @@ public class TestBillPaymentController extends BaseTestController {
         
         @Test
         public void verifyAndGetFavoriteBillInfoFail() throws Exception{
-        	when( billPaymentServiceMock.retrieveBillInformationWithBillCode(
+        	when( billPaymentServiceMock.retrieveBillInformationWithFavorite(
         			anyString(), anyString(), anyString(), any(BigDecimal.class), anyString()))
         			.thenThrow(new ServiceInventoryException(400, "", "", ""));
         	

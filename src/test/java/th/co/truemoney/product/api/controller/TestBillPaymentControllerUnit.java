@@ -82,7 +82,7 @@ public class TestBillPaymentControllerUnit {
 
 		when(
 				this.billPaymentServiceMock
-						.retrieveBillInformationWithBillCode(anyString(),
+						.retrieveBillInformationWithFavorite(anyString(),
 								anyString(), anyString(), any(BigDecimal.class), anyString()))
 				.thenReturn(createStubbedBillInfo());
 
@@ -192,7 +192,7 @@ public class TestBillPaymentControllerUnit {
 
 		when(
 				this.billPaymentServiceMock
-						.retrieveBillInformationWithBillCode(anyString(),
+						.retrieveBillInformationWithFavorite(anyString(),
 								anyString(), anyString(), any(BigDecimal.class), anyString()))
 				.thenReturn(createStubbedBillInfo());
 
@@ -630,7 +630,7 @@ public class TestBillPaymentControllerUnit {
 		
 		// retrieveBillInformationWithBillCode
 		when(
-				billPaymentServiceMock.retrieveBillInformationWithBillCode(anyString(),
+				billPaymentServiceMock.retrieveBillInformationWithFavorite(anyString(),
 						anyString(), anyString(), any(BigDecimal.class),
 						anyString())).thenReturn(bill);
 		

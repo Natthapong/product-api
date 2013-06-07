@@ -239,7 +239,7 @@ public class BillPaymentController extends BaseController {
 			throw new InvalidParameterException("50010"); 
 		}
 
-		Bill bill = billPaymentService.retrieveBillInformationWithBillCode(
+		Bill bill = billPaymentService.retrieveBillInformationWithFavorite(
 							billCode, ref1, ref2, amount, accessTokenID);
 		
 		BillPaymentDraft paymentDraft = billPaymentService.verifyPaymentAbility(

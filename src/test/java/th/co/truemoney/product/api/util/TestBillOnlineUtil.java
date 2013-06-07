@@ -117,7 +117,7 @@ public class TestBillOnlineUtil {
 		assertEquals("",resp.get("ref2TitleTh"));
 		assertEquals("none",resp.get("ref1Type"));
 		assertEquals("none",resp.get("ref2Type"));
-		assertEquals(true,resp.get("isInquiryOnline"));
+		assertEquals(false,resp.get("isInquiryOnline"));
 		assertTrue(resp.containsKey("minAmount"));
 		assertTrue(resp.containsKey("maxAmount"));
 	}

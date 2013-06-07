@@ -30,16 +30,16 @@ public class WalletActivity {
 		representEnglishText.put(TYPE.BONUS, "Promotion");
 		
 		actionList.put("promo_direct_debit", "คืนค่าธรรมเนียม");
-		actionList.put("tmhtopup", "TrueMove H");
-		actionList.put("tmvtopup", "TrueMove");
-		actionList.put("catv", "True Visions");
-		actionList.put("dstv", "True Visions");
-		actionList.put("tmvh", "TrueMove H");
-		actionList.put("trmv", "TrueMove");
-		actionList.put("tlp", "TrueLife Plus");
+		actionList.put("tmhtopup", "ทรูมูฟ เอช");
+		actionList.put("tmvtopup", "ทรูมูฟ");
+		actionList.put("catv", "ทรูวิชั่นส์");
+		actionList.put("dstv", "ทรูวิชั่นส์");
+		actionList.put("tmvh", "ทรูมูฟ เอช");
+		actionList.put("trmv", "ทรูมูฟ");
+		actionList.put("tlp", "ทรูไลฟ์ พลัส");
 		actionList.put("tr", "โทรศัพท์บ้านทรู");
-		actionList.put("ti", "True Online");
-		actionList.put("tic", "True 006");
+		actionList.put("ti", "ทรูออนไลน์");
+		actionList.put("tic", "ทรู 006");
 		actionList.put("tcg", "บิลกลุ่มทรู");
 		actionList.put("mea", "การไฟฟ้านครหลวง");
 		actionList.put("water", "การประปานครหลวง");

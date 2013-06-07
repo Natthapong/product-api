@@ -25,6 +25,7 @@ import th.co.truemoney.product.api.handler.TransferActivityDetailViewHandler;
 import th.co.truemoney.product.api.manager.OnlineResourceManager;
 import th.co.truemoney.product.api.util.BankUtil;
 import th.co.truemoney.product.api.util.Utils;
+import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.ewallet.ActivityService;
 import th.co.truemoney.serviceinventory.ewallet.domain.Activity;
 import th.co.truemoney.serviceinventory.ewallet.domain.ActivityDetail;
@@ -71,6 +72,14 @@ public class WalletActivityController extends BaseController {
 			} else if ("add_money".equalsIgnoreCase(ref1)) {
 				txt5En = "Direct Debit Topup";
 				txt5Th = "เติมเงินด้วยบัญชีธนาคาร";
+			} else if (t == TYPE.BILLPAY) {
+				if(ValidateUtil.isMobileNumber(ref1)){
+					txt5En = Utils.formatMobileNumber(ref1);
+					txt5Th = txt5En;
+				}else if(ValidateUtil.isTelNumber(ref1)){
+					txt5En = Utils.formatTelNumber(ref1);
+					txt5Th = txt5En;
+				}
 			}
 			
 			ActivityViewItem item = new ActivityViewItem();

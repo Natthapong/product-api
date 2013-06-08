@@ -364,10 +364,17 @@ public class BillPaymentController extends BaseController {
         String ref1 = request.get("ref1");
         String ref2 = request.containsKey("ref2") ? request.get("ref2") : "";
         String inquiryType = request.get("inquiry");
+        String inputAmount = request.containsKey("amount") ? request.get("amount") : "0";
+
+        if (ValidateUtil.isEmpty(inputAmount)) {
+            throw new InvalidParameterException("60000");
+        }
+
+        BigDecimal amount = new BigDecimal(inputAmount.replace(",", ""));
 
         Bill bill = null;
         try{
-            bill = billPaymentService.retrieveBillInformationWithBillCode(target, ref1, ref2, InquiryOutstandingBillType.valueFromString(inquiryType), accessTokenID);
+            bill = billPaymentService.retrieveBillInformationWithBillCode(target, ref1, ref2, amount, InquiryOutstandingBillType.valueFromString(inquiryType), accessTokenID);
         }catch(ServiceInventoryException e){
             if("PCS.PCS-30024".equals(String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode()))){
                 if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target))){

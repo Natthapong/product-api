@@ -620,7 +620,7 @@ public class TestBillPaymentControllerUnit {
 
         // retrieveBillInformationWithBillCode
         when(
-                billPaymentServiceMock.retrieveBillInformationWithBillCode("mea", "0891234567", "010520120200015601", InquiryOutstandingBillType.ONLINE, fakeAccessTokenID)
+                billPaymentServiceMock.retrieveBillInformationWithBillCode("mea", "0891234567", "010520120200015601", BigDecimal.ZERO, InquiryOutstandingBillType.ONLINE, fakeAccessTokenID)
             ).thenReturn(bill);
 
 

@@ -65,6 +65,23 @@ public final class Utils {
         return formattedAmount;
     }
     
+    /**
+     * Formatting telephone number regarding the number type
+     * 
+     * @param number is the telephone number to be format
+     * @return a string of formatted telephone number
+     */
+    public static String formatTelephoneNumber(String number) {
+    	
+    	if(ValidateUtil.isMobileNumber(number)){
+			 return formatMobileNumber(number);
+		 } else if(ValidateUtil.isTelNumber(number)){
+			 return formatTelNumber(number);
+		 } else {
+			 return number;
+		 }
+    }
+    
     public static String formatMobileNumber(String mobileNumber) {
         return String.valueOf(mobileNumber).replaceFirst(
                 "(\\d{3})(\\d{3})(\\d)", "$1-$2-$3");

@@ -8,7 +8,6 @@ import org.springframework.util.StringUtils;
 
 import th.co.truemoney.product.api.domain.WalletActivity;
 import th.co.truemoney.product.api.util.Utils;
-import th.co.truemoney.product.api.util.ValidateUtil;
 
 @Component
 public class BillPayActivityDetailViewHandler extends
@@ -66,24 +65,51 @@ public class BillPayActivityDetailViewHandler extends
 	
 	@Override
 	public Map<String, String> buildSection1() {
-		String action = Utils.removeSuffix(activity.getAction());
-		boolean truecorpBill = Utils.isTrueCorpBill(action);
-		
 		Map<String, String> section1 = super.buildSection1();
+
+		String action = Utils.removeSuffix(activity.getAction());
+		
 		section1.put("logoURL", onlineResourceManager.getActivityActionLogoURL(action));
-		section1.put("titleEn", truecorpBill ? "" : WalletActivity.getActionInEnglish(action));
-		section1.put("titleTh", truecorpBill ? "" : WalletActivity.getActionInThai(action));
+		section1.put("titleEn", getTitleEn(action));
+		section1.put("titleTh", getTitleTh(action));
+
 		return section1;
 	}
 	
-	private String formatRef1(String ref1Value) {
-		if(ValidateUtil.isMobileNumber(ref1Value)){
-			 return Utils.formatMobileNumber(ref1Value);
-		 } else if(ValidateUtil.isTelNumber(ref1Value)){
-			 return Utils.formatTelNumber(ref1Value);
-		 } else {
-			 return ref1Value;
+	@Override
+	public Map<String, Object> buildSection2() {
+		 Map<String, Object> section2 = super.buildSection2();
+		 Map<String, Object> column1 = new HashMap<String, Object>();
+		 Map<String, String> cell1 = new HashMap<String, String>();
+		 section2.put("column1", column1);
+		 column1.put("cell1", cell1);
+		 
+		 String action = Utils.removeSuffix(activity.getAction());
+
+		 cell1.put("titleTh", getRef1TitleTh(action));
+		 cell1.put("titleEn", getRef1TitleEn(action));
+		 cell1.put("value",   formatRef1(activity.getRef1()));
+		 
+		 if (hasRef2(activity.getRef2())) {
+			 Map<String, String> cell2 = new HashMap<String, String>();
+			 cell2.put("titleTh", getRef2TitleTh(action));
+			 cell2.put("titleEn", getRef2TitleEn(action));
+			 cell2.put("value", formatRef2(activity.getRef2()));
+			 column1.put("cell2", cell2);
 		 }
+		 return section2;
+	}
+	
+	private String formatRef1(String ref1Value) {
+		return Utils.formatTelephoneNumber(ref1Value);
+	}
+	
+	private String getTitleTh(String action) {
+		return Utils.isTrueCorpBill(action) ? "" : WalletActivity.getActionInThai(action);
+	}
+	
+	private String getTitleEn(String action) {
+		return Utils.isTrueCorpBill(action) ? "" : WalletActivity.getActionInEnglish(action);
 	}
 	
 	private String formatRef2(String ref2Value) {
@@ -113,38 +139,5 @@ public class BillPayActivityDetailViewHandler extends
 	private String getRef2TitleTh(String action) {
 		String key = action + "_th";
 		return ref2Title.containsKey(key) ? ref2Title.get(key) : "เลขที่ใบแจ้งค่าบริการ";
-	}
-	
-	@Override
-	public Map<String, Object> buildSection2() {
-		 Map<String, Object> section2 = super.buildSection2();
-		 Map<String, Object> column1 = new HashMap<String, Object>();
-		 Map<String, String> cell1 = new HashMap<String, String>();
-		 
-		 String action = Utils.removeSuffix(activity.getAction());
-
-		 String ref1TitleEn = getRef1TitleEn(action);
-		 String ref1TitleTh = getRef1TitleTh(action);
-		 String ref1Value = formatRef1(activity.getRef1());
-		 
-		 cell1.put("titleTh", ref1TitleTh);
-		 cell1.put("titleEn", ref1TitleEn);
-		 cell1.put("value", ref1Value);
-		 column1.put("cell1", cell1);
-		 
-		 if (hasRef2(activity.getRef2())) {
-			 Map<String, String> cell2 = new HashMap<String, String>();
-			 String ref2TitleEn = getRef2TitleEn(action);
-			 String ref2TitleTh = getRef2TitleTh(action);
-			 String ref2Value = formatRef2(activity.getRef2());
-			 cell2.put("titleTh", ref2TitleTh);
-			 cell2.put("titleEn", ref2TitleEn);
-			 cell2.put("value", ref2Value);
-			 column1.put("cell2", cell2);
-		 }
-		 
-		 section2.put("column1", column1);
-		 return section2;
-	}
-	
+	}	
 }

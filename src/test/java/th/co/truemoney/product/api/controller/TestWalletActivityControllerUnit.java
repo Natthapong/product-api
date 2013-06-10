@@ -41,24 +41,24 @@ public class TestWalletActivityControllerUnit {
 	@Parameters
 	public static Iterable<Object[]> data() throws ParseException {
 		return Arrays.asList(new Object[][] {
-				{ new Activity(1L, "topup_mobile", df.parse("10-03-2013"), "tmvhtopup_c", "0812345678"), new ActivityViewItem(String.valueOf(1L), "เติมเงินมือถือ", "10/03/13", "TrueMove H", "081-234-5678") },
-				{ new Activity(1L, "topup_mobile", df.parse("10-03-2013"), "tmvtopup_c", "0812345678"), new ActivityViewItem(String.valueOf(1L), "เติมเงินมือถือ", "10/03/13",  "TrueMove", "081-234-5678") },
-				{ new Activity(2L, "billpay", df.parse("10-03-2013"), "catv_c", "111111111"), new ActivityViewItem(String.valueOf(2L), "จ่ายบิล", "10/03/13", "True Vision", "111111111") },
-				{ new Activity(2L, "billpay", df.parse("10-03-2013"), "dstv_c", "111111111"), new ActivityViewItem(String.valueOf(2L), "จ่ายบิล", "10/03/13", "True Vision", "111111111") },
-				{ new Activity(2L, "billpay", df.parse("10-03-2013"), "tr_c", "111111111"), new ActivityViewItem(String.valueOf(2L), "จ่ายบิล", "10/03/13", "โทรศัพท์บ้านทรู", "111111111") },
-				{ new Activity(2L, "billpay", df.parse("10-03-2013"), "tmvh_c", "111111111"), new ActivityViewItem(String.valueOf(2L), "จ่ายบิล", "10/03/13", "TrueMove H", "111111111") },
-				{ new Activity(2L, "billpay", df.parse("10-03-2013"), "trmv_c", "111111111"), new ActivityViewItem(String.valueOf(2L), "จ่ายบิล", "10/03/13", "TrueMove", "111111111") },
-				{ new Activity(2L, "billpay", df.parse("10-03-2013"), "ti_c", "111111111"), new ActivityViewItem(String.valueOf(2L), "จ่ายบิล", "10/03/13", "True Online", "111111111") },
-				{ new Activity(2L, "billpay", df.parse("10-03-2013"), "tic_c", "111111111"), new ActivityViewItem(String.valueOf(2L), "จ่ายบิล", "10/03/13", "True 006", "111111111") },
-				{ new Activity(2L, "billpay", df.parse("10-03-2013"), "tlp_c", "111111111"), new ActivityViewItem(String.valueOf(2L), "จ่ายบิล", "10/03/13", "Truelifeplus", "111111111") },
-				{ new Activity(2L, "billpay", df.parse("10-03-2013"), "tcg_c", "111111111"), new ActivityViewItem(String.valueOf(2L), "จ่ายบิล", "10/03/13", "บิลกลุ่มทรู", "111111111") },
-				{ new Activity(2L, "bonus", df.parse("10-03-2013"), "promo_direct_debit", "add_money"), new ActivityViewItem(String.valueOf(2L), "โปรโมชั่น", "10/03/13", "คืนค่าธรรมเนียม", "เติมเงินด้วยบัญชีธนาคาร") },
+				{ new Activity(1L, "topup_mobile", df.parse("10-03-2013"), "tmhtopup_c", "0812345678"), new ActivityViewItem(String.valueOf(1L), "เติมเงินมือถือ", "10/03/13", "ทรูมูฟ เอช", "081-234-5678") },
+				{ new Activity(1L, "topup_mobile", df.parse("10-03-2013"), "tmvtopup_c", "0812345678"), new ActivityViewItem(String.valueOf(1L), "เติมเงินมือถือ", "10/03/13",  "ทรูมูฟ", "081-234-5678") },
 				{ new Activity(2L, "add_money", df.parse("10-03-2013"), "debit", "KTB"), new ActivityViewItem(String.valueOf(2L), "เติมเงิน Wallet", "10/03/13", "บัญชีธนาคาร", "ธนาคารกรุงไทย") },
 				{ new Activity(2L, "add_money", df.parse("10-03-2013"), "debit", "SCB"), new ActivityViewItem(String.valueOf(2L), "เติมเงิน Wallet", "10/03/13", "บัญชีธนาคาร", "ธนาคารไทยพาณิชย์") },
 				{ new Activity(2L, "add_money", df.parse("10-03-2013"), "debit", "BBL"), new ActivityViewItem(String.valueOf(2L), "เติมเงิน Wallet", "10/03/13", "บัญชีธนาคาร", "ธนาคารกรุงเทพ") },
 				{ new Activity(2L, "add_money", df.parse("10-03-2013"), "debit", "BAY"), new ActivityViewItem(String.valueOf(2L), "เติมเงิน Wallet", "10/03/13", "บัญชีธนาคาร", "ธนาคารกรุงศรีอยุธยา") },
 				{ new Activity(2L, "transfer", df.parse("10-03-2013"), "debtor", "0812345678"), new ActivityViewItem(String.valueOf(2L), "โอนเงิน", "10/03/13", "ส่งเงิน", "081-234-5678") },
-				{ new Activity(2L, "transfer", df.parse("10-03-2013"), "creditor", "0812345678"), new ActivityViewItem(String.valueOf(2L), "โอนเงิน ", "10/03/13", "รับเงิน", "081-234-5678") }
+				{ new Activity(2L, "transfer", df.parse("10-03-2013"), "creditor", "0812345678"), new ActivityViewItem(String.valueOf(2L), "โอนเงิน", "10/03/13", "รับเงิน", "081-234-5678") },
+				{ new Activity(2L, "bonus", df.parse("10-03-2013"), "promo_direct_debit", "add_money"), new ActivityViewItem(String.valueOf(2L), "โปรโมชั่น", "10/03/13", "คืนค่าธรรมเนียม", "เติมเงินด้วยบัญชีธนาคาร") },
+				{ new Activity(3L, "billpay", df.parse("10-03-2013"), "catv_c", "111111111"), new ActivityViewItem(String.valueOf(3L), "จ่ายบิล", "10/03/13", "ทรูวิชั่นส์", "111111111") },
+				{ new Activity(3L, "billpay", df.parse("10-03-2013"), "dstv_c", "111111111"), new ActivityViewItem(String.valueOf(3L), "จ่ายบิล", "10/03/13", "ทรูวิชั่นส์", "111111111") },
+				{ new Activity(3L, "billpay", df.parse("10-03-2013"), "tr_c", "111111111"), new ActivityViewItem(String.valueOf(3L), "จ่ายบิล", "10/03/13", "โทรศัพท์บ้านทรู", "111111111") },
+				{ new Activity(3L, "billpay", df.parse("10-03-2013"), "tmvh_c", "111111111"), new ActivityViewItem(String.valueOf(3L), "จ่ายบิล", "10/03/13", "ทรูมูฟ เอช", "111111111") },
+				{ new Activity(3L, "billpay", df.parse("10-03-2013"), "trmv_c", "111111111"), new ActivityViewItem(String.valueOf(3L), "จ่ายบิล", "10/03/13", "ทรูมูฟ", "111111111") },
+				{ new Activity(3L, "billpay", df.parse("10-03-2013"), "ti_c", "111111111"), new ActivityViewItem(String.valueOf(3L), "จ่ายบิล", "10/03/13", "ทรูออนไลน์", "111111111") },
+				{ new Activity(3L, "billpay", df.parse("10-03-2013"), "tic_c", "111111111"), new ActivityViewItem(String.valueOf(3L), "จ่ายบิล", "10/03/13", "ทรู 006", "111111111") },
+				{ new Activity(3L, "billpay", df.parse("10-03-2013"), "tlp_c", "111111111"), new ActivityViewItem(String.valueOf(3L), "จ่ายบิล", "10/03/13", "ทรูไลฟ์ พลัส", "111111111") },
+				{ new Activity(3L, "billpay", df.parse("10-03-2013"), "tcg_c", "111111111"), new ActivityViewItem(String.valueOf(3L), "จ่ายบิล", "10/03/13", "บิลกลุ่มทรู", "111111111") },
 		});
 	}
 	
@@ -105,5 +105,8 @@ public class TestWalletActivityControllerUnit {
 		ActivityViewItem viewItem = viewItemList.get(0);
 		
 		assertEquals(fOutput.getReportID(), viewItem.getReportID());
+		assertEquals(fOutput.getText1Th(), viewItem.getText1Th());
+		assertEquals(fOutput.getText2Th(), viewItem.getText2Th());
+		assertEquals(fOutput.getText3Th(), viewItem.getText3Th());
 	}
 }

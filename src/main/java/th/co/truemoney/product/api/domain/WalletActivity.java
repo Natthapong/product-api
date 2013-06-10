@@ -32,6 +32,10 @@ public class WalletActivity {
 		actionList.put("promo_direct_debit", "คืนค่าธรรมเนียม");
 		actionList.put("tmhtopup", "ทรูมูฟ เอช");
 		actionList.put("tmvtopup", "ทรูมูฟ");
+		actionList.put("mmcc", "บัตรเงินสด");
+		actionList.put("debtor", "ส่งเงิน");
+		actionList.put("debit", "บัญชีธนาคาร");
+		actionList.put("creditor", "รับเงิน");
 		actionList.put("catv", "ทรูวิชั่นส์");
 		actionList.put("dstv", "ทรูวิชั่นส์");
 		actionList.put("tmvh", "ทรูมูฟ เอช");
@@ -43,10 +47,17 @@ public class WalletActivity {
 		actionList.put("tcg", "บิลกลุ่มทรู");
 		actionList.put("mea", "การไฟฟ้านครหลวง");
 		actionList.put("water", "การประปานครหลวง");
-		actionList.put("mmcc", "บัตรเงินสด");
-		actionList.put("debtor", "ส่งเงิน");
-		actionList.put("debit", "บัญชีธนาคาร");
-		actionList.put("creditor", "รับเงิน");
+		actionList.put("bblc", "บัตรเครดิตธนาคารกรุงเทพ");
+		actionList.put("tisco", "ธนาคารทิสโก้");
+		actionList.put("ghb", "ธนาคารอาคารสงเคราะห์");
+		actionList.put("ktc", "บัตรเครดิต KTC");
+		actionList.put("aeon", "บัตรอิออน");
+		actionList.put("kcc", "บัตรเครดิตกรุงศรีอยุธยา");
+		actionList.put("pb", "บัตรเพาเวอร์บาย");
+		actionList.put("mistine", "มิสทีน");
+		actionList.put("bwc", "MPower");
+		actionList.put("uob", "ธนาคาร UOB");
+		actionList.put("fc", "กรุงศรีเฟิร์สชอยส์");
 		
 		serviceCodeList.put("tmvh", 10);
 		serviceCodeList.put("trmv", 9);

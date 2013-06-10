@@ -15,6 +15,8 @@ public class OnlineResourceManager {
 
     private static final String LOGO_ACTIVITY_TYPE_URL = "/m/tmn_webview/images/logo_activity_type/";
     
+    private static final String BG_BANK_IMAGE_URL = "/m/tmn_webview/images/bg_bank_images/";
+    
     @Autowired @Qualifier("apiHost")
 	private String apiHost;
     
@@ -24,6 +26,10 @@ public class OnlineResourceManager {
 
     public String getActivityTypeLogoURL(String type) {
         return apiHost + LOGO_ACTIVITY_TYPE_URL + Utils.removeSuffix(lower(type)) + ".png";
+    }
+    
+    public String getBackgroundBankImageURL(String bankCode){
+    	return apiHost + BG_BANK_IMAGE_URL + lower(bankCode) + "@2x.png";
     }
 
     public String getActivityActionLogoURL(String action) {

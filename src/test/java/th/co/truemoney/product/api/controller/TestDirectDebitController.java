@@ -79,7 +79,8 @@ public class TestDirectDebitController extends BaseTestController {
 			this.doGET(getBankURL)
 		).andExpect(jsonPath("$.data").exists()
 		).andExpect(jsonPath("$..listOfBank").isArray()
-		).andExpect(jsonPath("$..listOfBank[0].bankNameEn").value("Siam Commercial Bank"));
+		).andExpect(jsonPath("$..listOfBank[0].bankNameEn").value("Siam Commercial Bank")
+		).andExpect(jsonPath("$..listOfBank[0].backgroundBankImageURL").value(containsString(".png")));
 }
 
 	@Test

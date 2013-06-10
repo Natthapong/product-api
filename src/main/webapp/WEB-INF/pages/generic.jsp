@@ -53,7 +53,7 @@
 
 "payment.barcode.detail.url" : "${apiHost}/api/v1/bill-payment/barcode/%@/%@?",
 
-"payment.bill.create.url" : "${apiHost}/api/v1/bill-payment/create/%@?",
+"payment.bill.create.url" : "${apiHost}/api/v1/bill-payment/verify/%@?",
 
 "payment.bill.confirm.url" : "${apiHost}/api/v1/bill-payment/%@/confirm/%@?",
 
@@ -89,9 +89,9 @@
 
 "payment.bill.keyin.list.presscon.url" : "${apiHost}/api/v1/bill-payment/key-in/list/press-con?",
 
-"payment.bill.keyin.info.url" : "${apiHost}/api/v1/bill-payment/info/%@/%@?",
+"payment.bill.keyin.info.url" : "${apiHost}/api/v1/bill-payment/key-in/place-holder/%@/%@?",
 
-"payment.bill.keyin.input.url" : "${apiHost}/api/v1/bill-payment/key-in/%@?",
+"payment.bill.keyin.input.url" : "${apiHost}/api/v1/bill-payment/key-in/bill/%@?",
 
 "payment.bill.favorite.info.url" : "${apiHost}/api/v1/bill-payment/favorite/bill/%@?",
 

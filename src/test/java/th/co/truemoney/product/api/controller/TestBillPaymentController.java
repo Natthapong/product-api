@@ -20,6 +20,7 @@ import th.co.truemoney.serviceinventory.bill.domain.Bill;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentConfirmationInfo;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
+import th.co.truemoney.serviceinventory.bill.domain.InquiryOutstandingBillType;
 import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
@@ -39,7 +40,7 @@ public class TestBillPaymentController extends BaseTestController {
 
         private static final String getBarcodeDetailURL = String.format("/bill-payment/barcode/%s/%s", fakeBarcode, fakeAccessToken);
 
-        private static final String createBillPaymentURL = String.format("/bill-payment/create/%s", fakeAccessToken);
+        private static final String createBillPaymentURL = String.format("/bill-payment/verify/%s", fakeAccessToken);
 
         private static final String confirmBillPaymentURL = String.format("/bill-payment/%s/confirm/%s", fakeBillID, fakeAccessToken);
 
@@ -47,15 +48,11 @@ public class TestBillPaymentController extends BaseTestController {
 
         private static final String getBillPaymentDetailURL = String.format("/bill-payment/%s/details/%s", fakeBillPaymentID, fakeAccessToken);
 
-        private static final String getBillPaymentFavoriteInfoURL = String.format("/bill-payment/favorite/verify/%s", fakeAccessToken);
+        private static final String getFavoriteBillPaymentInfoURL = String.format("/bill-payment/favorite/bill/%s", fakeAccessToken);
 
         private static final String getKeyInBillListURL = "/bill-payment/key-in/list";
 
-        private static String getKeyInBillPaymentInfoURL(String billCode){
-            return String.format("/bill-payment/info/%s/%s", billCode, fakeAccessToken);
-        }
-
-        private static final String getKeyInBillPaymentURL = String.format("/bill-payment/key-in/%s", fakeAccessToken);
+        private static final String getKeyInBillPaymentURL = String.format("/bill-payment/key-in/bill/%s", fakeAccessToken);
 
         @Test
         public void getBillInformationSuccess() throws Exception {
@@ -295,9 +292,9 @@ public class TestBillPaymentController extends BaseTestController {
         }
 
         @Test
-        public void verifyAndGetFavoriteBillInfoSuccess() throws Exception{
-            when( billPaymentServiceMock.retrieveBillInformationWithFavorite(
-                    anyString(), anyString(), anyString(), any(BigDecimal.class), anyString()))
+        public void getFavoriteBillInfoSuccess() throws Exception{
+            when( billPaymentServiceMock.retrieveBillInformationWithUserFavorite(
+                    "tcg", "010004552", "", new BigDecimal(10000), InquiryOutstandingBillType.OFFLINE, fakeAccessToken))
                     .thenReturn(createStubbedBillInfo("tcg"));
 
              when(
@@ -309,30 +306,30 @@ public class TestBillPaymentController extends BaseTestController {
              ).thenReturn(createBillPaymentDraftStubbed());
 
             Map<String, String> req = new HashMap<String, String>();
-            req.put("billCode", "tcg");
+            req.put("target", "tcg");
             req.put("ref1", "010004552");
             req.put("amount", "10000");
 
-            this.verifySuccess(this.doPOST(getBillPaymentFavoriteInfoURL, req))
+            this.verifySuccess(this.doPOST(getFavoriteBillPaymentInfoURL, req))
             .andExpect(jsonPath("$.data").exists())
             .andExpect(jsonPath("$..ref1").value("010004552"))
             .andExpect(jsonPath("$..dueDate").value("30/08/2013"));
         }
 
         @Test
-        public void verifyAndGetFavoriteBillInfoFail() throws Exception{
-            when( billPaymentServiceMock.retrieveBillInformationWithFavorite(
-                    anyString(), anyString(), anyString(), any(BigDecimal.class), anyString()))
+        public void getFavoriteBillInfoFail() throws Exception{
+            when( billPaymentServiceMock.retrieveBillInformationWithUserFavorite(
+                    "tcg", "010004552", "", new BigDecimal(10000), InquiryOutstandingBillType.OFFLINE, fakeAccessToken))
                     .thenThrow(new ServiceInventoryException(400, "", "", ""));
 
 
 
             Map<String, String> req = new HashMap<String, String>();
-            req.put("billCode", "tcg");
+            req.put("target", "tcg");
             req.put("ref1", "010004552");
             req.put("amount", "10000");
 
-            this.verifyFailed(this.doPOST(getBillPaymentFavoriteInfoURL, req));
+            this.verifyFailed(this.doPOST(getFavoriteBillPaymentInfoURL, req));
         }
 
         @Test
@@ -343,43 +340,48 @@ public class TestBillPaymentController extends BaseTestController {
 
         @Test
         public void getKeyInBillInformationTCGSuccess() throws Exception {
-                when(
-                        billPaymentServiceMock.retrieveBillInformationWithKeyin(anyString(), anyString())
-                ).thenReturn(createStubbedBillInfo("tcg"));
 
-                this.verifySuccess(this.doGET(getKeyInBillPaymentInfoURL("tcg")))
-                .andExpect(jsonPath("$..ref1TitleTh").exists())
-                .andExpect(jsonPath("$..ref1TitleEn").exists())
-                .andExpect(jsonPath("$..ref2TitleTh").doesNotExist())
-                .andExpect(jsonPath("$..ref2TitleEn").doesNotExist())
-                .andExpect(jsonPath("$..minAmount").exists())
-                .andExpect(jsonPath("$..maxAmount").exists())
-                .andExpect(jsonPath("$..ref1Type").value("none"))
-                .andExpect(jsonPath("$..ref2Type").value("none"))
-                .andExpect(jsonPath("$..target").value("tcg"));
+            Map<String, String> req = new HashMap<String, String>();
+            req.put("ref1", "010004552");
+            req.put("target", "tcg");
+            req.put("amount", "10000");
+
+            when(
+                    billPaymentServiceMock.retrieveBillInformationWithKeyin(
+                            "tcg", "010004552", "", new BigDecimal(10000), InquiryOutstandingBillType.OFFLINE, fakeAccessToken)
+            ).thenReturn(createStubbedBillInfo("tcg"));
+
+            this.verifySuccess(this.doPOST(getKeyInBillPaymentURL, req))
+            .andExpect(jsonPath("$..ref1TitleTh").exists())
+            .andExpect(jsonPath("$..ref1TitleEn").exists())
+            .andExpect(jsonPath("$..ref2TitleTh").exists())
+            .andExpect(jsonPath("$..ref2TitleEn").exists())
+            .andExpect(jsonPath("$..minAmount").exists())
+            .andExpect(jsonPath("$..maxAmount").exists())
+            .andExpect(jsonPath("$..target").value("tcg"));
         }
 
         @Test
         public void getKeyInBillInformationCATVSuccess() throws Exception {
-                when(
-                        billPaymentServiceMock.retrieveBillInformationWithKeyin(anyString(), anyString())
-                ).thenReturn(createStubbedBillInfo("catv"));
 
-                this.verifySuccess(this.doGET(getKeyInBillPaymentInfoURL("catv")))
-                .andExpect(jsonPath("$..ref1TitleTh").exists())
-                .andExpect(jsonPath("$..ref1TitleEn").exists())
-                .andExpect(jsonPath("$..ref2TitleTh").exists())
-                .andExpect(jsonPath("$..ref2TitleEn").exists())
-                .andExpect(jsonPath("$..minAmount").exists())
-                .andExpect(jsonPath("$..maxAmount").exists())
-                .andExpect(jsonPath("$..ref1Type").value("none"))
-                .andExpect(jsonPath("$..ref2Type").value("none"))
-                .andExpect(jsonPath("$..target").value("catv"));
-        }
+            Map<String, String> req = new HashMap<String, String>();
+            req.put("ref1", "010004552");
+            req.put("target", "tcg");
+            req.put("amount", "10000");
 
-        @Test
-        public void getKeyInBillInformationFail() throws Exception {
-                this.verifyFailed(this.doGET(getKeyInBillPaymentInfoURL("tmhh_c")));
+            when(
+                    billPaymentServiceMock.retrieveBillInformationWithKeyin(
+                            "tcg", "010004552", "", new BigDecimal(10000), InquiryOutstandingBillType.OFFLINE, fakeAccessToken)
+            ).thenReturn(createStubbedBillInfo("catv"));
+
+            this.verifySuccess(this.doPOST(getKeyInBillPaymentURL, req))
+            .andExpect(jsonPath("$..ref1TitleTh").exists())
+            .andExpect(jsonPath("$..ref1TitleEn").exists())
+            .andExpect(jsonPath("$..ref2TitleTh").exists())
+            .andExpect(jsonPath("$..ref2TitleEn").exists())
+            .andExpect(jsonPath("$..minAmount").exists())
+            .andExpect(jsonPath("$..maxAmount").exists())
+            .andExpect(jsonPath("$..target").value("catv"));
         }
 
         @Test
@@ -387,15 +389,13 @@ public class TestBillPaymentController extends BaseTestController {
             Map<String, String> req = new HashMap<String, String>();
             req.put("ref1", "1234567890");
             req.put("target", "tcg");
-            req.put("amount", "100.00");
+            req.put("amount", "10000");
 
             when(
-                    billPaymentServiceMock.retrieveBillInformationWithKeyin(anyString(), anyString())
+                    billPaymentServiceMock.retrieveBillInformationWithKeyin(
+                            "tcg", "1234567890", "", new BigDecimal(10000), InquiryOutstandingBillType.OFFLINE, fakeAccessToken)
             ).thenReturn(createStubbedBillInfo("tcg"));
 
-            when(
-                    billPaymentServiceMock.verifyPaymentAbility(anyString(), any(BigDecimal.class), anyString())
-            ).thenReturn(createBillPaymentDraftStubbed());
 
             this.verifySuccess(this.doPOST(getKeyInBillPaymentURL, req))
             .andExpect(jsonPath("$..dueDate").value("30/08/2013"));
@@ -407,10 +407,11 @@ public class TestBillPaymentController extends BaseTestController {
             req.put("ref1", "1234567890");
             req.put("ref2", "1234567890");
             req.put("target", "catv");
-            req.put("amount", "100.00");
+            req.put("amount", "10000");
 
             when(
-                    billPaymentServiceMock.retrieveBillInformationWithKeyin(anyString(), anyString())
+                    billPaymentServiceMock.retrieveBillInformationWithKeyin(
+                            "catv", "1234567890", "1234567890", new BigDecimal(10000), InquiryOutstandingBillType.OFFLINE, fakeAccessToken)
             ).thenReturn(createStubbedBillInfo("catv"));
 
             when(
@@ -427,10 +428,11 @@ public class TestBillPaymentController extends BaseTestController {
             req.put("ref1", "1234567890");
             req.put("ref2", "1234567890");
             req.put("target", "tic");
-            req.put("amount", "100.00");
+            req.put("amount", "10000");
 
             when(
-                    billPaymentServiceMock.retrieveBillInformationWithKeyin(anyString(), anyString())
+                    billPaymentServiceMock.retrieveBillInformationWithKeyin(
+                            "tic", "1234567890", "1234567890", new BigDecimal(10000), InquiryOutstandingBillType.OFFLINE, fakeAccessToken)
             ).thenThrow(new ServiceInventoryException(500, "", "", ""));
 
             when(
@@ -446,9 +448,10 @@ public class TestBillPaymentController extends BaseTestController {
             req.put("ref1", "1234567890");
             req.put("ref2", "1234567890");
             req.put("target", "tmvh");
-            req.put("amount", "100.00");
+            req.put("amount", "10000");
                 when(
-                        billPaymentServiceMock.retrieveBillInformationWithKeyin(anyString(), anyString())
+                        billPaymentServiceMock.retrieveBillInformationWithKeyin(
+                                "tmvh", "1234567890", "1234567890", new BigDecimal(10000), InquiryOutstandingBillType.OFFLINE, fakeAccessToken)
                 ).thenThrow(new ServiceInventoryException(500, "PCS-30024", "", "PCS"));
 
                 when(

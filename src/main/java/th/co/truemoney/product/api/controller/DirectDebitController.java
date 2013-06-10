@@ -225,9 +225,15 @@ public class DirectDebitController extends BaseController {
 			returnData.put("maxAmount", debit.getMaxAmount());
 			returnData.put("sourceOfFundID", debit.getSourceOfFundID());
 			returnData.put("urlLogo", onlineResourceManager.getBankLogoURL(debit.getBankCode()));
+			if(null != debit.getBankCode() && ! "".equals(debit.getBankCode())){
+				returnData.put("backgroundBankImageURL", addBackgroundBankImageURL(debit.getBankCode()));
+			}
 			realData.add(returnData);
 		}
 		return realData;
 	}
-
+	
+	private String addBackgroundBankImageURL(String bankCode){
+		return onlineResourceManager.getBackgroundBankImageURL(bankCode);
+	}
 }

@@ -24,7 +24,7 @@ public class BillPayActivityDetailViewHandler extends
 			put("mea_th", "บัญชีแสดงสัญญาเลขที่");
 			put("bblc_en", "Account Number");
 		    put("bblc_th", "หมายเลขบัตรเครดิต");
-		    put("tisco_en", "Accont Number");
+		    put("tisco_en", "Ref. 1");
 		    put("tisco_th", "เลขที่อ้างอิง");
 		    put("ghb_en", "Account Number");
 		    put("ghb_th", "เลขที่บัญชีเงินกู้");
@@ -50,11 +50,11 @@ public class BillPayActivityDetailViewHandler extends
 	@SuppressWarnings("serial")
 	Map<String,String> ref2Title = new HashMap<String,String>() {
 		{
-			put("water_en", "Ref 2.");
+			put("water_en", "Ref. 2");
 			put("water_th", "เลขที่ใบแจ้งหนี้");
 			put("mea_en", "Ref. 2");
 			put("mea_th", "เลขที่ใบแจ้งหนี้");
-			put("tisco_en", "Ref. 2");
+			put("tisco_en", "Ref.2");
 		    put("tisco_th", "สัญญาเลขที่");
 		    put("mistine_en", "Bill Number");
 		    put("mistine_th", "เลขที่ใบสั่งของ");

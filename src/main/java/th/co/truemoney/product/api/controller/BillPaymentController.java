@@ -62,9 +62,10 @@ public class BillPaymentController extends BaseController {
 
     private Logger logger = Logger.getLogger(BillPaymentController.class);
 
+    // get bill by barcode
     @RequestMapping(value = "/barcode/{barcode}/{accessTokenID}", method = RequestMethod.GET)
     public @ResponseBody
-    ProductResponse getBillInformation(
+    ProductResponse getBillInformationFromBarcode(
             @PathVariable String barcode,
             @PathVariable String accessTokenID) {
 
@@ -97,7 +98,96 @@ public class BillPaymentController extends BaseController {
         return createResponse(data);
     }
 
-    @RequestMapping(value = "/create/{accessTokenID}", method = RequestMethod.POST)
+  //get bill key-in
+    @RequestMapping(value = "/key-in/bill/{accessTokenID}", method = RequestMethod.POST)
+    public @ResponseBody
+    ProductResponse getBillInformationFromKeyInBillCode(
+            @PathVariable String accessTokenID, @RequestBody Map<String,String> request) {
+
+        String target = request.get("target");
+        String ref1 = request.get("ref1");
+        String ref2 = request.containsKey("ref2") ? request.get("ref2") : "";
+        String inquiryType = request.get("inquiry");
+        String inputAmount = request.containsKey("amount") ? request.get("amount") : "0";
+
+        if (ValidateUtil.isEmpty(target)) {
+            throw new InvalidParameterException("60000");
+        }
+
+        BigDecimal amount = new BigDecimal(inputAmount.replace(",", ""));
+
+        Bill bill;
+        try{
+            bill = billPaymentService.retrieveBillInformationWithKeyin(target, ref1, ref2, amount, InquiryOutstandingBillType.valueFromString(inquiryType), accessTokenID);
+        }catch(ServiceInventoryException e){
+            if("PCS.PCS-30024".equals(String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode()))){
+                if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target))){
+                    throw new ServiceInventoryException(500,"70000","","TMN-PRODUCT");
+                }
+            }
+            throw e;
+        }
+
+        Map<String, Object> data = BillResponse.builder()
+                .setBill(bill)
+                .buildBillInfoResponse();
+
+        String formattedMobileNumber = parseMobileAndTelNumber(bill.getRef1());
+        data.put("ref1", formattedMobileNumber);
+
+        return createResponse(data);
+    }
+
+    // get bill favorite
+    @RequestMapping(value = "/favorite/bill/{accessTokenID}", method = RequestMethod.POST)
+    public @ResponseBody
+    ProductResponse getBillInformationFromFavorite(@PathVariable String accessTokenID,@RequestBody Map<String, String> request){
+        // get
+        String target = request.get("target");
+        String ref1 = request.get("ref1");
+        String ref2 = request.containsKey("ref2") ? request.get("ref2") : "";
+        String inquiryType = request.get("inquiry");
+        String inputAmount = request.containsKey("amount") ? request.get("amount") : "0";
+
+        if (ValidateUtil.isEmpty(target)) {
+            throw new InvalidParameterException("60000");
+        }
+
+        BigDecimal amount = new BigDecimal(inputAmount.replace(",", ""));
+
+        Bill bill = null;
+        try{
+            bill = billPaymentService.retrieveBillInformationWithUserFavorite(target, ref1, ref2, amount, InquiryOutstandingBillType.valueFromString(inquiryType), accessTokenID);
+        }catch(ServiceInventoryException e){
+            if("PCS.PCS-30024".equals(String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode()))){
+                if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target))){
+                    throw new ServiceInventoryException(500,"70000","","TMN-PRODUCT");
+                } else if("mea".equals(Utils.removeSuffix(target))) {
+                    throw new ServiceInventoryException(500,"90000","","TMN-PRODUCT");
+                }
+            }else if("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace()) && "1012".equals(e.getErrorCode())){
+                String targetTitle = getTargetTitle(Utils.removeSuffix(e.getData().get("target").toString()));
+                e.setErrorCode("80000");
+                e.setErrorNamespace("TMN-PRODUCT");
+                Date dueDate = new Date((Long)e.getData().get("dueDate"));
+                e.getData().put("dueDate",Utils.formatDate(dueDate));
+                e.getData().put("targetTitle",targetTitle);
+                throw e;
+            }
+            throw e;
+        }
+
+        Map<String, Object> data = BillResponse.builder()
+                .setBill(bill)
+                .buildBillInfoResponse();
+
+        String formattedMobileNumber = parseMobileAndTelNumber(bill.getRef1());
+        data.put("ref1", formattedMobileNumber);
+        return createResponse(data);
+    }
+
+    //verify bill by barcode & key-in
+    @RequestMapping(value = "/verify/{accessTokenID}", method = RequestMethod.POST)
     public @ResponseBody
     ProductResponse createBillPayment(
             @PathVariable String accessTokenID,
@@ -117,12 +207,53 @@ public class BillPaymentController extends BaseController {
                                         .setOTP(otp)
                                         .setPaymentDraft(paymentDraft)
                                         .buildBillCreateResponse();
+
         timer.stop();
         logger.info(timer.shortSummary());
 
         return createResponse(data);
+    }
+
+    // verify favorite bill only
+    @RequestMapping(value = "/bill/{billInfoID}/verify/{accessTokenID}", method = RequestMethod.POST)
+    public @ResponseBody
+    ProductResponse verifyBillPayment(
+            @PathVariable String billInfoID,
+            @PathVariable String accessTokenID,
+            @RequestBody Map<String, String> request) {
+
+        StopWatch timer = new StopWatch("verifyBillPayment for favorite bill ("+accessTokenID+")");
+        timer.start();
+        String inputAmount = request.get("amount");
+
+        if (ValidateUtil.isEmpty(inputAmount)) {
+            throw new InvalidParameterException("60000");
         }
 
+        BigDecimal amount = new BigDecimal(inputAmount.replace(",", ""));
+        BillPaymentDraft paymentDraft = billPaymentService.verifyPaymentAbility(
+                billInfoID, amount, accessTokenID);
+
+        Map<String, Object> data = BillResponse.builder()
+                                        .setPaymentDraft(paymentDraft)
+                                        .buildBillFavoriteResponse();
+
+        Bill bill = paymentDraft.getBillInfo();
+        if(ValidateUtil.isMobileNumber(bill.getRef1())) {
+            String formattedMobileNumber = Utils.formatMobileNumber(bill.getRef1());
+            data.put("ref1", formattedMobileNumber);
+        }else if(ValidateUtil.isTelNumber(bill.getRef1())){
+            String formattedTelNumber = Utils.formatTelNumber(bill.getRef1());
+            data.put("ref1", formattedTelNumber);
+        }
+
+        timer.stop();
+        logger.info(timer.shortSummary());
+
+        return createResponse(data);
+    }
+
+    //confirm all bills
     @RequestMapping(value = "/{draftID}/confirm/{accessTokenID}", method = RequestMethod.PUT)
     public @ResponseBody
     ProductResponse confirmBillPayment(
@@ -157,6 +288,7 @@ public class BillPaymentController extends BaseController {
         return createResponse(data);
     }
 
+    // transaction status
     @RequestMapping(value = "/{billPaymentID}/status/{accessTokenID}", method = RequestMethod.GET)
     public @ResponseBody
     ProductResponse getBillPaymentStatus(
@@ -177,6 +309,7 @@ public class BillPaymentController extends BaseController {
         return createResponse(data);
     }
 
+    //get payment result
     @RequestMapping(value = "/{billPaymentID}/details/{accessTokenID}", method = RequestMethod.GET)
     public @ResponseBody
     ProductResponse getBillPaymentDetail(
@@ -217,94 +350,10 @@ public class BillPaymentController extends BaseController {
         return createResponse(data);
     }
 
-    @RequestMapping(value = "/favorite/verify/{accessTokenID}", method = RequestMethod.POST)
+    //getKeyIn placeholder
+    @RequestMapping(value = "/key-in/place-holder/{billCode}/{accessTokenID}", method = RequestMethod.GET)
     public @ResponseBody
-    ProductResponse verifyAndGetBillPaymentFavoriteInfo(
-            @PathVariable String accessTokenID, @RequestBody Map<String,String> request) {
-
-        StopWatch timer = new StopWatch("verifyAndGetBillPaymentFavoriteInfo for favorite bill ("+accessTokenID+")");
-        timer.start();
-        String inputAmount = request.get("amount");
-
-        if (ValidateUtil.isEmpty(inputAmount)) {
-            throw new InvalidParameterException("60000");
-        }
-
-        BigDecimal amount = new BigDecimal(inputAmount.replace(",", ""));
-        String billCode = request.get("billCode");
-        String ref1 = request.get("ref1");
-        String ref2 = request.containsKey("ref2") ? request.get("ref2") : "";
-
-        if (isEmptyString(billCode) || isEmptyString(ref1)) {
-            throw new InvalidParameterException("50010");
-        }
-
-        Bill bill = billPaymentService.retrieveBillInformationWithFavorite(
-                            billCode, ref1, ref2, amount, accessTokenID);
-
-        BillPaymentDraft paymentDraft = billPaymentService.verifyPaymentAbility(
-                            bill.getID(), amount, accessTokenID);
-
-        Map<String, Object> data = BillResponse.builder()
-                                        .setPaymentDraft(paymentDraft)
-                                        .buildBillFavoriteResponse();
-
-        if(ValidateUtil.isMobileNumber(bill.getRef1())){
-            String formattedMobileNumber = Utils.formatMobileNumber(bill.getRef1());
-            data.put("ref1", formattedMobileNumber);
-        }else if(ValidateUtil.isTelNumber(bill.getRef1())){
-            String formattedTelNumber = Utils.formatTelNumber(bill.getRef1());
-            data.put("ref1", formattedTelNumber);
-        }
-
-        timer.stop();
-        logger.info(timer.shortSummary());
-
-        return createResponse(data);
-    }
-
-    @RequestMapping(value = "/bill/{billInfoID}/verify/{accessTokenID}", method = RequestMethod.POST)
-    public @ResponseBody
-    ProductResponse verifyBillPayment(
-            @PathVariable String billInfoID,
-            @PathVariable String accessTokenID,
-            @RequestBody Map<String, String> request) {
-
-        StopWatch timer = new StopWatch("verifyBillPayment for favorite bill ("+accessTokenID+")");
-        timer.start();
-        String inputAmount = request.get("amount");
-
-        if (ValidateUtil.isEmpty(inputAmount)) {
-            throw new InvalidParameterException("60000");
-        }
-
-        BigDecimal amount = new BigDecimal(inputAmount.replace(",", ""));
-        BillPaymentDraft paymentDraft = billPaymentService.verifyPaymentAbility(
-                billInfoID, amount, accessTokenID);
-
-        Map<String, Object> data = BillResponse.builder()
-                                        .setPaymentDraft(paymentDraft)
-                                        .buildBillFavoriteResponse();
-
-        Bill bill = paymentDraft.getBillInfo();
-        if(ValidateUtil.isMobileNumber(bill.getRef1())){
-            String formattedMobileNumber = Utils.formatMobileNumber(bill.getRef1());
-            data.put("ref1", formattedMobileNumber);
-        }else if(ValidateUtil.isTelNumber(bill.getRef1())){
-            String formattedTelNumber = Utils.formatTelNumber(bill.getRef1());
-            data.put("ref1", formattedTelNumber);
-        }
-
-        timer.stop();
-        logger.info(timer.shortSummary());
-
-        return createResponse(data);
-    }
-
-
-    @RequestMapping(value = "/info/{billCode}/{accessTokenID}", method = RequestMethod.GET)
-    public @ResponseBody
-    ProductResponse getKeyInBillInformation(
+    ProductResponse getKeyInInputPlaceHolders(
             @PathVariable String accessTokenID, @PathVariable String billCode) {
         BillReferenceUtil billReferenceUtil = new BillReferenceUtil();
         Map<String, Object> data = new HashMap<String, Object>();
@@ -320,83 +369,6 @@ public class BillPaymentController extends BaseController {
                 data.remove("ref2TitleEn");
             }
         }
-        return createResponse(data);
-    }
-
-    @RequestMapping(value = "/key-in/{accessTokenID}", method = RequestMethod.POST)
-    public @ResponseBody
-    ProductResponse getKeyInBillPayment(
-            @PathVariable String accessTokenID, @RequestBody Map<String,String> request) {
-        String inputAmount = request.get("amount");
-        String target = request.get("target");
-        if (ValidateUtil.isEmpty(inputAmount)) {
-            throw new InvalidParameterException("60000");
-        }
-
-        Bill bill;
-        try{
-            bill = billPaymentService.retrieveBillInformationWithKeyin(target, accessTokenID);
-        }catch(ServiceInventoryException e){
-            if("PCS.PCS-30024".equals(String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode()))){
-                if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target))){
-                    throw new ServiceInventoryException(500,"70000","","TMN-PRODUCT");
-                }
-            }
-            throw e;
-        }
-
-        BillPaymentDraft paymentDraft = billPaymentService.verifyPaymentAbility(bill.getID(), bill.getAmount(), accessTokenID);
-        Map<String, Object> data = BillResponse.builder()
-                .setPaymentDraft(paymentDraft)
-                .buildBillInfoResponse();
-
-        String formattedMobileNumber = parseMobileAndTelNumber(paymentDraft.getBillInfo().getRef1());
-        data.put("ref1", formattedMobileNumber);
-
-        return createResponse(data);
-    }
-
-    @RequestMapping(value = "/favorite/bill/{accessTokenID}", method = RequestMethod.POST)
-    public @ResponseBody
-    ProductResponse getFavoriteBillInformation(@PathVariable String accessTokenID,@RequestBody Map<String, String> request){
-        // get
-        String target = request.get("target");
-        String ref1 = request.get("ref1");
-        String ref2 = request.containsKey("ref2") ? request.get("ref2") : "";
-        String inquiryType = request.get("inquiry");
-        String inputAmount = request.containsKey("amount") ? request.get("amount") : "0";
-
-        if (ValidateUtil.isEmpty(inputAmount)) {
-            throw new InvalidParameterException("60000");
-        }
-
-        BigDecimal amount = new BigDecimal(inputAmount.replace(",", ""));
-
-        Bill bill = null;
-        try{
-            bill = billPaymentService.retrieveBillInformationWithBillCode(target, ref1, ref2, amount, InquiryOutstandingBillType.valueFromString(inquiryType), accessTokenID);
-        }catch(ServiceInventoryException e){
-            if("PCS.PCS-30024".equals(String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode()))){
-                if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target))){
-                    throw new ServiceInventoryException(500,"70000","","TMN-PRODUCT");
-                } else if("mea".equals(Utils.removeSuffix(target))) {
-                    throw new ServiceInventoryException(500,"90000","","TMN-PRODUCT");
-                }
-            }else if("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace()) && "1012".equals(e.getErrorCode())){
-                String targetTitle = getTargetTitle(Utils.removeSuffix(e.getData().get("target").toString()));
-                e.setErrorCode("80000");
-                e.setErrorNamespace("TMN-PRODUCT");
-                Date dueDate = new Date((Long)e.getData().get("dueDate"));
-                e.getData().put("dueDate",Utils.formatDate(dueDate));
-                e.getData().put("targetTitle",targetTitle);
-                throw e;
-            }
-            throw e;
-        }
-
-        Map<String, Object> data = BillResponse.builder().setBill(bill).buildBillInfoResponse();
-        String formattedMobileNumber = parseMobileAndTelNumber(bill.getRef1());
-        data.put("ref1", formattedMobileNumber);
         return createResponse(data);
     }
 

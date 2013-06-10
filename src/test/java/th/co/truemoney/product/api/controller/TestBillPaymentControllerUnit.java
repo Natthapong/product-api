@@ -1,5 +1,17 @@
 package th.co.truemoney.product.api.controller;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
+
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
 import java.text.ParseException;
@@ -21,7 +33,6 @@ import th.co.truemoney.serviceinventory.bill.domain.BillPaymentConfirmationInfo;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentDraft;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentTransaction;
 import th.co.truemoney.serviceinventory.bill.domain.InquiryOutstandingBillType;
-import th.co.truemoney.serviceinventory.bill.domain.OutStandingBill;
 import th.co.truemoney.serviceinventory.bill.domain.ServiceFeeInfo;
 import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
@@ -29,20 +40,6 @@ import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction;
 import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class TestBillPaymentControllerUnit {
 
@@ -77,23 +74,16 @@ public class TestBillPaymentControllerUnit {
     @Test
     public void favoriteBillPayment() throws Exception {
         Map<String, String> request = new HashMap<String, String>();
-        request.put("billCode", "tcg");
+        request.put("target", "tcg");
         request.put("ref1", "021234567");
         request.put("amount", "10000");
 
         when(
-                this.billPaymentServiceMock
-                        .retrieveBillInformationWithFavorite(anyString(),
-                                anyString(), anyString(), any(BigDecimal.class), anyString()))
+                this.billPaymentServiceMock.retrieveBillInformationWithUserFavorite(
+                        "tcg","021234567", "", new BigDecimal(10000), InquiryOutstandingBillType.OFFLINE, fakeAccessTokenID))
                 .thenReturn(createStubbedBillInfo());
 
-        when(
-                billPaymentServiceMock.verifyPaymentAbility(anyString(),
-                        any(BigDecimal.class), anyString())).thenReturn(
-                createBillPaymentDraftStubbed());
-
-        ProductResponse resp = billPaymentController
-                .verifyAndGetBillPaymentFavoriteInfo(fakeAccessTokenID, request);
+        ProductResponse resp = billPaymentController.getBillInformationFromFavorite(fakeAccessTokenID, request);
         Map<String, Object> data = resp.getData();
         assertNotNull(data);
 
@@ -139,24 +129,23 @@ public class TestBillPaymentControllerUnit {
     @Test(expected = InvalidParameterException.class)
     public void getFavoriteBillInfoFailBillCodeNull() {
         Map<String, String> request = new HashMap<String, String>();
-        request.put("billCode", null);
+        request.put("target", null);
         request.put("ref1", "010004552");
         request.put("amount", "10000");
 
-        ProductResponse resp = billPaymentController
-                .verifyAndGetBillPaymentFavoriteInfo(fakeAccessTokenID, request);
+        ProductResponse resp = billPaymentController.getBillInformationFromFavorite(fakeAccessTokenID, request);
         assertEquals("50010", resp.getCode());
     }
 
     @Test(expected = InvalidParameterException.class)
     public void getFavoriteBillInfoFailBillCodeEmpty() {
         Map<String, String> request = new HashMap<String, String>();
-        request.put("billCode", "");
+        request.put("target", "");
         request.put("ref1", "010004552");
         request.put("amount", "10000");
 
         ProductResponse resp = billPaymentController
-                .verifyAndGetBillPaymentFavoriteInfo(fakeAccessTokenID, request);
+                .getBillInformationFromFavorite(fakeAccessTokenID, request);
         assertEquals("50010", resp.getCode());
     }
 
@@ -168,7 +157,7 @@ public class TestBillPaymentControllerUnit {
         request.put("amount", "10000");
 
         ProductResponse resp = billPaymentController
-                .verifyAndGetBillPaymentFavoriteInfo(fakeAccessTokenID, request);
+                .getBillInformationFromFavorite(fakeAccessTokenID, request);
         assertEquals("50010", resp.getCode());
     }
 
@@ -180,21 +169,22 @@ public class TestBillPaymentControllerUnit {
         request.put("amount", "10000");
 
         ProductResponse resp = billPaymentController
-                .verifyAndGetBillPaymentFavoriteInfo(fakeAccessTokenID, request);
+                .getBillInformationFromFavorite(fakeAccessTokenID, request);
         assertEquals("50010", resp.getCode());
     }
 
     @Test
     public void verifyFavoriteBillSuccess() throws Exception {
         Map<String, String> request = new HashMap<String, String>();
-        request.put("billCode", "tcg");
+        request.put("target", "tcg");
         request.put("ref1", "010004552");
         request.put("amount", "10000");
 
         when(
                 this.billPaymentServiceMock
-                        .retrieveBillInformationWithFavorite(anyString(),
-                                anyString(), anyString(), any(BigDecimal.class), anyString()))
+                        .retrieveBillInformationWithUserFavorite(
+                                "tcg", "010004552", "", new BigDecimal(10000),
+                                InquiryOutstandingBillType.OFFLINE, fakeAccessTokenID))
                 .thenReturn(createStubbedBillInfo());
 
         when(
@@ -203,9 +193,14 @@ public class TestBillPaymentControllerUnit {
                 createBillPaymentDraftStubbed());
 
         ProductResponse resp = billPaymentController
-                .verifyAndGetBillPaymentFavoriteInfo(fakeAccessTokenID, request);
+                .getBillInformationFromFavorite(fakeAccessTokenID, request);
         Map<String, Object> data = resp.getData();
         assertNotNull(data);
+
+        String billID = (String) data.get("billID");
+        ProductResponse verifyResponse = billPaymentController.verifyBillPayment(billID, fakeAccessTokenID, request);
+
+        data = verifyResponse.getData();
 
         assertEquals("OTP_CONFIRMED",
                 String.valueOf(data.get("billPaymentStatus")));
@@ -273,7 +268,7 @@ public class TestBillPaymentControllerUnit {
                         anyString(), anyString())).thenReturn(
                 createStubbedBillInfo());
 
-        ProductResponse resp = billPaymentController.getBillInformation(
+        ProductResponse resp = billPaymentController.getBillInformationFromBarcode(
                 "1111111111", fakeAccessTokenID);
         Map<String, Object> data = resp.getData();
         assertNotNull(data);
@@ -463,12 +458,10 @@ public class TestBillPaymentControllerUnit {
     public void getKeyInBillInformation() throws ServiceInventoryException,
             ParseException {
         when(
-                billPaymentServiceMock.retrieveBillInformationWithKeyin(
-                        anyString(), anyString())).thenReturn(
+                billPaymentServiceMock.retrieveBillInformationWithKeyin("tcg", "", "", BigDecimal.ZERO, InquiryOutstandingBillType.OFFLINE, fakeAccessTokenID)).thenReturn(
                 createStubbedBillInfo());
 
-        ProductResponse resp = billPaymentController.getKeyInBillInformation(
-                fakeAccessTokenID, "tcg");
+        ProductResponse resp = billPaymentController.getKeyInInputPlaceHolders(fakeAccessTokenID, "tcg");
 
         Map<String, Object> data = resp.getData();
         assertNotNull(data);
@@ -491,20 +484,20 @@ public class TestBillPaymentControllerUnit {
         Map<String, String> req = new HashMap<String, String>();
         req.put("ref1", "021234567");
         req.put("target", "tcg");
-        req.put("amount", "10000.00");
+
         Bill bill = createStubbedBillInfo();
         bill.setRef2("");
         bill.setPayWith("keyin");
 
         BillPaymentDraft billPaymentDraft = createBillPaymentDraftStubbed();
         billPaymentDraft.setBillInfo(bill);
-        when( billPaymentServiceMock.retrieveBillInformationWithKeyin(anyString(), anyString())).thenReturn(bill);
-        when(
-                billPaymentServiceMock.verifyPaymentAbility(anyString(), any(BigDecimal.class), anyString())
-        ).thenReturn(billPaymentDraft);
 
-        ProductResponse resp = billPaymentController.getKeyInBillPayment(
-                fakeAccessTokenID, req);
+        when(
+                this.billPaymentServiceMock.retrieveBillInformationWithKeyin(
+                        "tcg","021234567", "", BigDecimal.ZERO, InquiryOutstandingBillType.OFFLINE, fakeAccessTokenID))
+                .thenReturn(createStubbedBillInfo());
+
+        ProductResponse resp = billPaymentController.getBillInformationFromKeyInBillCode(fakeAccessTokenID, req);
         Map<String, Object> data = resp.getData();
         assertNotNull(data);
 
@@ -521,7 +514,6 @@ public class TestBillPaymentControllerUnit {
 
         assertEquals("รหัสลูกค้า", data.get("ref2TitleTh"));
         assertEquals("Customer ID", data.get("ref2TitleEn"));
-        assertEquals("", data.get("ref2"));
 
         assertEquals("10000.00", data.get("amount"));
         assertEquals(new BigDecimal(1000), data.get("serviceFee"));
@@ -554,7 +546,6 @@ public class TestBillPaymentControllerUnit {
         Map<String, String> req = new HashMap<String, String>();
          req.put("ref1", "0891234567");
          req.put("target", "tmvh");
-         req.put("amount", "10000.00");
          Bill bill = createStubbedBillInfo();
          bill.setLogoURL("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png");
          bill.setRef1("0891234567");
@@ -564,12 +555,9 @@ public class TestBillPaymentControllerUnit {
 
          BillPaymentDraft billPaymentDraft = createBillPaymentDraftStubbed();
         billPaymentDraft.setBillInfo(bill);
-        when( billPaymentServiceMock.retrieveBillInformationWithKeyin(anyString(), anyString())).thenReturn(bill);
-        when(
-                billPaymentServiceMock.verifyPaymentAbility(anyString(), any(BigDecimal.class), anyString())
-        ).thenReturn(billPaymentDraft);
+        when( billPaymentServiceMock.retrieveBillInformationWithKeyin("tmvh", "0891234567", "", BigDecimal.ZERO, InquiryOutstandingBillType.OFFLINE, fakeAccessTokenID)).thenReturn(bill);
 
-        ProductResponse resp = billPaymentController.getKeyInBillPayment(fakeAccessTokenID, req);
+        ProductResponse resp = billPaymentController.getBillInformationFromKeyInBillCode(fakeAccessTokenID, req);
         Map<String, Object> data = resp.getData();
         assertNotNull(data);
 
@@ -620,11 +608,11 @@ public class TestBillPaymentControllerUnit {
 
         // retrieveBillInformationWithBillCode
         when(
-                billPaymentServiceMock.retrieveBillInformationWithBillCode("mea", "0891234567", "010520120200015601", BigDecimal.ZERO, InquiryOutstandingBillType.ONLINE, fakeAccessTokenID)
+                billPaymentServiceMock.retrieveBillInformationWithUserFavorite("mea", "0891234567", "010520120200015601", BigDecimal.ZERO, InquiryOutstandingBillType.ONLINE, fakeAccessTokenID)
             ).thenReturn(bill);
 
 
-        ProductResponse resp = billPaymentController.getFavoriteBillInformation(
+        ProductResponse resp = billPaymentController.getBillInformationFromFavorite(
                 fakeAccessTokenID, req);
 
         Map<String, Object> data = resp.getData();

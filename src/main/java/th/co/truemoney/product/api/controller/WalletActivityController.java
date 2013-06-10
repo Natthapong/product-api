@@ -119,11 +119,8 @@ public class WalletActivityController extends BaseController {
 		data.put("section3", handler.buildSection3());
 		data.put("section4", handler.buildSection4());
 		
-		if (TYPE.TRANSFER.name().equalsIgnoreCase(activity.getType()))
-		{
+		if (WalletActivity.getType(activity.getType()) ==  TYPE.TRANSFER) {
 			data.put("personalMessage", transferActivityDetailViewHandler.buildPersonalMessage(activity.getPersonalMessage()) );
-		}else{
-			data.put("transfer error", "no personal message type: " + activity.getType());
 		}
 		 
 		return this.responseFactory.createSuccessProductResonse(data);

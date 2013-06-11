@@ -76,7 +76,8 @@ public class BillPaymentController extends BaseController {
         try{
             bill = billPaymentService.retrieveBillInformationWithBarcode(barcode, accessTokenID);
         }catch(ServiceInventoryException e){
-            if("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace()) && "1012".equals(e.getErrorCode())){
+            if(("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace()) && "1012".equals(e.getErrorCode())) 
+            		|| ("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace()) && "1020".equals(e.getErrorCode()))){
                 String targetTitle = getTargetTitle(Utils.removeSuffix(e.getData().get("target").toString()));
                 e.setErrorCode("80000");
                 e.setErrorNamespace("TMN-PRODUCT");

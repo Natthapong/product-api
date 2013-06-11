@@ -32,7 +32,7 @@ public class BillPayActivityDetailViewHandler extends
 		    put("ktc_th", "หมายเลขบัตรเครดิต");
 		    put("aeon_en", "Ref. 1");
 		    put("aeon_th", "เลขที่อ้างอิง 1");
-		    put("fc_en", "Account No.");
+		    put("fc_en", "Account Number");
 		    put("fc_th", "หมายเลขบัตรเครดิต");
 		    put("kcc_en", "Account Number");
 		    put("kcc_th", "หมายเลขบัตรเครดิต");

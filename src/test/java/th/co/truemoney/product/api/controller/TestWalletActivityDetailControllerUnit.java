@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Before;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.domain.WalletActivity.TYPE;
+import th.co.truemoney.product.api.util.Utils;
 import th.co.truemoney.serviceinventory.ewallet.domain.ActivityDetail;
 
 public class TestWalletActivityDetailControllerUnit extends BaseTestController {
@@ -26,6 +28,8 @@ public class TestWalletActivityDetailControllerUnit extends BaseTestController {
 
 	private final String accessTokenID = "111111";
 	
+	private final String LOGO_URL = "http://localhost:8080/m/tmn_webview/images/logo_bill/";
+
 	ActivityDetailBuilder builder;
 	
 	@Before
@@ -33,26 +37,24 @@ public class TestWalletActivityDetailControllerUnit extends BaseTestController {
 		super.setup();
 		builder = ActivityDetailBuilder.defaultBillPayTestValues();
 	}
-	
+
 	@Test
 	public void activityDetailsBBCL() throws Exception{
+		String originalBillCode = "bblc_c";
+		String billCode = Utils.removeSuffix(originalBillCode);
 		
-		ActivityDetail detail = builder.setAction("bblc_c").setRef1("************1234").build();
+		ActivityDetail detail = ActivityDetailBuilder.defaultCreditCardBillPayment(originalBillCode).build();
 		
 		when(this.activityServiceMock.getActivityDetail(3L, accessTokenID)).thenReturn(detail);
 
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), accessTokenID);
 		Map<String, Object> data = resp.getData();
 
-		assertTrue(data.containsKey("section1"));
-
-		Map<String, String> section1 = (Map<String, String>) data.get("section1");
-		assertTrue(section1.containsKey("logoURL"));
-		assertTrue(section1.containsKey("titleTh"));
-		assertTrue(section1.containsKey("titleEn"));
-		assertEquals("http://localhost:8080/m/tmn_webview/images/logo_bill/bblc@2x.png", section1.get("logoURL"));
-		assertEquals("บัตรเครดิตธนาคารกรุงเทพ", section1.get("titleTh"));
-		assertEquals("bblc", section1.get("titleEn"));
+		Map<String, String> expected = new HashMap<String, String>();
+		expected.put("logoURL", LOGO_URL + billCode + "@2x.png");
+		expected.put("titleTh", "บัตรเครดิตธนาคารกรุงเทพ");
+		expected.put("titleEn", billCode);
+		checkSection1(expected, data);
 
 		assertTrue(data.containsKey("section2"));
 		Map<String, Object> section2 = (Map<String, Object>) data.get("section2");
@@ -75,23 +77,22 @@ public class TestWalletActivityDetailControllerUnit extends BaseTestController {
 	
 	@Test
 	public void activityDetailsTISCO() throws Exception{
+		String originalBillCode = "tisco_c";
+		String billCode = Utils.removeSuffix(originalBillCode);
 		
-		ActivityDetail detail = builder.setAction("tisco_c").setRef1("12345").setRef2("54321").build();
+		ActivityDetail detail = builder.setAction(originalBillCode).setRef1("12345").setRef2("54321").build();
 		
 		when(this.activityServiceMock.getActivityDetail(3L, accessTokenID)).thenReturn(detail);
 
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), accessTokenID);
 		Map<String, Object> data = resp.getData();
 
-		assertTrue(data.containsKey("section1"));
-		Map<String, String> section1 = (Map<String, String>) data.get("section1");
-		assertTrue(section1.containsKey("logoURL"));
-		assertTrue(section1.containsKey("titleTh"));
-		assertTrue(section1.containsKey("titleEn"));
-		assertEquals("http://localhost:8080/m/tmn_webview/images/logo_bill/tisco@2x.png", section1.get("logoURL"));
-		assertEquals("ธนาคารทิสโก้", section1.get("titleTh"));
-		assertEquals("tisco", section1.get("titleEn"));
-
+		Map<String, String> expected = new HashMap<String, String>();
+		expected.put("logoURL", LOGO_URL + billCode + "@2x.png");
+		expected.put("titleTh", "ธนาคารทิสโก้");
+		expected.put("titleEn", billCode);
+		checkSection1(expected, data);
+		
 		assertTrue(data.containsKey("section2"));
 		Map<String, Object> section2 = (Map<String, Object>) data.get("section2");
 		assertTrue(section2.containsKey("column1"));
@@ -118,23 +119,22 @@ public class TestWalletActivityDetailControllerUnit extends BaseTestController {
 
 	@Test
 	public void activityDetailsGHB() throws Exception{
+		String originalBillCode = "ghb_c";
+		String billCode = Utils.removeSuffix(originalBillCode);
 		
-		ActivityDetail detail = builder.setAction("ghb_c").setRef1("12345").build();
+		ActivityDetail detail = builder.setAction(originalBillCode).setRef1("12345").build();
 		
 		when(this.activityServiceMock.getActivityDetail(3L, accessTokenID)).thenReturn(detail);
 
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), accessTokenID);
 		Map<String, Object> data = resp.getData();
-
-		assertTrue(data.containsKey("section1"));
-		Map<String, String> section1 = (Map<String, String>) data.get("section1");
-		assertTrue(section1.containsKey("logoURL"));
-		assertTrue(section1.containsKey("titleTh"));
-		assertTrue(section1.containsKey("titleEn"));
-		assertEquals("http://localhost:8080/m/tmn_webview/images/logo_bill/ghb@2x.png", section1.get("logoURL"));
-		assertEquals("ธนาคารอาคารสงเคราะห์", section1.get("titleTh"));
-		assertEquals("ghb", section1.get("titleEn"));
-
+		
+		Map<String, String> expected = new HashMap<String, String>();
+		expected.put("logoURL", LOGO_URL + billCode + "@2x.png");
+		expected.put("titleTh", "ธนาคารอาคารสงเคราะห์");
+		expected.put("titleEn", billCode);
+		checkSection1(expected, data);
+		
 		assertTrue(data.containsKey("section2"));
 		Map<String, Object> section2 = (Map<String, Object>) data.get("section2");
 		assertTrue(section2.containsKey("column1"));
@@ -156,24 +156,22 @@ public class TestWalletActivityDetailControllerUnit extends BaseTestController {
 	
 	@Test
 	public void activityDetailsKTC() throws Exception{
+		String originalBillCode = "ktc_c";
+		String billCode = Utils.removeSuffix(originalBillCode);
 		
-		ActivityDetail detail = builder.setAction("ktc_c").setRef1("************1234").build();
+		ActivityDetail detail = ActivityDetailBuilder.defaultCreditCardBillPayment(originalBillCode).build();
 		
 		when(this.activityServiceMock.getActivityDetail(3L, accessTokenID)).thenReturn(detail);
 
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), accessTokenID);
 		Map<String, Object> data = resp.getData();
-
-		assertTrue(data.containsKey("section1"));
-
-		Map<String, String> section1 = (Map<String, String>) data.get("section1");
-		assertTrue(section1.containsKey("logoURL"));
-		assertTrue(section1.containsKey("titleTh"));
-		assertTrue(section1.containsKey("titleEn"));
-		assertEquals("http://localhost:8080/m/tmn_webview/images/logo_bill/ktc@2x.png", section1.get("logoURL"));
-		assertEquals("บัตรเครดิต KTC", section1.get("titleTh"));
-		assertEquals("ktc", section1.get("titleEn"));
-
+		
+		Map<String, String> expected = new HashMap<String, String>();
+		expected.put("logoURL", LOGO_URL + billCode +"@2x.png");
+		expected.put("titleTh", "บัตรเครดิต KTC");
+		expected.put("titleEn", billCode);
+		checkSection1(expected, data);
+		
 		assertTrue(data.containsKey("section2"));
 		Map<String, Object> section2 = (Map<String, Object>) data.get("section2");
 		assertTrue(section2.containsKey("column1"));
@@ -191,6 +189,15 @@ public class TestWalletActivityDetailControllerUnit extends BaseTestController {
 		
 		checkSection3(data);
 		checkSection4(data);
+	}
+	
+
+	private void checkSection1(Map<String, String> expected, Map<String, Object> data) {
+		assertTrue(data.containsKey("section1"));
+		Map<String, String> actual = (Map<String, String>) data.get("section1");
+		assertEquals(expected.get("logoURL"), actual.get("logoURL"));
+		assertEquals(expected.get("titleTh"), actual.get("titleTh"));
+		assertEquals(expected.get("titleEn"), actual.get("titleEn"));
 	}
 
 	private void checkSection3(Map<String, Object> data) {
@@ -278,6 +285,11 @@ class ActivityDetailBuilder {
 			e.printStackTrace();
 		}
 		return builder;
+	}
+	
+	public static ActivityDetailBuilder defaultCreditCardBillPayment(String action) {
+		String maskedCreditCardNumber = "************1234";
+		return defaultBillPayTestValues().setAction(action).setRef1(maskedCreditCardNumber);
 	}
 	
 	public ActivityDetailBuilder setType(String type) {

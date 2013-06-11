@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.security.InvalidParameterException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -369,6 +370,92 @@ public class BillPaymentController extends BaseController {
                 data.remove("ref2TitleEn");
             }
         }
+        return createResponse(data);
+    }
+
+    @RequestMapping(value = "/key-in/{accessTokenID}", method = RequestMethod.POST)
+    public @ResponseBody
+    ProductResponse getKeyInBillPayment(
+            @PathVariable String accessTokenID, @RequestBody Map<String,String> request) {
+        String inputAmount = request.get("amount");
+        String target = request.get("target");
+        if (ValidateUtil.isEmpty(inputAmount)) {
+            throw new InvalidParameterException("60000");
+        }
+
+        Bill bill;
+        try{
+            bill = billPaymentService.retrieveBillInformationWithKeyin(target, accessTokenID);
+        }catch(ServiceInventoryException e){
+            if("PCS.PCS-30024".equals(String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode()))){
+                if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target))){
+                    throw new ServiceInventoryException(500,"70000","","TMN-PRODUCT");
+                }
+            }
+            throw e;
+        }
+
+        BillPaymentDraft paymentDraft = billPaymentService.verifyPaymentAbility(bill.getID(), bill.getAmount(), accessTokenID);
+        Map<String, Object> data = BillResponse.builder()
+                .setPaymentDraft(paymentDraft)
+                .buildBillInfoResponse();
+
+        String formattedMobileNumber = parseMobileAndTelNumber(paymentDraft.getBillInfo().getRef1());
+        data.put("ref1", formattedMobileNumber);
+        
+        System.out.println("*****************************************************");
+        Iterator it = data.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pairs = (Map.Entry)it.next();
+            System.out.println(pairs.getKey() + " = " + pairs.getValue());
+            it.remove(); // avoids a ConcurrentModificationException
+        }
+        System.out.println("*****************************************************");
+        
+        return createResponse(data);
+    }
+
+    @RequestMapping(value = "/favorite/bill/{accessTokenID}", method = RequestMethod.POST)
+    public @ResponseBody
+    ProductResponse getFavoriteBillInformation(@PathVariable String accessTokenID,@RequestBody Map<String, String> request){
+        // get
+        String target = request.get("target");
+        String ref1 = request.get("ref1");
+        String ref2 = request.containsKey("ref2") ? request.get("ref2") : "";
+        String inquiryType = request.get("inquiry");
+        String inputAmount = request.containsKey("amount") ? request.get("amount") : "0";
+
+        if (ValidateUtil.isEmpty(inputAmount)) {
+            throw new InvalidParameterException("60000");
+        }
+
+        BigDecimal amount = new BigDecimal(inputAmount.replace(",", ""));
+
+        Bill bill = null;
+        try{
+            bill = billPaymentService.retrieveBillInformationWithBillCode(target, ref1, ref2, amount, InquiryOutstandingBillType.valueFromString(inquiryType), accessTokenID);
+        }catch(ServiceInventoryException e){
+            if("PCS.PCS-30024".equals(String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode()))){
+                if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target))){
+                    throw new ServiceInventoryException(500,"70000","","TMN-PRODUCT");
+                } else if("mea".equals(Utils.removeSuffix(target))) {
+                    throw new ServiceInventoryException(500,"90000","","TMN-PRODUCT");
+                }
+            }else if("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace()) && "1012".equals(e.getErrorCode())){
+                String targetTitle = getTargetTitle(Utils.removeSuffix(e.getData().get("target").toString()));
+                e.setErrorCode("80000");
+                e.setErrorNamespace("TMN-PRODUCT");
+                Date dueDate = new Date((Long)e.getData().get("dueDate"));
+                e.getData().put("dueDate",Utils.formatDate(dueDate));
+                e.getData().put("targetTitle",targetTitle);
+                throw e;
+            }
+            throw e;
+        }
+
+        Map<String, Object> data = BillResponse.builder().setBill(bill).buildBillInfoResponse();
+        String formattedMobileNumber = parseMobileAndTelNumber(bill.getRef1());
+        data.put("ref1", formattedMobileNumber);
         return createResponse(data);
     }
 

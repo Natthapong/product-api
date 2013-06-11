@@ -54,7 +54,7 @@ public class BillPayActivityDetailViewHandler extends
 			put("water_th", "เลขที่ใบแจ้งหนี้");
 			put("mea_en", "Ref. 2");
 			put("mea_th", "เลขที่ใบแจ้งหนี้");
-			put("tisco_en", "Ref.2");
+			put("tisco_en", "Ref. 2");
 		    put("tisco_th", "สัญญาเลขที่");
 		    put("mistine_en", "Bill Number");
 		    put("mistine_th", "เลขที่ใบส่งของ");

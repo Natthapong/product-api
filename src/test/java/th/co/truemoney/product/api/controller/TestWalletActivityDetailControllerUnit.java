@@ -264,6 +264,43 @@ public class TestWalletActivityDetailControllerUnit extends BaseTestController {
 		checkSection3(data);
 		checkSection4(data);
 	}
+	
+	@Test
+	public void activityDetailsKCC() throws Exception{
+		String originalBillCode = "kcc_c";
+		String billCode = Utils.removeSuffix(originalBillCode);
+		
+		ActivityDetail detail = ActivityDetailBuilder.defaultCreditCardBillPayment(originalBillCode).build();
+		
+		when(this.activityServiceMock.getActivityDetail(3L, accessTokenID)).thenReturn(detail);
+
+		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), accessTokenID);
+		Map<String, Object> data = resp.getData();
+		
+		Map<String, String> expected = new HashMap<String, String>();
+		expected.put("logoURL", LOGO_URL + billCode +"@2x.png");
+		expected.put("titleTh", "บัตรเครดิตกรุงศรีอยุธยา");
+		expected.put("titleEn", billCode);
+		checkSection1(expected, data);
+		
+		assertTrue(data.containsKey("section2"));
+		Map<String, Object> section2 = (Map<String, Object>) data.get("section2");
+		assertTrue(section2.containsKey("column1"));
+		assertFalse(section2.containsKey("column2"));
+		Map<String, Object> column21 = (Map<String, Object>) section2.get("column1");
+		assertTrue(column21.containsKey("cell1"));
+		assertFalse(column21.containsKey("cell2"));
+		Map<String, String> cell1 = (Map<String, String>) column21.get("cell1");
+		assertTrue(cell1.containsKey("titleTh"));
+		assertTrue(cell1.containsKey("titleEn"));
+		assertTrue(cell1.containsKey("value"));
+		assertEquals("หมายเลขบัตรเครดิต", cell1.get("titleTh"));
+		assertEquals("Account Number", cell1.get("titleEn"));
+		assertEquals("************1234", cell1.get("value"));
+		
+		checkSection3(data);
+		checkSection4(data);
+	}
 
 	private void checkSection1(Map<String, String> expected, Map<String, Object> data) {
 		assertTrue(data.containsKey("section1"));

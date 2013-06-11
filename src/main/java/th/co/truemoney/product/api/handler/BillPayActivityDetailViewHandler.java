@@ -59,7 +59,7 @@ public class BillPayActivityDetailViewHandler extends
 		    put("mistine_en", "Bill Number");
 		    put("mistine_th", "เลขที่ใบส่งของ");
 		    put("bwc_en", "Bill Number");
-		    put("bwc_th", "เลขที่ใบสั่งของ");
+		    put("bwc_th", "เลขที่ใบส่งของ");
 		}
 	};
 	

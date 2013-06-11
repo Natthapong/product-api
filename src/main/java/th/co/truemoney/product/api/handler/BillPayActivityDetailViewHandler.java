@@ -18,48 +18,48 @@ public class BillPayActivityDetailViewHandler extends
 		{
 			put("tr_en", "Account/Mobile Number");
 			put("tr_th", "เลขที่อ้างอิง 1/หมายเลขโทรศัพท์");
-			put("water_en", "Account Number");
-			put("water_th", "รหัสสาขา + ทะเบียนผู้ใช้น้ำ");
+			put("fc_en", "Account Number");
+			put("fc_th", "หมายเลขบัตรเครดิต");
+			put("pb_en", "Account Number");
+			put("pb_th", "หมายเลขบัตรเครดิต");
+			put("bwc_en", "Customer Number");
+			put("bwc_th", "รหัสสาวจำหน่าย");
+			put("kcc_en", "Account Number");
+			put("kcc_th", "หมายเลขบัตรเครดิต");
+			put("uob_en", "Card Number");
+			put("uob_th", "หมายเลขบัตร");
 			put("mea_en", "Account Number");
 			put("mea_th", "บัญชีแสดงสัญญาเลขที่");
+			put("ghb_en", "Account Number");
+			put("ghb_th", "เลขที่บัญชีเงินกู้");
+			put("ktc_en", "Account Number");
+			put("ktc_th", "หมายเลขบัตรเครดิต");
 			put("bblc_en", "Account Number");
-		    put("bblc_th", "หมายเลขบัตรเครดิต");
+			put("bblc_th", "หมายเลขบัตรเครดิต");
+			put("aeon_en", "Ref. 1");
+			put("aeon_th", "เลขที่อ้างอิง 1");
+			put("water_en", "Account Number");
+			put("water_th", "รหัสสาขา + ทะเบียนผู้ใช้น้ำ");
 		    put("tisco_en", "Ref. 1");
 		    put("tisco_th", "เลขที่อ้างอิง");
-		    put("ghb_en", "Account Number");
-		    put("ghb_th", "เลขที่บัญชีเงินกู้");
-		    put("ktc_en", "Account Number");
-		    put("ktc_th", "หมายเลขบัตรเครดิต");
-		    put("aeon_en", "Ref. 1");
-		    put("aeon_th", "เลขที่อ้างอิง 1");
-		    put("fc_en", "Account Number");
-		    put("fc_th", "หมายเลขบัตรเครดิต");
-		    put("kcc_en", "Account Number");
-		    put("kcc_th", "หมายเลขบัตรเครดิต");
-		    put("pb_en", "Account Number");
-		    put("pb_th", "หมายเลขบัตรเครดิต");
-		    put("uob_en", "Card Number");
-		    put("uob_th", "หมายเลขบัตร");
 		    put("mistine_en", "Customer Number");
 		    put("mistine_th", "รหัสสาวจำหน่าย");
-		    put("bwc_en", "Customer Number");
-		    put("bwc_th", "รหัสสาวจำหน่าย");
 		 }
 	};
 	
 	@SuppressWarnings("serial")
 	Map<String,String> ref2Title = new HashMap<String,String>() {
 		{
-			put("water_en", "Ref. 2");
-			put("water_th", "เลขที่ใบแจ้งหนี้");
+			put("bwc_en", "Bill Number");
+			put("bwc_th", "เลขที่ใบส่งของ");
 			put("mea_en", "Ref. 2");
 			put("mea_th", "เลขที่ใบแจ้งหนี้");
+			put("water_en", "Ref. 2");
+			put("water_th", "เลขที่ใบแจ้งหนี้");
 			put("tisco_en", "Ref. 2");
 		    put("tisco_th", "สัญญาเลขที่");
 		    put("mistine_en", "Bill Number");
 		    put("mistine_th", "เลขที่ใบส่งของ");
-		    put("bwc_en", "Bill Number");
-		    put("bwc_th", "เลขที่ใบส่งของ");
 		}
 	};
 	

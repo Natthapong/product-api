@@ -76,7 +76,7 @@ public class BillPaymentController extends BaseController {
         try{
             bill = billPaymentService.retrieveBillInformationWithBarcode(barcode, accessTokenID);
         }catch(ServiceInventoryException e){
-            if("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace()) && "1012".equals(e.getErrorCode())){
+            if(("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace()) && "1012".equals(e.getErrorCode()))){
                 String targetTitle = getTargetTitle(Utils.removeSuffix(e.getData().get("target").toString()));
                 e.setErrorCode("80000");
                 e.setErrorNamespace("TMN-PRODUCT");
@@ -165,7 +165,9 @@ public class BillPaymentController extends BaseController {
                 } else if("mea".equals(Utils.removeSuffix(target))) {
                     throw new ServiceInventoryException(500,"90000","","TMN-PRODUCT");
                 }
-            }else if("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace()) && "1012".equals(e.getErrorCode())){
+            }else if(("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace()) && "1012".equals(e.getErrorCode())) 
+            		|| ("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace()) && "1020".equals(e.getErrorCode()))){
+            	
                 String targetTitle = getTargetTitle(Utils.removeSuffix(e.getData().get("target").toString()));
                 e.setErrorCode("80000");
                 e.setErrorNamespace("TMN-PRODUCT");

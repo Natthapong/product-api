@@ -151,8 +151,8 @@
                 },
                 {
                     "serviceCode": "PW",
-                    "titleTh": "เพาวเวอร์บาย คาร์ด",
-                    "titleEn": "เพาวเวอร์บาย คาร์ด",
+                    "titleTh": "เพาเวอร์บาย คาร์ด",
+                    "titleEn": "เพาเวอร์บาย คาร์ด",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/pw@2x.png",
                     "enabled": false
                 },
@@ -161,13 +161,6 @@
                     "titleTh": "ซิมเพิล วีซ่า คาร์ด",
                     "titleEn": "ซิมเพิล วีซ่า คาร์ด",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/robinson@2x.png",
-                    "enabled": false
-                },
-                {
-                    "serviceCode": "HSBC",
-                    "titleTh": "บัตรเครดิต HSBC",
-                    "titleEn": "บัตรเครดิต HSBC",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/hsbc@2x.png",
                     "enabled": false
                 },
                 {
@@ -186,23 +179,23 @@
                 },
                 {
                     "serviceCode": "GEPC",
-                    "titleTh": "สินเชื่อเงินสดจีอี เพอร์ซัลนอลโลน",
-                    "titleEn": "สินเชื่อเงินสดจีอี เพอร์ซัลนอลโลน",
+                    "titleTh": "จีอี เพอร์ซัลนอลโลน",
+                    "titleEn": "จีอี เพอร์ซัลนอลโลน",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/gepc@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "CENTRALPL",
-                    "titleTh": "สินเชื่อเซ็นทรัล เอ็กซ์คลูซีฟ แคช",
-                    "titleEn": "สินเชื่อเซ็นทรัล เอ็กซ์คลูซีฟ แคช",
+                    "titleTh": "เซ็นทรัล เอ็กซ์คลูซีฟ แคช",
+                    "titleEn": "เซ็นทรัล เอ็กซ์คลูซีฟ แคช",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/centralpl@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "TESCOPL",
-                    "titleTh": "สินเชื่อเงินสดเทสโก้ เพอร์ซัลนอลโลน",
-                    "titleEn": "สินเชื่อเงินสดเทสโก้ เพอร์ซัลนอลโลน",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/tesopl@2x.png",
+                    "titleTh": "เทสโก้ เพอร์ซัลนอลโลน",
+                    "titleEn": "เทสโก้ เพอร์ซัลนอลโลน",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/tescopl@2x.png",
                     "enabled": false
                 },
                 {

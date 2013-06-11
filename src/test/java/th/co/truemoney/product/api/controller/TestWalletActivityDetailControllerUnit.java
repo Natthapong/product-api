@@ -6,10 +6,12 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,28 +24,28 @@ public class TestWalletActivityDetailControllerUnit extends BaseTestController {
 	@Autowired
 	WalletActivityController controller;
 
-	private static final String fakeAccessTokenID = "111111";
-
+	private final String accessTokenID = "111111";
+	
+	ActivityDetailBuilder builder;
+	
+	@Before
+	public void setup() {
+		super.setup();
+		builder = ActivityDetailBuilder.defaultBillPayTestValues();
+	}
+	
 	@Test
 	public void activityDetailsBBCL() throws Exception{
+		
+		ActivityDetail detail = builder.setAction("bblc_c").setRef1("************1234").build();
+		
+		when(this.activityServiceMock.getActivityDetail(3L, accessTokenID)).thenReturn(detail);
 
-		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
-
-		ActivityDetail detail = new ActivityDetail();
-		detail.setType(TYPE.BILLPAY.name());
-		detail.setAction("bblc_c");
-		detail.setRef1("************1234");
-		detail.setAmount(new BigDecimal(23455.50));
-		detail.setServiceFee(new BigDecimal(1234.50));
-		detail.setTransactionDate(txnDate);
-		detail.setTransactionID("1234567890");
-
-		when(this.activityServiceMock.getActivityDetail(3L, fakeAccessTokenID)).thenReturn(detail);
-
-		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), fakeAccessTokenID);
+		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), accessTokenID);
 		Map<String, Object> data = resp.getData();
 
 		assertTrue(data.containsKey("section1"));
+
 		Map<String, String> section1 = (Map<String, String>) data.get("section1");
 		assertTrue(section1.containsKey("logoURL"));
 		assertTrue(section1.containsKey("titleTh"));
@@ -66,77 +68,19 @@ public class TestWalletActivityDetailControllerUnit extends BaseTestController {
 		assertEquals("หมายเลขบัตรเครดิต", cell1.get("titleTh"));
 		assertEquals("Account Number", cell1.get("titleEn"));
 		assertEquals("************1234", cell1.get("value"));
-
-		assertTrue(data.containsKey("section3"));
-		Map<String, Object> section3 = (Map<String, Object>) data.get("section3");
-		assertTrue(section3.containsKey("column1"));
-		assertTrue(section3.containsKey("column2"));
-		Map<String, Object> column31 = (Map<String, Object>) section3.get("column1");
-		Map<String, Object> column32 = (Map<String, Object>) section3.get("column2");
-		assertTrue(column31.containsKey("cell1"));
-		assertTrue(column31.containsKey("cell2"));
-		assertTrue(column32.containsKey("cell1"));
-		assertFalse(column32.containsKey("cell2"));
-		Map<String, String> cell311 = (Map<String, String>) column31.get("cell1");
-		Map<String, String> cell312 = (Map<String, String>) column31.get("cell2");
-		Map<String, String> cell321 = (Map<String, String>) column32.get("cell1");
-		assertTrue(cell311.containsKey("titleTh"));
-		assertTrue(cell311.containsKey("titleEn"));
-		assertTrue(cell311.containsKey("value"));
-		assertEquals("จำนวนเงิน", cell311.get("titleTh"));
-		assertEquals("amount", cell311.get("titleEn"));
-		assertEquals("23,455.50", cell311.get("value"));
-		assertTrue(cell312.containsKey("titleTh"));
-		assertTrue(cell312.containsKey("titleEn"));
-		assertTrue(cell312.containsKey("value"));
-		assertEquals("รวมเงินที่ชำระ", cell312.get("titleTh"));
-		assertEquals("total amount", cell312.get("titleEn"));
-		assertEquals("24,690.00", cell312.get("value"));
-		assertTrue(cell321.containsKey("titleTh"));
-		assertTrue(cell321.containsKey("titleEn"));
-		assertTrue(cell321.containsKey("value"));
-		assertEquals("ค่าธรรมเนียม", cell321.get("titleTh"));
-		assertEquals("total fee", cell321.get("titleEn"));
-		assertEquals("1,234.50", cell321.get("value"));
-
-		assertTrue(data.containsKey("section4"));
-		Map<String, Object> section4 = (Map<String, Object>) data.get("section4");
-		assertTrue(section4.containsKey("column1"));
-		assertTrue(section4.containsKey("column2"));
-		Map<String, Object> column41 = (Map<String, Object>) section4.get("column1");
-		Map<String, Object> column42 = (Map<String, Object>) section4.get("column2");
-		assertTrue(column41.containsKey("cell1"));
-		assertFalse(column41.containsKey("cell2"));
-		assertTrue(column42.containsKey("cell1"));
-		assertFalse(column42.containsKey("cell2"));
-		Map<String, String> cell411 = (Map<String, String>) column41.get("cell1");
-		Map<String, String> cell421 = (Map<String, String>) column42.get("cell1");
-		assertEquals("วันที่-เวลา", cell411.get("titleTh"));
-		assertEquals("transaction date", cell411.get("titleEn"));
-		assertEquals("10/02/13 15:35", cell411.get("value"));
-		assertEquals("เลขที่อ้างอิง", cell421.get("titleTh"));
-		assertEquals("transaction ID", cell421.get("titleEn"));
-		assertEquals("1234567890", cell421.get("value"));
+		
+		checkSection3(data);
+		checkSection4(data);
 	}
 	
 	@Test
 	public void activityDetailsTISCO() throws Exception{
+		
+		ActivityDetail detail = builder.setAction("tisco_c").setRef1("12345").setRef2("54321").build();
+		
+		when(this.activityServiceMock.getActivityDetail(3L, accessTokenID)).thenReturn(detail);
 
-		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
-
-		ActivityDetail detail = new ActivityDetail();
-		detail.setType(TYPE.BILLPAY.name());
-		detail.setAction("tisco_c");
-		detail.setRef1("12345");
-		detail.setRef2("54321");
-		detail.setAmount(new BigDecimal(23455.50));
-		detail.setServiceFee(new BigDecimal(1234.50));
-		detail.setTransactionDate(txnDate);
-		detail.setTransactionID("1234567890");
-
-		when(this.activityServiceMock.getActivityDetail(3L, fakeAccessTokenID)).thenReturn(detail);
-
-		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), fakeAccessTokenID);
+		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), accessTokenID);
 		Map<String, Object> data = resp.getData();
 
 		assertTrue(data.containsKey("section1"));
@@ -168,75 +112,18 @@ public class TestWalletActivityDetailControllerUnit extends BaseTestController {
 		assertEquals("Ref.2", cell2.get("titleEn"));
 		assertEquals("54321", cell2.get("value"));
 		
-		assertTrue(data.containsKey("section3"));
-		Map<String, Object> section3 = (Map<String, Object>) data.get("section3");
-		assertTrue(section3.containsKey("column1"));
-		assertTrue(section3.containsKey("column2"));
-		Map<String, Object> column31 = (Map<String, Object>) section3.get("column1");
-		Map<String, Object> column32 = (Map<String, Object>) section3.get("column2");
-		assertTrue(column31.containsKey("cell1"));
-		assertTrue(column31.containsKey("cell2"));
-		assertTrue(column32.containsKey("cell1"));
-		assertFalse(column32.containsKey("cell2"));
-		Map<String, String> cell311 = (Map<String, String>) column31.get("cell1");
-		Map<String, String> cell312 = (Map<String, String>) column31.get("cell2");
-		Map<String, String> cell321 = (Map<String, String>) column32.get("cell1");
-		assertTrue(cell311.containsKey("titleTh"));
-		assertTrue(cell311.containsKey("titleEn"));
-		assertTrue(cell311.containsKey("value"));
-		assertEquals("จำนวนเงิน", cell311.get("titleTh"));
-		assertEquals("amount", cell311.get("titleEn"));
-		assertEquals("23,455.50", cell311.get("value"));
-		assertTrue(cell312.containsKey("titleTh"));
-		assertTrue(cell312.containsKey("titleEn"));
-		assertTrue(cell312.containsKey("value"));
-		assertEquals("รวมเงินที่ชำระ", cell312.get("titleTh"));
-		assertEquals("total amount", cell312.get("titleEn"));
-		assertEquals("24,690.00", cell312.get("value"));
-		assertTrue(cell321.containsKey("titleTh"));
-		assertTrue(cell321.containsKey("titleEn"));
-		assertTrue(cell321.containsKey("value"));
-		assertEquals("ค่าธรรมเนียม", cell321.get("titleTh"));
-		assertEquals("total fee", cell321.get("titleEn"));
-		assertEquals("1,234.50", cell321.get("value"));
-
-		assertTrue(data.containsKey("section4"));
-		Map<String, Object> section4 = (Map<String, Object>) data.get("section4");
-		assertTrue(section4.containsKey("column1"));
-		assertTrue(section4.containsKey("column2"));
-		Map<String, Object> column41 = (Map<String, Object>) section4.get("column1");
-		Map<String, Object> column42 = (Map<String, Object>) section4.get("column2");
-		assertTrue(column41.containsKey("cell1"));
-		assertFalse(column41.containsKey("cell2"));
-		assertTrue(column42.containsKey("cell1"));
-		assertFalse(column42.containsKey("cell2"));
-		Map<String, String> cell411 = (Map<String, String>) column41.get("cell1");
-		Map<String, String> cell421 = (Map<String, String>) column42.get("cell1");
-		assertEquals("วันที่-เวลา", cell411.get("titleTh"));
-		assertEquals("transaction date", cell411.get("titleEn"));
-		assertEquals("10/02/13 15:35", cell411.get("value"));
-		assertEquals("เลขที่อ้างอิง", cell421.get("titleTh"));
-		assertEquals("transaction ID", cell421.get("titleEn"));
-		assertEquals("1234567890", cell421.get("value"));
+		checkSection3(data);
+		checkSection4(data);
 	}
 
 	@Test
 	public void activityDetailsGHB() throws Exception{
+		
+		ActivityDetail detail = builder.setAction("ghb_c").setRef1("12345").build();
+		
+		when(this.activityServiceMock.getActivityDetail(3L, accessTokenID)).thenReturn(detail);
 
-		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
-
-		ActivityDetail detail = new ActivityDetail();
-		detail.setType(TYPE.BILLPAY.name());
-		detail.setAction("ghb_c");
-		detail.setRef1("12345");
-		detail.setAmount(new BigDecimal(23455.50));
-		detail.setServiceFee(new BigDecimal(1234.50));
-		detail.setTransactionDate(txnDate);
-		detail.setTransactionID("1234567890");
-
-		when(this.activityServiceMock.getActivityDetail(3L, fakeAccessTokenID)).thenReturn(detail);
-
-		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), fakeAccessTokenID);
+		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), accessTokenID);
 		Map<String, Object> data = resp.getData();
 
 		assertTrue(data.containsKey("section1"));
@@ -263,8 +150,13 @@ public class TestWalletActivityDetailControllerUnit extends BaseTestController {
 		assertEquals("Account Number", cell1.get("titleEn"));
 		assertEquals("12345", cell1.get("value"));
 
+		checkSection3(data);
+		checkSection4(data);
+	}
+	
+	private void checkSection3(Map<String, Object> data) {
 		assertTrue(data.containsKey("section3"));
-		Map<String, Object> section3 = (Map<String, Object>) data.get("section3");
+		Map<String, Object> section3 = (Map<String, Object>)data.get("section3");
 		assertTrue(section3.containsKey("column1"));
 		assertTrue(section3.containsKey("column2"));
 		Map<String, Object> column31 = (Map<String, Object>) section3.get("column1");
@@ -294,8 +186,10 @@ public class TestWalletActivityDetailControllerUnit extends BaseTestController {
 		assertEquals("ค่าธรรมเนียม", cell321.get("titleTh"));
 		assertEquals("total fee", cell321.get("titleEn"));
 		assertEquals("1,234.50", cell321.get("value"));
+	}
+	
 
-		assertTrue(data.containsKey("section4"));
+	private void checkSection4(Map<String, Object> data) {
 		Map<String, Object> section4 = (Map<String, Object>) data.get("section4");
 		assertTrue(section4.containsKey("column1"));
 		assertTrue(section4.containsKey("column2"));
@@ -317,3 +211,78 @@ public class TestWalletActivityDetailControllerUnit extends BaseTestController {
 
 }
 
+class ActivityDetailBuilder {
+	
+	private static final SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+	
+	private ActivityDetail activityDetail;
+	
+	public ActivityDetailBuilder() {
+		activityDetail = new ActivityDetail();
+	}
+	
+	public static ActivityDetailBuilder defaultValues() {
+		return new ActivityDetailBuilder();
+	}
+	
+	public static ActivityDetailBuilder defaultBillPayTestValues() {
+		ActivityDetailBuilder builder = defaultValues();
+		builder.setType(TYPE.BILLPAY.name());
+		builder.setAction("tmvh_c");
+		builder.setRef1("0897116568");
+		builder.setAmount(new BigDecimal(23455.50));
+		builder.setServiceFee(new BigDecimal(1234.50));
+		builder.setTransactionID("1234567890");
+		try {
+			builder.setTransactionDate(df.parse("2013/02/10 15:35"));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return builder;
+	}
+	
+	public ActivityDetailBuilder setType(String type) {
+		activityDetail.setType(type);
+		return this;
+	}
+	
+	public ActivityDetailBuilder setAction(String action) {
+		activityDetail.setAction(action);
+		return this;
+	}
+	
+	public ActivityDetailBuilder setRef1(String ref1) {
+		activityDetail.setRef1(ref1);
+		return this;
+	}
+	
+	public ActivityDetailBuilder setRef2(String ref2) {
+		activityDetail.setRef2(ref2);
+		return this;
+	}
+	
+	public ActivityDetailBuilder setAmount(BigDecimal amount) {
+		activityDetail.setAmount(amount);
+		return this;
+	}
+	
+	public ActivityDetailBuilder setServiceFee(BigDecimal serviceFee) {
+		activityDetail.setServiceFee(serviceFee);
+		return this;
+	}
+	
+	public ActivityDetailBuilder setTransactionDate(Date transactionDate) {
+		activityDetail.setTransactionDate(transactionDate);
+		return this;
+	}
+	
+	public ActivityDetailBuilder setTransactionID(String transactionID) {
+		activityDetail.setTransactionID(transactionID);
+		return this;
+	}
+	
+	public ActivityDetail build() {
+		return activityDetail;
+	}
+
+}

@@ -101,7 +101,7 @@ public class TestBillPaymentController extends BaseTestController {
 
                 this.verifyFailed(this.doGET(getBarcodeDetailURL))
                 .andExpect(jsonPath("$.messageTh").value(containsString("การไฟฟ้านครหลวง")))
-                .andExpect(jsonPath("$.messageTh").value(containsString("20/05/13")))
+                .andExpect(jsonPath("$.messageTh").value(containsString("20/05/2013")))
                 .andExpect(jsonPath("$.messageTh").value(containsString("1,234.55")));
         }
 
@@ -124,7 +124,7 @@ public class TestBillPaymentController extends BaseTestController {
 
                 this.verifyFailed(this.doGET(getBarcodeDetailURL))
                 .andExpect(jsonPath("$.messageTh").value(containsString("การประปานครหลวง")))
-                .andExpect(jsonPath("$.messageTh").value(containsString("20/05/13")))
+                .andExpect(jsonPath("$.messageTh").value(containsString("20/05/2013")))
                 .andExpect(jsonPath("$.messageTh").value(containsString("1,234.55")));
         }
 

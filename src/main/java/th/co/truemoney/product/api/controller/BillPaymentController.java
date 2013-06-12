@@ -81,7 +81,7 @@ public class BillPaymentController extends BaseController {
                 e.setErrorCode("80000");
                 e.setErrorNamespace("TMN-PRODUCT");
                 Date dueDate = new Date((Long)e.getData().get("dueDate"));
-                e.getData().put("dueDate",Utils.formatDate(dueDate));
+                e.getData().put("dueDate",Utils.formatDate4Y(dueDate));
                 e.getData().put("targetTitle",targetTitle);
                 throw e;
             }else{
@@ -172,7 +172,7 @@ public class BillPaymentController extends BaseController {
                 e.setErrorCode("80000");
                 e.setErrorNamespace("TMN-PRODUCT");
                 Date dueDate = new Date((Long)e.getData().get("dueDate"));
-                e.getData().put("dueDate",Utils.formatDate(dueDate));
+                e.getData().put("dueDate",Utils.formatDate4Y(dueDate));
                 e.getData().put("targetTitle",targetTitle);
                 throw e;
             }

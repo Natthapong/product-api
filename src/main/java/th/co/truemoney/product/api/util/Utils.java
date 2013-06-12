@@ -34,6 +34,13 @@ public final class Utils {
         }
         return totalFee;
     }
+    
+    public static String formatDate4Y(Date date) {
+    	if (date == null) {
+    		return "";
+    	}
+        return new SimpleDateFormat("dd/MM/yyyy").format(date);
+    }
 
     public static String formatDate(Date date) {
     	if (date == null) {

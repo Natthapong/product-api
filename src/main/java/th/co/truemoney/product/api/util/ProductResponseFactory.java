@@ -102,7 +102,8 @@ public class ProductResponseFactory {
                                                             "core.7",
                                                             "core.27",
                                                             "core.71",
-                                                            "core.1012"};
+                                                            "core.1012",
+                                                            "PCS.PCS-30008"};
 
     private boolean isInvalidAmountException(ServiceInventoryException e) {
         return LESS_THAN_MINIMUM_AMOUNT.equals(e.getErrorNamespace() + "." + e.getErrorCode())

@@ -55,7 +55,7 @@ public class WalletActivity {
 		actionList.put("kcc", "บัตรเครดิตกรุงศรี");
 		actionList.put("pb", "บัตรเพาเวอร์บาย");
 		actionList.put("mistine", "มิสทีน");
-		actionList.put("bwc", "MPower");
+		actionList.put("bwc", "เอ็ม พาวเวอร์");
 		actionList.put("uob", "บัตรเครดิตธนาคารยูโอบี");
 		actionList.put("fc", "กรุงศรีเฟิร์สชอยส์");
 		

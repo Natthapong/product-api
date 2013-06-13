@@ -341,7 +341,7 @@ public class TestWalletActivityDetailControllerUnit extends BaseTestController {
 	public void activityDetailsBWC() throws Exception {
 		String action = "bwc";
 		String titleEn = action;
-		String titleTh = "MPower";
+		String titleTh = "เอ็ม พาวเวอร์";
 		String ref1Value = "12345";
 		String ref1TitleEn = "Customer Number";
 		String ref1TitleTh = "รหัสสาวจำหน่าย";

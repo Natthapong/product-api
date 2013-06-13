@@ -273,7 +273,7 @@ public class TestWalletActivityDetailControllerUnit extends BaseTestController {
 	public void activityDetailsKCC() throws Exception {
 		String action = "kcc";
 		String titleEn = action;
-		String titleTh = "บัตรเครดิตกรุงศรีอยุธยา";
+		String titleTh = "บัตรเครดิตกรุงศรี";
 		String ref1Value = "************1234";
 		String ref1TitleEn = "Account Number";
 		String ref1TitleTh = "หมายเลขบัตรเครดิต";

@@ -63,7 +63,7 @@ public class TestWalletActivityControllerUnit {
 				{ new Activity(4L, "billpay", df.parse("10-03-2013"), "ghb_c", "222222222"), new ActivityViewItem(String.valueOf(4L), "จ่ายบิล", "10/03/13", "ธนาคารอาคารสงเคราะห์", "222222222") },
 				{ new Activity(4L, "billpay", df.parse("10-03-2013"), "ktc_c", "222222222"), new ActivityViewItem(String.valueOf(4L), "จ่ายบิล", "10/03/13", "บัตรเครดิต KTC", "222222222") },
 				{ new Activity(4L, "billpay", df.parse("10-03-2013"), "aeon_c", "222222222"), new ActivityViewItem(String.valueOf(4L), "จ่ายบิล", "10/03/13", "บัตรอิออน", "222222222") },
-				{ new Activity(4L, "billpay", df.parse("10-03-2013"), "kcc_c", "222222222"), new ActivityViewItem(String.valueOf(4L), "จ่ายบิล", "10/03/13", "บัตรเครดิตกรุงศรีอยุธยา", "222222222") },
+				{ new Activity(4L, "billpay", df.parse("10-03-2013"), "kcc_c", "222222222"), new ActivityViewItem(String.valueOf(4L), "จ่ายบิล", "10/03/13", "บัตรเครดิตกรุงศรี", "222222222") },
 				{ new Activity(4L, "billpay", df.parse("10-03-2013"), "pb_c", "222222222"), new ActivityViewItem(String.valueOf(4L), "จ่ายบิล", "10/03/13", "บัตรเพาเวอร์บาย", "222222222") },
 				{ new Activity(4L, "billpay", df.parse("10-03-2013"), "mistine_c", "222222222"), new ActivityViewItem(String.valueOf(4L), "จ่ายบิล", "10/03/13", "มิสทีน", "222222222") },
 				{ new Activity(4L, "billpay", df.parse("10-03-2013"), "bwc_c", "222222222"), new ActivityViewItem(String.valueOf(4L), "จ่ายบิล", "10/03/13", "MPower", "222222222") },

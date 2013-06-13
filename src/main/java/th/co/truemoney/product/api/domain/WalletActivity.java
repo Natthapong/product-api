@@ -52,7 +52,7 @@ public class WalletActivity {
 		actionList.put("ghb", "ธนาคารอาคารสงเคราะห์");
 		actionList.put("ktc", "บัตรเครดิต KTC");
 		actionList.put("aeon", "บัตรอิออน");
-		actionList.put("kcc", "บัตรเครดิตกรุงศรีอยุธยา");
+		actionList.put("kcc", "บัตรเครดิตกรุงศรี");
 		actionList.put("pb", "บัตรเพาเวอร์บาย");
 		actionList.put("mistine", "มิสทีน");
 		actionList.put("bwc", "MPower");

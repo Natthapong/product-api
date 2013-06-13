@@ -133,7 +133,7 @@ public class TestBillOnlineUtil {
 		assertEquals("เลขที่ใบแจ้งค่าบริการ",resp.get("ref2TitleTh"));
 		assertEquals("none",resp.get("ref1Type"));
 		assertEquals("none",resp.get("ref2Type"));
-		assertEquals(false, resp.get("isInquiryOnline"));
+		assertEquals(Boolean.FALSE, resp.get("isInquiryOnline"));
 		assertTrue(resp.containsKey("minAmount"));
 		assertTrue(resp.containsKey("maxAmount"));
 	}

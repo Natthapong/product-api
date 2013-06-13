@@ -36,10 +36,9 @@ public class TestWalletActivityControllerUnit {
 	
 	ProductResponseFactory responseFactory;
 	
-	static SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-	
 	@Parameters
 	public static Iterable<Object[]> data() throws ParseException {
+		SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 		return Arrays.asList(new Object[][] {
 				{ new Activity(1L, "topup_mobile", df.parse("10-03-2013"), "tmhtopup_c", "0812345678"), new ActivityViewItem(String.valueOf(1L), "เติมเงินมือถือ", "10/03/13", "ทรูมูฟ เอช", "081-234-5678") },
 				{ new Activity(1L, "topup_mobile", df.parse("10-03-2013"), "tmvtopup_c", "0812345678"), new ActivityViewItem(String.valueOf(1L), "เติมเงินมือถือ", "10/03/13",  "ทรูมูฟ", "081-234-5678") },

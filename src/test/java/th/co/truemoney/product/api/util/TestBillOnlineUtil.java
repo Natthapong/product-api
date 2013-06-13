@@ -1,6 +1,9 @@
 package th.co.truemoney.product.api.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Map;
 
 import org.junit.Before;
@@ -34,7 +37,7 @@ public class TestBillOnlineUtil {
 		assertEquals("",resp.get("ref2TitleTh"));
 		assertEquals("mobile",resp.get("ref1Type"));
 		assertEquals("none",resp.get("ref2Type"));
-		assertEquals(true,resp.get("isInquiryOnline"));
+		assertEquals(Boolean.TRUE,resp.get("isInquiryOnline"));
 		assertTrue(resp.containsKey("minAmount"));
 		assertTrue(resp.containsKey("maxAmount"));
 	}
@@ -47,8 +50,7 @@ public class TestBillOnlineUtil {
 		assertEquals("",resp.get("ref2TitleEn"));
 		assertEquals("",resp.get("ref2TitleTh"));
 		assertEquals("mobile",resp.get("ref1Type"));
-		//assertEquals("none",resp.get("ref2Type"));
-		assertEquals(true,resp.get("isInquiryOnline"));
+		assertEquals(Boolean.TRUE,resp.get("isInquiryOnline"));
 		assertTrue(resp.containsKey("minAmount"));
 		assertTrue(resp.containsKey("maxAmount"));
 	}
@@ -62,7 +64,7 @@ public class TestBillOnlineUtil {
 		assertEquals("",resp.get("ref2TitleTh"));
 		assertEquals("none",resp.get("ref1Type"));
 		assertEquals("none",resp.get("ref2Type"));
-		assertEquals(true,resp.get("isInquiryOnline"));
+		assertEquals(Boolean.TRUE,resp.get("isInquiryOnline"));
 		assertTrue(resp.containsKey("minAmount"));
 		assertTrue(resp.containsKey("maxAmount"));
 	}
@@ -90,7 +92,7 @@ public class TestBillOnlineUtil {
 		assertEquals("",resp.get("ref2TitleTh"));
 		assertEquals("none",resp.get("ref1Type"));
 		assertEquals("none",resp.get("ref2Type"));
-		assertEquals(true,resp.get("isInquiryOnline"));
+		assertEquals(Boolean.TRUE,resp.get("isInquiryOnline"));
 		assertTrue(resp.containsKey("minAmount"));
 		assertTrue(resp.containsKey("maxAmount"));
 	}
@@ -103,7 +105,7 @@ public class TestBillOnlineUtil {
 		assertEquals("",resp.get("ref2TitleEn"));
 		assertEquals("",resp.get("ref2TitleTh"));
 		assertEquals("none",resp.get("ref1Type"));
-		assertEquals(true,resp.get("isInquiryOnline"));
+		assertEquals(Boolean.TRUE,resp.get("isInquiryOnline"));
 		assertTrue(resp.containsKey("minAmount"));
 		assertTrue(resp.containsKey("maxAmount"));
 	}
@@ -117,7 +119,7 @@ public class TestBillOnlineUtil {
 		assertEquals("",resp.get("ref2TitleTh"));
 		assertEquals("none",resp.get("ref1Type"));
 		assertEquals("none",resp.get("ref2Type"));
-		assertEquals(false,resp.get("isInquiryOnline"));
+		assertEquals(Boolean.FALSE,resp.get("isInquiryOnline"));
 		assertTrue(resp.containsKey("minAmount"));
 		assertTrue(resp.containsKey("maxAmount"));
 	}
@@ -131,7 +133,7 @@ public class TestBillOnlineUtil {
 		assertEquals("เลขที่ใบแจ้งค่าบริการ",resp.get("ref2TitleTh"));
 		assertEquals("none",resp.get("ref1Type"));
 		assertEquals("none",resp.get("ref2Type"));
-		assertEquals(false,resp.get("isInquiryOnline"));
+		assertEquals(false, resp.get("isInquiryOnline"));
 		assertTrue(resp.containsKey("minAmount"));
 		assertTrue(resp.containsKey("maxAmount"));
 	}
@@ -145,7 +147,7 @@ public class TestBillOnlineUtil {
 		assertEquals("เลขที่ใบแจ้งค่าบริการ",resp.get("ref2TitleTh"));
 		assertEquals("none",resp.get("ref1Type"));
 		assertEquals("none",resp.get("ref2Type"));
-		assertEquals(false,resp.get("isInquiryOnline"));
+		assertEquals(Boolean.FALSE,resp.get("isInquiryOnline"));
 		assertTrue(resp.containsKey("minAmount"));
 		assertTrue(resp.containsKey("maxAmount"));
 	}
@@ -159,7 +161,7 @@ public class TestBillOnlineUtil {
 		assertEquals("เลขที่ใบแจ้งหนี้",resp.get("ref2TitleTh"));
 		assertEquals("none",resp.get("ref1Type"));
 		assertEquals("none",resp.get("ref2Type"));
-		assertEquals(true,resp.get("isInquiryOnline"));
+		assertEquals(Boolean.TRUE,resp.get("isInquiryOnline"));
 		assertTrue(resp.containsKey("minAmount"));
 		assertTrue(resp.containsKey("maxAmount"));
 	}
@@ -173,7 +175,7 @@ public class TestBillOnlineUtil {
 		assertEquals("เลขที่ใบแจ้งหนี้",resp.get("ref2TitleTh"));
 		assertEquals("none",resp.get("ref1Type"));
 		assertEquals("none",resp.get("ref2Type"));
-		assertEquals(false,resp.get("isInquiryOnline"));
+		assertEquals(Boolean.FALSE,resp.get("isInquiryOnline"));
 		assertTrue(resp.containsKey("minAmount"));
 		assertTrue(resp.containsKey("maxAmount"));
 	}

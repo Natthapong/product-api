@@ -29,8 +29,8 @@ public class TestProductResponseFactory {
 	@Test
 	public void displayPaymentAmountRangeErrorMessage() {
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("minAmount", new BigDecimal(1145.52));
-		data.put("maxAmount", new BigDecimal(10000.00));
+		data.put("minAmount", BigDecimal.valueOf(1145.52));
+		data.put("maxAmount", BigDecimal.valueOf(10000.00));
 		
 		ServiceInventoryException lessThanMinimumAmountException = new ServiceInventoryException();
 		lessThanMinimumAmountException.setErrorNamespace("TMN-SERVICE-INVENTORY");
@@ -46,7 +46,7 @@ public class TestProductResponseFactory {
 	public void errorMessageForBillMEAOverdue(){
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("target", "mea");
-    	data.put("amount", new BigDecimal(1234.55));
+    	data.put("amount", BigDecimal.valueOf(1234.55));
     	data.put("dueDate", "10/05/13");
     	
     	ServiceInventoryException overdueBillPayException = new ServiceInventoryException();

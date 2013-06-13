@@ -89,7 +89,7 @@ public class TestBillPaymentController extends BaseTestController {
             Date dateStr = formatter.parse(strDate);
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("target", "mea");
-            data.put("amount", new BigDecimal(1234.55));
+            data.put("amount", BigDecimal.valueOf(1234.55));
             data.put("dueDate", dateStr.getTime());
 
                 when(
@@ -112,7 +112,7 @@ public class TestBillPaymentController extends BaseTestController {
             Date dateStr = formatter.parse(strDate);
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("target", "water");
-            data.put("amount", new BigDecimal(1234.55));
+            data.put("amount", BigDecimal.valueOf(1234.55));
             data.put("dueDate", dateStr.getTime());
 
                 when(

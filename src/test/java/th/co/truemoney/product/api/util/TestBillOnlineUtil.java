@@ -58,8 +58,8 @@ public class TestBillOnlineUtil {
 	@Test
 	public void getTRBillInfoPropertySuccess(){
 		Map<String, String> resp = billReferenceUtil.getBillInfoResponse("tr");
-		assertEquals("เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก",resp.get("ref1TitleTh"));
-		assertEquals("เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก",resp.get("ref1TitleEn"));
+		assertEquals("เบอร์โทรศัพท์บ้าน",resp.get("ref1TitleTh"));
+		assertEquals("เบอร์โทรศัพท์บ้าน",resp.get("ref1TitleEn"));
 		assertEquals("",resp.get("ref2TitleEn"));
 		assertEquals("",resp.get("ref2TitleTh"));
 		assertEquals("none",resp.get("ref1Type"));

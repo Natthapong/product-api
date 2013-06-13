@@ -56,7 +56,7 @@ public class WalletActivity {
 		actionList.put("pb", "บัตรเพาเวอร์บาย");
 		actionList.put("mistine", "มิสทีน");
 		actionList.put("bwc", "MPower");
-		actionList.put("uob", "ธนาคาร UOB");
+		actionList.put("uob", "บัตรเครดิตธนาคารยูโอบี");
 		actionList.put("fc", "กรุงศรีเฟิร์สชอยส์");
 		
 		serviceCodeList.put("tmvh", 10);

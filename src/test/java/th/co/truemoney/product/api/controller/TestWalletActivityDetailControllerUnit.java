@@ -307,7 +307,7 @@ public class TestWalletActivityDetailControllerUnit extends BaseTestController {
 	public void activityDetailsUOB() throws Exception {
 		String action = "uob";
 		String titleEn = action;
-		String titleTh = "ธนาคาร UOB";
+		String titleTh = "บัตรเครดิตธนาคารยูโอบี";
 		String ref1Value = "************1234";
 		String ref1TitleEn = "Card Number";
 		String ref1TitleTh = "หมายเลขบัตร";

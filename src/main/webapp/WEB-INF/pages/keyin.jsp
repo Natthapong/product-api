@@ -9,17 +9,10 @@
             "categoryTitleEn": "True Bill",
             "items": [
                 {
-                    "serviceCode": "tmvh",
+                    "serviceCode": "tmob",
                     "titleTh": "ทรูมูฟ เอช",
                     "titleEn": "TrueMove H",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/tmvh@2x.png",
-                    "enabled": true
-                },
-                {
-                    "serviceCode": "trmv",
-                    "titleTh": "ทรูมูฟ",
-                    "titleEn": "TrueMove",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/trmv@2x.png",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/tmob@2x.png",
                     "enabled": true
                 },
                 {

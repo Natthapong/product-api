@@ -130,5 +130,17 @@
         "isInquiryOnline" : false,
         "minAmount" : 0.00,
         "maxAmount" : 30000.00
-    }
+    },
+    "tmob":
+    {
+    	"ref1Type" : "mobile",
+    	"ref2Type" : "none",
+        "ref1TitleEn" : "เบอร์โทรศัพท์ทรูมูฟ/ทรูมูฟเอช",
+        "ref1TitleTh" : "เบอร์โทรศัพท์ทรูมูฟ/ทรูมูฟเอช",
+        "ref2TitleEn" : "",
+        "ref2TitleTh" : "",
+        "isInquiryOnline" : true,
+        "minAmount" : 50.00,
+        "maxAmount" : 30000.00
+    },
 }

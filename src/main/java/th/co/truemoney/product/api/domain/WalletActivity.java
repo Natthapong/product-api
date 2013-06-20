@@ -58,7 +58,37 @@ public class WalletActivity {
         actionList.put("bwc", "เอ็ม พาวเวอร์");
         actionList.put("uob", "บัตรเครดิตธนาคารยูโอบี");
         actionList.put("fc", "กรุงศรีเฟิร์สชอยส์");
-
+        actionList.put("tmob", "ทรูมูฟ/ทรูมูฟ เอช");
+        actionList.put("rft", "ทรูมูฟ เอช");
+        actionList.put("dlt", "ภาษีรถยนต์");
+        actionList.put("tli", "ไทยประกันชีวิต");
+        actionList.put("hiway", "ไฮเวย์");
+        actionList.put("mthai", "เมืองไทยประกันชีวิต");
+        actionList.put("mti", "เมืองไทยประกันภัย");
+        actionList.put("ing", "ไอเอ็นจี ประกันชีวิต");
+        actionList.put("bkip", "กรุงเทพประกันภัย");
+        actionList.put("tqmlife", "ทีคิวเอ็ม ประกันชีวิต");
+        actionList.put("cimbpe", "เพอร์ซันนัลแคช ซีไอเอ็มบี ไทย");
+        actionList.put("cimbex", "เอ็กซ์ตร้าแคช ซีไอเอ็มบี ไทย");
+        actionList.put("scal", "ซัมมิท แคปปิตอล ลีสซิ่ง");
+        actionList.put("ask", "เอเซียเสริมกิจลีสซิ่ง");
+        actionList.put("cal", "เซ็นเตอร์ ออโต้ลิสซิ่ง");
+        actionList.put("hp", "บัตรเครดิตโฮมโปร");
+        actionList.put("dream", "กรุงศรี ดรีมโลน");
+        actionList.put("robinson", "ซิมเพิล วีซ่า คาร์ด");
+        actionList.put("central", "เซ็นทรัล เครดิตคาร์ด");
+        actionList.put("centralpl", "เซ็นทรัล เอ็กซ์คลูซีฟ แคช");
+        actionList.put("tesco", "บัตรเครดิตเทสโก้ โลตัส");
+        actionList.put("tescopl", "สินเชื่อเทสโก้ เพอร์ซัลนอลโลน");
+        actionList.put("qc", "สินเชื่อเงินสดควิกแคช");
+        actionList.put("gepc", "สินเชื่อเงินสดจีอี เพอร์ซัลนอลโลน");
+        actionList.put("glc", "สินเชื่อบริษัท กรุ๊ปลีส");
+        actionList.put("sg", "เอส 11 กรุ๊ป");
+        actionList.put("mitt", "มิตรแท้ประกันภัย");
+        actionList.put("cigna", "ซิกน่า ประกันภัย");
+        actionList.put("tqm", "ทีคิวเอ็ม ประกันภัย");
+        actionList.put("bla", "กรุงเทพประกันชีวิต");
+        
         serviceCodeList.put("tmvh", 10);
         serviceCodeList.put("trmv", 9);
         serviceCodeList.put("tr", 8);

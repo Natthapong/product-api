@@ -10,56 +10,56 @@
             "items": [
                 {
                     "serviceCode": "tmvh",
-                    "titleTh": "TrueMove H",
+                    "titleTh": "ทรูมูฟ เอช",
                     "titleEn": "TrueMove H",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_bill/tmvh@2x.png",
                     "enabled": true
                 },
                 {
                     "serviceCode": "trmv",
-                    "titleTh": "TrueMove",
+                    "titleTh": "ทรูมูฟ",
                     "titleEn": "TrueMove",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_bill/trmv@2x.png",
                     "enabled": true
                 },
                 {
                     "serviceCode": "tr",
-                    "titleTh": "True Fixed Line",
+                    "titleTh": "โทรศัพท์บ้านทรู",
                     "titleEn": "True Fixed Line",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_bill/tr@2x.png",
                     "enabled": true
                 },
                 {
                     "serviceCode": "ti",
-                    "titleTh": "True Online",
+                    "titleTh": "ทรูออนไลน์",
                     "titleEn": "True Online",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_bill/ti@2x.png",
                     "enabled": true
                 },
                 {
                     "serviceCode": "tlp",
-                    "titleTh": "TrueLife Plus",
+                    "titleTh": "ทรูไลฟ์ พลัส",
                     "titleEn": "TrueLife Plus",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_bill/tlp@2x.png",
                     "enabled": true
                 },
                 {
                     "serviceCode": "dstv",
-                    "titleTh": "TrueVisions - Satellite",
+                    "titleTh": "ทรูวิชั่นส์ ระบบจานดาวเทียม",
                     "titleEn": "TrueVisions - Satellite",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_bill/dstv@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "catv",
-                    "titleTh": "TrueVisions - Cable",
+                    "titleTh": "ทรูวิชั่นส์ ระบบเคเบิ้ล",
                     "titleEn": "TrueVisions - Cable",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_bill/catv@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "tic",
-                    "titleTh": "True 006",
+                    "titleTh": "ทรู 006",
                     "titleEn": "True 006",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_bill/tic@2x.png",
                     "enabled": true
@@ -71,7 +71,29 @@
             "categoryLogo": "${apiHost}/m/tmn_webview/images/logo_bill_type/utility@2x.png",
             "categoryTitleTh": "สาธารณูปโภค",
             "categoryTitleEn": "Utility",
-            "items": []
+            "items": [
+				{
+					"serviceCode": "MWA",
+					"titleTh": "การประปานครหลวง",
+					"titleEn": "การประปานครหลวง",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/mwa@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "MEA",
+					"titleTh": "การไฟฟ้านครหลวง",
+					"titleEn": "การไฟฟ้านครหลวง",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/mea@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "DLT",
+					"titleTh": "ภาษีรถยนต์ประจำปี",
+					"titleEn": "ภาษีรถยนต์ประจำปี",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/dlt@2x.png",
+					"enabled": false
+				}
+            ]
         },
         {
             "categoryID": 3,
@@ -94,10 +116,17 @@
                     "enabled": false
                 },
                 {
-                    "serviceCode": "CIMB",
-                    "titleTh": "ธนาคารซีไอเอ็มบี ไทย",
-                    "titleEn": "ธนาคารซีไอเอ็มบี ไทย",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/cimb@2x.png",
+                    "serviceCode": "CIMBPE",
+                    "titleTh": "เพอร์ซันนัลแคช ซีไอเอ็มบี ไทย",
+                    "titleEn": "เพอร์ซันนัลแคช ซีไอเอ็มบี ไทย",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/cimbpe@2x.png",
+                    "enabled": false
+                },
+                {
+                    "serviceCode": "CIMBEX",
+                    "titleTh": "เอ็กซ์ตร้าแคช ซีไอเอ็มบี ไทย",
+                    "titleEn": "เอ็กซ์ตร้าแคช ซีไอเอ็มบี ไทย",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/cimbex@2x.png",
                     "enabled": false
                 },
                 {
@@ -130,8 +159,8 @@
                 },
                 {
                     "serviceCode": "KCC",
-                    "titleTh": "บัตรเครดิตกรุงศรี จีอี",
-                    "titleEn": "บัตรเครดิตกรุงศรี จีอี",
+                    "titleTh": "บัตรเครดิตกรุงศรี",
+                    "titleEn": "บัตรเครดิตกรุงศรี",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/kcc@2x.png",
                     "enabled": false
                 },
@@ -179,8 +208,8 @@
                 },
                 {
                     "serviceCode": "GEPC",
-                    "titleTh": "จีอี เพอร์ซัลนอลโลน",
-                    "titleEn": "จีอี เพอร์ซัลนอลโลน",
+                    "titleTh": "กรุงศรี เพอร์ซัลนอลโลน",
+                    "titleEn": "กรุงศรี เพอร์ซัลนอลโลน",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/gepc@2x.png",
                     "enabled": false
                 },
@@ -226,21 +255,178 @@
             "categoryLogo": "${apiHost}/m/tmn_webview/images/logo_bill_type/leasing@2x.png",
             "categoryTitleTh": "ลีสซิ่ง",
             "categoryTitleEn": "Leasing",
-            "items": []
+            "items": [
+				{
+					"serviceCode": "GLC",
+					"titleTh": "สินเชื่อบริษัท กรุ๊ปลีส",
+					"titleEn": "สินเชื่อบริษัท กรุ๊ปลีส",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/glc@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "SCAL",
+					"titleTh": "ซัมมิท แคปปิตอล ลีสซิ่ง",
+					"titleEn": "ซัมมิท แคปปิตอล ลีสซิ่ง",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/scal@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "ASK",
+					"titleTh": "เอเซียเสริมกิจลีสซิ่ง",
+					"titleEn": "เอเซียเสริมกิจลีสซิ่ง",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/ask@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "CAL",
+					"titleTh": "เซ็นเตอร์ ออโต้ลิสซิ่ง",
+					"titleEn": "เซ็นเตอร์ ออโต้ลิสซิ่ง",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/cal@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "SG",
+					"titleTh": "เอส 11 กรุ๊ป",
+					"titleEn": "เอส 11 กรุ๊ป",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/sg@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "HIWAY",
+					"titleTh": "ไฮเวย์",
+					"titleEn": "ไฮเวย์",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/hiway@2x.png",
+					"enabled": false
+				}
+            ]
         },
         {
             "categoryID": 5,
             "categoryLogo": "${apiHost}/m/tmn_webview/images/logo_bill_type/insurance@2x.png",
             "categoryTitleTh": "ประกันภัย",
             "categoryTitleEn": "Insurance",
-            "items": []
+            "items": [
+				{
+					"serviceCode": "AZCP",
+					"titleTh": "อลิอันซ์ ซี.พี.",
+					"titleEn": "Allianz C.P.",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/azcp@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "AXA",
+					"titleTh": "แอกซ่าประกันภัย",
+					"titleEn": "AXA Insurance",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/axa@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "AACP",
+					"titleTh": "อลิอันซ์ อยุธยา",
+					"titleEn": "Allianz Ayudhya",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/aacp@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "BKIP",
+					"titleTh": "กรุงเทพประกันภัย",
+					"titleEn": "Bangkok Insurance",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/bkip@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "BLA",
+					"titleTh": "กรุงเทพประกันชีวิต",
+					"titleEn": "Bangkok Life Assurance",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/bla@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "CIGNA",
+					"titleTh": "ซิกน่า ประกันภัย",
+					"titleEn": "Cigna Insurance",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/cigna@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "ING",
+					"titleTh": "ไอเอ็นจี ประกันชีวิต",
+					"titleEn": "ING Life Assurance",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/ing@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "MITT",
+					"titleTh": "มิตรแท้ประกันภัย",
+					"titleEn": "Mittare Insurance",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/mitt@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "MTHAI",
+					"titleTh": "เมืองไทยประกันชีวิต",
+					"titleEn": "Muang Thai Life Assurance",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/mthai@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "MTI",
+					"titleTh": "เมืองไทยประกันภัย",
+					"titleEn": "Muang Thai Life Insurance",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/mti@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "TLI",
+					"titleTh": "ไทยประกันชีวิต",
+					"titleEn": "Thai Life Insurance",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/tli@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "TQM",
+					"titleTh": "ทีคิวเอ็ม ประกันภัย",
+					"titleEn": "TQM Insurance",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/tqm@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "TQMLIFE",
+					"titleTh": "ทีคิวเอ็ม ประกันชีวิต",
+					"titleEn": "TQM Life Insurance",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/tqmlife@2x.png",
+					"enabled": false
+				}
+            ]
         },
         {
             "categoryID": 6,
             "categoryLogo": "${apiHost}/m/tmn_webview/images/logo_bill_type/others@2x.png",
             "categoryTitleTh": "อื่นๆ",
             "categoryTitleEn": "Others",
-            "items": []
+            "items": [
+				{
+					"serviceCode": "BWC",
+					"titleTh": "เอ็ม พาวเวอร์",
+					"titleEn": "เอ็ม พาวเวอร์",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/bwc@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "MISTINE",
+					"titleTh": "มิสทีน",
+					"titleEn": "มิสทีน",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/mistine@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "PRS",
+					"titleTh": "พฤกษา เรียลเอสเตท",
+					"titleEn": "พฤกษา เรียลเอสเตท",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/prs@2x.png",
+					"enabled": false
+				}
+            ]
         }
     ]
 }

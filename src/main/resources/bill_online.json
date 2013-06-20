@@ -135,8 +135,8 @@
     {
     	"ref1Type" : "mobile",
     	"ref2Type" : "none",
-        "ref1TitleEn" : "เบอร์โทรศัพท์ทรูมูฟ/ทรูมูฟเอช",
-        "ref1TitleTh" : "เบอร์โทรศัพท์ทรูมูฟ/ทรูมูฟเอช",
+        "ref1TitleEn" : "เบอร์โทรศัพท์ทรูมูฟ/ทรูมูฟ เอช",
+        "ref1TitleTh" : "เบอร์โทรศัพท์ทรูมูฟ/ทรูมูฟ เอช",
         "ref2TitleEn" : "",
         "ref2TitleTh" : "",
         "isInquiryOnline" : true,

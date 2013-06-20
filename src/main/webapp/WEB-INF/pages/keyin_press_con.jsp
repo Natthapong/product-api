@@ -73,17 +73,31 @@
             "categoryTitleEn": "Utility",
             "items": [
 				{
-					"serviceCode": "MWA",
-					"titleTh": "การประปานครหลวง",
-					"titleEn": "การประปานครหลวง",
-					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/mwa@2x.png",
-					"enabled": false
-				},
-				{
 					"serviceCode": "MEA",
 					"titleTh": "การไฟฟ้านครหลวง",
 					"titleEn": "การไฟฟ้านครหลวง",
 					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/mea@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "MWA",
+					"titleTh": "การประปานครหลวง",
+					"titleEn": "การประปานครหลวง",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/water@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "PEA",
+					"titleTh": "การไฟฟ้าส่วนภูมิภาค",
+					"titleEn": "การไฟฟ้าส่วนภูมิภาค",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/pea@2x.png",
+					"enabled": false
+				},
+				{
+					"serviceCode": "PWA",
+					"titleTh": "การประปาส่วนภูมิภาค",
+					"titleEn": "การประปาส่วนภูมิภาค",
+					"logo": "${apiHost}/m/tmn_webview/images/logo_bill/pwa@2x.png",
 					"enabled": false
 				},
 				{
@@ -105,147 +119,147 @@
                     "serviceCode": "BBL",
                     "titleTh": "บัตรเครดิตธนาคารกรุงเทพ",
                     "titleEn": "บัตรเครดิตธนาคารกรุงเทพ",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/bblc@2x.png",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/bblc@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "TISCO",
                     "titleTh": "ธนาคารทิสโก้",
                     "titleEn": "ธนาคารทิสโก้",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/tisco@2x.png",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/tisco@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "CIMBPE",
                     "titleTh": "เพอร์ซันนัลแคช ซีไอเอ็มบี ไทย",
                     "titleEn": "เพอร์ซันนัลแคช ซีไอเอ็มบี ไทย",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/cimbpe@2x.png",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/cimbpe@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "CIMBEX",
                     "titleTh": "เอ็กซ์ตร้าแคช ซีไอเอ็มบี ไทย",
                     "titleEn": "เอ็กซ์ตร้าแคช ซีไอเอ็มบี ไทย",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/cimbex@2x.png",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/cimbex@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "UOB",
                     "titleTh": "บัตรเครดิตธนาคารยูโอบี",
                     "titleEn": "บัตรเครดิตธนาคารยูโอบี",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/uob@2x.png",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/uob@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "GHB",
                     "titleTh": "ธนาคารอาคารสงเคราะห์",
                     "titleEn": "ธนาคารอาคารสงเคราะห์",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/ghb@2x.png",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/ghb@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "AEON",
                     "titleTh": "บัตรอิออน",
                     "titleEn": "บัตรอิออน",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/aeon@2x.png",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/aeon@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "KTC",
                     "titleTh": "บัตรเครดิต KTC",
                     "titleEn": "บัตรเครดิต KTC",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/ktc@2x.png",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/ktc@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "KCC",
                     "titleTh": "บัตรเครดิตกรุงศรี",
                     "titleEn": "บัตรเครดิตกรุงศรี",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/kcc@2x.png",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/kcc@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "CENTRAL",
                     "titleTh": "เซ็นทรัล เครดิตคาร์ด",
                     "titleEn": "เซ็นทรัล เครดิตคาร์ด",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/central@2x.png",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/central@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "TESCO",
                     "titleTh": "บัตรเครดิตเทสโก้ โลตัส",
                     "titleEn": "บัตรเครดิตเทสโก้ โลตัส",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/tesco@2x.png",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/tesco@2x.png",
                     "enabled": false
                 },
                 {
-                    "serviceCode": "PW",
+                    "serviceCode": "PB",
                     "titleTh": "เพาเวอร์บาย คาร์ด",
                     "titleEn": "เพาเวอร์บาย คาร์ด",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/pw@2x.png",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/pb@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "ROBINSON",
                     "titleTh": "ซิมเพิล วีซ่า คาร์ด",
                     "titleEn": "ซิมเพิล วีซ่า คาร์ด",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/robinson@2x.png",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/robinson@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "HP",
                     "titleTh": "บัตรเครดิตโฮมโปร",
                     "titleEn": "บัตรเครดิตโฮมโปร",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/hp@2x.png",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/hp@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "QUICK",
                     "titleTh": "สินเชื่อเงินสดควิกแคช",
                     "titleEn": "สินเชื่อเงินสดควิกแคช",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/quick@2x.png",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/quick@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "GEPC",
                     "titleTh": "กรุงศรี เพอร์ซัลนอลโลน",
                     "titleEn": "กรุงศรี เพอร์ซัลนอลโลน",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/gepc@2x.png",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/gepc@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "CENTRALPL",
                     "titleTh": "เซ็นทรัล เอ็กซ์คลูซีฟ แคช",
                     "titleEn": "เซ็นทรัล เอ็กซ์คลูซีฟ แคช",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/centralpl@2x.png",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/centralpl@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "TESCOPL",
                     "titleTh": "เทสโก้ เพอร์ซัลนอลโลน",
                     "titleEn": "เทสโก้ เพอร์ซัลนอลโลน",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/tescopl@2x.png",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/tescopl@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "DREAM",
                     "titleTh": "กรุงศรี ดรีมโลน",
                     "titleEn": "กรุงศรี ดรีมโลน",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/dream@2x.png",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/dream@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "FC",
                     "titleTh": "กรุงศรี เฟิร์สช้อยส์คาร์ด",
                     "titleEn": "กรุงศรี เฟิร์สช้อยส์คาร์ด",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/fc@2x.png",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/fc@2x.png",
                     "enabled": false
                 },
                 {
                     "serviceCode": "EASY",
                     "titleTh": "บัตรอีซี่บาย / ยูเมะ พลัส",
                     "titleEn": "บัตรอีซี่บาย / ยูเมะ พลัส",
-                    "logo": "${apiHost}/m/tmn_webview/images/logo_credit_card/easy@2x.png",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/easy@2x.png",
                     "enabled": false
                 }
             ]

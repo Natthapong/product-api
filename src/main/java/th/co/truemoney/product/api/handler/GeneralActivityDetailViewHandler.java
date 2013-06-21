@@ -77,5 +77,8 @@ public abstract class GeneralActivityDetailViewHandler implements ActivityDetail
 		section4.put("column2", column42);
 		return section4;
 	}
-
+	
+	public void setOnlineReourceManager(OnlineResourceManager onlineResourceManager) {
+		this.onlineResourceManager = onlineResourceManager;
+	}
 }

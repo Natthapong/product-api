@@ -10,7 +10,7 @@
             "items": [
                 {
                     "serviceCode": "tmob",
-                    "titleTh": "ทรูมูฟ เอช",
+                    "titleTh": "ทรูมูฟ/ทรูมูฟ เอช",
                     "titleEn": "TrueMove H",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_bill/tmob@2x.png",
                     "enabled": true

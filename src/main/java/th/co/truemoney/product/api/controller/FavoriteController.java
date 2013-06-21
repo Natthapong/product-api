@@ -104,7 +104,6 @@ public class FavoriteController extends BaseController {
 				String serviceName = WalletActivity.getActionInThai(serviceCode);
 				String logoURL = onlineResourceManager.getActivityActionLogoURL(serviceCode);
 				Integer serviceSortWeight = WalletActivity.getWeightFromServiceCode(serviceCode);
-				System.out.println(favorite.getServiceCode());
 				Boolean inquiryStatus = billReferenceUtil.isOnlineInquiry(serviceCode);
 				String formattedMobileNumber = favorite.getRef1();
 				if(ValidateUtil.isMobileNumber(reference1)){

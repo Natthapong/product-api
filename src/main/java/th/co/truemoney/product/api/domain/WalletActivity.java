@@ -97,6 +97,7 @@ public class WalletActivity {
         serviceCodeList.put("tlp", 6);
         serviceCodeList.put("tcg", 5);
         serviceCodeList.put("tic", 4);
+        serviceCodeList.put("rft", 3);
     }
 
     public static enum TYPE {

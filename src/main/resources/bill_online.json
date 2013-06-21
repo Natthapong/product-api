@@ -154,5 +154,5 @@
         "isInquiryOnline" : true,
         "minAmount" : 50.00,
         "maxAmount" : 30000.00
-    },
+    }
 }

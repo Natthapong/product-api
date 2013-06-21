@@ -25,13 +25,25 @@ public class TestBillPayActivityDetailViewHandler {
 	public TestBillPayActivityDetailViewHandler(BillTest bill) {
 		this.bill = bill;
 	}
-
+	
+	    
 	@Parameters
 	public static Iterable<BillTest[]> data() {
 		BillTest[][] data = new BillTest[][] {
-				{ new BillTest("hp", "บัตรเครดิตโฮมโปร", "************1234", "Card Number", "หมายเลขบัตร", null, null, null) },
-				{ new BillTest("central", "เซ็นทรัล เครดิตคาร์ด", "************1234", "", "เลขที่บัตรเครดิต (16หลัก)", null, null, null) },
-				{ new BillTest("scal", "ซัมมิท แคปปิตอล ลีสซิ่ง", "1234567890", "Ref. No. 1", "สัญญาเลขที่", "0987654321", "Ref. No. 2", "เลขที่อ้างอิง") }
+				{ new BillTest("hp", "บัตรเครดิตโฮมโปร", "************1234", "Card Number", "หมายเลขบัตร") },
+				{ new BillTest("central", "เซ็นทรัล เครดิตคาร์ด", "************1234", "", "เลขที่บัตรเครดิต (16หลัก)") },
+				{ new BillTest("scal", "ซัมมิท แคปปิตอล ลีสซิ่ง", "1234567890", "Ref. No. 1", "สัญญาเลขที่", "0987654321", "Ref. No. 2", "เลขที่อ้างอิง") },
+				{ new BillTest("bblc", "บัตรเครดิตธนาคารกรุงเทพ", "************1234", "Account Number", "หมายเลขบัตรเครดิต") },
+				{ new BillTest("tisco", "ธนาคารทิสโก้", "12345", "Ref. 1", "เลขที่อ้างอิง", "54321", "Ref. 2", "สัญญาเลขที่") },
+				{ new BillTest("ghb", "ธนาคารอาคารสงเคราะห์", "12345", "Account Number", "เลขที่บัญชีเงินกู้") },
+				{ new BillTest("ktc", "KTC", "************1234", "Account Number", "หมายเลขบัตรเครดิต") }, 
+				{ new BillTest("aeon", "บัตรอิออน", "12345", "Ref. 1", "เลขที่อ้างอิง 1") },
+				{ new BillTest("fc", "กรุงศรีเฟิร์สชอยส์", "************1234", "Account Number", "หมายเลขบัตรเครดิต") },
+				{ new BillTest("kcc", "บัตรเครดิตกรุงศรี", "************1234", "Account Number", "หมายเลขบัตรเครดิต") },
+				{ new BillTest("pb", "บัตรเพาเวอร์บาย", "************1234", "Account Number", "หมายเลขบัตรเครดิต") },
+				{ new BillTest("uob", "บัตรเครดิตธนาคารยูโอบี", "************1234", "Card Number", "หมายเลขบัตร") },
+				{ new BillTest("bwc", "เอ็ม พาวเวอร์", "12345", "Customer Number", "รหัสสาวจำหน่าย", "54321", "Bill Number", "เลขที่ใบส่งของ") },
+				{ new BillTest("mistine", "มิสทีน", "12345", "Customer Number", "รหัสสาวจำหน่าย", "54321", "Bill Number", "เลขที่ใบส่งของ") }
 		};
 		return Arrays.asList(data);
 	}
@@ -118,6 +130,15 @@ class BillTest {
 		this.ref2 = ref2;
 		this.ref2TitleEn = ref2TitleEn;
 		this.ref2TitleTh = ref2TitleTh;
+	}
+	public BillTest(String action, String titleTh, 
+			String ref1, String ref1TitleEn, String ref1TitleTh) {
+		super();
+		this.action = action;
+		this.titleTh = titleTh;
+		this.ref1 = ref1;
+		this.ref1TitleEn = ref1TitleEn;
+		this.ref1TitleTh = ref1TitleTh;
 	}
 	public String getAction() {
 		return action;

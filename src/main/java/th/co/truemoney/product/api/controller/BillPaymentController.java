@@ -332,7 +332,8 @@ public class BillPaymentController extends BaseController {
 
         Bill bill = txn.getDraftTransaction().getBillInfo();
         String target = Utils.removeSuffix(bill.getTarget());
-        if ("tmvh".equals(target) || "trmv".equals(target)) {
+        
+        if ("tmvh".equals(target) || "trmv".equals(target) || "rft".equals(target)) {
             // remark message that display at the bottom of receipt
             data.put("remarkEn", messageManager.getMessageEn("payment.bill.remark"));
             data.put("remarkTh", messageManager.getMessageTh("payment.bill.remark"));

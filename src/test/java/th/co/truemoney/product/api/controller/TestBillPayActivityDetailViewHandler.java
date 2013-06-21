@@ -29,48 +29,48 @@ public class TestBillPayActivityDetailViewHandler {
 	@Parameters
 	public static Iterable<BillTest[]> data() {
 		BillTest[][] data = new BillTest[][] {
-				{ new BillTest("rft", "ทรูมูฟ เอช", "12345", "Account/Mobile Number", "รหัสลูกค้า/หมายเลขโทรศัพท์", "54321", "invoice number", "เลขที่ใบแจ้งค่าบริการ") },
-				{ new BillTest("bla", "กรุงเทพประกันชีวิต", "12345", "Ref. No. 1", "เลขที่อ้างอิง 1", "54321", "Ref. No. 2", "เลขที่อ้างอิง 2") },
-				{ new BillTest("tqm", "ทีคิวเอ็ม ประกันภัย", "12345", "Ref. No. 1", "เลขที่อ้างอิง 1", "54321", "Ref. No. 2", "เลขที่อ้างอิง 2") },
-				{ new BillTest("cigna", "ซิกน่า ประกันภัย", "12345", "Customer Number", "รหัสลูกค้า", "54321", "Reference Number", "เลขที่อ้างอิง") },
-				{ new BillTest("mitt", "มิตรแท้ประกันภัย", "12345", "Ref. No. 1", "เลขที่ลูกค้า/รหัสผู้ให้บริการ", "54321", "Ref. No. 2", "กรมธรรม์เลขที่/สลักหลังเลขที่") },
-				{ new BillTest("sg", "เอส 11 กรุ๊ป", "12345", "Customer Number", "รหัสลูกค้า", "54321", "Reference No", "หมายเลขอ้างอิง") },
-				{ new BillTest("glc", "สินเชื่อบริษัท กรุ๊ปลีส", "12345", "Customer Number", "รหัสลูกค้า", "54321", "Reference No", "หมายเลขอ้างอิง") },
-				{ new BillTest("gepc", "สินเชื่อเงินสดจีอี เพอร์ซัลนอลโลน", "12345", "", "เลขที่บัตรเครดิต (16หลัก)") },
-				{ new BillTest("qc", "สินเชื่อเงินสดควิกแคช", "12345", "REF1", "หมายเลขสมาชิก") },
-				{ new BillTest("tescopl", "สินเชื่อเทสโก้ เพอร์ซัลนอลโลน", "12345", "Account Number", "หมายเลขสมาชิก") },
-				{ new BillTest("tesco", "บัตรเครดิตเทสโก้ โลตัส", "12345", "Account Number", "หมายเลขบัตร") },
-				{ new BillTest("centralpl", "เซ็นทรัล เอ็กซ์คลูซีฟ แคช", "12345", "Account Number", "หมายเลขบัญชี") },
-				{ new BillTest("central", "เซ็นทรัล เครดิตคาร์ด", "12345", "", "เลขที่บัตรเครดิต (16หลัก)") }, 
-				{ new BillTest("robinson", "ซิมเพิล วีซ่า คาร์ด", "12345", "Account Number", "หมายเลขบัญชี") },
-				{ new BillTest("dream", "กรุงศรี ดรีมโลน", "12345", "Loan Number", "หมายเลขสมาชิก") },
-				{ new BillTest("hp", "บัตรเครดิตโฮมโปร", "************1234", "Card Number", "หมายเลขบัตร") },
-				{ new BillTest("cal", "เซ็นเตอร์ ออโต้ลิสซิ่ง", "1234567890", "", "รหัสลูกค้า (10 หลัก)", "0987654321", "", "เลขที่สัญญา (10 หลัก)") },
-				{ new BillTest("ask", "เอเซียเสริมกิจลีสซิ่ง", "12345", "", "หมายเลขผู้เช่าซื้อ", "54321", "", "เลขที่สัญญา + ประเภทบริการ") },
-				{ new BillTest("scal", "ซัมมิท แคปปิตอล ลีสซิ่ง", "1234567890", "Ref. No. 1", "สัญญาเลขที่", "0987654321", "Ref. No. 2", "เลขที่อ้างอิง") },
-				{ new BillTest("cimbex", "เอ็กซ์ตร้าแคช ซีไอเอ็มบี ไทย", "12345", "", "เลขที่บัญชี") },
-				{ new BillTest("cimbpe", "เพอร์ซันนัลแคช ซีไอเอ็มบี ไทย", "12345", "", "เลขที่บัญชี", "54321", "Ref. 2", "วงเงินกู้") },
-				{ new BillTest("tqmlife", "ทีคิวเอ็ม ประกันชีวิต", "12345", "Ref. No. 1", "เลขที่อ้างอิง 1", "54321", "Ref. No. 2", "เลขที่อ้างอิง 2") },
-				{ new BillTest("bkip", "กรุงเทพประกันภัย", "12345", "Policy Number", "กรมธรรม์เลขที่", "54321", "", "เลขที่อ้างอิง 2") },
-				{ new BillTest("ing", "ไอเอ็นจี ประกันชีวิต", "12345", "Ref. No. 1", "หมายเลขอ้างอิง 1", "54321", "Ref. No. 2", "หมายเลขอ้างอิง 2") },
-				{ new BillTest("mti", "เมืองไทยประกันภัย", "12345", "Proposal ID", "เลขที่ใบคำขอ", "54321", "Ref. No. 2", "เลขที่ตัวแทน") },
-				{ new BillTest("mthai", "เมืองไทยประกันชีวิต", "12345", "Policy Number", "เลขที่กรมธรรม์") },
-				{ new BillTest("hiway", "ไฮเวย์", "12345", "Ref. No. 1", "เลขที่อ้างอิง", "54321", "Ref. No. 2", "สัญญาเลขที่") },
-				{ new BillTest("tli", "ไทยประกันชีวิต", "12345", "Ref. No. 1/Cust. No.", "Ref. No. 1/Cust. No.", "54321", "Ref. No. 2", "Ref. No. 2") },
-				{ new BillTest("dlt", "ภาษีรถยนต์", "12345", "", "เลขใบแจ้งชำระค่าภาษี", "54321", "", "หมายเลขอ้างอิง") },
-				{ new BillTest("hp", "บัตรเครดิตโฮมโปร", "************1234", "Card Number", "หมายเลขบัตร") },
-				{ new BillTest("central", "เซ็นทรัล เครดิตคาร์ด", "************1234", "", "เลขที่บัตรเครดิต (16หลัก)") },
-				{ new BillTest("bblc", "บัตรเครดิตธนาคารกรุงเทพ", "************1234", "Account Number", "หมายเลขบัตรเครดิต") },
-				{ new BillTest("tisco", "ธนาคารทิสโก้", "12345", "Ref. 1", "เลขที่อ้างอิง", "54321", "Ref. 2", "สัญญาเลขที่") },
-				{ new BillTest("ghb", "ธนาคารอาคารสงเคราะห์", "12345", "Account Number", "เลขที่บัญชีเงินกู้") },
-				{ new BillTest("ktc", "KTC", "************1234", "Account Number", "หมายเลขบัตรเครดิต") }, 
-				{ new BillTest("aeon", "บัตรอิออน", "12345", "Ref. 1", "เลขที่อ้างอิง 1") },
-				{ new BillTest("fc", "กรุงศรีเฟิร์สชอยส์", "************1234", "Account Number", "หมายเลขบัตรเครดิต") },
-				{ new BillTest("kcc", "บัตรเครดิตกรุงศรี", "************1234", "Account Number", "หมายเลขบัตรเครดิต") },
-				{ new BillTest("pb", "บัตรเพาเวอร์บาย", "************1234", "Account Number", "หมายเลขบัตรเครดิต") },
-				{ new BillTest("uob", "บัตรเครดิตธนาคารยูโอบี", "************1234", "Card Number", "หมายเลขบัตร") },
-				{ new BillTest("bwc", "เอ็ม พาวเวอร์", "12345", "Customer Number", "รหัสสาวจำหน่าย", "54321", "Bill Number", "เลขที่ใบส่งของ") },
-				{ new BillTest("mistine", "มิสทีน", "12345", "Customer Number", "รหัสสาวจำหน่าย", "54321", "Bill Number", "เลขที่ใบส่งของ") }
+				{ new BillTest("rft", "", "", "12345", "Account/Mobile Number", "รหัสลูกค้า/หมายเลขโทรศัพท์", "54321", "invoice number", "เลขที่ใบแจ้งค่าบริการ") },
+				{ new BillTest("bla", "bla", "กรุงเทพประกันชีวิต", "12345", "Ref. No. 1", "เลขที่อ้างอิง 1", "54321", "Ref. No. 2", "เลขที่อ้างอิง 2") },
+				{ new BillTest("tqm", "tqm", "ทีคิวเอ็ม ประกันภัย", "12345", "Ref. No. 1", "เลขที่อ้างอิง 1", "54321", "Ref. No. 2", "เลขที่อ้างอิง 2") },
+				{ new BillTest("cigna", "cigna", "ซิกน่า ประกันภัย", "12345", "Customer Number", "รหัสลูกค้า", "54321", "Reference Number", "เลขที่อ้างอิง") },
+				{ new BillTest("mitt", "mitt", "มิตรแท้ประกันภัย", "12345", "Ref. No. 1", "เลขที่ลูกค้า/รหัสผู้ให้บริการ", "54321", "Ref. No. 2", "กรมธรรม์เลขที่/สลักหลังเลขที่") },
+				{ new BillTest("sg", "sg", "เอส 11 กรุ๊ป", "12345", "Customer Number", "รหัสลูกค้า", "54321", "Reference No", "หมายเลขอ้างอิง") },
+				{ new BillTest("glc", "glc", "สินเชื่อบริษัท กรุ๊ปลีส", "12345", "Customer Number", "รหัสลูกค้า", "54321", "Reference No", "หมายเลขอ้างอิง") },
+				{ new BillTest("gepc", "gepc", "สินเชื่อเงินสดจีอี เพอร์ซัลนอลโลน", "12345", "", "เลขที่บัตรเครดิต (16หลัก)") },
+				{ new BillTest("qc", "qc", "สินเชื่อเงินสดควิกแคช", "12345", "REF1", "หมายเลขสมาชิก") },
+				{ new BillTest("tescopl", "tescopl", "สินเชื่อเทสโก้ เพอร์ซัลนอลโลน", "12345", "Account Number", "หมายเลขสมาชิก") },
+				{ new BillTest("tesco", "tesco", "บัตรเครดิตเทสโก้ โลตัส", "12345", "Account Number", "หมายเลขบัตร") },
+				{ new BillTest("centralpl", "centralpl", "เซ็นทรัล เอ็กซ์คลูซีฟ แคช", "12345", "Account Number", "หมายเลขบัญชี") },
+				{ new BillTest("central", "central", "เซ็นทรัล เครดิตคาร์ด", "12345", "", "เลขที่บัตรเครดิต (16หลัก)") }, 
+				{ new BillTest("robinson", "robinson", "ซิมเพิล วีซ่า คาร์ด", "12345", "Account Number", "หมายเลขบัญชี") },
+				{ new BillTest("dream", "dream", "กรุงศรี ดรีมโลน", "12345", "Loan Number", "หมายเลขสมาชิก") },
+				{ new BillTest("hp", "hp", "บัตรเครดิตโฮมโปร", "************1234", "Card Number", "หมายเลขบัตร") },
+				{ new BillTest("cal", "cal", "เซ็นเตอร์ ออโต้ลิสซิ่ง", "1234567890", "", "รหัสลูกค้า (10 หลัก)", "0987654321", "", "เลขที่สัญญา (10 หลัก)") },
+				{ new BillTest("ask", "ask", "เอเซียเสริมกิจลีสซิ่ง", "12345", "", "หมายเลขผู้เช่าซื้อ", "54321", "", "เลขที่สัญญา + ประเภทบริการ") },
+				{ new BillTest("scal", "scal", "ซัมมิท แคปปิตอล ลีสซิ่ง", "1234567890", "Ref. No. 1", "สัญญาเลขที่", "0987654321", "Ref. No. 2", "เลขที่อ้างอิง") },
+				{ new BillTest("cimbex", "cimbex", "เอ็กซ์ตร้าแคช ซีไอเอ็มบี ไทย", "12345", "", "เลขที่บัญชี") },
+				{ new BillTest("cimbpe", "cimbpe", "เพอร์ซันนัลแคช ซีไอเอ็มบี ไทย", "12345", "", "เลขที่บัญชี", "54321", "Ref. 2", "วงเงินกู้") },
+				{ new BillTest("tqmlife", "tqmlife", "ทีคิวเอ็ม ประกันชีวิต", "12345", "Ref. No. 1", "เลขที่อ้างอิง 1", "54321", "Ref. No. 2", "เลขที่อ้างอิง 2") },
+				{ new BillTest("bkip", "bkip", "กรุงเทพประกันภัย", "12345", "Policy Number", "กรมธรรม์เลขที่", "54321", "", "เลขที่อ้างอิง 2") },
+				{ new BillTest("ing", "ing", "ไอเอ็นจี ประกันชีวิต", "12345", "Ref. No. 1", "หมายเลขอ้างอิง 1", "54321", "Ref. No. 2", "หมายเลขอ้างอิง 2") },
+				{ new BillTest("mti", "mti", "เมืองไทยประกันภัย", "12345", "Proposal ID", "เลขที่ใบคำขอ", "54321", "Ref. No. 2", "เลขที่ตัวแทน") },
+				{ new BillTest("mthai", "mthai", "เมืองไทยประกันชีวิต", "12345", "Policy Number", "เลขที่กรมธรรม์") },
+				{ new BillTest("hiway", "hiway", "ไฮเวย์", "12345", "Ref. No. 1", "เลขที่อ้างอิง", "54321", "Ref. No. 2", "สัญญาเลขที่") },
+				{ new BillTest("tli", "tli", "ไทยประกันชีวิต", "12345", "Ref. No. 1/Cust. No.", "Ref. No. 1/Cust. No.", "54321", "Ref. No. 2", "Ref. No. 2") },
+				{ new BillTest("dlt", "dlt", "ภาษีรถยนต์", "12345", "", "เลขใบแจ้งชำระค่าภาษี", "54321", "", "หมายเลขอ้างอิง") },
+				{ new BillTest("hp", "hp", "บัตรเครดิตโฮมโปร", "************1234", "Card Number", "หมายเลขบัตร") },
+				{ new BillTest("central", "central", "เซ็นทรัล เครดิตคาร์ด", "************1234", "", "เลขที่บัตรเครดิต (16หลัก)") },
+				{ new BillTest("bblc", "bblc", "บัตรเครดิตธนาคารกรุงเทพ", "************1234", "Account Number", "หมายเลขบัตรเครดิต") },
+				{ new BillTest("tisco", "tisco", "ธนาคารทิสโก้", "12345", "Ref. 1", "เลขที่อ้างอิง", "54321", "Ref. 2", "สัญญาเลขที่") },
+				{ new BillTest("ghb", "ghb", "ธนาคารอาคารสงเคราะห์", "12345", "Account Number", "เลขที่บัญชีเงินกู้") },
+				{ new BillTest("ktc", "ktc", "KTC", "************1234", "Account Number", "หมายเลขบัตรเครดิต") }, 
+				{ new BillTest("aeon", "aeon", "บัตรอิออน", "12345", "Ref. 1", "เลขที่อ้างอิง 1") },
+				{ new BillTest("fc", "fc", "กรุงศรีเฟิร์สชอยส์", "************1234", "Account Number", "หมายเลขบัตรเครดิต") },
+				{ new BillTest("kcc", "kcc", "บัตรเครดิตกรุงศรี", "************1234", "Account Number", "หมายเลขบัตรเครดิต") },
+				{ new BillTest("pb", "pb", "บัตรเพาเวอร์บาย", "************1234", "Account Number", "หมายเลขบัตรเครดิต") },
+				{ new BillTest("uob", "uob", "บัตรเครดิตธนาคารยูโอบี", "************1234", "Card Number", "หมายเลขบัตร") },
+				{ new BillTest("bwc", "bwc", "เอ็ม พาวเวอร์", "12345", "Customer Number", "รหัสสาวจำหน่าย", "54321", "Bill Number", "เลขที่ใบส่งของ") },
+				{ new BillTest("mistine", "mistine", "มิสทีน", "12345", "Customer Number", "รหัสสาวจำหน่าย", "54321", "Bill Number", "เลขที่ใบส่งของ") }
 		};
 		return Arrays.asList(data);
 	}
@@ -130,13 +130,14 @@ public class TestBillPayActivityDetailViewHandler {
 	}
 
 	private String section1String() {
-		return String.format(sec1FormatStr, bill.getAction(), bill.getTitleTh(), bill.getAction());
+		return String.format(sec1FormatStr, bill.getAction(), bill.getTitleTh(), bill.getTitleEn());
 	}
     
 }
 
 class BillTest {
 	String action;
+	String titleEn;
 	String titleTh;
 	String ref1;
 	String ref1TitleEn;
@@ -145,11 +146,12 @@ class BillTest {
 	String ref2TitleEn;
 	String ref2TitleTh;
 	
-	public BillTest(String action, String titleTh, String ref1,
-			String ref1TitleEn, String ref1TitleTh, String ref2,
-			String ref2TitleEn, String ref2TitleTh) {
+	public BillTest(String action, String titleEn, String titleTh, 
+			String ref1, String ref1TitleEn, String ref1TitleTh, 
+			String ref2, String ref2TitleEn, String ref2TitleTh) {
 		super();
 		this.action = action;
+		this.titleEn = titleEn;
 		this.titleTh = titleTh;
 		this.ref1 = ref1;
 		this.ref1TitleEn = ref1TitleEn;
@@ -158,10 +160,11 @@ class BillTest {
 		this.ref2TitleEn = ref2TitleEn;
 		this.ref2TitleTh = ref2TitleTh;
 	}
-	public BillTest(String action, String titleTh, 
+	public BillTest(String action, String titleEn, String titleTh, 
 			String ref1, String ref1TitleEn, String ref1TitleTh) {
 		super();
 		this.action = action;
+		this.titleEn = titleEn;
 		this.titleTh = titleTh;
 		this.ref1 = ref1;
 		this.ref1TitleEn = ref1TitleEn;
@@ -214,5 +217,11 @@ class BillTest {
 	}
 	public void setRef2TitleTh(String ref2TitleTh) {
 		this.ref2TitleTh = ref2TitleTh;
+	}
+	public String getTitleEn() {
+		return titleEn;
+	}
+	public void setTitleEn(String titleEn) {
+		this.titleEn = titleEn;
 	}
 }

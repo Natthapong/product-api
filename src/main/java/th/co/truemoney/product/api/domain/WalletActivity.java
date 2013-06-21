@@ -88,6 +88,7 @@ public class WalletActivity {
         actionList.put("cigna", "ซิกน่า ประกันภัย");
         actionList.put("tqm", "ทีคิวเอ็ม ประกันภัย");
         actionList.put("bla", "กรุงเทพประกันชีวิต");
+        actionList.put("rft", "ทรูมูฟ เอช");
         
         serviceCodeList.put("tmvh", 10);
         serviceCodeList.put("trmv", 9);

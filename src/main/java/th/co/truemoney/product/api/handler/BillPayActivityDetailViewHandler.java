@@ -85,7 +85,7 @@ public class BillPayActivityDetailViewHandler extends
 		    put("tescopl_th", "หมายเลขสมาชิก");
 		    put("tescopl_en", "Account Number");
 		    put("qc_th", "หมายเลขสมาชิก");
-		    put("qc_en", "Account Number");
+		    put("qc_en", "REF1");
 		    put("gepc_th", "เลขที่บัตรเครดิต (16หลัก)");
 		    put("gepc_en", "");
 		    put("glc_th", "รหัสลูกค้า");

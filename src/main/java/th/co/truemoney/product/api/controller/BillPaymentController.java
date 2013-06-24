@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StopWatch;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -399,10 +398,6 @@ public class BillPaymentController extends BaseController {
 
     public void setProfileService(TmnProfileService profileService) {
         this.profileService = profileService;
-    }
-
-    private boolean isEmptyString(String str) {
-        return ! StringUtils.hasText(str);
     }
 
     private String getTargetTitle(String target){

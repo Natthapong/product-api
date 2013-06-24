@@ -90,14 +90,14 @@ public class WalletActivity {
         actionList.put("bla", "กรุงเทพประกันชีวิต");
         actionList.put("rft", "ทรูมูฟ เอช");
         
-        serviceCodeList.put("tmvh", 10);
-        serviceCodeList.put("trmv", 9);
-        serviceCodeList.put("tr", 8);
-        serviceCodeList.put("ti", 7);
-        serviceCodeList.put("tlp", 6);
-        serviceCodeList.put("tcg", 5);
-        serviceCodeList.put("tic", 4);
-        serviceCodeList.put("rft", 3);
+        serviceCodeList.put("rft", 10);
+        serviceCodeList.put("tmvh", 9);
+        serviceCodeList.put("trmv", 8);
+        serviceCodeList.put("tr", 7);
+        serviceCodeList.put("ti", 6);
+        serviceCodeList.put("tlp", 5);
+        serviceCodeList.put("tcg", 4);
+        serviceCodeList.put("tic", 3);
     }
 
     public static enum TYPE {

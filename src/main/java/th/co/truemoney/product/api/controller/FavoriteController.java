@@ -26,165 +26,164 @@ import th.co.truemoney.product.api.domain.WalletActivity;
 import th.co.truemoney.product.api.manager.OnlineResourceManager;
 import th.co.truemoney.product.api.util.BillReferenceUtil;
 import th.co.truemoney.product.api.util.Utils;
-import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.ewallet.FavoriteService;
 import th.co.truemoney.serviceinventory.ewallet.domain.Favorite;
 
 @Controller
 public class FavoriteController extends BaseController {
 
-	@Autowired
-	private FavoriteService favoriteService;
-	
-	@Autowired
-	private OnlineResourceManager onlineResourceManager;
-	
-	@Autowired
-	private BillReferenceUtil billReferenceUtil;
-	
-	@RequestMapping(value = "/favorite/add/{accessTokenID}", method = RequestMethod.PUT)
-	@ResponseBody
-	public ProductResponse addFavorite(@PathVariable String accessTokenID,
-			                           @RequestBody Map<String, String> request) {
+    @Autowired
+    private FavoriteService favoriteService;
 
-		Favorite reqFavorite = buildFavorite(request);
+    @Autowired
+    private OnlineResourceManager onlineResourceManager;
 
-		Favorite respFavorite = favoriteService.addFavorite(reqFavorite, accessTokenID);
+    @Autowired
+    private BillReferenceUtil billReferenceUtil;
 
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("favoriteID", String.valueOf(respFavorite.getFavoriteID()));
-		return this.responseFactory.createSuccessProductResonse(data);
-	}
+    @RequestMapping(value = "/favorite/add/{accessTokenID}", method = RequestMethod.PUT)
+    @ResponseBody
+    public ProductResponse addFavorite(@PathVariable String accessTokenID,
+                                       @RequestBody Map<String, String> request) {
 
-	private Favorite buildFavorite(Map<String, String> request) {
-		validate(request);
+        Favorite reqFavorite = buildFavorite(request);
 
-		Favorite reqFavorite = new Favorite();
-		reqFavorite.setRef1(request.get("ref1"));
-		reqFavorite.setServiceCode(request.get("serviceCode"));
-		reqFavorite.setServiceType(request.get("serviceType"));
-		reqFavorite.setAmount(new BigDecimal(request.get("amount")));
-		return reqFavorite;
-	}
+        Favorite respFavorite = favoriteService.addFavorite(reqFavorite, accessTokenID);
 
-	private void validate(Map<String, String> request) {
-		String amount = request.get("amount");
-		try {
-			new BigDecimal(amount);
-		} catch (Exception e) {
-			throw new InvalidParameterException("50005");
-		}
-		if (!StringUtils.hasText(request.get("serviceCode"))) {
-			throw new InvalidParameterException("50006");
-		}
-		if (!StringUtils.hasText(request.get("serviceType"))) {
-			throw new InvalidParameterException("50007");
-		}
-		if (!StringUtils.hasText(request.get("ref1"))) {
-			throw new InvalidParameterException("50008");
-		}
-	}
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("favoriteID", String.valueOf(respFavorite.getFavoriteID()));
+        return this.responseFactory.createSuccessProductResonse(data);
+    }
 
-	@RequestMapping(value = "/favorite/{accessTokenID}", method = RequestMethod.GET)
-	@ResponseBody
-	public ProductResponse getFavoriteList(@PathVariable String accessTokenID) {
+    private Favorite buildFavorite(Map<String, String> request) {
+        validate(request);
 
-		Map<String, Object> data = new HashMap<String, Object>();
-		List<FavoriteGroup> groups = new ArrayList<FavoriteGroup>();
-		data.put("groups", groups);
+        Favorite reqFavorite = new Favorite();
+        reqFavorite.setRef1(request.get("ref1"));
+        reqFavorite.setServiceCode(request.get("serviceCode"));
+        reqFavorite.setServiceType(request.get("serviceType"));
+        reqFavorite.setAmount(new BigDecimal(request.get("amount")));
+        return reqFavorite;
+    }
 
-		List<Favorite> favoriteList = favoriteService.getFavorites(accessTokenID);
-		if (favoriteList != null && favoriteList.size() > 0) {
-			FavoriteGroup group0 = new FavoriteGroup("รายการบิล", "BillPay", "billpay");
-			groups.add(group0);
-			
-			for (Favorite favorite : favoriteList) {
-				String reference1  = favorite.getRef1();
-				String serviceCode = favorite.getServiceCode();
-				String serviceName = WalletActivity.getActionInThai(serviceCode);
-				String logoURL = onlineResourceManager.getActivityActionLogoURL(serviceCode);
-				Integer serviceSortWeight = WalletActivity.getWeightFromServiceCode(serviceCode);
-				Boolean inquiryStatus = billReferenceUtil.isOnlineInquiry(serviceCode);
-				String formattedMobileNumber = Utils.formatTelephoneNumber(reference1);
-				
-				FavoriteItem favoriteItem =new FavoriteItem(serviceName, formattedMobileNumber, logoURL, serviceCode, 
+    private void validate(Map<String, String> request) {
+        String amount = request.get("amount");
+        try {
+            new BigDecimal(amount);
+        } catch (Exception e) {
+            throw new InvalidParameterException("50005");
+        }
+        if (!StringUtils.hasText(request.get("serviceCode"))) {
+            throw new InvalidParameterException("50006");
+        }
+        if (!StringUtils.hasText(request.get("serviceType"))) {
+            throw new InvalidParameterException("50007");
+        }
+        if (!StringUtils.hasText(request.get("ref1"))) {
+            throw new InvalidParameterException("50008");
+        }
+    }
+
+    @RequestMapping(value = "/favorite/{accessTokenID}", method = RequestMethod.GET)
+    @ResponseBody
+    public ProductResponse getFavoriteList(@PathVariable String accessTokenID) {
+
+        Map<String, Object> data = new HashMap<String, Object>();
+        List<FavoriteGroup> groups = new ArrayList<FavoriteGroup>();
+        data.put("groups", groups);
+
+        List<Favorite> favoriteList = favoriteService.getFavorites(accessTokenID);
+        if (favoriteList != null && favoriteList.size() > 0) {
+            FavoriteGroup group0 = new FavoriteGroup("รายการบิล", "BillPay", "billpay");
+            groups.add(group0);
+
+            for (Favorite favorite : favoriteList) {
+                String reference1  = favorite.getRef1();
+                String serviceCode = favorite.getServiceCode();
+                String serviceName = WalletActivity.getActionInThai(serviceCode);
+                String logoURL = onlineResourceManager.getActivityActionLogoURL(serviceCode);
+                Integer serviceSortWeight = WalletActivity.getWeightFromServiceCode(serviceCode);
+                Boolean inquiryStatus = billReferenceUtil.isOnlineInquiry(serviceCode);
+                String formattedMobileNumber = Utils.formatTelephoneNumber(reference1);
+
+                FavoriteItem favoriteItem =new FavoriteItem(serviceName, formattedMobileNumber, logoURL, serviceCode,
                         reference1, favorite.getDate(), serviceSortWeight);
-				String ref1Title = findRef1Title(serviceCode);
-				favoriteItem.setText2En(ref1Title);
-				favoriteItem.setText2Th(ref1Title);
-				favoriteItem.setIsInquiryOnline(inquiryStatus);
-				group0.addItems(favoriteItem);
-				
-			}
-			order(group0.getItems());
-		}
-		
-		return this.responseFactory.createSuccessProductResonse(data);
-	}
-	
-	@RequestMapping(value = "/favorite/remove/{accessTokenID}", method = RequestMethod.DELETE)
-	@ResponseBody
-	public ProductResponse removeFavorite(@PathVariable String accessTokenID,
-			                           @RequestBody Map<String, String> request) {
-		favoriteService.deleteFavorite(request.get("serviceCode"), request.get("ref1"), accessTokenID);
-		System.out.println("serviceCode = "+request.get("serviceCode"));
+                String ref1Title = findRef1Title(serviceCode);
+                favoriteItem.setText2En(ref1Title);
+                favoriteItem.setText2Th(ref1Title);
+                favoriteItem.setIsInquiryOnline(inquiryStatus);
+                group0.addItems(favoriteItem);
 
-		Map<String, Object> data = new HashMap<String, Object>();
-		return this.responseFactory.createSuccessProductResonse(data);
-	}
-	
-	public void setFavoriteService(FavoriteService favoriteService) {
-		this.favoriteService = favoriteService;
-	}
-	
-	public void setOnlineResourceManager(OnlineResourceManager onlineResourceManager) {
-		this.onlineResourceManager = onlineResourceManager;
-	}
-	
-	private String findRef1Title(String target){
-		String title = "";
-		String serviceCode = Utils.removeSuffix(target);
-		if("tmvh".equals(serviceCode) 
-			|| "trmv".equals(serviceCode) 
-			|| "tlp".equals(serviceCode) 
-			|| "ti".equals(serviceCode) 
-			|| "tic".equals(serviceCode) 
-			|| "tcg".equals(serviceCode)
-			|| "rft".equals(serviceCode)) {
-			
-			title = "รหัสลูกค้า/หมายเลขโทรศัพท์";
-		} else if("tr".equals(serviceCode)){
-			title = "เลขที่อ้างอิง 1/หมายเลขโทรศัพท์";
-		}else if("mea".equals(Utils.removeSuffix(target))){
-			title = "บัญชีแสดงสัญญาเลขที่";
-		}
-		return title;
-	}
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void order(List<FavoriteItem> itemList){
-		Collections.sort(itemList,  new Comparator() {
+            }
+            order(group0.getItems());
+        }
 
-			@Override
-			public int compare(Object o1, Object o2) {
-				FavoriteItem fi1 = (FavoriteItem) o1;
-				FavoriteItem fi2 = (FavoriteItem) o2;
-				int x1 = fi1.getWeight();
-				int x2 = fi2.getWeight();
-				
-				if((x1 - x2) != 0){
-					return x2 - x1;
-				}else{
-					Date d1 = (Date) fi1.getDate();
-					Date d2 = (Date) fi2.getDate();
-					return d1.compareTo(d2);
-				}
-			}
-			
-		});
-	}
+        return this.responseFactory.createSuccessProductResonse(data);
+    }
 
-	public void setBillReferenceUtil(BillReferenceUtil billReferenceUtil) {
-		this.billReferenceUtil = billReferenceUtil;
-	}
+    @RequestMapping(value = "/favorite/remove/{accessTokenID}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public ProductResponse removeFavorite(@PathVariable String accessTokenID,
+                                       @RequestBody Map<String, String> request) {
+        favoriteService.deleteFavorite(request.get("serviceCode"), request.get("ref1"), accessTokenID);
+        System.out.println("serviceCode = "+request.get("serviceCode"));
+
+        Map<String, Object> data = new HashMap<String, Object>();
+        return this.responseFactory.createSuccessProductResonse(data);
+    }
+
+    public void setFavoriteService(FavoriteService favoriteService) {
+        this.favoriteService = favoriteService;
+    }
+
+    public void setOnlineResourceManager(OnlineResourceManager onlineResourceManager) {
+        this.onlineResourceManager = onlineResourceManager;
+    }
+
+    private String findRef1Title(String target){
+        String title = "";
+        String serviceCode = Utils.removeSuffix(target);
+        if("tmvh".equals(serviceCode)
+            || "trmv".equals(serviceCode)
+            || "tlp".equals(serviceCode)
+            || "ti".equals(serviceCode)
+            || "tic".equals(serviceCode)
+            || "tcg".equals(serviceCode)
+            || "rft".equals(serviceCode)) {
+
+            title = "รหัสลูกค้า/หมายเลขโทรศัพท์";
+        } else if("tr".equals(serviceCode)){
+            title = "เลขที่อ้างอิง 1/หมายเลขโทรศัพท์";
+        }else if("mea".equals(Utils.removeSuffix(target))){
+            title = "บัญชีแสดงสัญญาเลขที่";
+        }
+        return title;
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private void order(List<FavoriteItem> itemList){
+        Collections.sort(itemList,  new Comparator() {
+
+            @Override
+            public int compare(Object o1, Object o2) {
+                FavoriteItem fi1 = (FavoriteItem) o1;
+                FavoriteItem fi2 = (FavoriteItem) o2;
+                int x1 = fi1.getWeight();
+                int x2 = fi2.getWeight();
+
+                if((x1 - x2) != 0){
+                    return x2 - x1;
+                }else{
+                    Date d1 = (Date) fi1.getDate();
+                    Date d2 = (Date) fi2.getDate();
+                    return d1.compareTo(d2);
+                }
+            }
+
+        });
+    }
+
+    public void setBillReferenceUtil(BillReferenceUtil billReferenceUtil) {
+        this.billReferenceUtil = billReferenceUtil;
+    }
 }

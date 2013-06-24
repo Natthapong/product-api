@@ -105,14 +105,9 @@ public class FavoriteController extends BaseController {
 				String logoURL = onlineResourceManager.getActivityActionLogoURL(serviceCode);
 				Integer serviceSortWeight = WalletActivity.getWeightFromServiceCode(serviceCode);
 				Boolean inquiryStatus = billReferenceUtil.isOnlineInquiry(serviceCode);
-				String formattedMobileNumber = favorite.getRef1();
-				if(ValidateUtil.isMobileNumber(reference1)){
-					formattedMobileNumber = Utils.formatMobileNumber(reference1);
-				}else if(ValidateUtil.isTelNumber(reference1)){
-					formattedMobileNumber = Utils.formatTelNumber(reference1);
-				}
+				String formattedMobileNumber = Utils.formatTelephoneNumber(reference1);
 				
-				FavoriteItem favoriteItem =new FavoriteItem( serviceName, formattedMobileNumber, logoURL, serviceCode, 
+				FavoriteItem favoriteItem =new FavoriteItem(serviceName, formattedMobileNumber, logoURL, serviceCode, 
                         reference1, favorite.getDate(), serviceSortWeight);
 				String ref1Title = findRef1Title(serviceCode);
 				favoriteItem.setText2En(ref1Title);
@@ -149,9 +144,14 @@ public class FavoriteController extends BaseController {
 	private String findRef1Title(String target){
 		String title = "";
 		String serviceCode = Utils.removeSuffix(target);
-		if("tmvh".equals(serviceCode) || "trmv".equals(serviceCode) 
-				|| "tlp".equals(serviceCode) || "ti".equals(serviceCode) 
-				|| "tic".equals(serviceCode)|| "tcg".equals(serviceCode)){
+		if("tmvh".equals(serviceCode) 
+			|| "trmv".equals(serviceCode) 
+			|| "tlp".equals(serviceCode) 
+			|| "ti".equals(serviceCode) 
+			|| "tic".equals(serviceCode) 
+			|| "tcg".equals(serviceCode)
+			|| "rft".equals(serviceCode)) {
+			
 			title = "รหัสลูกค้า/หมายเลขโทรศัพท์";
 		} else if("tr".equals(serviceCode)){
 			title = "เลขที่อ้างอิง 1/หมายเลขโทรศัพท์";

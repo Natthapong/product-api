@@ -36,6 +36,7 @@ public class WalletActivity {
         actionList.put("debtor", "ส่งเงิน");
         actionList.put("debit", "บัญชีธนาคาร");
         actionList.put("creditor", "รับเงิน");
+        
         actionList.put("catv", "ทรูวิชั่นส์");
         actionList.put("dstv", "ทรูวิชั่นส์");
         actionList.put("tmvh", "ทรูมูฟ เอช");

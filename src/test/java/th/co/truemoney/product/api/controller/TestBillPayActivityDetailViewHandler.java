@@ -10,6 +10,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import th.co.truemoney.product.api.handler.BillPayActivityDetailViewHandler;
+import th.co.truemoney.product.api.manager.BillConfigurationManager;
 import th.co.truemoney.product.api.manager.OnlineResourceManager;
 import th.co.truemoney.serviceinventory.ewallet.domain.ActivityDetail;
 
@@ -79,6 +80,7 @@ public class TestBillPayActivityDetailViewHandler {
 	public void setup() {
 		handler = new BillPayActivityDetailViewHandler();
 		handler.setOnlineReourceManager(new OnlineResourceManager());
+		handler.setConfigurationManager(new BillConfigurationManager());
 	}
     
 	@Test

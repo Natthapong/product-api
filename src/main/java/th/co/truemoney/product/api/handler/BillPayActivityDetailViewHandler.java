@@ -3,16 +3,20 @@ package th.co.truemoney.product.api.handler;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import th.co.truemoney.product.api.domain.WalletActivity;
+import th.co.truemoney.product.api.manager.BillConfigurationManager;
 import th.co.truemoney.product.api.util.Utils;
 
 @Component
 public class BillPayActivityDetailViewHandler extends
 		GeneralActivityDetailViewHandler {
 	
+	@Autowired
+	BillConfigurationManager configurationManager;
+	/*
 	@SuppressWarnings("serial")
 	Map<String,String> ref1Title = new HashMap<String,String>() {
 		{
@@ -152,7 +156,7 @@ public class BillPayActivityDetailViewHandler extends
 		    put("bla_en", "Ref. No. 2");
 		}
 	};
-	
+	*/
 	@Override
 	public Map<String, String> buildSection1() {
 		Map<String, String> section1 = super.buildSection1();
@@ -194,14 +198,6 @@ public class BillPayActivityDetailViewHandler extends
 		return Utils.formatTelephoneNumber(ref1Value);
 	}
 	
-	private String getTitleTh(String action) {
-		return Utils.isTrueCorpBill(action) ? "" : WalletActivity.getActionInThai(action);
-	}
-	
-	private String getTitleEn(String action) {
-		return Utils.isTrueCorpBill(action) ? "" : WalletActivity.getActionInEnglish(action);
-	}
-	
 	private String formatRef2(String ref2Value) {
 		return ref2Value != null ? ref2Value.trim() : "";
 	}
@@ -211,23 +207,31 @@ public class BillPayActivityDetailViewHandler extends
 		return StringUtils.hasText(ref2) && (!"-".equals(ref2));
 	}
 	
+	private String getTitleTh(String action) {
+		return Utils.isTrueCorpBill(action) ? "" : configurationManager.getTitleTh(action);
+	}
+	
+	private String getTitleEn(String action) {
+		return Utils.isTrueCorpBill(action) ? "" : configurationManager.getTitleEn(action);
+	}
+	
 	private String getRef1TitleEn(String action) {
-		String key = action + "_en";
-		return ref1Title.containsKey(key) ? ref1Title.get(key) : "Account/Mobile Number";
+		return configurationManager.getRef1TitleEn(action);
 	}
 	
 	private String getRef1TitleTh(String action) {
-		String key = action + "_th";
-		return ref1Title.containsKey(key) ? ref1Title.get(key) : "รหัสลูกค้า/หมายเลขโทรศัพท์";
+		return configurationManager.getRef1TitleTh(action);
 	}
 	
 	private String getRef2TitleEn(String action) {
-		String key = action + "_en";
-		return ref2Title.containsKey(key) ? ref2Title.get(key) : "invoice number";
+		return configurationManager.getRef2TitleEn(action);
 	}
 	
 	private String getRef2TitleTh(String action) {
-		String key = action + "_th";
-		return ref2Title.containsKey(key) ? ref2Title.get(key) : "เลขที่ใบแจ้งค่าบริการ";
-	}	
+		return configurationManager.getRef2TitleTh(action);
+	}
+	
+	public void setConfigurationManager(BillConfigurationManager configurationManager) {
+		this.configurationManager = configurationManager;
+	}
 }

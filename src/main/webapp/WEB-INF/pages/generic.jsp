@@ -97,5 +97,14 @@
 
 "payment.bill.verify.url" : "${apiHost}/api/v1/bill-payment/bill/%@/verify/%@?",
 
-"canRegister" : "true"
+"canRegister" : "true",
+
+"forgot.password.active" : "true",
+
+"forgot.pin.active" : "true",
+
+"forgot.password.url" : "www.google.co.th",
+
+"forgot.pin.url" : "www.amazon.com"
+
 }

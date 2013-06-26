@@ -92,7 +92,8 @@ public class DirectDebitController extends BaseController {
 		data.put("urlLogo", onlineResourceManager.getBankLogoURL(db.getBankCode()));
 		data.put("sourceOfFundID", quote.getSourceOfFund().getSourceOfFundID());
 		data.put("accessToken", quote.getAccessTokenID());
-		data.put("message", messageManager.getMessageTh("directdebit.message"));
+		data.put("promotionTh", messageManager.getMessageTh("directdebit.promotion.message"));
+		data.put("promotionEn", messageManager.getMessageEn("directdebit.promotion.message"));
 		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}

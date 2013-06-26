@@ -1,5 +1,12 @@
 package th.co.truemoney.product.api.controller;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
+
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,20 +22,12 @@ import org.junit.Test;
 import th.co.truemoney.product.api.domain.FavoriteGroup;
 import th.co.truemoney.product.api.domain.FavoriteItem;
 import th.co.truemoney.product.api.domain.ProductResponse;
+import th.co.truemoney.product.api.manager.BillConfigurationManager;
 import th.co.truemoney.product.api.manager.MessageManager;
 import th.co.truemoney.product.api.manager.OnlineResourceManager;
-import th.co.truemoney.product.api.util.BillReferenceUtil;
 import th.co.truemoney.product.api.util.ProductResponseFactory;
 import th.co.truemoney.serviceinventory.ewallet.FavoriteService;
 import th.co.truemoney.serviceinventory.ewallet.domain.Favorite;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class TestFavoriteControllerUnit {
 
@@ -49,7 +48,7 @@ public class TestFavoriteControllerUnit {
         this.favoriteController.setFavoriteService(favoriteServiceMock);
         this.favoriteController.setResponseFactory(responseFactory);
         this.favoriteController.setOnlineResourceManager(new OnlineResourceManager());
-        this.favoriteController.setBillReferenceUtil(new BillReferenceUtil());
+        this.favoriteController.setBillConfigurationManager(new BillConfigurationManager());
     }
 
     public void tearDown() {

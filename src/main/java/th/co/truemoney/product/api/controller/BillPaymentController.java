@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.domain.BillResponse;
 import th.co.truemoney.product.api.domain.ProductResponse;
+import th.co.truemoney.product.api.manager.BillConfigurationManager;
 import th.co.truemoney.product.api.manager.MessageManager;
-import th.co.truemoney.product.api.util.BillReferenceUtil;
 import th.co.truemoney.product.api.util.Utils;
 import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
@@ -58,7 +58,10 @@ public class BillPaymentController extends BaseController {
 
     @Autowired
     private MessageManager messageManager;
-
+    
+    @Autowired
+    BillConfigurationManager billConfigurationManager;
+    
     private Logger logger = Logger.getLogger(BillPaymentController.class);
 
     // get bill by barcode
@@ -131,7 +134,7 @@ public class BillPaymentController extends BaseController {
                 .setBill(bill)
                 .buildBillInfoResponse();
 
-        String formattedMobileNumber = parseMobileAndTelNumber(bill.getRef1());
+        String formattedMobileNumber = Utils.formatTelephoneNumber(bill.getRef1());
         data.put("ref1", formattedMobileNumber);
 
         return createResponse(data);
@@ -182,7 +185,7 @@ public class BillPaymentController extends BaseController {
                 .setBill(bill)
                 .buildBillInfoResponse();
 
-        String formattedMobileNumber = parseMobileAndTelNumber(bill.getRef1());
+        String formattedMobileNumber = Utils.formatTelephoneNumber(bill.getRef1());
         data.put("ref1", formattedMobileNumber);
         return createResponse(data);
     }
@@ -351,39 +354,26 @@ public class BillPaymentController extends BaseController {
 
         return createResponse(data);
     }
-
+    
     //getKeyIn placeholder
     @RequestMapping(value = "/key-in/place-holder/{billCode}/{accessTokenID}", method = RequestMethod.GET)
     public @ResponseBody
     ProductResponse getKeyInInputPlaceHolders(
-            @PathVariable String accessTokenID, @PathVariable String billCode) {
-        BillReferenceUtil billReferenceUtil = new BillReferenceUtil();
-        Map<String, Object> data = new HashMap<String, Object>();
-        Map<String, String> placeHolderMessages = billReferenceUtil.getBillInfoResponse(Utils.removeSuffix(billCode));
-        if (placeHolderMessages == null) {
-            throw new ServiceInventoryException(400, "30000", "", "TMN-PRODUCT");
-        }else{
-            data.putAll(placeHolderMessages);
-            data.put("target", billCode);
-
-            if(data.get("ref2TitleTh").equals("")){
-                data.remove("ref2TitleTh");
-                data.remove("ref2TitleEn");
-            }
-        }
+            @PathVariable String accessTokenID, 
+            @PathVariable String billCode) {
+        
+    	Map<String, Object> data = new HashMap<String, Object>();
+    	data.put("target", billCode);
+    	data.putAll(billConfigurationManager.getBillInfoResponse(billCode));
+    	/*
+    	if (Utils.isTrueCorpBill(billCode)) {
+            data.remove("ref2TitleTh");
+            data.remove("ref2TitleEn");
+    	}
+    	*/
         return createResponse(data);
     }
-
-    private String parseMobileAndTelNumber(String mobileNumber) {
-        String formattedNumber = mobileNumber;
-        if(ValidateUtil.isMobileNumber(mobileNumber)){
-            formattedNumber = Utils.formatMobileNumber(mobileNumber);
-        }else if(ValidateUtil.isTelNumber(mobileNumber)){
-            formattedNumber = Utils.formatTelNumber(mobileNumber);
-        }
-        return formattedNumber;
-    }
-
+    
     private ProductResponse createResponse(Map<String, Object> data) {
         return this.responseFactory.createSuccessProductResonse(data);
     }
@@ -400,7 +390,12 @@ public class BillPaymentController extends BaseController {
         this.profileService = profileService;
     }
 
-    private String getTargetTitle(String target){
+    public void setBillConfigurationManager(
+			BillConfigurationManager billConfigurationManager) {
+		this.billConfigurationManager = billConfigurationManager;
+	}
+
+	private String getTargetTitle(String target){
         String result = "";
         if("mea".equals(target)){
             result = "การไฟฟ้านครหลวง";

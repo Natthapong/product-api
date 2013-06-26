@@ -1,19 +1,15 @@
 package th.co.truemoney.product.api.controller;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -63,9 +59,7 @@ public class TestWalletActivityDetailController extends
 		
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), fakeAccessTokenID);
 		Map<String,Object> respData = resp.getData();
-		Map<String,Object> data = (Map<String,Object>)respData.get("personalMessage");
-		assertEquals(data.get("value"),"Hello World");
-		
+		assertTrue(respData.toString().toString().contains("Hello World"));
 	}
 	
 	@Test
@@ -103,80 +97,11 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 
-		assertTrue(data.containsKey("section1"));
-		Map<String, String> section1 = (Map<String, String>) data.get("section1");
-		assertTrue(section1.containsKey("logoURL"));
-		assertTrue(section1.containsKey("titleTh"));
-		assertTrue(section1.containsKey("titleEn"));
-		assertEquals("http://localhost:8080/m/tmn_webview/images/logo_bill/tmvh@2x.png", section1.get("logoURL"));
-		assertEquals("", section1.get("titleTh"));
-		assertEquals("", section1.get("titleEn"));
-
-		assertTrue(data.containsKey("section2"));
-		Map<String, Object> section2 = (Map<String, Object>) data.get("section2");
-		assertTrue(section2.containsKey("column1"));
-		assertFalse(section2.containsKey("column2"));
-		Map<String, Object> column21 = (Map<String, Object>) section2.get("column1");
-		assertTrue(column21.containsKey("cell1"));
-		assertFalse(column21.containsKey("cell2"));
-		Map<String, String> cell1 = (Map<String, String>) column21.get("cell1");
-		assertTrue(cell1.containsKey("titleTh"));
-		assertTrue(cell1.containsKey("titleEn"));
-		assertTrue(cell1.containsKey("value"));
-		assertEquals("หมายเลขโทรศัพท์", cell1.get("titleTh"));
-		assertEquals("mobile number", cell1.get("titleEn"));
-		assertEquals("089-765-4333", cell1.get("value"));
-
-		assertTrue(data.containsKey("section3"));
-		Map<String, Object> section3 = (Map<String, Object>) data.get("section3");
-		assertTrue(section3.containsKey("column1"));
-		assertTrue(section3.containsKey("column2"));
-		Map<String, Object> column31 = (Map<String, Object>) section3.get("column1");
-		Map<String, Object> column32 = (Map<String, Object>) section3.get("column2");
-		assertTrue(column31.containsKey("cell1"));
-		assertTrue(column31.containsKey("cell2"));
-		assertTrue(column32.containsKey("cell1"));
-		assertFalse(column32.containsKey("cell2"));
-		Map<String, String> cell311 = (Map<String, String>) column31.get("cell1");
-		Map<String, String> cell312 = (Map<String, String>) column31.get("cell2");
-		Map<String, String> cell321 = (Map<String, String>) column32.get("cell1");
-		assertTrue(cell311.containsKey("titleTh"));
-		assertTrue(cell311.containsKey("titleEn"));
-		assertTrue(cell311.containsKey("value"));
-		assertEquals("จำนวนเงิน", cell311.get("titleTh"));
-		assertEquals("amount", cell311.get("titleEn"));
-		assertEquals("23,455.50", cell311.get("value"));
-		assertTrue(cell312.containsKey("titleTh"));
-		assertTrue(cell312.containsKey("titleEn"));
-		assertTrue(cell312.containsKey("value"));
-		assertEquals("รวมเงินที่ชำระ", cell312.get("titleTh"));
-		assertEquals("total amount", cell312.get("titleEn"));
-		assertEquals("24,690.00", cell312.get("value"));
-		assertTrue(cell321.containsKey("titleTh"));
-		assertTrue(cell321.containsKey("titleEn"));
-		assertTrue(cell321.containsKey("value"));
-		assertEquals("ค่าธรรมเนียม", cell321.get("titleTh"));
-		assertEquals("total fee", cell321.get("titleEn"));
-		assertEquals("1,234.50", cell321.get("value"));
-
-		assertTrue(data.containsKey("section4"));
-		Map<String, Object> section4 = (Map<String, Object>) data.get("section4");
-		assertTrue(section4.containsKey("column1"));
-		assertTrue(section4.containsKey("column2"));
-		Map<String, Object> column41 = (Map<String, Object>) section4.get("column1");
-		Map<String, Object> column42 = (Map<String, Object>) section4.get("column2");
-		assertTrue(column41.containsKey("cell1"));
-		assertFalse(column41.containsKey("cell2"));
-		assertTrue(column42.containsKey("cell1"));
-		assertFalse(column42.containsKey("cell2"));
-		Map<String, String> cell411 = (Map<String, String>) column41.get("cell1");
-		Map<String, String> cell421 = (Map<String, String>) column42.get("cell1");
-		assertEquals("วันที่-เวลา", cell411.get("titleTh"));
-		assertEquals("transaction date", cell411.get("titleEn"));
-		assertEquals("10/02/13 15:35", cell411.get("value"));
-		assertEquals("เลขที่อ้างอิง", cell421.get("titleTh"));
-		assertEquals("transaction ID", cell421.get("titleEn"));
-		assertEquals("1234567890", cell421.get("value"));
+		assertEquals("{logoURL=http://localhost:8080/m/tmn_webview/images/logo_bill/tmvh@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
+		assertEquals("{column1={cell1={titleTh=หมายเลขโทรศัพท์, titleEn=mobile number, value=089-765-4333}}}", data.get("section2").toString());
+		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
+		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
+		
 	}
 	
 	@Test
@@ -197,84 +122,14 @@ public class TestWalletActivityDetailController extends
 
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
-
-		assertTrue(data.containsKey("section1"));
-		Map<String, String> section1 = (Map<String, String>) data.get("section1");
-		assertTrue(section1.containsKey("logoURL"));
-		assertTrue(section1.containsKey("titleTh"));
-		assertTrue(section1.containsKey("titleEn"));
-		assertEquals("http://localhost:8080/m/tmn_webview/images/logo_bill/trmv@2x.png", section1.get("logoURL"));
-		assertEquals("", section1.get("titleTh"));
-		assertEquals("", section1.get("titleEn"));
-
-		assertTrue(data.containsKey("section2"));
-		Map<String, Object> section2 = (Map<String, Object>) data.get("section2");
-		assertTrue(section2.containsKey("column1"));
-		assertFalse(section2.containsKey("column2"));
-		Map<String, Object> column21 = (Map<String, Object>) section2.get("column1");
-		assertTrue(column21.containsKey("cell1"));
-		assertFalse(column21.containsKey("cell2"));
-		Map<String, String> cell1 = (Map<String, String>) column21.get("cell1");
-		assertTrue(cell1.containsKey("titleTh"));
-		assertTrue(cell1.containsKey("titleEn"));
-		assertTrue(cell1.containsKey("value"));
-		assertEquals("หมายเลขโทรศัพท์", cell1.get("titleTh"));
-		assertEquals("mobile number", cell1.get("titleEn"));
-		assertEquals("089-765-4333", cell1.get("value"));
-
-		assertTrue(data.containsKey("section3"));
-		Map<String, Object> section3 = (Map<String, Object>) data.get("section3");
-		assertTrue(section3.containsKey("column1"));
-		assertTrue(section3.containsKey("column2"));
-		Map<String, Object> column31 = (Map<String, Object>) section3.get("column1");
-		Map<String, Object> column32 = (Map<String, Object>) section3.get("column2");
-		assertTrue(column31.containsKey("cell1"));
-		assertTrue(column31.containsKey("cell2"));
-		assertTrue(column32.containsKey("cell1"));
-		assertFalse(column32.containsKey("cell2"));
-		Map<String, String> cell311 = (Map<String, String>) column31.get("cell1");
-		Map<String, String> cell312 = (Map<String, String>) column31.get("cell2");
-		Map<String, String> cell321 = (Map<String, String>) column32.get("cell1");
-		assertTrue(cell311.containsKey("titleTh"));
-		assertTrue(cell311.containsKey("titleEn"));
-		assertTrue(cell311.containsKey("value"));
-		assertEquals("จำนวนเงิน", cell311.get("titleTh"));
-		assertEquals("amount", cell311.get("titleEn"));
-		assertEquals("23,455.50", cell311.get("value"));
-		assertTrue(cell312.containsKey("titleTh"));
-		assertTrue(cell312.containsKey("titleEn"));
-		assertTrue(cell312.containsKey("value"));
-		assertEquals("รวมเงินที่ชำระ", cell312.get("titleTh"));
-		assertEquals("total amount", cell312.get("titleEn"));
-		assertEquals("24,690.00", cell312.get("value"));
-		assertTrue(cell321.containsKey("titleTh"));
-		assertTrue(cell321.containsKey("titleEn"));
-		assertTrue(cell321.containsKey("value"));
-		assertEquals("ค่าธรรมเนียม", cell321.get("titleTh"));
-		assertEquals("total fee", cell321.get("titleEn"));
-		assertEquals("1,234.50", cell321.get("value"));
-
-		assertTrue(data.containsKey("section4"));
-		Map<String, Object> section4 = (Map<String, Object>) data.get("section4");
-		assertTrue(section4.containsKey("column1"));
-		assertTrue(section4.containsKey("column2"));
-		Map<String, Object> column41 = (Map<String, Object>) section4.get("column1");
-		Map<String, Object> column42 = (Map<String, Object>) section4.get("column2");
-		assertTrue(column41.containsKey("cell1"));
-		assertFalse(column41.containsKey("cell2"));
-		assertTrue(column42.containsKey("cell1"));
-		assertFalse(column42.containsKey("cell2"));
-		Map<String, String> cell411 = (Map<String, String>) column41.get("cell1");
-		Map<String, String> cell421 = (Map<String, String>) column42.get("cell1");
-		assertEquals("วันที่-เวลา", cell411.get("titleTh"));
-		assertEquals("transaction date", cell411.get("titleEn"));
-		assertEquals("10/02/13 15:35", cell411.get("value"));
-		assertEquals("เลขที่อ้างอิง", cell421.get("titleTh"));
-		assertEquals("transaction ID", cell421.get("titleEn"));
-		assertEquals("1234567890", cell421.get("value"));
+		
+		assertEquals("{logoURL=http://localhost:8080/m/tmn_webview/images/logo_bill/trmv@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
+		assertEquals("{column1={cell1={titleTh=หมายเลขโทรศัพท์, titleEn=mobile number, value=089-765-4333}}}", data.get("section2").toString());
+		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
+		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
 	}
 
-
+	
 	@Test
 	public void getBillPayActivityDetails() throws Exception {
 		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
@@ -294,87 +149,10 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(4L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 
-		assertTrue(data.containsKey("section1"));
-		Map<String, String> section1 = (Map<String, String>) data.get("section1");
-		assertTrue(section1.containsKey("logoURL"));
-		assertTrue(section1.containsKey("titleTh"));
-		assertTrue(section1.containsKey("titleEn"));
-		assertEquals("http://localhost:8080/m/tmn_webview/images/logo_bill/ti@2x.png", section1.get("logoURL"));
-		assertEquals("", section1.get("titleTh"));
-		assertEquals("", section1.get("titleEn"));
-
-		assertTrue(data.containsKey("section2"));
-		Map<String, Object> section2 = (Map<String, Object>) data.get("section2");
-		assertTrue(section2.containsKey("column1"));
-		assertFalse(section2.containsKey("column2"));
-		Map<String, Object> column21 = (Map<String, Object>) section2.get("column1");
-		assertTrue(column21.containsKey("cell1"));
-		assertTrue(column21.containsKey("cell2"));
-		Map<String, String> cell1 = (Map<String, String>) column21.get("cell1");
-		Map<String, String> cell2 = (Map<String, String>) column21.get("cell2");
-		assertTrue(cell1.containsKey("titleTh"));
-		assertTrue(cell1.containsKey("titleEn"));
-		assertTrue(cell1.containsKey("value"));
-		assertEquals("รหัสลูกค้า/หมายเลขโทรศัพท์", cell1.get("titleTh"));
-		assertEquals("Account/Mobile Number", cell1.get("titleEn"));
-		assertEquals("864895245", cell1.get("value"));
-		assertTrue(cell2.containsKey("titleTh"));
-		assertTrue(cell2.containsKey("titleEn"));
-		assertTrue(cell2.containsKey("value"));
-		assertEquals("เลขที่ใบแจ้งค่าบริการ", cell2.get("titleTh"));
-		assertEquals("invoice number", cell2.get("titleEn"));
-		assertEquals("923178945372901", cell2.get("value"));
-
-		assertTrue(data.containsKey("section3"));
-		Map<String, Object> section3 = (Map<String, Object>) data.get("section3");
-		assertTrue(section3.containsKey("column1"));
-		assertTrue(section3.containsKey("column2"));
-		Map<String, Object> column31 = (Map<String, Object>) section3.get("column1");
-		Map<String, Object> column32 = (Map<String, Object>) section3.get("column2");
-		assertTrue(column31.containsKey("cell1"));
-		assertTrue(column31.containsKey("cell2"));
-		assertTrue(column32.containsKey("cell1"));
-		assertFalse(column32.containsKey("cell2"));
-		Map<String, String> cell311 = (Map<String, String>) column31.get("cell1");
-		Map<String, String> cell312 = (Map<String, String>) column31.get("cell2");
-		Map<String, String> cell321 = (Map<String, String>) column32.get("cell1");
-		assertTrue(cell311.containsKey("titleTh"));
-		assertTrue(cell311.containsKey("titleEn"));
-		assertTrue(cell311.containsKey("value"));
-		assertEquals("จำนวนเงิน", cell311.get("titleTh"));
-		assertEquals("amount", cell311.get("titleEn"));
-		assertEquals("23,455.50", cell311.get("value"));
-		assertTrue(cell312.containsKey("titleTh"));
-		assertTrue(cell312.containsKey("titleEn"));
-		assertTrue(cell312.containsKey("value"));
-		assertEquals("รวมเงินที่ชำระ", cell312.get("titleTh"));
-		assertEquals("total amount", cell312.get("titleEn"));
-		assertEquals("24,690.00", cell312.get("value"));
-		assertTrue(cell321.containsKey("titleTh"));
-		assertTrue(cell321.containsKey("titleEn"));
-		assertTrue(cell321.containsKey("value"));
-		assertEquals("ค่าธรรมเนียม", cell321.get("titleTh"));
-		assertEquals("total fee", cell321.get("titleEn"));
-		assertEquals("1,234.50", cell321.get("value"));
-
-		assertTrue(data.containsKey("section4"));
-		Map<String, Object> section4 = (Map<String, Object>) data.get("section4");
-		assertTrue(section4.containsKey("column1"));
-		assertTrue(section4.containsKey("column2"));
-		Map<String, Object> column41 = (Map<String, Object>) section4.get("column1");
-		Map<String, Object> column42 = (Map<String, Object>) section4.get("column2");
-		assertTrue(column41.containsKey("cell1"));
-		assertFalse(column41.containsKey("cell2"));
-		assertTrue(column42.containsKey("cell1"));
-		assertFalse(column42.containsKey("cell2"));
-		Map<String, String> cell411 = (Map<String, String>) column41.get("cell1");
-		Map<String, String> cell421 = (Map<String, String>) column42.get("cell1");
-		assertEquals("วันที่-เวลา", cell411.get("titleTh"));
-		assertEquals("transaction date", cell411.get("titleEn"));
-		assertEquals("10/02/13 15:35", cell411.get("value"));
-		assertEquals("เลขที่อ้างอิง", cell421.get("titleTh"));
-		assertEquals("transaction ID", cell421.get("titleEn"));
-		assertEquals("1234567890", cell421.get("value"));
+		assertEquals("{logoURL=http://localhost:8080/m/tmn_webview/images/logo_bill/ti@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
+		assertEquals("{column1={cell2={titleTh=เลขที่ใบแจ้งค่าบริการ, titleEn=invoice number, value=923178945372901}, cell1={titleTh=เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก, titleEn=Telephone Number/Customer Number, value=864895245}}}", data.get("section2").toString());
+		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
+		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
 	}
 	
 	@Test
@@ -396,80 +174,10 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(4L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 
-		assertTrue(data.containsKey("section1"));
-		Map<String, String> section1 = (Map<String, String>) data.get("section1");
-		assertTrue(section1.containsKey("logoURL"));
-		assertTrue(section1.containsKey("titleTh"));
-		assertTrue(section1.containsKey("titleEn"));
-		assertEquals("http://localhost:8080/m/tmn_webview/images/logo_bill/tmvh@2x.png", section1.get("logoURL"));
-		assertEquals("", section1.get("titleTh"));
-		assertEquals("", section1.get("titleEn"));
-
-		assertTrue(data.containsKey("section2"));
-		Map<String, Object> section2 = (Map<String, Object>) data.get("section2");
-		assertTrue(section2.containsKey("column1"));
-		assertFalse(section2.containsKey("column2"));
-		Map<String, Object> column21 = (Map<String, Object>) section2.get("column1");
-		assertTrue(column21.containsKey("cell1"));
-		assertFalse(column21.containsKey("cell2"));
-		Map<String, String> cell1 = (Map<String, String>) column21.get("cell1");
-		assertTrue(cell1.containsKey("titleTh"));
-		assertTrue(cell1.containsKey("titleEn"));
-		assertTrue(cell1.containsKey("value"));
-		assertEquals("รหัสลูกค้า/หมายเลขโทรศัพท์", cell1.get("titleTh"));
-		assertEquals("Account/Mobile Number", cell1.get("titleEn"));
-		assertEquals("089-123-4567", cell1.get("value"));
-
-		assertTrue(data.containsKey("section3"));
-		Map<String, Object> section3 = (Map<String, Object>) data.get("section3");
-		assertTrue(section3.containsKey("column1"));
-		assertTrue(section3.containsKey("column2"));
-		Map<String, Object> column31 = (Map<String, Object>) section3.get("column1");
-		Map<String, Object> column32 = (Map<String, Object>) section3.get("column2");
-		assertTrue(column31.containsKey("cell1"));
-		assertTrue(column31.containsKey("cell2"));
-		assertTrue(column32.containsKey("cell1"));
-		assertFalse(column32.containsKey("cell2"));
-		Map<String, String> cell311 = (Map<String, String>) column31.get("cell1");
-		Map<String, String> cell312 = (Map<String, String>) column31.get("cell2");
-		Map<String, String> cell321 = (Map<String, String>) column32.get("cell1");
-		assertTrue(cell311.containsKey("titleTh"));
-		assertTrue(cell311.containsKey("titleEn"));
-		assertTrue(cell311.containsKey("value"));
-		assertEquals("จำนวนเงิน", cell311.get("titleTh"));
-		assertEquals("amount", cell311.get("titleEn"));
-		assertEquals("23,455.50", cell311.get("value"));
-		assertTrue(cell312.containsKey("titleTh"));
-		assertTrue(cell312.containsKey("titleEn"));
-		assertTrue(cell312.containsKey("value"));
-		assertEquals("รวมเงินที่ชำระ", cell312.get("titleTh"));
-		assertEquals("total amount", cell312.get("titleEn"));
-		assertEquals("24,690.00", cell312.get("value"));
-		assertTrue(cell321.containsKey("titleTh"));
-		assertTrue(cell321.containsKey("titleEn"));
-		assertTrue(cell321.containsKey("value"));
-		assertEquals("ค่าธรรมเนียม", cell321.get("titleTh"));
-		assertEquals("total fee", cell321.get("titleEn"));
-		assertEquals("1,234.50", cell321.get("value"));
-
-		assertTrue(data.containsKey("section4"));
-		Map<String, Object> section4 = (Map<String, Object>) data.get("section4");
-		assertTrue(section4.containsKey("column1"));
-		assertTrue(section4.containsKey("column2"));
-		Map<String, Object> column41 = (Map<String, Object>) section4.get("column1");
-		Map<String, Object> column42 = (Map<String, Object>) section4.get("column2");
-		assertTrue(column41.containsKey("cell1"));
-		assertFalse(column41.containsKey("cell2"));
-		assertTrue(column42.containsKey("cell1"));
-		assertFalse(column42.containsKey("cell2"));
-		Map<String, String> cell411 = (Map<String, String>) column41.get("cell1");
-		Map<String, String> cell421 = (Map<String, String>) column42.get("cell1");
-		assertEquals("วันที่-เวลา", cell411.get("titleTh"));
-		assertEquals("transaction date", cell411.get("titleEn"));
-		assertEquals("10/02/13 15:35", cell411.get("value"));
-		assertEquals("เลขที่อ้างอิง", cell421.get("titleTh"));
-		assertEquals("transaction ID", cell421.get("titleEn"));
-		assertEquals("1234567890", cell421.get("value"));
+		assertEquals("{logoURL=http://localhost:8080/m/tmn_webview/images/logo_bill/tmvh@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
+		assertEquals("{column1={cell1={titleTh=เบอร์โทรศัพท์ทรูมูฟ เอช, titleEn=Mobile Number, value=089-123-4567}}}", data.get("section2").toString());
+		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
+		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
 	}
 	
 	@Test
@@ -490,83 +198,13 @@ public class TestWalletActivityDetailController extends
 
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(4L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
-
-		assertTrue(data.containsKey("section1"));
-		Map<String, String> section1 = (Map<String, String>) data.get("section1");
-		assertTrue(section1.containsKey("logoURL"));
-		assertTrue(section1.containsKey("titleTh"));
-		assertTrue(section1.containsKey("titleEn"));
-		assertEquals("http://localhost:8080/m/tmn_webview/images/logo_bill/tr@2x.png", section1.get("logoURL"));
-		assertEquals("", section1.get("titleTh"));
-		assertEquals("", section1.get("titleEn"));
-
-		assertTrue(data.containsKey("section2"));
-		Map<String, Object> section2 = (Map<String, Object>) data.get("section2");
-		assertTrue(section2.containsKey("column1"));
-		assertFalse(section2.containsKey("column2"));
-		Map<String, Object> column21 = (Map<String, Object>) section2.get("column1");
-		assertTrue(column21.containsKey("cell1"));
-		assertFalse(column21.containsKey("cell2"));
-		Map<String, String> cell1 = (Map<String, String>) column21.get("cell1");
-		assertTrue(cell1.containsKey("titleTh"));
-		assertTrue(cell1.containsKey("titleEn"));
-		assertTrue(cell1.containsKey("value"));
-		assertEquals("เลขที่อ้างอิง 1/หมายเลขโทรศัพท์", cell1.get("titleTh"));
-		assertEquals("Account/Mobile Number", cell1.get("titleEn"));
-		assertEquals("02-000-0000", cell1.get("value"));
-
-		assertTrue(data.containsKey("section3"));
-		Map<String, Object> section3 = (Map<String, Object>) data.get("section3");
-		assertTrue(section3.containsKey("column1"));
-		assertTrue(section3.containsKey("column2"));
-		Map<String, Object> column31 = (Map<String, Object>) section3.get("column1");
-		Map<String, Object> column32 = (Map<String, Object>) section3.get("column2");
-		assertTrue(column31.containsKey("cell1"));
-		assertTrue(column31.containsKey("cell2"));
-		assertTrue(column32.containsKey("cell1"));
-		assertFalse(column32.containsKey("cell2"));
-		Map<String, String> cell311 = (Map<String, String>) column31.get("cell1");
-		Map<String, String> cell312 = (Map<String, String>) column31.get("cell2");
-		Map<String, String> cell321 = (Map<String, String>) column32.get("cell1");
-		assertTrue(cell311.containsKey("titleTh"));
-		assertTrue(cell311.containsKey("titleEn"));
-		assertTrue(cell311.containsKey("value"));
-		assertEquals("จำนวนเงิน", cell311.get("titleTh"));
-		assertEquals("amount", cell311.get("titleEn"));
-		assertEquals("23,455.50", cell311.get("value"));
-		assertTrue(cell312.containsKey("titleTh"));
-		assertTrue(cell312.containsKey("titleEn"));
-		assertTrue(cell312.containsKey("value"));
-		assertEquals("รวมเงินที่ชำระ", cell312.get("titleTh"));
-		assertEquals("total amount", cell312.get("titleEn"));
-		assertEquals("24,690.00", cell312.get("value"));
-		assertTrue(cell321.containsKey("titleTh"));
-		assertTrue(cell321.containsKey("titleEn"));
-		assertTrue(cell321.containsKey("value"));
-		assertEquals("ค่าธรรมเนียม", cell321.get("titleTh"));
-		assertEquals("total fee", cell321.get("titleEn"));
-		assertEquals("1,234.50", cell321.get("value"));
-
-		assertTrue(data.containsKey("section4"));
-		Map<String, Object> section4 = (Map<String, Object>) data.get("section4");
-		assertTrue(section4.containsKey("column1"));
-		assertTrue(section4.containsKey("column2"));
-		Map<String, Object> column41 = (Map<String, Object>) section4.get("column1");
-		Map<String, Object> column42 = (Map<String, Object>) section4.get("column2");
-		assertTrue(column41.containsKey("cell1"));
-		assertFalse(column41.containsKey("cell2"));
-		assertTrue(column42.containsKey("cell1"));
-		assertFalse(column42.containsKey("cell2"));
-		Map<String, String> cell411 = (Map<String, String>) column41.get("cell1");
-		Map<String, String> cell421 = (Map<String, String>) column42.get("cell1");
-		assertEquals("วันที่-เวลา", cell411.get("titleTh"));
-		assertEquals("transaction date", cell411.get("titleEn"));
-		assertEquals("10/02/13 15:35", cell411.get("value"));
-		assertEquals("เลขที่อ้างอิง", cell421.get("titleTh"));
-		assertEquals("transaction ID", cell421.get("titleEn"));
-		assertEquals("1234567890", cell421.get("value"));
+		
+		assertEquals("{logoURL=http://localhost:8080/m/tmn_webview/images/logo_bill/tr@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
+		assertEquals("{column1={cell1={titleTh=เบอร์โทรศัพท์บ้าน, titleEn=Telephone Number, value=02-000-0000}}}", data.get("section2").toString());
+		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
+		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
 	}
-
+	
 	@Test
 	public void getBillPayActivityDetailsRef2Empty() throws Exception {
 		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
@@ -585,85 +223,13 @@ public class TestWalletActivityDetailController extends
 
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(4L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
-
-		assertTrue(data.containsKey("section1"));
-		Map<String, String> section1 = (Map<String, String>) data.get("section1");
-		assertTrue(section1.containsKey("logoURL"));
-		assertTrue(section1.containsKey("titleTh"));
-		assertTrue(section1.containsKey("titleEn"));
-		assertEquals("http://localhost:8080/m/tmn_webview/images/logo_bill/ti@2x.png", section1.get("logoURL"));
-		assertEquals("", section1.get("titleTh"));
-		assertEquals("", section1.get("titleEn"));
-
-		assertTrue(data.containsKey("section2"));
-		Map<String, Object> section2 = (Map<String, Object>) data.get("section2");
-		assertTrue(section2.containsKey("column1"));
-		assertFalse(section2.containsKey("column2"));
-		Map<String, Object> column21 = (Map<String, Object>) section2.get("column1");
-		assertTrue(column21.containsKey("cell1"));
-		assertFalse(column21.containsKey("cell2"));
-		Map<String, String> cell1 = (Map<String, String>) column21.get("cell1");
-		Map<String, String> cell2 = (Map<String, String>) column21.get("cell2");
-		assertTrue(cell1.containsKey("titleTh"));
-		assertTrue(cell1.containsKey("titleEn"));
-		assertTrue(cell1.containsKey("value"));
-		assertEquals("รหัสลูกค้า/หมายเลขโทรศัพท์", cell1.get("titleTh"));
-		assertEquals("Account/Mobile Number", cell1.get("titleEn"));
-		assertEquals("864895245", cell1.get("value"));
 		
-
-		assertTrue(data.containsKey("section3"));
-		Map<String, Object> section3 = (Map<String, Object>) data.get("section3");
-		assertTrue(section3.containsKey("column1"));
-		assertTrue(section3.containsKey("column2"));
-		Map<String, Object> column31 = (Map<String, Object>) section3.get("column1");
-		Map<String, Object> column32 = (Map<String, Object>) section3.get("column2");
-		assertTrue(column31.containsKey("cell1"));
-		assertTrue(column31.containsKey("cell2"));
-		assertTrue(column32.containsKey("cell1"));
-		assertFalse(column32.containsKey("cell2"));
-		Map<String, String> cell311 = (Map<String, String>) column31.get("cell1");
-		Map<String, String> cell312 = (Map<String, String>) column31.get("cell2");
-		Map<String, String> cell321 = (Map<String, String>) column32.get("cell1");
-		assertTrue(cell311.containsKey("titleTh"));
-		assertTrue(cell311.containsKey("titleEn"));
-		assertTrue(cell311.containsKey("value"));
-		assertEquals("จำนวนเงิน", cell311.get("titleTh"));
-		assertEquals("amount", cell311.get("titleEn"));
-		assertEquals("23,455.50", cell311.get("value"));
-		assertTrue(cell312.containsKey("titleTh"));
-		assertTrue(cell312.containsKey("titleEn"));
-		assertTrue(cell312.containsKey("value"));
-		assertEquals("รวมเงินที่ชำระ", cell312.get("titleTh"));
-		assertEquals("total amount", cell312.get("titleEn"));
-		assertEquals("24,690.00", cell312.get("value"));
-		assertTrue(cell321.containsKey("titleTh"));
-		assertTrue(cell321.containsKey("titleEn"));
-		assertTrue(cell321.containsKey("value"));
-		assertEquals("ค่าธรรมเนียม", cell321.get("titleTh"));
-		assertEquals("total fee", cell321.get("titleEn"));
-		assertEquals("1,234.50", cell321.get("value"));
-
-		assertTrue(data.containsKey("section4"));
-		Map<String, Object> section4 = (Map<String, Object>) data.get("section4");
-		assertTrue(section4.containsKey("column1"));
-		assertTrue(section4.containsKey("column2"));
-		Map<String, Object> column41 = (Map<String, Object>) section4.get("column1");
-		Map<String, Object> column42 = (Map<String, Object>) section4.get("column2");
-		assertTrue(column41.containsKey("cell1"));
-		assertFalse(column41.containsKey("cell2"));
-		assertTrue(column42.containsKey("cell1"));
-		assertFalse(column42.containsKey("cell2"));
-		Map<String, String> cell411 = (Map<String, String>) column41.get("cell1");
-		Map<String, String> cell421 = (Map<String, String>) column42.get("cell1");
-		assertEquals("วันที่-เวลา", cell411.get("titleTh"));
-		assertEquals("transaction date", cell411.get("titleEn"));
-		assertEquals("10/02/13 15:35", cell411.get("value"));
-		assertEquals("เลขที่อ้างอิง", cell421.get("titleTh"));
-		assertEquals("transaction ID", cell421.get("titleEn"));
-		assertEquals("1234567890", cell421.get("value"));
+		assertEquals("{logoURL=http://localhost:8080/m/tmn_webview/images/logo_bill/ti@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
+		assertEquals("{column1={cell1={titleTh=เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก, titleEn=Telephone Number/Customer Number, value=864895245}}}", data.get("section2").toString());
+		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
+		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
 	}
-
+	
 	@Test
 	public void getBillPayActivityDetailsRef2Dash() throws Exception {
 		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
@@ -682,85 +248,13 @@ public class TestWalletActivityDetailController extends
 
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(4L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
-
-		assertTrue(data.containsKey("section1"));
-		Map<String, String> section1 = (Map<String, String>) data.get("section1");
-		assertTrue(section1.containsKey("logoURL"));
-		assertTrue(section1.containsKey("titleTh"));
-		assertTrue(section1.containsKey("titleEn"));
-		assertEquals("http://localhost:8080/m/tmn_webview/images/logo_bill/ti@2x.png", section1.get("logoURL"));
-		assertEquals("", section1.get("titleTh"));
-		assertEquals("", section1.get("titleEn"));
-
-		assertTrue(data.containsKey("section2"));
-		Map<String, Object> section2 = (Map<String, Object>) data.get("section2");
-		assertTrue(section2.containsKey("column1"));
-		assertFalse(section2.containsKey("column2"));
-		Map<String, Object> column21 = (Map<String, Object>) section2.get("column1");
-		assertTrue(column21.containsKey("cell1"));
-		assertFalse(column21.containsKey("cell2"));
-		Map<String, String> cell1 = (Map<String, String>) column21.get("cell1");
-		Map<String, String> cell2 = (Map<String, String>) column21.get("cell2");
-		assertTrue(cell1.containsKey("titleTh"));
-		assertTrue(cell1.containsKey("titleEn"));
-		assertTrue(cell1.containsKey("value"));
-		assertEquals("รหัสลูกค้า/หมายเลขโทรศัพท์", cell1.get("titleTh"));
-		assertEquals("Account/Mobile Number", cell1.get("titleEn"));
-		assertEquals("864895245", cell1.get("value"));
 		
-
-		assertTrue(data.containsKey("section3"));
-		Map<String, Object> section3 = (Map<String, Object>) data.get("section3");
-		assertTrue(section3.containsKey("column1"));
-		assertTrue(section3.containsKey("column2"));
-		Map<String, Object> column31 = (Map<String, Object>) section3.get("column1");
-		Map<String, Object> column32 = (Map<String, Object>) section3.get("column2");
-		assertTrue(column31.containsKey("cell1"));
-		assertTrue(column31.containsKey("cell2"));
-		assertTrue(column32.containsKey("cell1"));
-		assertFalse(column32.containsKey("cell2"));
-		Map<String, String> cell311 = (Map<String, String>) column31.get("cell1");
-		Map<String, String> cell312 = (Map<String, String>) column31.get("cell2");
-		Map<String, String> cell321 = (Map<String, String>) column32.get("cell1");
-		assertTrue(cell311.containsKey("titleTh"));
-		assertTrue(cell311.containsKey("titleEn"));
-		assertTrue(cell311.containsKey("value"));
-		assertEquals("จำนวนเงิน", cell311.get("titleTh"));
-		assertEquals("amount", cell311.get("titleEn"));
-		assertEquals("23,455.50", cell311.get("value"));
-		assertTrue(cell312.containsKey("titleTh"));
-		assertTrue(cell312.containsKey("titleEn"));
-		assertTrue(cell312.containsKey("value"));
-		assertEquals("รวมเงินที่ชำระ", cell312.get("titleTh"));
-		assertEquals("total amount", cell312.get("titleEn"));
-		assertEquals("24,690.00", cell312.get("value"));
-		assertTrue(cell321.containsKey("titleTh"));
-		assertTrue(cell321.containsKey("titleEn"));
-		assertTrue(cell321.containsKey("value"));
-		assertEquals("ค่าธรรมเนียม", cell321.get("titleTh"));
-		assertEquals("total fee", cell321.get("titleEn"));
-		assertEquals("1,234.50", cell321.get("value"));
-
-		assertTrue(data.containsKey("section4"));
-		Map<String, Object> section4 = (Map<String, Object>) data.get("section4");
-		assertTrue(section4.containsKey("column1"));
-		assertTrue(section4.containsKey("column2"));
-		Map<String, Object> column41 = (Map<String, Object>) section4.get("column1");
-		Map<String, Object> column42 = (Map<String, Object>) section4.get("column2");
-		assertTrue(column41.containsKey("cell1"));
-		assertFalse(column41.containsKey("cell2"));
-		assertTrue(column42.containsKey("cell1"));
-		assertFalse(column42.containsKey("cell2"));
-		Map<String, String> cell411 = (Map<String, String>) column41.get("cell1");
-		Map<String, String> cell421 = (Map<String, String>) column42.get("cell1");
-		assertEquals("วันที่-เวลา", cell411.get("titleTh"));
-		assertEquals("transaction date", cell411.get("titleEn"));
-		assertEquals("10/02/13 15:35", cell411.get("value"));
-		assertEquals("เลขที่อ้างอิง", cell421.get("titleTh"));
-		assertEquals("transaction ID", cell421.get("titleEn"));
-		assertEquals("1234567890", cell421.get("value"));
+		assertEquals("{logoURL=http://localhost:8080/m/tmn_webview/images/logo_bill/ti@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
+		assertEquals("{column1={cell1={titleTh=เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก, titleEn=Telephone Number/Customer Number, value=864895245}}}", data.get("section2").toString());
+		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
+		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
 	}
-
+	
 	@Test
 	public void getBonusActivityDetails() throws Exception {
 		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
@@ -777,66 +271,13 @@ public class TestWalletActivityDetailController extends
 
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(5L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
-
-		assertTrue(data.containsKey("section1"));
-		Map<String, String> section1 = (Map<String, String>) data.get("section1");
-		assertFalse(section1.containsKey("logoURL"));
-		assertTrue(section1.containsKey("titleTh"));
-		assertTrue(section1.containsKey("titleEn"));
-		assertEquals("คืนค่าธรรมเนียม", section1.get("titleTh"));
-		assertEquals("kickback", section1.get("titleEn"));
-
-		assertTrue(data.containsKey("section2"));
-		Map<String, Object> section2 = (Map<String, Object>) data.get("section2");
-		assertTrue(section2.containsKey("column1"));
-		assertFalse(section2.containsKey("column2"));
-		Map<String, Object> column21 = (Map<String, Object>) section2.get("column1");
-		assertTrue(column21.containsKey("cell1"));
-		assertFalse(column21.containsKey("cell2"));
-		Map<String, String> cell1 = (Map<String, String>) column21.get("cell1");
-		Map<String, String> cell2 = (Map<String, String>) column21.get("cell2");
-		assertTrue(cell1.containsKey("titleTh"));
-		assertTrue(cell1.containsKey("titleEn"));
-		assertTrue(cell1.containsKey("value"));
-		assertEquals("ทำรายการ", cell1.get("titleTh"));
-		assertEquals("activity", cell1.get("titleEn"));
-		assertEquals("เติมเงินด้วยบัญชีธนาคาร", cell1.get("value"));
-
-		assertTrue(data.containsKey("section3"));
-		Map<String, Object> section3 = (Map<String, Object>) data.get("section3");
-		assertTrue(section3.containsKey("column1"));
-		assertFalse(section3.containsKey("column2"));
-		Map<String, Object> column31 = (Map<String, Object>) section3.get("column1");
-		assertTrue(column31.containsKey("cell1"));
-		assertFalse(column31.containsKey("cell2"));
-		Map<String, String> cell311 = (Map<String, String>) column31.get("cell1");
-		assertTrue(cell311.containsKey("titleTh"));
-		assertTrue(cell311.containsKey("titleEn"));
-		assertTrue(cell311.containsKey("value"));
-		assertEquals("ยอดเงินเข้า Wallet", cell311.get("titleTh"));
-		assertEquals("total amount", cell311.get("titleEn"));
-		assertEquals("23,455.50", cell311.get("value"));
-
-		assertTrue(data.containsKey("section4"));
-		Map<String, Object> section4 = (Map<String, Object>) data.get("section4");
-		assertTrue(section4.containsKey("column1"));
-		assertTrue(section4.containsKey("column2"));
-		Map<String, Object> column41 = (Map<String, Object>) section4.get("column1");
-		Map<String, Object> column42 = (Map<String, Object>) section4.get("column2");
-		assertTrue(column41.containsKey("cell1"));
-		assertFalse(column41.containsKey("cell2"));
-		assertTrue(column42.containsKey("cell1"));
-		assertFalse(column42.containsKey("cell2"));
-		Map<String, String> cell411 = (Map<String, String>) column41.get("cell1");
-		Map<String, String> cell421 = (Map<String, String>) column42.get("cell1");
-		assertEquals("วันที่-เวลา", cell411.get("titleTh"));
-		assertEquals("transaction date", cell411.get("titleEn"));
-		assertEquals("10/02/13 15:35", cell411.get("value"));
-		assertEquals("เลขที่อ้างอิง", cell421.get("titleTh"));
-		assertEquals("transaction ID", cell421.get("titleEn"));
-		assertEquals("1234567890", cell421.get("value"));
+		
+		assertEquals("{titleTh=คืนค่าธรรมเนียม, titleEn=kickback}", data.get("section1").toString());
+		assertEquals("{column1={cell1={titleTh=ทำรายการ, titleEn=activity, value=เติมเงินด้วยบัญชีธนาคาร}}}", data.get("section2").toString());
+		assertEquals("{column1={cell1={titleTh=ยอดเงินเข้า Wallet, titleEn=total amount, value=23,455.50}}}", data.get("section3").toString());
+		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
 	}
-
+	
 	@Test
 	public void getAddMoneyActivityDetails() throws Exception {
 		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
@@ -855,74 +296,13 @@ public class TestWalletActivityDetailController extends
 
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
-
-		assertTrue(data.containsKey("section1"));
-		Map<String, String> section1 = (Map<String, String>) data.get("section1");
-		assertTrue(section1.containsKey("logoURL"));
-		assertTrue(section1.containsKey("titleTh"));
-		assertTrue(section1.containsKey("titleEn"));
-		assertEquals("บัญชีธนาคาร", section1.get("titleTh"));
-		assertEquals("bank account", section1.get("titleEn"));
-
-		assertTrue(data.containsKey("section2"));
-		Map<String, Object> section2 = (Map<String, Object>) data.get("section2");
-		assertTrue(section2.containsKey("column1"));
-		assertFalse(section2.containsKey("column2"));
-		Map<String, Object> column21 = (Map<String, Object>) section2.get("column1");
-		assertTrue(column21.containsKey("cell1"));
-		assertTrue(column21.containsKey("cell2"));
-		Map<String, String> cell1 = (Map<String, String>) column21.get("cell1");
-		Map<String, String> cell2 = (Map<String, String>) column21.get("cell2");
-		assertTrue(cell1.containsKey("titleTh"));
-		assertTrue(cell1.containsKey("titleEn"));
-		assertTrue(cell1.containsKey("value"));
-		assertEquals("ธนาคาร", cell1.get("titleTh"));
-		assertEquals("bank name", cell1.get("titleEn"));
-		assertEquals("ธนาคารกรุงไทย", cell1.get("value"));
-		assertTrue(cell2.containsKey("titleTh"));
-		assertTrue(cell2.containsKey("titleEn"));
-		assertTrue(cell2.containsKey("value"));
-		assertEquals("หมายเลขบัญชี", cell2.get("titleTh"));
-		assertEquals("account number", cell2.get("titleEn"));
-		assertEquals("***7412", cell2.get("value"));
-
-		assertTrue(data.containsKey("section3"));
-		Map<String, Object> section3 = (Map<String, Object>) data.get("section3");
-		assertTrue(section3.containsKey("column1"));
-		assertFalse(section3.containsKey("column2"));
-		Map<String, Object> column31 = (Map<String, Object>) section3.get("column1");
-		Map<String, Object> column32 = (Map<String, Object>) section3.get("column2");
-		assertTrue(column31.containsKey("cell1"));
-		assertFalse(column31.containsKey("cell2"));
-		Map<String, String> cell311 = (Map<String, String>) column31.get("cell1");
-		Map<String, String> cell312 = (Map<String, String>) column31.get("cell2");
-		assertTrue(cell311.containsKey("titleTh"));
-		assertTrue(cell311.containsKey("titleEn"));
-		assertTrue(cell311.containsKey("value"));
-		assertEquals("ยอดเงินเข้า Wallet", cell311.get("titleTh"));
-		assertEquals("total amount", cell311.get("titleEn"));
-		assertEquals("24,690.00", cell311.get("value"));
-
-		assertTrue(data.containsKey("section4"));
-		Map<String, Object> section4 = (Map<String, Object>) data.get("section4");
-		assertTrue(section4.containsKey("column1"));
-		assertTrue(section4.containsKey("column2"));
-		Map<String, Object> column41 = (Map<String, Object>) section4.get("column1");
-		Map<String, Object> column42 = (Map<String, Object>) section4.get("column2");
-		assertTrue(column41.containsKey("cell1"));
-		assertFalse(column41.containsKey("cell2"));
-		assertTrue(column42.containsKey("cell1"));
-		assertFalse(column42.containsKey("cell2"));
-		Map<String, String> cell411 = (Map<String, String>) column41.get("cell1");
-		Map<String, String> cell421 = (Map<String, String>) column42.get("cell1");
-		assertEquals("วันที่-เวลา", cell411.get("titleTh"));
-		assertEquals("transaction date", cell411.get("titleEn"));
-		assertEquals("10/02/13 15:35", cell411.get("value"));
-		assertEquals("เลขที่อ้างอิง", cell421.get("titleTh"));
-		assertEquals("transaction ID", cell421.get("titleEn"));
-		assertEquals("1234567890", cell421.get("value"));
+		
+		assertEquals("{logoURL=http://localhost:8080/m/tmn_webview/images/logo_bank/ktb@2x.png, titleTh=บัญชีธนาคาร, titleEn=bank account}", data.get("section1").toString());
+		assertEquals("{column1={cell2={titleTh=หมายเลขบัญชี, titleEn=account number, value=***7412}, cell1={titleTh=ธนาคาร, titleEn=bank name, value=ธนาคารกรุงไทย}}}", data.get("section2").toString());
+		assertEquals("{column1={cell1={titleTh=ยอดเงินเข้า Wallet, titleEn=total amount, value=24,690.00}}}", data.get("section3").toString());
+		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
 	}
-
+	
 	@Test
 	public void getTransferDebtorActivityDetails() throws Exception {
 		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
@@ -941,71 +321,12 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(7L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 
-		assertTrue(data.containsKey("section1"));
-		Map<String, String> section1 = (Map<String, String>) data.get("section1");
-		assertFalse(section1.containsKey("logoURL"));
-		assertTrue(section1.containsKey("titleTh"));
-		assertTrue(section1.containsKey("titleEn"));
-		assertEquals("ส่งเงิน", section1.get("titleTh"));
-		assertEquals("debtor", section1.get("titleEn"));
-
-		assertTrue(data.containsKey("section2"));
-		Map<String, Object> section2 = (Map<String, Object>) data.get("section2");
-		assertTrue(section2.containsKey("column1"));
-		assertFalse(section2.containsKey("column2"));
-		Map<String, Object> column21 = (Map<String, Object>) section2.get("column1");
-		assertTrue(column21.containsKey("cell1"));
-		assertTrue(column21.containsKey("cell2"));
-		Map<String, String> cell1 = (Map<String, String>) column21.get("cell1");
-		Map<String, String> cell2 = (Map<String, String>) column21.get("cell2");
-		assertTrue(cell1.containsKey("titleTh"));
-		assertTrue(cell1.containsKey("titleEn"));
-		assertTrue(cell1.containsKey("value"));
-		assertEquals("หมายเลขผู้รับ", cell1.get("titleTh"));
-		assertEquals("account number", cell1.get("titleEn"));
-		assertEquals("085-382-8482", cell1.get("value"));
-		assertTrue(cell2.containsKey("titleTh"));
-		assertTrue(cell2.containsKey("titleEn"));
-		assertTrue(cell2.containsKey("value"));
-		assertEquals("ชื่อผู้รับ", cell2.get("titleTh"));
-		assertEquals("account owner", cell2.get("titleEn"));
-		assertEquals("ทวี คุณบิดา", cell2.get("value"));
-
-		assertTrue(data.containsKey("section3"));
-		Map<String, Object> section3 = (Map<String, Object>) data.get("section3");
-		assertTrue(section3.containsKey("column1"));
-		assertFalse(section3.containsKey("column2"));
-		Map<String, Object> column31 = (Map<String, Object>) section3.get("column1");
-		assertTrue(column31.containsKey("cell1"));
-		assertFalse(column31.containsKey("cell2"));
-		Map<String, String> cell311 = (Map<String, String>) column31.get("cell1");
-		assertTrue(cell311.containsKey("titleTh"));
-		assertTrue(cell311.containsKey("titleEn"));
-		assertTrue(cell311.containsKey("value"));
-		assertEquals("จำนวนเงิน", cell311.get("titleTh"));
-		assertEquals("amount", cell311.get("titleEn"));
-		assertEquals("23,455.50", cell311.get("value"));
-
-		assertTrue(data.containsKey("section4"));
-		Map<String, Object> section4 = (Map<String, Object>) data.get("section4");
-		assertTrue(section4.containsKey("column1"));
-		assertTrue(section4.containsKey("column2"));
-		Map<String, Object> column41 = (Map<String, Object>) section4.get("column1");
-		Map<String, Object> column42 = (Map<String, Object>) section4.get("column2");
-		assertTrue(column41.containsKey("cell1"));
-		assertFalse(column41.containsKey("cell2"));
-		assertTrue(column42.containsKey("cell1"));
-		assertFalse(column42.containsKey("cell2"));
-		Map<String, String> cell411 = (Map<String, String>) column41.get("cell1");
-		Map<String, String> cell421 = (Map<String, String>) column42.get("cell1");
-		assertEquals("วันที่-เวลา", cell411.get("titleTh"));
-		assertEquals("transaction date", cell411.get("titleEn"));
-		assertEquals("10/02/13 15:35", cell411.get("value"));
-		assertEquals("เลขที่อ้างอิง", cell421.get("titleTh"));
-		assertEquals("transaction ID", cell421.get("titleEn"));
-		assertEquals("1234567890", cell421.get("value"));
+		assertEquals("{titleTh=ส่งเงิน, titleEn=debtor}", data.get("section1").toString());
+		assertEquals("{column1={cell2={titleTh=ชื่อผู้รับ, titleEn=account owner, value=ทวี คุณบิดา}, cell1={titleTh=หมายเลขผู้รับ, titleEn=account number, value=085-382-8482}}}", data.get("section2").toString());
+		assertEquals("{column1={cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}}", data.get("section3").toString());
+		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
 	}
-
+	
 	@Test
 	public void getTransferCreditorActivityDetails() throws Exception {
 		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
@@ -1023,69 +344,10 @@ public class TestWalletActivityDetailController extends
 
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(7L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
-
-		assertTrue(data.containsKey("section1"));
-		Map<String, String> section1 = (Map<String, String>) data.get("section1");
-		assertFalse(section1.containsKey("logoURL"));
-		assertTrue(section1.containsKey("titleTh"));
-		assertTrue(section1.containsKey("titleEn"));
-		assertEquals("รับเงิน", section1.get("titleTh"));
-		assertEquals("creditor", section1.get("titleEn"));
-
-		assertTrue(data.containsKey("section2"));
-		Map<String, Object> section2 = (Map<String, Object>) data.get("section2");
-		assertTrue(section2.containsKey("column1"));
-		assertFalse(section2.containsKey("column2"));
-		Map<String, Object> column21 = (Map<String, Object>) section2.get("column1");
-		assertTrue(column21.containsKey("cell1"));
-		assertTrue(column21.containsKey("cell2"));
-		Map<String, String> cell1 = (Map<String, String>) column21.get("cell1");
-		Map<String, String> cell2 = (Map<String, String>) column21.get("cell2");
-		assertTrue(cell1.containsKey("titleTh"));
-		assertTrue(cell1.containsKey("titleEn"));
-		assertTrue(cell1.containsKey("value"));
-		assertEquals("หมายเลขผู้ส่ง", cell1.get("titleTh"));
-		assertEquals("account number", cell1.get("titleEn"));
-		assertEquals("085-382-8482", cell1.get("value"));
-		assertTrue(cell2.containsKey("titleTh"));
-		assertTrue(cell2.containsKey("titleEn"));
-		assertTrue(cell2.containsKey("value"));
-		assertEquals("ชื่อผู้ส่ง", cell2.get("titleTh"));
-		assertEquals("account owner", cell2.get("titleEn"));
-		assertEquals("ทวี คุณบิดา", cell2.get("value"));
-
-		assertTrue(data.containsKey("section3"));
-		Map<String, Object> section3 = (Map<String, Object>) data.get("section3");
-		assertTrue(section3.containsKey("column1"));
-		assertFalse(section3.containsKey("column2"));
-		Map<String, Object> column31 = (Map<String, Object>) section3.get("column1");
-		assertTrue(column31.containsKey("cell1"));
-		assertFalse(column31.containsKey("cell2"));
-		Map<String, String> cell311 = (Map<String, String>) column31.get("cell1");
-		assertTrue(cell311.containsKey("titleTh"));
-		assertTrue(cell311.containsKey("titleEn"));
-		assertTrue(cell311.containsKey("value"));
-		assertEquals("จำนวนเงิน", cell311.get("titleTh"));
-		assertEquals("amount", cell311.get("titleEn"));
-		assertEquals("23,455.50", cell311.get("value"));
-
-		assertTrue(data.containsKey("section4"));
-		Map<String, Object> section4 = (Map<String, Object>) data.get("section4");
-		assertTrue(section4.containsKey("column1"));
-		assertTrue(section4.containsKey("column2"));
-		Map<String, Object> column41 = (Map<String, Object>) section4.get("column1");
-		Map<String, Object> column42 = (Map<String, Object>) section4.get("column2");
-		assertTrue(column41.containsKey("cell1"));
-		assertFalse(column41.containsKey("cell2"));
-		assertTrue(column42.containsKey("cell1"));
-		assertFalse(column42.containsKey("cell2"));
-		Map<String, String> cell411 = (Map<String, String>) column41.get("cell1");
-		Map<String, String> cell421 = (Map<String, String>) column42.get("cell1");
-		assertEquals("วันที่-เวลา", cell411.get("titleTh"));
-		assertEquals("transaction date", cell411.get("titleEn"));
-		assertEquals("10/02/13 15:35", cell411.get("value"));
-		assertEquals("เลขที่อ้างอิง", cell421.get("titleTh"));
-		assertEquals("transaction ID", cell421.get("titleEn"));
-		assertEquals("1234567890", cell421.get("value"));
+		
+		assertEquals("{titleTh=รับเงิน, titleEn=creditor}", data.get("section1").toString());
+		assertEquals("{column1={cell2={titleTh=ชื่อผู้ส่ง, titleEn=account owner, value=ทวี คุณบิดา}, cell1={titleTh=หมายเลขผู้ส่ง, titleEn=account number, value=085-382-8482}}}", data.get("section2").toString());
+		assertEquals("{column1={cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}}", data.get("section3").toString());
+		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
 	}
 }

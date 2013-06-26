@@ -1,6 +1,8 @@
 package th.co.truemoney.product.api.controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,10 +24,10 @@ import th.co.truemoney.product.api.handler.BillPayActivityDetailViewHandler;
 import th.co.truemoney.product.api.handler.BonusActivityDetailViewHandler;
 import th.co.truemoney.product.api.handler.TopupMobileActivityDetailViewHandler;
 import th.co.truemoney.product.api.handler.TransferActivityDetailViewHandler;
+import th.co.truemoney.product.api.manager.BillConfigurationManager;
 import th.co.truemoney.product.api.manager.OnlineResourceManager;
 import th.co.truemoney.product.api.util.BankUtil;
 import th.co.truemoney.product.api.util.Utils;
-import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.ewallet.ActivityService;
 import th.co.truemoney.serviceinventory.ewallet.domain.Activity;
 import th.co.truemoney.serviceinventory.ewallet.domain.ActivityDetail;
@@ -39,7 +41,10 @@ public class WalletActivityController extends BaseController {
 	
 	@Autowired
 	private OnlineResourceManager onlineResourceManager;
-
+	
+	@Autowired
+	private BillConfigurationManager billConfigurationManager;
+	
 	@RequestMapping(value = "/list/{accessTokenID}", method = RequestMethod.GET)
 	@ResponseBody
 	public ProductResponse getActivityList(@PathVariable String accessTokenID) {
@@ -47,54 +52,22 @@ public class WalletActivityController extends BaseController {
 
 		List<ActivityViewItem> itemList = new ArrayList<ActivityViewItem>();
 		for (Activity act : activityList) {
-			String type = act.getType();
-			String action = act.getAction();
-			String ref1 = act.getRef1();
-			
-			String logoURL = onlineResourceManager.getActivityTypeLogoURL(type);
-			String txt1En = WalletActivity.getTypeInEnglish(type);
-			String txt1Th = WalletActivity.getTypeInThai(type);
-			String txt2En = Utils.formatDate(act.getTransactionDate());
-			String txt2Th = txt2En;
-			String txt3En = WalletActivity.getActionInEnglish(action);
-			String txt3Th = WalletActivity.getActionInThai(action);
-			String txt4En = Utils.formatSignedAmount(act.getTotalAmount());
-			String txt4Th = txt4En;
-			String txt5En = ref1;
-			String txt5Th = ref1;
-			TYPE t = WalletActivity.getType(type);
-			if (t == TYPE.TOPUP_MOBILE || t == TYPE.TRANSFER) {
-				txt5En = Utils.formatMobileNumber(ref1);
-				txt5Th = txt5En;
-			} else if (t == TYPE.ADD_MONEY && "debit".equals(action)) {
-				txt5En = BankUtil.getEnglishBankName(ref1);
-				txt5Th = BankUtil.getThaiBankName(ref1);
-			} else if ("add_money".equalsIgnoreCase(ref1)) {
-				txt5En = "Direct Debit Topup";
-				txt5Th = "เติมเงินด้วยบัญชีธนาคาร";
-			} else if (t == TYPE.BILLPAY) {
-				if(ValidateUtil.isMobileNumber(ref1)){
-					txt5En = Utils.formatMobileNumber(ref1);
-					txt5Th = txt5En;
-				}else if(ValidateUtil.isTelNumber(ref1)){
-					txt5En = Utils.formatTelNumber(ref1);
-					txt5Th = txt5En;
-				}
-			}
+			TYPE t = WalletActivity.getType(act.getType());
+			String action = Utils.removeSuffix(act.getAction());
 			
 			ActivityViewItem item = new ActivityViewItem();
 			item.setReportID(String.valueOf(act.getReportID()));
-			item.setLogoURL(logoURL);
-			item.setText1En(txt1En);
-			item.setText1Th(txt1Th);
-			item.setText2En(txt2En);
-			item.setText2Th(txt2Th);
-			item.setText3En(txt3En);
-			item.setText3Th(txt3Th);
-			item.setText4En(txt4En);
-			item.setText4Th(txt4Th);
-			item.setText5En(txt5En);
-			item.setText5Th(txt5Th);
+			item.setLogoURL(getActivityTypeLogo(act));
+			item.setText1En(WalletActivity.getTypeInEnglish(t));
+			item.setText1Th(WalletActivity.getTypeInThai(t));
+			item.setText2En(getDateString(act.getTransactionDate()));
+			item.setText2Th(getDateString(act.getTransactionDate()));
+			item.setText3En(getActionNameEn(t, action));
+			item.setText3Th(getActionNameTh(t, action));
+			item.setText4En(getAmountString(act.getAmount()));
+			item.setText4Th(getAmountString(act.getAmount()));
+			item.setText5En(getRef1StringEn(t, action, act.getRef1()));
+			item.setText5Th(getRef1StringTh(t, action, act.getRef1()));
 			itemList.add(item);
 		}
 
@@ -102,6 +75,58 @@ public class WalletActivityController extends BaseController {
 		data.put("activities", itemList);
 
 		return this.responseFactory.createSuccessProductResonse(data);
+	}
+
+	private String getActivityTypeLogo(Activity action) {
+		return onlineResourceManager.getActivityTypeLogoURL(action.getType());
+	}
+	
+	private String getActionNameEn(TYPE t, String action) {
+		if (t == TYPE.BILLPAY) {
+			return  billConfigurationManager.getTitleEn(action);
+		} else {
+			return WalletActivity.getActionInEnglish(action);
+		}
+	}
+	
+	private String getActionNameTh(TYPE t, String action) {
+		if (t == TYPE.BILLPAY) {
+			return billConfigurationManager.getTitleTh(action);
+		} else {
+			return WalletActivity.getActionInThai(action);
+		}
+	}
+	
+	private String getRef1StringEn(TYPE t, String action, String ref1) {
+		if (t == TYPE.TOPUP_MOBILE || t == TYPE.TRANSFER || t == TYPE.BILLPAY) {
+			return Utils.formatTelephoneNumber(ref1);
+		} else if (t == TYPE.ADD_MONEY && "debit".equals(action)) {
+			return BankUtil.getEnglishBankName(ref1);
+		} else if ("add_money".equalsIgnoreCase(ref1)) {
+			return "Direct Debit Topup";
+		} else {
+			return ref1;
+		}
+	}
+	
+	private String getRef1StringTh(TYPE t, String action, String ref1) {
+		if (t == TYPE.TOPUP_MOBILE || t == TYPE.TRANSFER || t == TYPE.BILLPAY) {
+			return Utils.formatTelephoneNumber(ref1);
+		} else if (t == TYPE.ADD_MONEY && "debit".equals(action)) {
+			return BankUtil.getThaiBankName(ref1);
+		} else if ("add_money".equalsIgnoreCase(ref1)) {
+			return "เติมเงินด้วยบัญชีธนาคาร";
+		} else {
+			return ref1;
+		}
+	}
+	
+	private String getAmountString(BigDecimal amount) {
+		return Utils.formatSignedAmount(amount);
+	}
+	
+	private String getDateString(Date d) {
+		return Utils.formatDate(d);
 	}
 	
 	@RequestMapping(value = "/{reportID}/detail/{accessTokenID}", method =RequestMethod.GET)
@@ -119,8 +144,8 @@ public class WalletActivityController extends BaseController {
 		data.put("section3", handler.buildSection3());
 		data.put("section4", handler.buildSection4());
 		
-		String t = Utils.removeSuffix(activity.getType());
-		if (WalletActivity.getType(t) ==  TYPE.TRANSFER) {
+		TYPE t = WalletActivity.getType(Utils.removeSuffix(activity.getType()));
+		if (t ==  TYPE.TRANSFER) {
 			data.put("personalMessage", transferActivityDetailViewHandler.buildPersonalMessage(activity.getPersonalMessage()) );
 		}
 		 
@@ -163,6 +188,10 @@ public class WalletActivityController extends BaseController {
 
 	public void setOnlineResourceManager(OnlineResourceManager onlineResourceManager) {
 		this.onlineResourceManager = onlineResourceManager;
+	}
+
+	public void setBillConfigurationManager(BillConfigurationManager billConfigurationManager) {
+		this.billConfigurationManager = billConfigurationManager;
 	}
 
 }

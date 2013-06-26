@@ -10,7 +10,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import th.co.truemoney.product.api.domain.ProductResponse;
+import th.co.truemoney.product.api.manager.BillConfigurationManager;
 import th.co.truemoney.product.api.manager.MessageManager;
 import th.co.truemoney.product.api.util.ProductResponseFactory;
 import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
@@ -61,13 +62,13 @@ public class TestBillPaymentControllerUnit {
         this.billPaymentServiceMock = mock(BillPaymentService.class);
         this.responseFactory = new ProductResponseFactory();
         this.responseFactory.setMessageManager(mock(MessageManager.class));
-        this.billPaymentController
-                .setBillPaymentService(billPaymentServiceMock);
+        this.billPaymentController.setBillPaymentService(billPaymentServiceMock);
         this.billPaymentController.setResponseFactory(responseFactory);
         this.transactionAuthenServiceMock = mock(TransactionAuthenService.class);
         this.billPaymentController.setAuthService(transactionAuthenServiceMock);
         this.profileServiceMock = mock(TmnProfileService.class);
         this.billPaymentController.setProfileService(profileServiceMock);
+        this.billPaymentController.setBillConfigurationManager(new BillConfigurationManager());
     }
 
     @SuppressWarnings("unchecked")
@@ -468,7 +469,7 @@ public class TestBillPaymentControllerUnit {
 
         assertEquals( "tcg", data.get("target"));
         assertEquals("เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก", data.get("ref1TitleTh"));
-        assertEquals("เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก", data.get("ref1TitleEn"));
+        assertEquals("Telephone Number/Customer Number", data.get("ref1TitleEn"));
         assertFalse(data.containsKey("ref2TitleTh"));
         assertFalse(data.containsKey("ref2TitleEn"));
         assertTrue(data.containsKey("minAmount"));
@@ -641,9 +642,9 @@ public class TestBillPaymentControllerUnit {
         assertEquals("Y", data.get("partialPaymentAllow"));
         assertEquals(new BigDecimal(1000), data.get("serviceFee"));
         assertEquals("THB", data.get("serviceFeeType"));
-
-        List<Map<String, Object>> sofList = (List<Map<String, Object>>) data
-                .get("sourceOfFundFee");
+        
+        @SuppressWarnings("unchecked")
+		List<Map<String, Object>> sofList = (List<Map<String, Object>>) data.get("sourceOfFundFee");
         Map<String, Object> ew = sofList.get(0);
         assertNotNull(ew);
 

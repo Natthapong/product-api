@@ -36,7 +36,7 @@ public class WalletActivity {
         actionList.put("debtor", "ส่งเงิน");
         actionList.put("debit", "บัญชีธนาคาร");
         actionList.put("creditor", "รับเงิน");
-        
+        /*
         actionList.put("catv", "ทรูวิชั่นส์");
         actionList.put("dstv", "ทรูวิชั่นส์");
         actionList.put("tmvh", "ทรูมูฟ เอช");
@@ -90,7 +90,7 @@ public class WalletActivity {
         actionList.put("tqm", "ทีคิวเอ็ม ประกันภัย");
         actionList.put("bla", "กรุงเทพประกันชีวิต");
         actionList.put("rft", "ทรูมูฟ เอช");
-        
+        */
         serviceCodeList.put("rft", 10);
         serviceCodeList.put("tmvh", 9);
         serviceCodeList.put("trmv", 8);

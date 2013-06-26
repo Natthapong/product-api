@@ -1,7 +1,9 @@
 package th.co.truemoney.product.api.manager;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.core.io.ClassPathResource;
@@ -30,6 +32,22 @@ public class BillConfigurationManager {
 			e1.printStackTrace();
 		} catch (IOException e2) {
 			e2.printStackTrace();
+		}
+	}
+	
+	private static List<String> noRef2 = Arrays.asList("tcg", "ti", "tic", "tlp", "tmvh", "tr", "trmv", "true", "rft", "tmob");
+	
+	public Map<String, Object> getBillInfoResponse(String billCode) {
+		BillConfiguration conf = configurations.get(billCode);
+		if (conf != null) {
+			Map<String, Object> info = conf.asMap();
+			if (noRef2.contains(billCode)) {
+				info.remove("ref2TitleTh");
+				info.remove("ref2TitleEn");
+			}
+			return info;
+		} else {
+			return new HashMap<String, Object>();
 		}
 	}
 	

@@ -21,6 +21,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import th.co.truemoney.product.api.domain.ActivityViewItem;
 import th.co.truemoney.product.api.domain.ProductResponse;
+import th.co.truemoney.product.api.manager.BillConfigurationManager;
 import th.co.truemoney.product.api.manager.MessageManager;
 import th.co.truemoney.product.api.manager.OnlineResourceManager;
 import th.co.truemoney.product.api.util.ProductResponseFactory;
@@ -90,6 +91,7 @@ public class TestWalletActivityControllerUnit {
         this.controller.setActivityService(this.activityServiceMock);
         this.controller.setResponseFactory(responseFactory);
         this.controller.setOnlineResourceManager(new OnlineResourceManager());
+        this.controller.setBillConfigurationManager(new BillConfigurationManager());
     }
 
     public void tearDown() {

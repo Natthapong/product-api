@@ -23,8 +23,8 @@ import th.co.truemoney.product.api.domain.FavoriteGroup;
 import th.co.truemoney.product.api.domain.FavoriteItem;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.domain.WalletActivity;
+import th.co.truemoney.product.api.manager.BillConfigurationManager;
 import th.co.truemoney.product.api.manager.OnlineResourceManager;
-import th.co.truemoney.product.api.util.BillReferenceUtil;
 import th.co.truemoney.product.api.util.Utils;
 import th.co.truemoney.serviceinventory.ewallet.FavoriteService;
 import th.co.truemoney.serviceinventory.ewallet.domain.Favorite;
@@ -39,8 +39,8 @@ public class FavoriteController extends BaseController {
     private OnlineResourceManager onlineResourceManager;
 
     @Autowired
-    private BillReferenceUtil billReferenceUtil;
-
+    BillConfigurationManager billConfigurationManager;
+    
     @RequestMapping(value = "/favorite/add/{accessTokenID}", method = RequestMethod.PUT)
     @ResponseBody
     public ProductResponse addFavorite(@PathVariable String accessTokenID,
@@ -83,7 +83,7 @@ public class FavoriteController extends BaseController {
             throw new InvalidParameterException("50008");
         }
     }
-
+    
     @RequestMapping(value = "/favorite/{accessTokenID}", method = RequestMethod.GET)
     @ResponseBody
     public ProductResponse getFavoriteList(@PathVariable String accessTokenID) {
@@ -103,7 +103,8 @@ public class FavoriteController extends BaseController {
                 String serviceName = WalletActivity.getActionInThai(serviceCode);
                 String logoURL = onlineResourceManager.getActivityActionLogoURL(serviceCode);
                 Integer serviceSortWeight = WalletActivity.getWeightFromServiceCode(serviceCode);
-                Boolean inquiryStatus = billReferenceUtil.isOnlineInquiry(serviceCode);
+                //Boolean inquiryStatus = billReferenceUtil.isOnlineInquiry(serviceCode);
+                Boolean inquiryStatus = billConfigurationManager.isOnlineInquiry(serviceCode);
                 String formattedMobileNumber = Utils.formatTelephoneNumber(reference1);
 
                 FavoriteItem favoriteItem =new FavoriteItem(serviceName, formattedMobileNumber, logoURL, serviceCode,
@@ -183,7 +184,9 @@ public class FavoriteController extends BaseController {
         });
     }
 
-    public void setBillReferenceUtil(BillReferenceUtil billReferenceUtil) {
-        this.billReferenceUtil = billReferenceUtil;
-    }
+	public void setBillConfigurationManager(
+			BillConfigurationManager billConfigurationManager) {
+		this.billConfigurationManager = billConfigurationManager;
+	}
+    
 }

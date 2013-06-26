@@ -46,10 +46,11 @@ public class TransferActivityDetailViewHandler extends GeneralActivityDetailView
         return section2;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Map<String, Object> buildSection3() {
         Map<String, Object> section3 = super.buildSection3();
-        Map<String, Object> column1 = (Map<String, Object>)section3.get("column1");
+		Map<String, Object> column1 = (Map<String, Object>)section3.get("column1");
         if (column1.containsKey("cell2")) {
             column1.remove("cell2");
         }

@@ -103,15 +103,13 @@ public class FavoriteController extends BaseController {
                 String serviceName = WalletActivity.getActionInThai(serviceCode);
                 String logoURL = onlineResourceManager.getActivityActionLogoURL(serviceCode);
                 Integer serviceSortWeight = WalletActivity.getWeightFromServiceCode(serviceCode);
-                //Boolean inquiryStatus = billReferenceUtil.isOnlineInquiry(serviceCode);
                 Boolean inquiryStatus = billConfigurationManager.isOnlineInquiry(serviceCode);
                 String formattedMobileNumber = Utils.formatTelephoneNumber(reference1);
 
                 FavoriteItem favoriteItem =new FavoriteItem(serviceName, formattedMobileNumber, logoURL, serviceCode,
                         reference1, favorite.getDate(), serviceSortWeight);
-                String ref1Title = findRef1Title(serviceCode);
-                favoriteItem.setText2En(ref1Title);
-                favoriteItem.setText2Th(ref1Title);
+                favoriteItem.setText2En(billConfigurationManager.getRef1TitleEn(serviceCode));
+                favoriteItem.setText2Th(billConfigurationManager.getRef1TitleTh(serviceCode));
                 favoriteItem.setIsInquiryOnline(inquiryStatus);
                 group0.addItems(favoriteItem);
 
@@ -126,8 +124,8 @@ public class FavoriteController extends BaseController {
     @ResponseBody
     public ProductResponse removeFavorite(@PathVariable String accessTokenID,
                                        @RequestBody Map<String, String> request) {
-        favoriteService.deleteFavorite(request.get("serviceCode"), request.get("ref1"), accessTokenID);
-        System.out.println("serviceCode = "+request.get("serviceCode"));
+        
+    	favoriteService.deleteFavorite(request.get("serviceCode"), request.get("ref1"), accessTokenID);
 
         Map<String, Object> data = new HashMap<String, Object>();
         return this.responseFactory.createSuccessProductResonse(data);
@@ -140,27 +138,7 @@ public class FavoriteController extends BaseController {
     public void setOnlineResourceManager(OnlineResourceManager onlineResourceManager) {
         this.onlineResourceManager = onlineResourceManager;
     }
-
-    private String findRef1Title(String target){
-        String title = "";
-        String serviceCode = Utils.removeSuffix(target);
-        if("tmvh".equals(serviceCode)
-            || "trmv".equals(serviceCode)
-            || "tlp".equals(serviceCode)
-            || "ti".equals(serviceCode)
-            || "tic".equals(serviceCode)
-            || "tcg".equals(serviceCode)
-            || "rft".equals(serviceCode)) {
-
-            title = "รหัสลูกค้า/หมายเลขโทรศัพท์";
-        } else if("tr".equals(serviceCode)){
-            title = "เลขที่อ้างอิง 1/หมายเลขโทรศัพท์";
-        }else if("mea".equals(Utils.removeSuffix(target))){
-            title = "บัญชีแสดงสัญญาเลขที่";
-        }
-        return title;
-    }
-
+    
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private void order(List<FavoriteItem> itemList){
         Collections.sort(itemList,  new Comparator() {
@@ -184,8 +162,7 @@ public class FavoriteController extends BaseController {
         });
     }
 
-	public void setBillConfigurationManager(
-			BillConfigurationManager billConfigurationManager) {
+	public void setBillConfigurationManager(BillConfigurationManager billConfigurationManager) {
 		this.billConfigurationManager = billConfigurationManager;
 	}
     

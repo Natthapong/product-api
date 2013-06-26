@@ -2,7 +2,6 @@ package th.co.truemoney.product.api.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;

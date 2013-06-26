@@ -170,7 +170,8 @@ public class TestDirectDebitController extends BaseTestController {
 				.andExpect(jsonPath("$..bankNameTh").exists())
 				.andExpect(jsonPath("$..sourceOfFundID").exists())
 				.andExpect(jsonPath("$..accessToken").value(fakeAccessToken))
-				.andExpect(jsonPath("$..urlLogo").exists());
+				.andExpect(jsonPath("$..urlLogo").exists())
+				.andExpect(jsonPath("$..message").exists());
 	}
 
 	@Test

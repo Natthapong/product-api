@@ -22,6 +22,7 @@ import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.domain.TopupDirectDebitRequest;
 import th.co.truemoney.product.api.domain.TopupOrderConfirmRequest;
 import th.co.truemoney.product.api.domain.TopupQuotableRequest;
+import th.co.truemoney.product.api.manager.MessageManager;
 import th.co.truemoney.product.api.manager.OnlineResourceManager;
 import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.ewallet.DirectDebitSourceOfFundService;
@@ -46,11 +47,14 @@ public class DirectDebitController extends BaseController {
 	private TopUpService topupService;
 
 	@Autowired
+	private MessageManager messageManager;
+
+	@Autowired
 	private TmnProfileService profileService;
 
 	@Autowired
 	private OnlineResourceManager onlineResourceManager;
-
+	
 	@RequestMapping(value = "/add-money/ewallet/banks/{username}/{accessToken}", method = RequestMethod.GET)
 	@ResponseBody
 	public ProductResponse getUserDirectDebitSources(
@@ -88,7 +92,8 @@ public class DirectDebitController extends BaseController {
 		data.put("urlLogo", onlineResourceManager.getBankLogoURL(db.getBankCode()));
 		data.put("sourceOfFundID", quote.getSourceOfFund().getSourceOfFundID());
 		data.put("accessToken", quote.getAccessTokenID());
-
+		data.put("message", messageManager.getMessageTh("directdebit.message"));
+		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 

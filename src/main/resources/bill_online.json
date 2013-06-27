@@ -536,7 +536,7 @@
       "ref1Placeholder":"หมายเลขสมาชิกทรูวิชั่นส์",
       "ref2Placeholder":"เลขที่ใบแจ้งค่าบริการ",
       "isInquiryOnline":false,
-      "minAmount":145.50,
+      "minAmount":145.52,
       "maxAmount":10000.0
    },
    "cigna":{
@@ -701,7 +701,7 @@
       "ref1Placeholder":"หมายเลขสมาชิกทรูวิชั่นส์",
       "ref2Placeholder":"เลขที่ใบแจ้งค่าบริการ",
       "isInquiryOnline":false,
-      "minAmount":145.50,
+      "minAmount":145.52,
       "maxAmount":10000.0
    },
    "fc":{

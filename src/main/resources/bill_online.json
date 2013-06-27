@@ -98,8 +98,8 @@
       "ref1TitleTh":"รหัสสาวจำหน่าย",
       "ref2TitleEn":"Bill Number",
       "ref2TitleTh":"เลขที่ใบส่งของ",
-      "ref1Placeholder":"",
-      "ref2Placeholder":"",
+      "ref1Placeholder":"รหัสสาวจำหน่าย",
+      "ref2Placeholder":"เลขที่ใบส่งของ",
       "isInquiryOnline":false,
       "minAmount":10.0,
       "maxAmount":30000.0
@@ -323,8 +323,8 @@
       "ref1TitleTh":"รหัสสาวจำหน่าย",
       "ref2TitleEn":"Bill Number",
       "ref2TitleTh":"เลขที่ใบส่งของ",
-      "ref1Placeholder":"",
-      "ref2Placeholder":"",
+      "ref1Placeholder":"รหัสสาวจำหน่าย",
+      "ref2Placeholder":"เลขที่ใบส่งของ",
       "isInquiryOnline":false,
       "minAmount":10.0,
       "maxAmount":30000.0

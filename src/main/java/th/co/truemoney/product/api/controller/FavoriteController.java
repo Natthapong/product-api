@@ -98,28 +98,27 @@ public class FavoriteController extends BaseController {
             groups.add(group0);
 
             for (Favorite favorite : favoriteList) {
-                String reference1  = favorite.getRef1();
+                String ref1  = favorite.getRef1();
                 String serviceCode = favorite.getServiceCode();
-                String serviceName = WalletActivity.getActionInThai(serviceCode);
+                String serviceName = billConfigurationManager.getTitleTh(serviceCode);
                 String logoURL = onlineResourceManager.getActivityActionLogoURL(serviceCode);
                 Integer serviceSortWeight = WalletActivity.getWeightFromServiceCode(serviceCode);
-                Boolean inquiryStatus = billConfigurationManager.isOnlineInquiry(serviceCode);
-                String formattedMobileNumber = Utils.formatTelephoneNumber(reference1);
-
-                FavoriteItem favoriteItem =new FavoriteItem(serviceName, formattedMobileNumber, logoURL, serviceCode,
-                        reference1, favorite.getDate(), serviceSortWeight);
+                String formattedMobileNumber = Utils.formatTelephoneNumber(ref1);
+                Boolean isOnline = billConfigurationManager.isOnlineInquiry(serviceCode);
+                
+                FavoriteItem favoriteItem = new FavoriteItem(serviceName, formattedMobileNumber, logoURL, serviceCode,
+                                                            ref1, favorite.getDate(), serviceSortWeight);
                 favoriteItem.setText2En(billConfigurationManager.getRef1TitleEn(serviceCode));
                 favoriteItem.setText2Th(billConfigurationManager.getRef1TitleTh(serviceCode));
-                favoriteItem.setIsInquiryOnline(inquiryStatus);
+                favoriteItem.setIsInquiryOnline(isOnline);
                 group0.addItems(favoriteItem);
-
             }
             order(group0.getItems());
         }
 
         return this.responseFactory.createSuccessProductResonse(data);
     }
-
+    
     @RequestMapping(value = "/favorite/remove/{accessTokenID}", method = RequestMethod.DELETE)
     @ResponseBody
     public ProductResponse removeFavorite(@PathVariable String accessTokenID,

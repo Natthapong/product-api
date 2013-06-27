@@ -99,12 +99,12 @@
 
 "canRegister" : "true",
 
-"forgot.password.active" : "true",
+"forgot.password.active" : "false",
 
-"forgot.pin.active" : "true",
+"forgot.pin.active" : "false",
 
-"forgot.password.url" : "www.google.co.th",
+"forgot.password.url" : http://www.google.co.th",
 
-"forgot.pin.url" : "www.amazon.com"
+"forgot.pin.url" : "http://www.amazon.com"
 
 }

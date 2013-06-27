@@ -468,8 +468,8 @@ public class TestBillPaymentControllerUnit {
         assertNotNull(data);
 
         assertEquals( "tcg", data.get("target"));
-        assertEquals("", data.get("ref1TitleTh"));
-        assertEquals("", data.get("ref1TitleEn"));
+        assertFalse(data.containsKey("ref1TitleTh"));
+        assertFalse(data.containsKey("ref1TitleEn"));
         assertFalse(data.containsKey("ref2TitleTh"));
         assertFalse(data.containsKey("ref2TitleEn"));
         assertTrue(data.containsKey("minAmount"));
@@ -623,10 +623,6 @@ public class TestBillPaymentControllerUnit {
         assertEquals(
                 "https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png",
                 data.get("logoURL"));
-
-        //assertEquals("", data.get("messageTh"));
-        //assertEquals("", data.get("messageEn"));
-
 
         assertEquals("089-123-4567", data.get("ref1"));
         assertEquals("Fix Line", data.get("ref1TitleEn"));

@@ -4,7 +4,7 @@
     "category": [
         {
             "categoryID": 1,
-            "categoryLogo": "${apiHost}/m/tmn_webview/images/logo_bill_type/false@2x.png",
+            "categoryLogo": "${apiHost}/m/tmn_webview/images/logo_bill_type/true@2x.png",
             "categoryTitleTh": "บิลทรู",
             "categoryTitleEn": "false Bill",
             "items": [

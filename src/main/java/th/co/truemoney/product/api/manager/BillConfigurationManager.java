@@ -21,7 +21,7 @@ public class BillConfigurationManager {
 	
 	private ObjectMapper mapper = new ObjectMapper(new JsonFactory());
 
-	private String configFile = "bill_online2.json";
+	private String configFile = "bill_online.json";
 	
 	public BillConfigurationManager(){
 		try {

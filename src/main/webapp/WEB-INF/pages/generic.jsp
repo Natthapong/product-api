@@ -103,7 +103,7 @@
 
 "forgot.pin.active" : "false",
 
-"forgot.password.url" : http://www.google.co.th",
+"forgot.password.url" : "http://www.google.co.th",
 
 "forgot.pin.url" : "http://www.amazon.com"
 

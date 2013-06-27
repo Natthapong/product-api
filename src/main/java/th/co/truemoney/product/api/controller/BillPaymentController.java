@@ -373,12 +373,7 @@ public class BillPaymentController extends BaseController {
     	Map<String, Object> data = new HashMap<String, Object>();
     	data.put("target", billCode);
     	data.putAll(billConfigurationManager.getBillInfoResponse(billCode));
-    	/*
-    	if (Utils.isTrueCorpBill(billCode)) {
-            data.remove("ref2TitleTh");
-            data.remove("ref2TitleEn");
-    	}
-    	*/
+
         return createResponse(data);
     }
     

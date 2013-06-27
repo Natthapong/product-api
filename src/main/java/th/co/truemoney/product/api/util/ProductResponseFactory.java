@@ -57,7 +57,7 @@ public class ProductResponseFactory {
                                            data.get("maxAmount")
                                            };
             }
-        }else if (isOverdueException(exception)) {
+        }else if (isOverdueException(exception) || debtBillException(exception)) {
         	Map<String, Object> data = exception.getData();
             if (data != null) {
             parameters = new Object[]{ data.get("targetTitle"),
@@ -91,6 +91,8 @@ public class ProductResponseFactory {
     
     private final String OVERDUE_BILLPAY = "TMN-PRODUCT.80000";
     
+    private final String DEBT_BILLPAY = "TMN-PRODUCT.80001";
+    
     private final String LESS_THAN_MINIMUM_AMOUNT = "TMN-SERVICE-INVENTORY.20001";
 
     private final String MORE_THAN_MINIMUM_AMOUNT = "TMN-SERVICE-INVENTORY.20002";
@@ -119,6 +121,9 @@ public class ProductResponseFactory {
         return OVERDUE_BILLPAY.equals(e.getErrorNamespace() + "." + e.getErrorCode());
     }
     
+    private boolean debtBillException(ServiceInventoryException e) {
+        return DEBT_BILLPAY.equals(e.getErrorNamespace() + "." + e.getErrorCode());
+    }
 
     public void setMessageManager(MessageManager messageManager) {
         this.messageManager = messageManager;

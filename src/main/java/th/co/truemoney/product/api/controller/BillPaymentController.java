@@ -87,13 +87,13 @@ public class BillPaymentController extends BaseController {
                 e.getData().put("targetTitle",targetTitle);
                 throw e;
             } else if(("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace()) && "1021".equals(e.getErrorCode()))){
-                    String targetTitle = getTargetTitle(Utils.removeSuffix(e.getData().get("target").toString()));
-                    e.setErrorCode("80001");
-                    e.setErrorNamespace("TMN-PRODUCT");
-                    Date dueDate = new Date((Long)e.getData().get("dueDate"));
-                    e.getData().put("dueDate",Utils.formatDate4Y(dueDate));
-                    e.getData().put("targetTitle",targetTitle);
-                    throw e;                
+                String targetTitle = getTargetTitle(Utils.removeSuffix(e.getData().get("target").toString()));
+                e.setErrorCode("80001");
+                e.setErrorNamespace("TMN-PRODUCT");
+                Date dueDate = new Date((Long)e.getData().get("dueDate"));
+                e.getData().put("dueDate",Utils.formatDate4Y(dueDate));
+                e.getData().put("targetTitle",targetTitle);
+                throw e;                
             } else{
                 throw e;
             }

@@ -33,6 +33,18 @@
                     "logo": "${apiHost}/m/tmn_webview/images/logo_bill/tlp@2x.png"
                 },
                 {
+                    "serviceCode": "dstv",
+                    "titleTh": "ทรูวิชั่นส์ ระบบจานดาวเทียม",
+                    "titleEn": "TrueVisions - Satellite",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/dstv@2x.png"
+                },
+                {
+                    "serviceCode": "catv",
+                    "titleTh": "ทรูวิชั่นส์ ระบบเคเบิ้ล",
+                    "titleEn": "TrueVisions - Cable",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/catv@2x.png"
+                },
+                {
                     "serviceCode": "tic",
                     "titleTh": "ทรู 006",
                     "titleEn": "false 006",

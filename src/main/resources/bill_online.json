@@ -140,7 +140,7 @@
       "ref1Type":"none",
       "ref2Type":"none",
       "ref1TitleEn":"",
-      "ref1TitleTh":"เลขที่บัตรเครดิต (16หลัก)",
+      "ref1TitleTh":"หมายเลขบัญชี",
       "ref2TitleEn":"invoice number",
       "ref2TitleTh":"เลขที่ใบแจ้งค่าบริการ",
       "ref1Placeholder":"หมายเลขบัญชี 16 หลัก",

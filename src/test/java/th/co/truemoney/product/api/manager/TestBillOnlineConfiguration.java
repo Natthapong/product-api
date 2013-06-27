@@ -33,7 +33,7 @@ public class TestBillOnlineConfiguration {
 	@Test
 	public void getTMVHBillInfoPropertySuccess(){
 		Map<String, Object> resp = configurationManager.getBillInfoResponse("tmvh");
-		assertEquals("เบอร์โทรศัพท์ทรูมูฟ เอช",resp.get("ref1TitleTh"));
+		assertEquals("รหัสลูกค้า/หมายเลขโทรศัพท์",resp.get("ref1TitleTh"));
 		assertEquals("Mobile Number",resp.get("ref1TitleEn"));
 		assertFalse(resp.containsKey("ref2TitleEn"));
 		assertFalse(resp.containsKey("ref2TitleTh"));
@@ -47,7 +47,7 @@ public class TestBillOnlineConfiguration {
 	@Test
 	public void getTRMVBillInfoPropertySuccess(){
 		Map<String, Object> resp = configurationManager.getBillInfoResponse("trmv");
-		assertEquals("เบอร์โทรศัพท์ทรูมูฟ",resp.get("ref1TitleTh"));
+		assertEquals("รหัสลูกค้า/หมายเลขโทรศัพท์",resp.get("ref1TitleTh"));
 		assertEquals("Mobile Number",resp.get("ref1TitleEn"));
 		assertFalse(resp.containsKey("ref2TitleEn"));
 		assertFalse(resp.containsKey("ref2TitleTh"));
@@ -60,7 +60,7 @@ public class TestBillOnlineConfiguration {
 	@Test
 	public void getTRBillInfoPropertySuccess(){
 		Map<String, Object> resp = configurationManager.getBillInfoResponse("tr");
-		assertEquals("เบอร์โทรศัพท์บ้าน",resp.get("ref1TitleTh"));
+		assertEquals("เลขที่อ้างอิง 1/หมายเลขโทรศัพท์",resp.get("ref1TitleTh"));
 		assertEquals("Telephone Number",resp.get("ref1TitleEn"));
 		assertFalse(resp.containsKey("ref2TitleEn"));
 		assertFalse(resp.containsKey("ref2TitleTh"));
@@ -74,7 +74,7 @@ public class TestBillOnlineConfiguration {
 	@Test
 	public void getTIBillInfoPropertySuccess(){
 		Map<String, Object> resp = configurationManager.getBillInfoResponse("ti");
-		assertEquals("เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก",resp.get("ref1TitleTh"));
+		assertEquals("รหัสลูกค้า/หมายเลขโทรศัพท์",resp.get("ref1TitleTh"));
 		assertEquals("Telephone Number/Customer Number",resp.get("ref1TitleEn"));
 		assertFalse(resp.containsKey("ref2TitleEn"));
 		assertFalse(resp.containsKey("ref2TitleTh"));
@@ -88,8 +88,8 @@ public class TestBillOnlineConfiguration {
 	@Test
 	public void getTICBillInfoPropertySuccess(){
 		Map<String, Object> resp = configurationManager.getBillInfoResponse("tic");
-		assertEquals("เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก",resp.get("ref1TitleTh"));
-		assertEquals("Telephone Number/Customer Number",resp.get("ref1TitleEn"));
+		assertEquals("รหัสลูกค้า",resp.get("ref1TitleTh"));
+		assertEquals("Customer Number",resp.get("ref1TitleEn"));
 		assertFalse(resp.containsKey("ref2TitleEn"));
 		assertFalse(resp.containsKey("ref2TitleTh"));
 		assertEquals("none",resp.get("ref1Type"));
@@ -102,7 +102,7 @@ public class TestBillOnlineConfiguration {
 	@Test
 	public void getTLPBillInfoPropertySuccess(){
 		Map<String, Object> resp = configurationManager.getBillInfoResponse("tlp");
-		assertEquals("รหัสลูกค้า/หมายเลขโทรศัพท์",resp.get("ref1TitleTh"));
+		assertEquals("รหัสลูกค้า",resp.get("ref1TitleTh"));
 		assertEquals("Account/Mobile Number",resp.get("ref1TitleEn"));
 		assertFalse(resp.containsKey("ref2TitleEn"));
 		assertFalse(resp.containsKey("ref2TitleTh"));
@@ -115,7 +115,7 @@ public class TestBillOnlineConfiguration {
 	@Test
 	public void getTCGBillInfoPropertySuccess(){
 		Map<String, Object> resp = configurationManager.getBillInfoResponse("tcg");
-		assertEquals("เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก",resp.get("ref1TitleTh"));
+		assertEquals("รหัสลูกค้า",resp.get("ref1TitleTh"));
 		assertEquals("Telephone Number/Customer Number",resp.get("ref1TitleEn"));
 		assertFalse(resp.containsKey("ref2TitleEn"));
 		assertFalse(resp.containsKey("ref2TitleTh"));
@@ -143,7 +143,7 @@ public class TestBillOnlineConfiguration {
 	@Test
 	public void getDSTVBillInfoPropertySuccess(){
 		Map<String, Object> resp = configurationManager.getBillInfoResponse("dstv");
-		assertEquals("หมายเลขสมาชิกทรูวิชั่นส์",resp.get("ref1TitleTh"));
+		assertEquals("หมายเลขสมาชิก",resp.get("ref1TitleTh"));
 		assertEquals("Customer Number",resp.get("ref1TitleEn"));
 		assertEquals("invoice number",resp.get("ref2TitleEn"));
 		assertEquals("เลขที่ใบแจ้งค่าบริการ",resp.get("ref2TitleTh"));

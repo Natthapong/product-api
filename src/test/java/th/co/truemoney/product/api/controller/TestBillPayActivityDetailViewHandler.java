@@ -64,7 +64,7 @@ public class TestBillPayActivityDetailViewHandler {
 				{ new BillTest("bblc", "bblc", "บัตรเครดิตธนาคารกรุงเทพ", "************1234", "Account Number", "หมายเลขบัตรเครดิต") },
 				{ new BillTest("tisco", "tisco", "ธนาคารทิสโก้", "12345", "Ref. 1", "เลขที่อ้างอิง", "54321", "Ref. 2", "สัญญาเลขที่") },
 				{ new BillTest("ghb", "ghb", "ธนาคารอาคารสงเคราะห์", "12345", "Account Number", "เลขที่บัญชีเงินกู้") },
-				{ new BillTest("ktc", "ktc", "KTC", "************1234", "Account Number", "หมายเลขบัตรเครดิต") }, 
+				{ new BillTest("ktc", "ktc", "KTC", "************1234", "Account Number", "หมายเลขบัตรเครดิต/หมายเลขสมาชิก") }, 
 				{ new BillTest("aeon", "aeon", "บัตรอิออน", "12345", "Ref. 1", "เลขที่อ้างอิง 1") },
 				{ new BillTest("fc", "fc", "กรุงศรีเฟิร์สชอยส์", "************1234", "Account Number", "หมายเลขบัตรเครดิต") },
 				{ new BillTest("kcc", "kcc", "บัตรเครดิตกรุงศรี", "************1234", "Account Number", "หมายเลขบัตรเครดิต") },

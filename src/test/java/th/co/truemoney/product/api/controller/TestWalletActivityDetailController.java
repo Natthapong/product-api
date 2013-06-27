@@ -150,7 +150,7 @@ public class TestWalletActivityDetailController extends
 		Map<String, Object> data = resp.getData();
 
 		assertEquals("{logoURL=http://localhost:8080/m/tmn_webview/images/logo_bill/ti@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
-		assertEquals("{column1={cell2={titleTh=เลขที่ใบแจ้งค่าบริการ, titleEn=invoice number, value=923178945372901}, cell1={titleTh=เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก, titleEn=Telephone Number/Customer Number, value=864895245}}}", data.get("section2").toString());
+		assertEquals("{column1={cell2={titleTh=เลขที่ใบแจ้งค่าบริการ, titleEn=invoice number, value=923178945372901}, cell1={titleTh=รหัสลูกค้า/หมายเลขโทรศัพท์, titleEn=Telephone Number/Customer Number, value=864895245}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
 	}
@@ -175,7 +175,7 @@ public class TestWalletActivityDetailController extends
 		Map<String, Object> data = resp.getData();
 
 		assertEquals("{logoURL=http://localhost:8080/m/tmn_webview/images/logo_bill/tmvh@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
-		assertEquals("{column1={cell1={titleTh=เบอร์โทรศัพท์ทรูมูฟ เอช, titleEn=Mobile Number, value=089-123-4567}}}", data.get("section2").toString());
+		assertEquals("{column1={cell1={titleTh=รหัสลูกค้า/หมายเลขโทรศัพท์, titleEn=Mobile Number, value=089-123-4567}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
 	}
@@ -200,7 +200,7 @@ public class TestWalletActivityDetailController extends
 		Map<String, Object> data = resp.getData();
 		
 		assertEquals("{logoURL=http://localhost:8080/m/tmn_webview/images/logo_bill/tr@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
-		assertEquals("{column1={cell1={titleTh=เบอร์โทรศัพท์บ้าน, titleEn=Telephone Number, value=02-000-0000}}}", data.get("section2").toString());
+		assertEquals("{column1={cell1={titleTh=เลขที่อ้างอิง 1/หมายเลขโทรศัพท์, titleEn=Telephone Number, value=02-000-0000}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
 	}
@@ -225,7 +225,7 @@ public class TestWalletActivityDetailController extends
 		Map<String, Object> data = resp.getData();
 		
 		assertEquals("{logoURL=http://localhost:8080/m/tmn_webview/images/logo_bill/ti@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
-		assertEquals("{column1={cell1={titleTh=เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก, titleEn=Telephone Number/Customer Number, value=864895245}}}", data.get("section2").toString());
+		assertEquals("{column1={cell1={titleTh=รหัสลูกค้า/หมายเลขโทรศัพท์, titleEn=Telephone Number/Customer Number, value=864895245}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
 	}
@@ -250,7 +250,7 @@ public class TestWalletActivityDetailController extends
 		Map<String, Object> data = resp.getData();
 		
 		assertEquals("{logoURL=http://localhost:8080/m/tmn_webview/images/logo_bill/ti@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
-		assertEquals("{column1={cell1={titleTh=เบอร์โทรศัพท์บ้าน หรือรหัสลูกค้า 12 หลัก, titleEn=Telephone Number/Customer Number, value=864895245}}}", data.get("section2").toString());
+		assertEquals("{column1={cell1={titleTh=รหัสลูกค้า/หมายเลขโทรศัพท์, titleEn=Telephone Number/Customer Number, value=864895245}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
 	}

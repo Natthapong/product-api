@@ -40,7 +40,7 @@ public class BillConfigurationManager {
 	public Map<String, Object> getBillInfoResponse(String billCode) {
 		BillConfiguration conf = configurations.get(billCode);
 		if (conf != null) {
-			Map<String, Object> info = conf.asMap();
+			Map<String, Object> info = conf.getPlaceholderParameters();
 			if (noRef2.contains(billCode)) {
 				info.remove("ref2TitleTh");
 				info.remove("ref2TitleEn");

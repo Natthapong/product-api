@@ -468,8 +468,8 @@ public class TestBillPaymentControllerUnit {
         assertNotNull(data);
 
         assertEquals( "tcg", data.get("target"));
-        assertEquals("รหัสลูกค้า", data.get("ref1TitleTh"));
-        assertEquals("Telephone Number/Customer Number", data.get("ref1TitleEn"));
+        assertEquals("", data.get("ref1TitleTh"));
+        assertEquals("", data.get("ref1TitleEn"));
         assertFalse(data.containsKey("ref2TitleTh"));
         assertFalse(data.containsKey("ref2TitleEn"));
         assertTrue(data.containsKey("minAmount"));

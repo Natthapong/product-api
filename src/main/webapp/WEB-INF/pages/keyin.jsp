@@ -72,14 +72,14 @@
                 },
                 {
                     "serviceCode": "aeon",
-                    "titleTh": "บัตรอิออน",
-                    "titleEn": "บัตรอิออน",
+                    "titleTh": "อิออน",
+                    "titleEn": "อิออน",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_bill/aeon@2x.png"
                 },
                 {
                     "serviceCode": "ktc",
-                    "titleTh": "บัตรเครดิต KTC",
-                    "titleEn": "บัตรเครดิต KTC",
+                    "titleTh": "KTC",
+                    "titleEn": "KTC",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_bill/ktc@2x.png"
                 },
                 {
@@ -120,8 +120,8 @@
                 },
                 {
                     "serviceCode": "gepc",
-                    "titleTh": "กรุงศรี เพอร์ซัลนอลโลน",
-                    "titleEn": "กรุงศรี เพอร์ซัลนอลโลน",
+                    "titleTh": "สินเชื่อบุคคล อยุธยา แคปปิตอล เซอร์วิสเซส",
+                    "titleEn": "สินเชื่อบุคคล อยุธยา แคปปิตอล เซอร์วิสเซส",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_bill/gepc@2x.png"
                 },
                 {
@@ -147,6 +147,12 @@
                     "titleTh": "กรุงศรี เฟิร์สช้อยส์คาร์ด",
                     "titleEn": "กรุงศรี เฟิร์สช้อยส์คาร์ด",
                     "logo": "${apiHost}/m/tmn_webview/images/logo_bill/fc@2x.png"
+                },
+                {
+                    "serviceCode": "uob",
+                    "titleTh": "บัตรเครดิตธนาคารยูโอบี",
+                    "titleEn": "บัตรเครดิตธนาคารยูโอบี",
+                    "logo": "${apiHost}/m/tmn_webview/images/logo_bill/uob@2x.png"
                 }
             ]
         },

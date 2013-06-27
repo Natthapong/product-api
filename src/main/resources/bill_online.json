@@ -181,7 +181,7 @@
    },
    "aeon":{
       "titleEn":"aeon",
-      "titleTh":"บัตรอิออน",
+      "titleTh":"อิออน",
       "ref1Type":"none",
       "ref2Type":"none",
       "ref1TitleEn":"Ref. 1",
@@ -473,7 +473,7 @@
       "ref1TitleTh":"หมายเลขบัตร",
       "ref2TitleEn":"",
       "ref2TitleTh":"",
-      "ref1Placeholder":"",
+      "ref1Placeholder":"หมายเลขบัตร",
       "ref2Placeholder":"",
       "isInquiryOnline":false,
       "minAmount":10.0,

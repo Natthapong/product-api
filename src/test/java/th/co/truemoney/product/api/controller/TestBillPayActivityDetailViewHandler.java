@@ -37,7 +37,7 @@ public class TestBillPayActivityDetailViewHandler {
 				{ new BillTest("mitt", "mitt", "มิตรแท้ประกันภัย", "12345", "Ref. No. 1", "เลขที่ลูกค้า/รหัสผู้ให้บริการ", "54321", "Ref. No. 2", "กรมธรรม์เลขที่/สลักหลังเลขที่") },
 				{ new BillTest("sg", "sg", "เอส 11 กรุ๊ป", "12345", "Customer Number", "รหัสลูกค้า", "54321", "Reference No", "หมายเลขอ้างอิง") },
 				{ new BillTest("glc", "glc", "สินเชื่อบริษัท กรุ๊ปลีส", "12345", "Customer Number", "รหัสลูกค้า", "54321", "Reference No", "หมายเลขอ้างอิง") },
-				{ new BillTest("gepc", "gepc", "สินเชื่อเงินสดจีอี เพอร์ซัลนอลโลน", "12345", "", "เลขที่อ้างอิง 1") },
+				{ new BillTest("gepc", "gepc", "สินเชื่อบุคคล อยุธยา แคปปิตอล เซอร์วิสเซส", "12345", "", "เลขที่อ้างอิง 1") },
 				{ new BillTest("qc", "qc", "สินเชื่อเงินสดควิกแคช", "12345", "REF1", "หมายเลขสมาชิก") },
 				{ new BillTest("tescopl", "tescopl", "สินเชื่อเทสโก้ เพอร์ซัลนอลโลน", "12345", "Account Number", "หมายเลขสมาชิก") },
 				{ new BillTest("tesco", "tesco", "บัตรเครดิตเทสโก้ โลตัส", "12345", "Account Number", "หมายเลขบัตร") },

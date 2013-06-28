@@ -404,6 +404,10 @@ public class BillPaymentController extends BaseController {
             result = "การไฟฟ้านครหลวง";
         }else if("water".equals(target)){
             result = "การประปานครหลวง";
+        }else if("tli".equals(target)){
+            result = "ไทยประกันชีวิต";
+        }else if("dlt".equals(target)){
+            result = "กรมการขนส่งทางบก";
         }
         return result;
     }

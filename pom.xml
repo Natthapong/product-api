@@ -3,14 +3,14 @@
     <groupId>th.co.truemoney.product</groupId>
     <artifactId>product-api</artifactId>
     <packaging>war</packaging>
-    <version>1.1.RC1</version>
+    <version>1.2-SNAPSHOT</version>
     <name>mobile product API Webapp</name>
     <url>http://maven.apache.org</url>
     <scm>
         <connection>scm:git:git@bitbucket.org:tmnkaizen/product-api.git</connection>
         <url>scm:git:git@bitbucket.org:tmnkaizen/product-api.git</url>
         <developerConnection>scm:git:git@bitbucket.org:tmnkaizen/product-api.git</developerConnection>
-        <tag>1.1.RC1</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
@@ -25,12 +25,12 @@
         <dependency>
             <groupId>th.co.truemoney.serviceinventory</groupId>
             <artifactId>service-inventory-client</artifactId>
-            <version>1.1.RC1</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>th.co.truemoney.serviceinventory</groupId>
             <artifactId>service-inventory-api</artifactId>
-            <version>1.1.RC1</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

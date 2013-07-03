@@ -58,7 +58,7 @@ public class TestBillPayActivityDetailViewHandler {
 				{ new BillTest("mthai", "mthai", "เมืองไทยประกันชีวิต", "12345", "Policy Number", "เลขที่กรมธรรม์") },
 				{ new BillTest("hiway", "hiway", "ไฮเวย์", "12345", "Ref. No. 1", "เลขที่อ้างอิง", "54321", "Ref. No. 2", "สัญญาเลขที่") },
 				{ new BillTest("tli", "tli", "ไทยประกันชีวิต", "12345", "Ref. No. 1/Cust. No.", "Ref. No. 1/Cust. No.", "54321", "Ref. No. 2", "Ref. No. 2") },
-				{ new BillTest("dlt", "dlt", "ภาษีรถยนต์", "12345", "", "เลขใบแจ้งชำระค่าภาษี", "54321", "", "หมายเลขอ้างอิง") },
+				{ new BillTest("dlt", "dlt", "กรมการขนส่งทางบก", "12345", "", "เลขใบแจ้งชำระค่าภาษี", "54321", "", "หมายเลขอ้างอิง") },
 				{ new BillTest("hp", "hp", "บัตรเครดิตโฮมโปร", "************1234", "Card Number", "หมายเลขบัตร") },
 				{ new BillTest("central", "central", "เซ็นทรัล เครดิตคาร์ด", "************1234", "", "หมายเลขบัญชี") },
 				{ new BillTest("bblc", "bblc", "บัตรเครดิตธนาคารกรุงเทพ", "************1234", "Account Number", "หมายเลขบัตรเครดิต") },

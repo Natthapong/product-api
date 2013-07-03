@@ -99,12 +99,12 @@
 
 "canRegister" : "true",
 
-"forgot.password.active" : "false",
+"forgot.password.active" : "true",
 
 "forgot.pin.active" : "false",
 
-"forgot.password.url" : "http://www.google.co.th",
+"forgot.password.url" : "${apiHost}/m/tmn_webview/forgot/password.html",
 
-"forgot.pin.url" : "http://www.amazon.com"
+"forgot.pin.url" : "${apiHost}/m/tmn_webview/forgot/pin.html"
 
 }

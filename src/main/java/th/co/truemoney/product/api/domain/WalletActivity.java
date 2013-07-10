@@ -36,6 +36,8 @@ public class WalletActivity {
         actionList.put("debtor", "ส่งเงิน");
         actionList.put("debit", "บัญชีธนาคาร");
         actionList.put("creditor", "รับเงิน");
+        actionList.put("cash", "เงินสด");
+        actionList.put("tmcc", "บัตรเงินสดทรูมันนี่");
         
         serviceCodeList.put("rft", 10);
         serviceCodeList.put("tmvh", 9);

@@ -103,8 +103,8 @@
 
 "forgot.pin.active" : "false",
 
-"forgot.password.url" : "${apiHost}/m/tmn_webview/forgot/password.html",
+"forgot.password.url" : "${apiHost}/m/request-password",
 
-"forgot.pin.url" : "${apiHost}/m/tmn_webview/forgot/pin.html"
+"forgot.pin.url" : "${apiHost}/m/request-pin"
 
 }

@@ -105,6 +105,11 @@
 
 "forgot.password.url" : "${apiHost}/m/request-password",
 
-"forgot.pin.url" : "${apiHost}/m/request-pin"
+"forgot.pin.url" : "${apiHost}/m/request-pin",
 
+"more.bill.messageEn" : "ดูรายการบิลที่รับชําระทั้งหมดEn",
+
+"more.bill.messageTh" : "ดูรายการบิลที่รับชําระทั้งหมด",
+
+"more.bill.url" : "http://www.truemoney.co.th/wallet/bills"
 }

@@ -28,13 +28,6 @@ public class GenericController {
 		return new ModelAndView("forward:/WEB-INF/pages/keyin.jsp").addObject("apiHost", apiHost);
 	}
 	
-	@RequestMapping(value = "/bill-payment/key-in/list/press-con", method = RequestMethod.GET)
-	public
-	ModelAndView getKeyInBillListPressConference(HttpServletResponse response) {
-		response.setContentType("application/json;charset=UTF-8");
-		return new ModelAndView("forward:/WEB-INF/pages/keyin_press_con.jsp").addObject("apiHost", apiHost);
-	}
-	
 	public void setApiHost(String apiHost) {
 		this.apiHost = apiHost;
 	}

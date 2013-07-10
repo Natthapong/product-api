@@ -111,5 +111,5 @@
 
 "more.bill.messageTh" : "ดูรายการบิลที่รับชําระทั้งหมด",
 
-"more.bill.url" : "http://www.google.com"
+"more.bill.url" : "http://www.truemoney.co.th/wallet/bills"
 }

@@ -291,7 +291,7 @@ public class TestWalletActivityDetailController extends
 		detail.setServiceFee(new BigDecimal(1234.50));
 		detail.setTransactionDate(txnDate);
 		detail.setTransactionID("1234567890");
-		detail.setChannel("40");
+		detail.setChannel(new Long(40));
 
 		when(this.activityServiceMock.getActivityDetail(6L, fakeAccessTokenID)).thenReturn(detail);
 
@@ -318,7 +318,7 @@ public class TestWalletActivityDetailController extends
 		detail.setServiceFee(new BigDecimal(0));
 		detail.setTransactionDate(txnDate);
 		detail.setTransactionID("1234567890");
-		detail.setChannel("40");
+		detail.setChannel(new Long("40"));
 
 		when(this.activityServiceMock.getActivityDetail(6L, fakeAccessTokenID)).thenReturn(detail);
 
@@ -346,7 +346,7 @@ public class TestWalletActivityDetailController extends
 		detail.setServiceFee(new BigDecimal(0));
 		detail.setTransactionDate(txnDate);
 		detail.setTransactionID("1234567890");
-		detail.setChannel("33");
+		detail.setChannel(new Long("33"));
 
 		when(this.activityServiceMock.getActivityDetail(6L, fakeAccessTokenID)).thenReturn(detail);
 
@@ -374,7 +374,7 @@ public class TestWalletActivityDetailController extends
 		detail.setServiceFee(new BigDecimal(0));
 		detail.setTransactionDate(txnDate);
 		detail.setTransactionID("1234567890");
-		detail.setChannel("38");
+		detail.setChannel(new Long("38"));
 
 		when(this.activityServiceMock.getActivityDetail(6L, fakeAccessTokenID)).thenReturn(detail);
 
@@ -402,7 +402,7 @@ public class TestWalletActivityDetailController extends
 		detail.setServiceFee(new BigDecimal(0));
 		detail.setTransactionDate(txnDate);
 		detail.setTransactionID("1234567890");
-		detail.setChannel("39");
+		detail.setChannel(new Long("39"));
 
 		when(this.activityServiceMock.getActivityDetail(6L, fakeAccessTokenID)).thenReturn(detail);
 
@@ -430,7 +430,7 @@ public class TestWalletActivityDetailController extends
 		detail.setServiceFee(new BigDecimal(0));
 		detail.setTransactionDate(txnDate);
 		detail.setTransactionID("1234567890");
-		detail.setChannel("42");
+		detail.setChannel(new Long("42"));
 
 		when(this.activityServiceMock.getActivityDetail(6L, fakeAccessTokenID)).thenReturn(detail);
 
@@ -458,7 +458,7 @@ public class TestWalletActivityDetailController extends
 		detail.setServiceFee(new BigDecimal(0));
 		detail.setTransactionDate(txnDate);
 		detail.setTransactionID("1234567890");
-		detail.setChannel("43");
+		detail.setChannel(new Long("43"));
 
 		when(this.activityServiceMock.getActivityDetail(6L, fakeAccessTokenID)).thenReturn(detail);
 
@@ -486,7 +486,7 @@ public class TestWalletActivityDetailController extends
 		detail.setServiceFee(new BigDecimal(0));
 		detail.setTransactionDate(txnDate);
 		detail.setTransactionID("1234567890");
-		detail.setChannel("44");
+		detail.setChannel(new Long("44"));
 
 		when(this.activityServiceMock.getActivityDetail(6L, fakeAccessTokenID)).thenReturn(detail);
 

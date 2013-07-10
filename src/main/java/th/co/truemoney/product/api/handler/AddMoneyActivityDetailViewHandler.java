@@ -13,18 +13,18 @@ import th.co.truemoney.product.api.util.Utils;
 public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailViewHandler {
 
 	private static final String SOF_TMCC = "tmcc";
-	private static final String KIOSK_CHANNEL = "33";
-	private static final String CP_FRESH_MART_CHANNEL = "38";
-	private static final String TMX_CHANNEL = "39";
-	private static final String IOS_APP_CHANNEL = "40";
-	private static final String ATM_CHANNEL = "42";
-	private static final String IBANKING = "43";
-	private static final String TRM_CHANNEL = "44";
+	private static final Long KIOSK_CHANNEL = 33l;
+	private static final Long CP_FRESH_MART_CHANNEL = 38l;
+	private static final Long TMX_CHANNEL = 39l;
+	private static final Long IOS_APP_CHANNEL = 40l;
+	private static final Long ATM_CHANNEL = 42l;
+	private static final Long IBANKING = 43l;
+	private static final Long TRM_CHANNEL = 44l;
 
 	@Override
 	public Map<String, String> buildSection1() {
 		Map<String, String> section1 = super.buildSection1();
-		String channel = activity.getChannel();
+		Long channel = activity.getChannel();
 		String action  = activity.getAction();
 		if (SOF_TMCC.equals(action)) {
 			section1.put("titleTh", "บัตรเงินสดทรูมันนี่");
@@ -58,7 +58,7 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 	@Override
 	public Map<String, Object> buildSection2() {
 		Map<String, Object> section2 = super.buildSection2();
-		String channel = activity.getChannel();
+		Long channel = activity.getChannel();
 		String action  = activity.getAction();
 		if (SOF_TMCC.equals(action)) {
 			Map<String, Object> column1 = new HashMap<String, Object>();
@@ -136,7 +136,7 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 	@Override
 	public Map<String, Object> buildSection3() {
 		Map<String, Object> section3 = new HashMap<String, Object>();
-		String channel = activity.getChannel();
+		Long channel = activity.getChannel();
 		String action  = activity.getAction();
 		if (SOF_TMCC.equals(action)) {
 			Map<String, Object> column31 = new HashMap<String, Object>();
@@ -234,7 +234,7 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 	
 	@Override
 	public Map<String, Object> buildSection4() {
-		String channel = activity.getChannel();
+		Long channel = activity.getChannel();
 		if (!(TRM_CHANNEL.equals(channel) || KIOSK_CHANNEL.equals(channel))) {
 			Map<String, Object> section4 = new HashMap<String, Object>();
 			Map<String, Object> column41 = new HashMap<String, Object>();

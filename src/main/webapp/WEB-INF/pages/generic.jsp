@@ -105,6 +105,11 @@
 
 "forgot.password.url" : "${apiHost}/m/tmn_webview/forgot/password.html",
 
-"forgot.pin.url" : "${apiHost}/m/tmn_webview/forgot/pin.html"
+"forgot.pin.url" : "${apiHost}/m/tmn_webview/forgot/pin.html",
 
+"more.bill.messageEn" : "ดูรายการบิลที่รับชําระทั้งหมดEn",
+
+"more.bill.messageTh" : "ดูรายการบิลที่รับชําระทั้งหมด",
+
+"more.bill.url" : "http://www.google.com"
 }

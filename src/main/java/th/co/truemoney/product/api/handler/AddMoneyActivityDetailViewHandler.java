@@ -235,26 +235,11 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 	@Override
 	public Map<String, Object> buildSection4() {
 		Long channel = activity.getChannel();
-		if (!(TRM_CHANNEL.equals(channel) || KIOSK_CHANNEL.equals(channel))) {
-			Map<String, Object> section4 = new HashMap<String, Object>();
-			Map<String, Object> column41 = new HashMap<String, Object>();
-			Map<String, Object> column42 = new HashMap<String, Object>();
-			Map<String, String> cell411 = new HashMap<String, String>();
-			Map<String, String> cell421 = new HashMap<String, String>();
-			cell411.put("titleTh", "วันที่-เวลา");
-			cell411.put("titleEn", "transaction date");
-			cell411.put("value", Utils.formatDateTime(activity.getTransactionDate()));	 
-			cell421.put("titleTh", "เลขที่อ้างอิง");
-			cell421.put("titleEn", "transaction ID");
-			cell421.put("value", activity.getTransactionID());
-			column41.put("cell1", cell411);
-			column42.put("cell1", cell421);
-			section4.put("column1", column41);
-			section4.put("column2", column42);
-			return section4;
-		} 
-		Map<String, Object> section4 = new HashMap<String, Object>();
-		return section4;
+		if (TRM_CHANNEL.equals(channel) || KIOSK_CHANNEL.equals(channel)) {
+			return new HashMap<String, Object>();
+		} else {
+			return super.buildSection4();
+		}
 	}
 	
 }

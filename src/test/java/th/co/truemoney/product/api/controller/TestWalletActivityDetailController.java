@@ -1,5 +1,6 @@
 package th.co.truemoney.product.api.controller;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -9,6 +10,8 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+
+import javax.validation.constraints.AssertFalse;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -356,7 +359,7 @@ public class TestWalletActivityDetailController extends
 		assertEquals("{titleTh=True Money Kiosk, titleEn=True Money Kiosk}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=ยอดเงินเข้า Wallet, titleEn=total amount, value=2,000.00}}}", data.get("section2").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section3").toString());
-		assertEquals("{}", data.get("section4").toString());
+		assertFalse(data.containsKey("section4"));
 		
 	}
 
@@ -496,7 +499,7 @@ public class TestWalletActivityDetailController extends
 		assertEquals("{titleTh=True Shop, titleEn=True Shop}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=ยอดเงินเข้า Wallet, titleEn=total amount, value=2,000.00}}}", data.get("section2").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section3").toString());
-		assertEquals("{}", data.get("section4").toString());
+		assertFalse(data.containsKey("section4"));
 		
 	}
 	

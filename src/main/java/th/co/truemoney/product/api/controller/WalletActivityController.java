@@ -142,7 +142,11 @@ public class WalletActivityController extends BaseController {
 		data.put("section1", handler.buildSection1());
 		data.put("section2", handler.buildSection2());
 		data.put("section3", handler.buildSection3());
-		data.put("section4", handler.buildSection4());
+		
+		Map<String, Object> sec4 = handler.buildSection4();
+		if (sec4 != null && sec4.size() > 0) {
+			data.put("section4", handler.buildSection4());
+		}
 		
 		TYPE t = WalletActivity.getType(Utils.removeSuffix(activity.getType()));
 		if (t ==  TYPE.TRANSFER) {

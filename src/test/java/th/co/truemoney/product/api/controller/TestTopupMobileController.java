@@ -119,7 +119,7 @@ public class TestTopupMobileController extends BaseTestController {
 		Map<String, Object> data = response.getData();
 		Assert.assertEquals("1111111111", data.get("draftTransactionID"));
 		Assert.assertEquals(
-				"https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bank/scb@2x.png",
+				"https://secure.truemoney-dev.com/m/images/logo_bank/scb@2x.png",
 				data.get("logoURL"));
 		Assert.assertEquals("089-444-5266", data.get("mobileNumber"));
 		Assert.assertEquals(new BigDecimal(500), data.get("amount"));
@@ -283,7 +283,7 @@ public class TestTopupMobileController extends BaseTestController {
 		topUpMobileInfo.setAmount(new BigDecimal(500));
 		topUpMobileInfo.setMobileNumber("0894445266");
 		topUpMobileInfo
-				.setLogo("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bank/scb@2x.png");
+				.setLogo("https://secure.truemoney-dev.com/m/images/logo_bank/scb@2x.png");
 		topUpMobileInfo.setServiceFee(new ServiceFeeInfo("THB", new BigDecimal(
 				15)));
 		topUpMobileInfo.setSourceOfFundFees(createSOF());
@@ -314,7 +314,7 @@ public class TestTopupMobileController extends BaseTestController {
 		TopUpMobile topUpMobile = new TopUpMobile();
 		topUpMobile.setAmount(new BigDecimal(500));
 		topUpMobile.setID("1111111111");
-		topUpMobile.setLogo("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bank/scb@2x.png");
+		topUpMobile.setLogo("https://secure.truemoney-dev.com/m/images/logo_bank/scb@2x.png");
 		topUpMobile.setMaxAmount(new BigDecimal(1000));
 		topUpMobile.setMinAmount(new BigDecimal(10));
 		topUpMobile.setMobileNumber("0894445266");

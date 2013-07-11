@@ -276,7 +276,7 @@ public class TestBillPaymentControllerUnit {
 
         assertEquals("tcg", data.get("target"));
         assertEquals(
-                "https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tcg@2x.png",
+                "https://secure.truemoney-dev.com/m/images/logo_bill/tcg@2x.png",
                 data.get("logoURL"));
         assertEquals("", data.get("titleTh"));
         assertEquals("", data.get("titleEn"));
@@ -424,7 +424,7 @@ public class TestBillPaymentControllerUnit {
 
         assertEquals("tcg", data.get("target"));
         assertEquals(
-                "https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tcg@2x.png",
+                "https://secure.truemoney-dev.com/m/images/logo_bill/tcg@2x.png",
                 data.get("logoURL"));
         assertEquals("", data.get("titleTh"));
         assertEquals("", data.get("titleEn"));
@@ -504,7 +504,7 @@ public class TestBillPaymentControllerUnit {
 
         assertEquals("tcg", data.get("target"));
         assertEquals(
-                "https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tcg@2x.png",
+                "https://secure.truemoney-dev.com/m/images/logo_bill/tcg@2x.png",
                 data.get("logoURL"));
         assertEquals("", data.get("titleTh"));
         assertEquals("", data.get("titleEn"));
@@ -548,7 +548,7 @@ public class TestBillPaymentControllerUnit {
          req.put("ref1", "0891234567");
          req.put("target", "tmvh");
          Bill bill = createStubbedBillInfo();
-         bill.setLogoURL("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png");
+         bill.setLogoURL("https://secure.truemoney-dev.com/m/images/logo_bill/tmvh@2x.png");
          bill.setRef1("0891234567");
          bill.setTarget("tmvh");
          bill.setRef2("");
@@ -563,7 +563,7 @@ public class TestBillPaymentControllerUnit {
         assertNotNull(data);
 
         assertEquals("tmvh", data.get("target"));
-        assertEquals("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png", data.get("logoURL"));
+        assertEquals("https://secure.truemoney-dev.com/m/images/logo_bill/tmvh@2x.png", data.get("logoURL"));
         assertEquals("", data.get("titleTh"));
         assertEquals("", data.get("titleEn"));
 
@@ -602,7 +602,7 @@ public class TestBillPaymentControllerUnit {
         req.put("inquiry", "online");
 
         Bill bill = createStubbedBillInfo();
-        bill.setLogoURL("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png");
+        bill.setLogoURL("https://secure.truemoney-dev.com/m/images/logo_bill/tmvh@2x.png");
         bill.setRef1("0891234567");
         bill.setTarget("mea");
         bill.setRef2("010520120200015601");
@@ -621,7 +621,7 @@ public class TestBillPaymentControllerUnit {
 
         assertEquals("30/08/2013", data.get("dueDate").toString());
         assertEquals(
-                "https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tmvh@2x.png",
+                "https://secure.truemoney-dev.com/m/images/logo_bill/tmvh@2x.png",
                 data.get("logoURL"));
 
         assertEquals("089-123-4567", data.get("ref1"));
@@ -663,7 +663,7 @@ public class TestBillPaymentControllerUnit {
         Bill billInfo = new Bill();
         billInfo.setID("111111");
         billInfo.setTarget("tcg");
-        billInfo.setLogoURL("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tcg@2x.png");
+        billInfo.setLogoURL("https://secure.truemoney-dev.com/m/images/logo_bill/tcg@2x.png");
         billInfo.setTitleTH("ค่าใช้บริการบริษัทในกลุ่มทรู");
         billInfo.setTitleEN("Convergence Postpay");
 

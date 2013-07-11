@@ -467,7 +467,7 @@ public class TestBillPaymentController extends BaseTestController {
                  SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
                 Bill billInfo = new Bill();
                 billInfo.setTarget(target);
-                billInfo.setLogoURL("https://secure.truemoney-dev.com/m/tmn_webview/images/logo_bill/tcg@2x.png");
+                billInfo.setLogoURL("https://secure.truemoney-dev.com/m/images/logo_bill/tcg@2x.png");
                 billInfo.setTitleTH("ค่าใช้บริการบริษัทในกลุ่มทรู");
                 billInfo.setTitleEN("Convergence Postpay");
 

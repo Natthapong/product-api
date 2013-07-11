@@ -109,7 +109,7 @@ public class TestBillPayActivityDetailViewHandler {
 		assertEquals(section4String(), sec4.toString());
 	}
 
-	private static final String sec1FormatStr = "{logoURL=null/m/tmn_webview/images/logo_bill/%s@2x.png, titleTh=%s, titleEn=%s}";
+	private static final String sec1FormatStr = "{logoURL=null/images/logo_bill/%s@2x.png, titleTh=%s, titleEn=%s}";
 	private static final String sec2FormatStrRef1Ref2 = "{column1={cell2={titleTh=%s, titleEn=%s, value=%s}, cell1={titleTh=%s, titleEn=%s, value=%s}}}";
 	private static final String sec2FormatStrRef1 = "{column1={cell1={titleTh=%s, titleEn=%s, value=%s}}}";
 	private static final String sec3FormatStr = "{column1={cell2={titleTh=%s, titleEn=%s, value=%s}, cell1={titleTh=%s, titleEn=%s, value=%s}}, column2={cell1={titleTh=%s, titleEn=%s, value=%s}}}";

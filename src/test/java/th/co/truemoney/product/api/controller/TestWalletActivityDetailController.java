@@ -97,7 +97,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 
-		assertEquals("{logoURL=http://localhost:8080/m/tmn_webview/images/logo_bill/tmvh@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
+		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/tmvh@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=หมายเลขโทรศัพท์, titleEn=mobile number, value=089-765-4333}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
@@ -123,7 +123,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
-		assertEquals("{logoURL=http://localhost:8080/m/tmn_webview/images/logo_bill/trmv@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
+		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/trmv@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=หมายเลขโทรศัพท์, titleEn=mobile number, value=089-765-4333}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
@@ -149,7 +149,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(4L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 
-		assertEquals("{logoURL=http://localhost:8080/m/tmn_webview/images/logo_bill/ti@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
+		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/ti@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
 		assertEquals("{column1={cell2={titleTh=เลขที่ใบแจ้งค่าบริการ, titleEn=invoice number, value=923178945372901}, cell1={titleTh=รหัสลูกค้า/หมายเลขโทรศัพท์, titleEn=Telephone Number/Customer Number, value=864895245}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
@@ -174,7 +174,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(4L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 
-		assertEquals("{logoURL=http://localhost:8080/m/tmn_webview/images/logo_bill/tmvh@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
+		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/tmvh@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=รหัสลูกค้า/หมายเลขโทรศัพท์, titleEn=Mobile Number, value=089-123-4567}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
@@ -199,7 +199,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(4L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
-		assertEquals("{logoURL=http://localhost:8080/m/tmn_webview/images/logo_bill/tr@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
+		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/tr@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=เลขที่อ้างอิง 1/หมายเลขโทรศัพท์, titleEn=Telephone Number, value=02-000-0000}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
@@ -224,7 +224,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(4L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
-		assertEquals("{logoURL=http://localhost:8080/m/tmn_webview/images/logo_bill/ti@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
+		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/ti@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=รหัสลูกค้า/หมายเลขโทรศัพท์, titleEn=Telephone Number/Customer Number, value=864895245}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
@@ -249,7 +249,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(4L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
-		assertEquals("{logoURL=http://localhost:8080/m/tmn_webview/images/logo_bill/ti@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
+		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/ti@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=รหัสลูกค้า/หมายเลขโทรศัพท์, titleEn=Telephone Number/Customer Number, value=864895245}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
@@ -298,7 +298,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
-		assertEquals("{logoURL=http://localhost:8080/m/tmn_webview/images/logo_bank/ktb@2x.png, titleTh=บัญชีธนาคาร, titleEn=bank account}", data.get("section1").toString());
+		assertEquals("{logoURL=http://localhost:8080/images/logo_bank/ktb@2x.png, titleTh=บัญชีธนาคาร, titleEn=bank account}", data.get("section1").toString());
 		assertEquals("{column1={cell2={titleTh=หมายเลขบัญชี, titleEn=account number, value=***7412}, cell1={titleTh=ธนาคาร, titleEn=bank name, value=ธนาคารกรุงไทย}}}", data.get("section2").toString());
 		assertEquals("{column1={cell1={titleTh=ยอดเงินเข้า Wallet, titleEn=total amount, value=24,690.00}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());

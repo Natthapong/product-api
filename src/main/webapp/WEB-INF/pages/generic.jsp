@@ -103,13 +103,13 @@
 
 "forgot.pin.active" : "false",
 
-"forgot.password.url" : "${mHost}/info/forgot/password.html",
+"forgot.password.url" : "${mHost}/request-password",
 
-"forgot.pin.url" : "${mHost}/info/forgot/pin.html",
+"forgot.pin.url" : "${mHost}/request-pin",
 
 "more.bill.messageEn" : "ดูรายการบิลที่รับชําระทั้งหมดEn",
 
 "more.bill.messageTh" : "ดูรายการบิลที่รับชําระทั้งหมด",
 
-"more.bill.url" : "http://www.google.com"
+"more.bill.url" : "http://www.truemoney.co.th/wallet/bills"
 }

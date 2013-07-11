@@ -279,7 +279,7 @@ public class TestWalletActivityDetailController extends
 	}
 	
 	@Test
-	public void getAddMoneyActivityDetails() throws Exception {
+	public void getAddMoneyActivityDetailsByIOSApp() throws Exception {
 		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
 
 		ActivityDetail detail = new ActivityDetail();
@@ -291,6 +291,7 @@ public class TestWalletActivityDetailController extends
 		detail.setServiceFee(new BigDecimal(1234.50));
 		detail.setTransactionDate(txnDate);
 		detail.setTransactionID("1234567890");
+		detail.setChannel(new Long(40));
 
 		when(this.activityServiceMock.getActivityDetail(6L, fakeAccessTokenID)).thenReturn(detail);
 
@@ -301,6 +302,202 @@ public class TestWalletActivityDetailController extends
 		assertEquals("{column1={cell2={titleTh=หมายเลขบัญชี, titleEn=account number, value=***7412}, cell1={titleTh=ธนาคาร, titleEn=bank name, value=ธนาคารกรุงไทย}}}", data.get("section2").toString());
 		assertEquals("{column1={cell1={titleTh=ยอดเงินเข้า Wallet, titleEn=total amount, value=24,690.00}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
+	}
+	
+	@Test
+	public void getAddMoneyActivityDetailsByTMCC() throws Exception {
+		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
+
+		ActivityDetail detail = new ActivityDetail();
+		detail.setType(TYPE.ADD_MONEY.name());
+		detail.setAction("tmcc");
+		detail.setRef1("12345678901234");
+		detail.setRef2("");
+		detail.setAmount(new BigDecimal(139.50));
+		detail.setSourceOfFundFee(new BigDecimal(10.50));
+		detail.setServiceFee(new BigDecimal(0));
+		detail.setTransactionDate(txnDate);
+		detail.setTransactionID("1234567890");
+		detail.setChannel(new Long("40"));
+
+		when(this.activityServiceMock.getActivityDetail(6L, fakeAccessTokenID)).thenReturn(detail);
+
+		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
+		Map<String, Object> data = resp.getData();
+		
+		assertEquals("{titleTh=บัตรเงินสดทรูมันนี่, titleEn=True Money Cash Card}", data.get("section1").toString());
+		assertEquals("{column1={cell1={titleTh=serial บัตรเงินสด, titleEn=serial number, value=12345678901234}}}", data.get("section2").toString());
+		assertEquals("{column1={cell2={titleTh=ยอดเงินเข้า Wallet, titleEn=amount, value=139.50}, cell1={titleTh=จำนวนเงิน, titleEn=total amount, value=150.00}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=10.50}}}", data.get("section3").toString());
+		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
+	
+	}
+	
+	@Test
+	public void getAddMoneyActivityDetailsByKiosk() throws Exception {
+		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
+
+		ActivityDetail detail = new ActivityDetail();
+		detail.setType(TYPE.ADD_MONEY.name());
+		detail.setAction("cash");
+		detail.setRef1("12345678901234");
+		detail.setRef2("");
+		detail.setAmount(new BigDecimal(2000.00));
+		detail.setSourceOfFundFee(new BigDecimal(0));
+		detail.setServiceFee(new BigDecimal(0));
+		detail.setTransactionDate(txnDate);
+		detail.setTransactionID("1234567890");
+		detail.setChannel(new Long("33"));
+
+		when(this.activityServiceMock.getActivityDetail(6L, fakeAccessTokenID)).thenReturn(detail);
+
+		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
+		Map<String, Object> data = resp.getData();
+
+		assertEquals("{titleTh=True Money Kiosk, titleEn=True Money Kiosk}", data.get("section1").toString());
+		assertEquals("{column1={cell1={titleTh=ยอดเงินเข้า Wallet, titleEn=total amount, value=2,000.00}}}", data.get("section2").toString());
+		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section3").toString());
+		assertEquals("{}", data.get("section4").toString());
+		
+	}
+
+	@Test
+	public void getAddMoneyActivityDetailsByCPFreshMart() throws Exception {
+		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
+
+		ActivityDetail detail = new ActivityDetail();
+		detail.setType(TYPE.ADD_MONEY.name());
+		detail.setAction("cash");
+		detail.setRef1("12345678901234");
+		detail.setRef2("");
+		detail.setAmount(new BigDecimal(2000.00));
+		detail.setSourceOfFundFee(new BigDecimal(0));
+		detail.setServiceFee(new BigDecimal(0));
+		detail.setTransactionDate(txnDate);
+		detail.setTransactionID("1234567890");
+		detail.setChannel(new Long("38"));
+
+		when(this.activityServiceMock.getActivityDetail(6L, fakeAccessTokenID)).thenReturn(detail);
+
+		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
+		Map<String, Object> data = resp.getData();
+
+		assertEquals("{titleTh=CP Fresh Mart, titleEn=CP Fresh Mart}", data.get("section1").toString());
+		assertEquals("{column1={cell1={titleTh=หมายเลขสาขา, titleEn=หมายเลขสาขา, value=12345678901234}}}", data.get("section2").toString());
+		assertEquals("{column1={cell1={titleTh=ยอดเงินเข้า Wallet, titleEn=total amount, value=2,000.00}}}", data.get("section3").toString());
+		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
+		
+	}
+	
+	@Test
+	public void getAddMoneyActivityDetailsByTMX() throws Exception {
+		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
+
+		ActivityDetail detail = new ActivityDetail();
+		detail.setType(TYPE.ADD_MONEY.name());
+		detail.setAction("cash");
+		detail.setRef1("12345678901234");
+		detail.setRef2("");
+		detail.setAmount(new BigDecimal(2000.00));
+		detail.setSourceOfFundFee(new BigDecimal(0));
+		detail.setServiceFee(new BigDecimal(0));
+		detail.setTransactionDate(txnDate);
+		detail.setTransactionID("1234567890");
+		detail.setChannel(new Long("39"));
+
+		when(this.activityServiceMock.getActivityDetail(6L, fakeAccessTokenID)).thenReturn(detail);
+
+		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
+		Map<String, Object> data = resp.getData();
+
+		assertEquals("{titleTh=True Money Express, titleEn=True Money Express}", data.get("section1").toString());
+		assertEquals("{column1={cell1={titleTh=หมายเลขร้านค้า, titleEn=หมายเลขร้านค้า, value=12345678901234}}}", data.get("section2").toString());
+		assertEquals("{column1={cell1={titleTh=ยอดเงินเข้า Wallet, titleEn=total amount, value=2,000.00}}}", data.get("section3").toString());
+		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
+		
+	}
+	
+	@Test
+	public void getAddMoneyActivityDetailsByATM() throws Exception {
+		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
+
+		ActivityDetail detail = new ActivityDetail();
+		detail.setType(TYPE.ADD_MONEY.name());
+		detail.setAction("cash");
+		detail.setRef1("12345678901234");
+		detail.setRef2("");
+		detail.setAmount(new BigDecimal(2000.00));
+		detail.setSourceOfFundFee(new BigDecimal(0));
+		detail.setServiceFee(new BigDecimal(0));
+		detail.setTransactionDate(txnDate);
+		detail.setTransactionID("1234567890");
+		detail.setChannel(new Long("42"));
+
+		when(this.activityServiceMock.getActivityDetail(6L, fakeAccessTokenID)).thenReturn(detail);
+
+		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
+		Map<String, Object> data = resp.getData();
+
+		assertEquals("{titleTh=เอทีเอ็ม, titleEn=ATM}", data.get("section1").toString());
+		assertEquals("{column1={cell1={titleTh=ธนาคาร, titleEn=bank name, value=null}}}", data.get("section2").toString());
+		assertEquals("{column1={cell1={titleTh=ยอดเงินเข้า Wallet, titleEn=total amount, value=2,000.00}}}", data.get("section3").toString());
+		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
+		
+	}
+	
+	@Test
+	public void getAddMoneyActivityDetailsByIBanking() throws Exception {
+		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
+
+		ActivityDetail detail = new ActivityDetail();
+		detail.setType(TYPE.ADD_MONEY.name());
+		detail.setAction("cash");
+		detail.setRef1("12345678901234");
+		detail.setRef2("");
+		detail.setAmount(new BigDecimal(2000.00));
+		detail.setSourceOfFundFee(new BigDecimal(0));
+		detail.setServiceFee(new BigDecimal(0));
+		detail.setTransactionDate(txnDate);
+		detail.setTransactionID("1234567890");
+		detail.setChannel(new Long("43"));
+
+		when(this.activityServiceMock.getActivityDetail(6L, fakeAccessTokenID)).thenReturn(detail);
+
+		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
+		Map<String, Object> data = resp.getData();
+
+		assertEquals("{titleTh=ไอแบงก์กิ้ง, titleEn=iBanking}", data.get("section1").toString());
+		assertEquals("{column1={cell1={titleTh=ธนาคาร, titleEn=bank name, value=null}}}", data.get("section2").toString());
+		assertEquals("{column1={cell1={titleTh=ยอดเงินเข้า Wallet, titleEn=total amount, value=2,000.00}}}", data.get("section3").toString());
+		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
+		
+	}
+	
+	@Test
+	public void getAddMoneyActivityDetailsByTRM() throws Exception {
+		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
+
+		ActivityDetail detail = new ActivityDetail();
+		detail.setType(TYPE.ADD_MONEY.name());
+		detail.setAction("cash");
+		detail.setRef1("12345678901234");
+		detail.setRef2("");
+		detail.setAmount(new BigDecimal(2000.00));
+		detail.setSourceOfFundFee(new BigDecimal(0));
+		detail.setServiceFee(new BigDecimal(0));
+		detail.setTransactionDate(txnDate);
+		detail.setTransactionID("1234567890");
+		detail.setChannel(new Long("44"));
+
+		when(this.activityServiceMock.getActivityDetail(6L, fakeAccessTokenID)).thenReturn(detail);
+
+		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
+		Map<String, Object> data = resp.getData();
+
+		assertEquals("{titleTh=True Shop, titleEn=True Shop}", data.get("section1").toString());
+		assertEquals("{column1={cell1={titleTh=ยอดเงินเข้า Wallet, titleEn=total amount, value=2,000.00}}}", data.get("section2").toString());
+		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section3").toString());
+		assertEquals("{}", data.get("section4").toString());
+		
 	}
 	
 	@Test
@@ -350,4 +547,5 @@ public class TestWalletActivityDetailController extends
 		assertEquals("{column1={cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=transaction ID, value=1234567890}}}", data.get("section4").toString());
 	}
+	
 }

@@ -11,6 +11,11 @@ public class LocalEnvConfig  extends BaseEnvConfig {
 
 	@Bean @Qualifier("apiHost")
 	public String apiHost() {
-		return "http://localhost:8080";
+		return "http://localhost:8080/api";
+	}
+	
+	@Bean @Qualifier("mHost")
+	public String mHost() {
+		return "http://localhost:8080/m";
 	}
 }

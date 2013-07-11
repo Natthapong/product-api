@@ -11,6 +11,11 @@ public class DevelopEnvConfig extends BaseEnvConfig {
 
 	@Bean @Qualifier("apiHost")
 	public String apiHost() {
-		return "https://secure.truemoney-dev.com";
+		return "https://secure.truemoney-dev.com/api";
+	}
+	
+	@Bean @Qualifier("mHost")
+	public String mHost() {
+		return "https://secure.truemoney-dev.com/m";
 	}
 }

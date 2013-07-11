@@ -86,6 +86,11 @@ public class TestWebConfig extends BaseEnvConfig {
 		return "http://localhost:8080";
 	}
 	
+	@Bean @Qualifier("mHost")
+	public String mHost() {
+		return "http://localhost:8080";
+	}
+	
 	@Bean
 	public ClientCredential appLogin() {
 		return new ClientCredential("f7cb0d495ea6d989", "MOBILE_IPHONE", "IPHONE+1", "iPhone", "iPhone");

@@ -103,9 +103,9 @@
 
 "forgot.pin.active" : "false",
 
-"forgot.password.url" : "${mHost}/request-password",
+"forgot.password.url" : "${mHost}/forgot-password",
 
-"forgot.pin.url" : "${mHost}/request-pin",
+"forgot.pin.url" : "${mHost}/forgot-pin",
 
 "more.bill.messageEn" : "ดูรายการบิลที่รับชําระทั้งหมดEn",
 

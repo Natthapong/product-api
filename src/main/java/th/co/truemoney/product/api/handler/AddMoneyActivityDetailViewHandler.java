@@ -51,6 +51,10 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 		} else if (TRM_CHANNEL.equals(channel)) {
 			section1.put("titleTh", "True Shop");
 			section1.put("titleEn", "True Shop");			
+		} else {
+			section1.put("logoURL", onlineResourceManager.getBankLogoURL(activity.getRef1()));
+			section1.put("titleTh", "บัญชีธนาคาร");
+			section1.put("titleEn", "bank account");
 		}
 		return section1;
 	}
@@ -129,6 +133,19 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			cell1.put("value", Utils.formatAbsoluteAmount(activity.getTotalAmount()));
 			column1.put("cell1", cell1);
 			section2.put("column1", column1);	
+		} else {
+			Map<String, Object> column1 = new HashMap<String, Object>();
+			Map<String, String> cell1 = new HashMap<String, String>();
+			Map<String, String> cell2 = new HashMap<String, String>();
+		 	cell1.put("titleTh", "ธนาคาร");
+			cell1.put("titleEn", "bank name");
+			cell1.put("value", BankUtil.getThaiBankName(activity.getRef1()));
+			cell2.put("titleTh", "หมายเลขบัญชี");
+			cell2.put("titleEn", "account number");
+			cell2.put("value", StringUtils.hasText(activity.getRef2()) ? activity.getRef2() : "-");
+			column1.put("cell2", cell2);
+		 	column1.put("cell1", cell1);
+		 	section2.put("column1", column1);
 		}
 		return section2;
 	}
@@ -228,6 +245,14 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			column32.put("cell1", cell321);
 			section3.put("column1", column31);
 			section3.put("column2", column32);
+		} else {
+			Map<String, Object> column31 = new HashMap<String, Object>();
+			Map<String, String> cell311 = new HashMap<String, String>();
+			cell311.put("titleTh", "ยอดเงินเข้า Wallet");
+			cell311.put("titleEn", "total amount");
+			cell311.put("value", Utils.formatAbsoluteAmount(activity.getTotalAmount()));
+			column31.put("cell1", cell311);
+			section3.put("column1", column31);
 		}
 		return section3;
 	}

@@ -101,7 +101,7 @@
 
 "forgot.password.active" : "true",
 
-"forgot.pin.active" : "false",
+"forgot.pin.active" : "true",
 
 "forgot.password.url" : "${mHost}/forgot-password",
 

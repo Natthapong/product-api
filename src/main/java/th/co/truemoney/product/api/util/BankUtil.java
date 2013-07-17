@@ -20,7 +20,7 @@ public class BankUtil {
 		banks.put("SCIB.EN", "SCIB");		
 		banks.put("CIMB.TH", "ธนาคารซีไอเอ็มบี ไทย");
 		banks.put("CIMB.EN", "CIMB THAI");	
-		banks.put("TBANK.TH", "ธนาคารธนชาติ");
+		banks.put("TBANK.TH", "ธนาคารธนชาต");
 		banks.put("TBANK.EN", "TBANK");		
 		banks.put("TMB.TH", "ธนาคารทหารไทย");
 		banks.put("TMB.EN", "TMB");				

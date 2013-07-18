@@ -502,7 +502,35 @@ public class TestBillPaymentController extends BaseTestController {
 
                 return billInfo;
         }
-
+        
+        @Test
+    	@SuppressWarnings("serial")
+        public void testMEAErrorMessage() throws Exception {
+        	Map<String, Object> data = new HashMap<String, Object>() {{
+        		put("target", "mea");
+        	}};
+        	
+        	when(
+        		billPaymentServiceMock.retrieveBillInformationWithUserFavorite(
+        				anyString(), anyString(), anyString(), any(BigDecimal.class), 
+        				any(InquiryOutstandingBillType.class), anyString()
+        		)
+        	).thenThrow(
+        		new ServiceInventoryException(500, "C-02", "Overdue can not pay", "MEA", "", data)
+        	);
+        	
+        	Map<String, String> req = new HashMap<String, String>() {{
+        		put("ref1", "0891234567");
+                put("ref2", "010520120200015601");
+                put("target", "mea");
+                put("inquiry", "online");
+        	}};
+        	this.verifyFailed(this.doPOST(getFavoriteBillPaymentInfoURL, req))
+            						.andExpect(jsonPath("$code").value("80001"))
+            						.andExpect(jsonPath("$namespace").value("TMN-PRODUCT"))
+            						.andExpect(jsonPath("$.messageTh").value(containsString("การไฟฟ้านครหลวง")));
+        }
+        
         private BillPaymentDraft createBillPaymentDraftStubbed() throws ParseException{
             Bill bill = createStubbedBillInfo("tcg");
             return new BillPaymentDraft("1111111111", bill, new BigDecimal(11000), "123567890", Status.OTP_CONFIRMED);

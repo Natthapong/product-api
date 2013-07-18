@@ -166,26 +166,34 @@ public class BillPaymentController extends BaseController {
         BigDecimal amount = new BigDecimal(inputAmount.replace(",", ""));
 
         Bill bill = null;
-        try{
-            bill = billPaymentService.retrieveBillInformationWithUserFavorite(target, ref1, ref2, amount, InquiryOutstandingBillType.valueFromString(inquiryType), accessTokenID);
-        }catch(ServiceInventoryException e){
-            if("PCS.PCS-30024".equals(String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode()))){
-                if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target))){
+        try {
+            bill = billPaymentService.retrieveBillInformationWithUserFavorite(
+            		target, ref1, ref2, amount, InquiryOutstandingBillType.valueFromString(inquiryType), accessTokenID);
+        } catch(ServiceInventoryException e) {
+        	String error = e.getErrorNamespace() + "." + e.getErrorCode();
+            if("PCS.PCS-30024".equals(error)) {
+            	String serviceCode = Utils.removeSuffix(target);
+                if("tmvh".equals(serviceCode) || "trmv".equals(serviceCode)){
                     throw new ServiceInventoryException(500,"70000","","TMN-PRODUCT");
-                } else if("mea".equals(Utils.removeSuffix(target))) {
+                } else if("mea".equals(serviceCode)) {
                     throw new ServiceInventoryException(500,"90000","","TMN-PRODUCT");
                 }
-            }else if(("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace()) && "1012".equals(e.getErrorCode())) 
-            		|| ("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace()) && "1020".equals(e.getErrorCode()))){
-            	
-                String targetTitle = getTargetTitle(Utils.removeSuffix(e.getData().get("target").toString()));
+            } else if(("TMN-SERVICE-INVENTORY.1012".equals(error)) 
+            		|| ("TMN-SERVICE-INVENTORY.1020".equals(error))) {
+                String serviceCode = e.getData().get("target").toString();
                 e.setErrorCode("80000");
                 e.setErrorNamespace("TMN-PRODUCT");
                 Date dueDate = new Date((Long)e.getData().get("dueDate"));
                 e.getData().put("dueDate",Utils.formatDate4Y(dueDate));
-                e.getData().put("targetTitle",targetTitle);
+                e.getData().put("targetTitle", getTargetTitle(Utils.removeSuffix(serviceCode)));
                 throw e;
-            }
+            } else if ("MEA.C-02".equals(error)) {
+            	String targetTitle = getTargetTitle(Utils.removeSuffix(e.getData().get("target").toString()));
+            	e.setErrorCode("80001");
+            	e.setErrorNamespace("TMN-PRODUCT");
+            	e.getData().put("targetTitle", targetTitle);
+			}
+            
             throw e;
         }
 

@@ -189,9 +189,12 @@ public class BillPaymentController extends BaseController {
                 throw e;
             } else if ("MEA.C-02".equals(error)) {
             	String targetTitle = getTargetTitle(Utils.removeSuffix(target));
+            	Map<String, Object> data = new HashMap<String, Object>();
+            	data.put("targetTitle", targetTitle);
+
+            	e.setData(data);
             	e.setErrorCode("80001");
             	e.setErrorNamespace("TMN-PRODUCT");
-            	e.getData().put("targetTitle", targetTitle);
 			}
             
             throw e;

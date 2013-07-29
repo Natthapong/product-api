@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,10 +19,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.portlet.MockMimeResponse;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -226,14 +229,14 @@ public class TestRegisterController {
 		mockData.put("mobileNumber", "0899999999");
 		mockData.put("otpString", "111111");
 		mockData.put("otpRefCode", "qwer");
-		mockData.put("loginSecret", "111111111111");
+		//mockData.put("loginSecret", "111111111111");
 
 		TmnProfile profileMock = new TmnProfile();
 		profileMock.setEmail("apinya@gmail.com");
 		profileMock.setFullname("Apinya Ukachoke");
 		profileMock.setMobileNumber("0899999999");
 		profileMock.setPassword("werw2345");
-
+		
 		when(
 				this.tmnProfileServiceMock.confirmCreateProfile(anyInt(), any(OTP.class)) )
 			.thenThrow(new ServiceInventoryException(400, failedCode, failedMessage,
@@ -247,9 +250,9 @@ public class TestRegisterController {
 		when(
 				this.tmnProfileServiceMock.getTruemoneyProfile(
 						any(String.class))).thenReturn(profileMock);
-
-			this.mockMvc
-					.perform(post(confirmCreateProfileURL).content(mapper.writeValueAsBytes(mockData)).contentType(MediaType.APPLICATION_JSON))
+		
+		this.mockMvc
+					.perform(post(confirmCreateProfileURL).content(mapper.writeValueAsString(mockData)).contentType(MediaType.APPLICATION_JSON))
 					.andExpect(status().isInternalServerError())
 					.andExpect(jsonPath("$.code").value(failedCode))
 					.andExpect(jsonPath("$.namespace").value(failedNamespace))
@@ -268,7 +271,7 @@ public class TestRegisterController {
 		Map<String,String> mockData = new HashMap<String, String>();
 		mockData.put("mobileNumber", "0899999999");
 		mockData.put("otpString", "123456");
-		mockData.put("otpString", "qwer");
+		mockData.put("otpRefCode", "qwer");
 		mockData.put("loginSecret", "1111111");
 
 		TmnProfile profileMock = new TmnProfile();
@@ -316,7 +319,7 @@ public class TestRegisterController {
 		Map<String,String> mockData = new HashMap<String, String>();
 		mockData.put("mobileNumber", "0899999999");
 		mockData.put("otpString", "123456");
-		mockData.put("otpRef", "qwer");
+		mockData.put("otpRefCode", "qwer");
 		mockData.put("loginSecret", "1111111");
 
 		TmnProfile profileMock = new TmnProfile();

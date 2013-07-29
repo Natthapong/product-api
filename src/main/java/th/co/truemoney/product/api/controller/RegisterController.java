@@ -1,16 +1,25 @@
 package th.co.truemoney.product.api.controller;
 
+import static th.co.truemoney.product.api.util.ProductResponseFactory.PRODUCT_NAMESPACE;
+
 import java.security.InvalidParameterException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import th.co.truemoney.product.api.domain.OTPBean;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.manager.SecurityManager;
 import th.co.truemoney.product.api.util.ValidateUtil;
@@ -80,23 +89,34 @@ public class RegisterController extends BaseController {
 
         return this.responseFactory.createSuccessProductResonse(data);
     }
-
+    
     @RequestMapping(value = "/profiles/verify-otp", method = RequestMethod.POST)
-    @ResponseBody
-    public ProductResponse confirmCreateProfile(@RequestBody Map<String, String> request)
-            throws ServiceInventoryException {
+    public @ResponseBody ProductResponse confirmCreateProfile(
+    	   @RequestBody @Valid OTPBean otpBean) throws ServiceInventoryException {
 
-        OTP otp = new OTP();
-        otp.setOtpString(request.get("otpString"));
-        otp.setReferenceCode(request.get("otpRefCode"));
-        otp.setMobileNumber(request.get("mobileNumber"));
-
-        confirmCreateProfile(otp);
-        Map<String, Object> data = new HashMap<String, Object>();
-
-        return this.responseFactory.createSuccessProductResonse(data);
+        confirmCreateProfile(otpBean.toOTPObj());
+        
+        return this.responseFactory.createSuccessProductResonse(Collections.<String, Object>emptyMap());
     }
-
+    
+    private static final Integer HTTP_BAD_REQUEST = HttpServletResponse.SC_BAD_REQUEST;
+    
+    private static final String INVALID_PARAMETER = HTTP_BAD_REQUEST.toString();
+    
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+	public @ResponseBody
+	ProductResponse handleInvalidParameterExceptions(
+			MethodArgumentNotValidException exception, 
+			HttpServletResponse response) {
+		response.setStatus(HTTP_BAD_REQUEST);
+		
+		String errorMessage = "Invalid " + exception.getBindingResult().getFieldError().getField();
+		
+		return responseFactory.createErrorProductResponse(
+				new ServiceInventoryException(
+						HTTP_BAD_REQUEST, INVALID_PARAMETER, errorMessage, PRODUCT_NAMESPACE));
+	}
+    
     private String verifyEmail(String email) {
         try {
             return profileService.validateEmail(MOBILE_APP_CHANNEL_ID, email);
@@ -134,5 +154,5 @@ public class RegisterController extends BaseController {
 
         }
     }
-
+    
 }

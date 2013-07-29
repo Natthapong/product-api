@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,12 +18,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.portlet.MockMimeResponse;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -45,16 +43,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class TestRegisterController {
 
 	private MockMvc mockMvc;
-
+	
+	private ObjectMapper mapper = new ObjectMapper();
+	
 	@Autowired
 	private WebApplicationContext wac;
 
 	@Autowired
 	private TmnProfileService tmnProfileServiceMock;
-
-	private String validateEmailURL = "/ewallet/profiles/validate-email";
-	private String createProfileURL = "/ewallet/profiles";
-	private String confirmCreateProfileURL = "/ewallet/profiles/verify-otp";
 
 	@Before
 	public void setup() {
@@ -69,58 +65,52 @@ public class TestRegisterController {
 
 	@Test
 	public void validateEmailSuccess() throws Exception {
-		ObjectMapper mapper = new ObjectMapper();
-
 		String email = "apinya@gmail.com";
 
-		Map<String, Object> data = new HashMap<String, Object>();
+		Map<String, String> data = new HashMap<String, String>();
 		data.put("email","apinya@gmail.com");
 
 		when(
-				this.tmnProfileServiceMock.validateEmail(anyInt(), any(String.class)) )
-			.thenReturn(email);
+				this.tmnProfileServiceMock.validateEmail(anyInt(), any(String.class))
+		).thenReturn(email);
 
-			this.mockMvc
-					.perform(post(validateEmailURL).content(mapper.writeValueAsBytes(data)).contentType(MediaType.APPLICATION_JSON))
-					.andExpect(status().isOk())
-					.andExpect(jsonPath("$.code").value("20000"))
-					.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
-					.andExpect(jsonPath("$.messageEn").exists())
-					.andExpect(jsonPath("$.messageTh").exists())
-					.andExpect(jsonPath("$.data").exists())
-					.andExpect(jsonPath("$..email").value("apinya@gmail.com"));
+		ResultActions result = doPost("/ewallet/profiles/validate-email", data);
+		
+		result.andExpect(status().isOk());
+		result.andExpect(jsonPath("$.code").value("20000"));
+		result.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"));
+		result.andExpect(jsonPath("$.messageEn").exists());
+		result.andExpect(jsonPath("$.messageTh").exists());
+		result.andExpect(jsonPath("$.data").exists());
+		result.andExpect(jsonPath("$..email").value("apinya@gmail.com"));
 	}
 
 	@Test
 	public void validateEmailInvalidFormat() throws Exception {
-		ObjectMapper mapper = new ObjectMapper();
 		String failedCode = "40000";
 		String failedMessage = "Invalid email format";
 		String failedNamespace = "TMN-PRODUCT";
 
-		Map<String, Object> data = new HashMap<String, Object>();
+		Map<String, String> data = new HashMap<String, String>();
 		data.put("email","apinya@gmail.com");
 
 		when(
-				this.tmnProfileServiceMock.validateEmail(anyInt(), any(String.class)) )
-			.thenThrow(new ServiceInventoryException(400, failedCode, failedMessage,
-					failedNamespace));
-
-			this.mockMvc
-					.perform(post(validateEmailURL).content(mapper.writeValueAsBytes(data)).contentType(MediaType.APPLICATION_JSON))
-					.andExpect(status().isInternalServerError())
-					.andExpect(jsonPath("$.code").value(failedCode))
-					.andExpect(jsonPath("$.namespace").value(failedNamespace))
-					.andExpect(jsonPath("$.messageEn").exists())
-					.andExpect(jsonPath("$.messageTh").exists())
-					.andExpect(jsonPath("$.data").exists());
+				this.tmnProfileServiceMock.validateEmail(anyInt(), any(String.class))
+		).thenThrow(new ServiceInventoryException(400, failedCode, failedMessage,failedNamespace));
+		
+		ResultActions result = doPost("/ewallet/profiles/validate-email", data);
+		
+		result.andExpect(status().isInternalServerError());
+		result.andExpect(jsonPath("$.code").value(failedCode));
+		result.andExpect(jsonPath("$.namespace").value(failedNamespace));
+		result.andExpect(jsonPath("$.messageEn").exists());
+		result.andExpect(jsonPath("$.messageTh").exists());
+		result.andExpect(jsonPath("$.data").exists());
 	}
 
 	@Test
 	public void createProfileSuccess() throws Exception {
-		ObjectMapper mapper = new ObjectMapper();
-
-		Map<String, Object> tmnProfile = new HashMap<String, Object>();
+		Map<String, String> tmnProfile = new HashMap<String, String>();
 		tmnProfile.put("email","apinya@gmail.com");
 		tmnProfile.put("password","werw2345");
 		tmnProfile.put("mobileNumber","0899999999");
@@ -132,28 +122,26 @@ public class TestRegisterController {
 		otp.setReferenceCode("wert");
 
 		when(
-				this.tmnProfileServiceMock.createProfile(anyInt(), any(TmnProfile.class)) )
-			.thenReturn(otp);
-
-			this.mockMvc
-					.perform(post(createProfileURL).content(mapper.writeValueAsBytes(tmnProfile)).contentType(MediaType.APPLICATION_JSON))
-					.andExpect(status().isOk())
-					.andExpect(jsonPath("$.code").value("20000"))
-					.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
-					.andExpect(jsonPath("$.messageEn").exists())
-					.andExpect(jsonPath("$.messageTh").exists())
-					.andExpect(jsonPath("$.data").exists())
-					.andExpect(jsonPath("$..otpRefCode").value("wert"));
+			this.tmnProfileServiceMock.createProfile(anyInt(), any(TmnProfile.class))
+		).thenReturn(otp);
+		
+		ResultActions result = doPost("/ewallet/profiles", tmnProfile);
+		
+		result.andExpect(status().isOk());
+		result.andExpect(jsonPath("$.code").value("20000"));
+		result.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"));
+		result.andExpect(jsonPath("$.messageEn").exists());
+		result.andExpect(jsonPath("$.messageTh").exists());
+		result.andExpect(jsonPath("$.data").exists());
 	}
 
 	@Test
 	public void createProfileFail() throws Exception {
-		ObjectMapper mapper = new ObjectMapper();
 		String failedCode = "50001";
 		String failedMessage = "Username is invalid format";
 		String failedNamespace = "TMN-PRODUCT";
 
-		Map<String, Object> tmnProfile = new HashMap<String, Object>();
+		Map<String, String> tmnProfile = new HashMap<String, String>();
 		tmnProfile.put("email","apinya@gmail.com");
 		tmnProfile.put("password","werw2345");
 		tmnProfile.put("mobileNumber","0899999999");
@@ -163,21 +151,19 @@ public class TestRegisterController {
 				this.tmnProfileServiceMock.createProfile(anyInt(), any(TmnProfile.class)) )
 			.thenThrow(new ServiceInventoryException(400, failedCode, failedMessage,
 					failedNamespace));
-
-			this.mockMvc
-					.perform(post(createProfileURL).content(mapper.writeValueAsBytes(tmnProfile)).contentType(MediaType.APPLICATION_JSON))
-					.andExpect(status().isInternalServerError())
-					.andExpect(jsonPath("$.code").value(failedCode))
-					.andExpect(jsonPath("$.namespace").value(failedNamespace))
-					.andExpect(jsonPath("$.messageEn").exists())
-					.andExpect(jsonPath("$.messageTh").exists())
-					.andExpect(jsonPath("$.data").exists());
+		
+		ResultActions result = doPost("/ewallet/profiles", tmnProfile);
+		
+		result.andExpect(status().isInternalServerError());
+		result.andExpect(jsonPath("$.code").value(failedCode));
+		result.andExpect(jsonPath("$.namespace").value(failedNamespace));
+		result.andExpect(jsonPath("$.messageEn").exists());
+		result.andExpect(jsonPath("$.messageTh").exists());
+		result.andExpect(jsonPath("$.data").exists());
 	}
 
 	@Test
 	public void confirmCreateProfileSuccess() throws Exception {
-		ObjectMapper mapper = new ObjectMapper();
-
 		TmnProfile profileMock = new TmnProfile();
 		profileMock.setEmail("apinya@gmail.com");
 		profileMock.setFullname("Apinya Ukachoke");
@@ -207,20 +193,19 @@ public class TestRegisterController {
 		when(
 				this.tmnProfileServiceMock.getTruemoneyProfile(
 						any(String.class))).thenReturn(profileMock);
-
-			this.mockMvc
-					.perform(post(confirmCreateProfileURL).content(mapper.writeValueAsBytes(mockData)).contentType(MediaType.APPLICATION_JSON))
-
-					.andExpect(jsonPath("$.code").value("20000"))
-					.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"))
-					.andExpect(jsonPath("$.messageEn").exists())
-					.andExpect(jsonPath("$.messageTh").exists())
-					.andExpect(jsonPath("$.data").exists());
+		
+		ResultActions result = doPost("/ewallet/profiles/verify-otp", mockData);
+		
+		result.andExpect(status().isOk());
+		result.andExpect(jsonPath("$.code").value("20000"));
+		result.andExpect(jsonPath("$.namespace").value("TMN-PRODUCT"));
+		result.andExpect(jsonPath("$.messageEn").exists());
+		result.andExpect(jsonPath("$.messageTh").exists());
+		result.andExpect(jsonPath("$.data").exists());
 	}
 
 	@Test
 	public void confirmCreateProfileFail() throws Exception {
-		ObjectMapper mapper = new ObjectMapper();
 		String failedCode = "50001";
 		String failedMessage = "Username is invalid format";
 		String failedNamespace = "TMN-PRODUCT";
@@ -251,19 +236,18 @@ public class TestRegisterController {
 				this.tmnProfileServiceMock.getTruemoneyProfile(
 						any(String.class))).thenReturn(profileMock);
 		
-		this.mockMvc
-					.perform(post(confirmCreateProfileURL).content(mapper.writeValueAsString(mockData)).contentType(MediaType.APPLICATION_JSON))
-					.andExpect(status().isInternalServerError())
-					.andExpect(jsonPath("$.code").value(failedCode))
-					.andExpect(jsonPath("$.namespace").value(failedNamespace))
-					.andExpect(jsonPath("$.messageEn").exists())
-					.andExpect(jsonPath("$.messageTh").exists())
-					.andExpect(jsonPath("$.data").exists());
+		ResultActions result = doPost("/ewallet/profiles/verify-otp", mockData);
+		
+		result.andExpect(status().isInternalServerError());
+		result.andExpect(jsonPath("$.code").value(failedCode));
+		result.andExpect(jsonPath("$.namespace").value(failedNamespace));
+		result.andExpect(jsonPath("$.messageEn").exists());
+		result.andExpect(jsonPath("$.messageTh").exists());
+		result.andExpect(jsonPath("$.data").exists());
 	}
 
 	@Test
 	public void confirmCreateProfileOTPNotFound() throws Exception {
-		ObjectMapper mapper = new ObjectMapper();
 		String failedCode = "1000";
 		String failedMessage = "send OTP failed.";
 		String failedNamespace = "TMN-SERVICE-INVENTORY";
@@ -298,20 +282,20 @@ public class TestRegisterController {
 						any(EWalletOwnerCredential.class),
 						any(ClientCredential.class))
 			).thenReturn("");
-
-			this.mockMvc
-					.perform(post(confirmCreateProfileURL).content(mapper.writeValueAsBytes(mockData)).contentType(MediaType.APPLICATION_JSON))
-					.andExpect(status().isInternalServerError())
-					.andExpect(jsonPath("$.code").value(failedCode))
-					.andExpect(jsonPath("$.namespace").value(failedNamespace))
-					.andExpect(jsonPath("$.messageEn").exists())
-					.andExpect(jsonPath("$.messageTh").exists())
-					.andExpect(jsonPath("$.data").exists());
+		
+		ResultActions result = doPost("/ewallet/profiles/verify-otp", mockData);
+		
+		result.andExpect(status().isInternalServerError());
+		result.andExpect(jsonPath("$.code").value(failedCode));
+		result.andExpect(jsonPath("$.namespace").value(failedNamespace));
+		result.andExpect(jsonPath("$.messageEn").exists());
+		result.andExpect(jsonPath("$.messageTh").exists());
+		result.andExpect(jsonPath("$.data").exists());
 	}
 
 	@Test
 	public void confirmCreateProfileInvalidMobileFormat() throws Exception {
-		ObjectMapper mapper = new ObjectMapper();
+		
 		String failedCode = "1000";
 		String failedMessage = "send OTP failed.";
 		String failedNamespace = "TMN-SERVICE-INVENTORY";
@@ -346,15 +330,19 @@ public class TestRegisterController {
 						any(EWalletOwnerCredential.class),
 						any(ClientCredential.class))
 			).thenReturn("");
-
-			this.mockMvc
-					.perform(post(confirmCreateProfileURL).content(mapper.writeValueAsBytes(mockData)).contentType(MediaType.APPLICATION_JSON))
-					.andExpect(status().isInternalServerError())
-					.andExpect(jsonPath("$.code").value(failedCode))
-					.andExpect(jsonPath("$.namespace").value(failedNamespace))
-					.andExpect(jsonPath("$.messageEn").exists())
-					.andExpect(jsonPath("$.messageTh").exists())
-					.andExpect(jsonPath("$.data").exists());
+		
+		ResultActions result = doPost("/ewallet/profiles/verify-otp", mockData);
+		
+		result.andExpect(status().isInternalServerError());
+		result.andExpect(jsonPath("$.code").value(failedCode));
+		result.andExpect(jsonPath("$.namespace").value(failedNamespace));
+		result.andExpect(jsonPath("$.messageEn").exists());
+		result.andExpect(jsonPath("$.messageTh").exists());
+		result.andExpect(jsonPath("$.data").exists());
+	}
+	
+	private ResultActions doPost(String url, Map<String,String> requestData) throws Exception {
+		return this.mockMvc.perform(post(url).content(mapper.writeValueAsBytes(requestData)).contentType(MediaType.APPLICATION_JSON));
 	}
 
 }

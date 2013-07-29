@@ -15,6 +15,10 @@
 
 "instruction.addmoney.tmx" : "${mHost}/info/addmoney/instruction/tmx/cp_freshmart.html",
 
+"instruction.addmoney.truemoneyexpress" : "${mHost}/info/addmoney/instruction/tmx/tmx.html",
+
+"instruction.addmoney.ivr" : "${mHost}/info/addmoney/instruction/ivr/ivr.html",
+
 "signin.url" : "${apiHost}/v1/signin?",
 
 "signout.url" : "${apiHost}/v1/signout/%@?",

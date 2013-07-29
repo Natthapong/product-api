@@ -17,7 +17,7 @@
 
 "instruction.addmoney.truemoneyexpress" : "${mHost}/info/addmoney/instruction/tmx/tmx.html",
 
-"instruction.addmoney.ivr" : "${mHost}/info/addmoney/instruction/ivr/ivr.html",
+"instruction.addmoney.cashcard" : "${mHost}/info/addmoney/instruction/cashcard/cashcard.html",
 
 "signin.url" : "${apiHost}/v1/signin?",
 

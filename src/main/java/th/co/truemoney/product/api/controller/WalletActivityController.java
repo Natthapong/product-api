@@ -77,8 +77,8 @@ public class WalletActivityController extends BaseController {
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 
-	private String getActivityTypeLogo(Activity action) {
-		return onlineResourceManager.getActivityTypeLogoURL(action.getType());
+	private String getActivityTypeLogo(Activity activity) {
+		return onlineResourceManager.getActivityTypeLogoURL(activity);
 	}
 	
 	private String getActionNameEn(TYPE t, String action) {

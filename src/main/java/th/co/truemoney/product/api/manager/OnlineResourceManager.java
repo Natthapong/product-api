@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import th.co.truemoney.product.api.domain.WalletActivity;
+import th.co.truemoney.product.api.domain.WalletActivity.TYPE;
 import th.co.truemoney.product.api.util.Utils;
+import th.co.truemoney.serviceinventory.ewallet.domain.Activity;
 
 @Component
 public class OnlineResourceManager {
@@ -24,8 +27,17 @@ public class OnlineResourceManager {
     	return mHost + LOGO_BANK_URL + lower(bankCode) + "@2x.png";
     }
 
-    public String getActivityTypeLogoURL(String type) {
-        return mHost + LOGO_ACTIVITY_TYPE_URL + Utils.removeSuffix(lower(type)) + ".png";
+    public String getActivityTypeLogoURL(Activity activity) {
+    	String type = lower(activity.getType());
+    	
+    	if (TYPE.TRANSFER == WalletActivity.getType(type)) {
+    		// transfer_debtor
+    		// transfer_creditor
+    		String action = Utils.removeSuffix(lower(activity.getAction()));
+    		type = String.format("%s_%s", type, action);
+    	}
+    	
+        return mHost + LOGO_ACTIVITY_TYPE_URL + type + ".png";
     }
     
     public String getBackgroundBankImageURL(String bankCode){

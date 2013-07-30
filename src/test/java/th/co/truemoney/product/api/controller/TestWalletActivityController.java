@@ -5,10 +5,12 @@ import java.util.Collections;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import th.co.truemoney.product.api.domain.WalletActivity;
+import th.co.truemoney.product.api.manager.OnlineResourceManager;
 import th.co.truemoney.serviceinventory.ewallet.domain.Activity;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
-
 import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertTrue;
 
 public class TestWalletActivityController extends BaseTestController {
 
@@ -16,8 +18,11 @@ public class TestWalletActivityController extends BaseTestController {
 	private static final String getActivityListURL = String.format("/profile/activities/list/%s", fakeAccessToken);
 
 	@Autowired
-	WalletActivityController controller = new WalletActivityController();
+	private WalletActivityController controller = new WalletActivityController();
 
+	@Autowired
+	private OnlineResourceManager onlineResourceManager;
+	
 	@Test
 	public void getActivityListSuccess() throws Exception {
 
@@ -30,5 +35,18 @@ public class TestWalletActivityController extends BaseTestController {
 		when(this.activityServiceMock.getActivities(fakeAccessToken)).thenThrow(new ServiceInventoryException(400, "", "", ""));
 		this.verifyFailed(this.doGET(getActivityListURL));
 	}
-
+	
+	@Test
+	public void transferActivityTypeLogo() {
+		Activity transfer = new Activity();
+		transfer.setType("transfer");
+		transfer.setAction("debtor");
+		
+		String logoURL = onlineResourceManager.getActivityTypeLogoURL(transfer);
+		assertTrue(logoURL.endsWith("transfer_debtor.png"));
+		
+		transfer.setAction("creditor");
+		logoURL = onlineResourceManager.getActivityTypeLogoURL(transfer);
+		assertTrue(logoURL.endsWith("transfer_creditor.png"));
+	}
 }

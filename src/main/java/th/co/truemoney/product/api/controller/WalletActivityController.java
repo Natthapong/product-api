@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.domain.ActivityViewItem;
 import th.co.truemoney.product.api.domain.ProductResponse;
+import th.co.truemoney.product.api.domain.ServiceChannel;
 import th.co.truemoney.product.api.domain.WalletActivity;
 import th.co.truemoney.product.api.domain.WalletActivity.TYPE;
 import th.co.truemoney.product.api.handler.ActivityDetailViewHandler;
@@ -62,8 +63,14 @@ public class WalletActivityController extends BaseController {
 			item.setText1Th(WalletActivity.getTypeInThai(t));
 			item.setText2En(getDateString(act.getTransactionDate()));
 			item.setText2Th(getDateString(act.getTransactionDate()));
-			item.setText3En(getActionNameEn(t, action));
-			item.setText3Th(getActionNameTh(t, action));
+			if (t == TYPE.ADD_MONEY) {
+				item.setText3En(getChannelNameEn(act.getChannel()));
+				item.setText3Th(getChannelNameTh(act.getChannel()));
+			} else {
+				item.setText3En(getActionNameEn(t, action));
+				item.setText3Th(getActionNameTh(t, action));
+			}
+			
 			item.setText4En(getAmountString(act.getAmount()));
 			item.setText4Th(getAmountString(act.getAmount()));
 			item.setText5En(getRef1StringEn(t, action, act.getRef1()));
@@ -75,6 +82,16 @@ public class WalletActivityController extends BaseController {
 		data.put("activities", itemList);
 
 		return this.responseFactory.createSuccessProductResonse(data);
+	}
+
+	private String getChannelNameTh(Long channelID) {
+		ServiceChannel channel = ServiceChannel.getChannel(channelID.intValue());
+		return channel.getNameTh();
+	}
+
+	private String getChannelNameEn(Long channelID) {
+		ServiceChannel channel = ServiceChannel.getChannel(channelID.intValue());
+		return channel.getNameEn();
 	}
 
 	private String getActivityTypeLogo(Activity activity) {

@@ -32,10 +32,11 @@ public class WalletActivity {
         actionList.put("promo_direct_debit", "คืนค่าธรรมเนียม");
         actionList.put("tmhtopup", "ทรูมูฟ เอช");
         actionList.put("tmvtopup", "ทรูมูฟ");
-        actionList.put("mmcc", "บัตรเงินสด");
         actionList.put("debtor", "ส่งเงิน");
-        actionList.put("debit", "บัญชีธนาคาร");
         actionList.put("creditor", "รับเงิน");
+
+        actionList.put("mmcc", "บัตรเงินสดทรูมันนี่");
+        actionList.put("debit", "บัญชีธนาคาร");
         actionList.put("cash", "เงินสด");
         actionList.put("tmcc", "บัตรเงินสดทรูมันนี่");
         

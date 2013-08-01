@@ -26,35 +26,35 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 		Map<String, String> section1 = super.buildSection1();
 		Long channel = activity.getChannel();
 		String action  = activity.getAction();
-		if (SOF_TMCC.equals(action)) {
+		if (SOF_TMCC.equals(action)) {//no ref1 in list page
 			section1.put("titleTh", "บัตรเงินสดทรูมันนี่");
 			section1.put("titleEn", "True Money Cash Card");
-		} else if (KIOSK_CHANNEL.equals(channel)) {
-			section1.put("titleTh", "True Money Kiosk");
+		} else if (KIOSK_CHANNEL.equals(channel)) {//
+			section1.put("titleTh", "ตู้ทรูมันนี่");
 			section1.put("titleEn", "True Money Kiosk");
-		} else if (CP_FRESH_MART_CHANNEL.equals(channel)) {
-			section1.put("titleTh", "CP Fresh Mart");
+		} else if (CP_FRESH_MART_CHANNEL.equals(channel)) {//
+			section1.put("titleTh", "ซีพี เฟรชมาร์ท");
 			section1.put("titleEn", "CP Fresh Mart");
-		} else if (TMX_CHANNEL.equals(channel)) {
-			section1.put("titleTh", "True Money Express");
+		} else if (TMX_CHANNEL.equals(channel)) {//
+			section1.put("titleTh", "จุดบริการทรูมันนี่");
 			section1.put("titleEn", "True Money Express");		
 		} else if (IOS_APP_CHANNEL.equals(channel)) {
 			section1.put("logoURL", onlineResourceManager.getBankLogoURL(activity.getRef1()));
 			section1.put("titleTh", "บัญชีธนาคาร");
-			section1.put("titleEn", "bank account");
+			section1.put("titleEn", "Bank account");
 		} else if (ATM_CHANNEL.equals(channel)) {
 			section1.put("titleTh", "เอทีเอ็ม");
 			section1.put("titleEn", "ATM");			
 		} else if (IBANKING.equals(channel)) {
 			section1.put("titleTh", "ไอแบงก์กิ้ง");
 			section1.put("titleEn", "iBanking");			
-		} else if (TRM_CHANNEL.equals(channel)) {
-			section1.put("titleTh", "True Shop");
+		} else if (TRM_CHANNEL.equals(channel)) {//
+			section1.put("titleTh", "ทรูช้อป");
 			section1.put("titleEn", "True Shop");			
 		} else {
 			section1.put("logoURL", onlineResourceManager.getBankLogoURL(activity.getRef1()));
 			section1.put("titleTh", "บัญชีธนาคาร");
-			section1.put("titleEn", "bank account");
+			section1.put("titleEn", "Bank account");
 		}
 		return section1;
 	}
@@ -67,16 +67,16 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 		if (SOF_TMCC.equals(action)) {
 			Map<String, Object> column1 = new HashMap<String, Object>();
 			Map<String, String> cell1 = new HashMap<String, String>();
-		 	cell1.put("titleTh", "serial บัตรเงินสด");
-			cell1.put("titleEn", "serial number");
-			cell1.put("value", "12345678901234");
+		 	cell1.put("titleTh", "รหัสบัตรเงินสด");
+			cell1.put("titleEn", "Cash Card PIN");
+			cell1.put("value", "12345678901234");// check !!!!
 		 	column1.put("cell1", cell1);
 		 	section2.put("column1", column1);
 		} else if (KIOSK_CHANNEL.equals(channel)) {
 			Map<String, Object> column1 = new HashMap<String, Object>();
 			Map<String, String> cell1 = new HashMap<String, String>();
 			cell1.put("titleTh", "ยอดเงินเข้า Wallet");
-			cell1.put("titleEn", "total amount");
+			cell1.put("titleEn", "Total amount");
 			cell1.put("value", Utils.formatAbsoluteAmount(activity.getTotalAmount()));
 			column1.put("cell1", cell1);
 			section2.put("column1", column1);	 	
@@ -84,7 +84,7 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			Map<String, Object> column1 = new HashMap<String, Object>();
 			Map<String, String> cell1 = new HashMap<String, String>();
 		 	cell1.put("titleTh", "หมายเลขสาขา");
-			cell1.put("titleEn", "หมายเลขสาขา");
+			cell1.put("titleEn", "Store number");
 			cell1.put("value", activity.getRef1());
 		 	column1.put("cell1", cell1);
 		 	section2.put("column1", column1);
@@ -92,7 +92,7 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			Map<String, Object> column1 = new HashMap<String, Object>();
 			Map<String, String> cell1 = new HashMap<String, String>();
 		 	cell1.put("titleTh", "หมายเลขร้านค้า");
-			cell1.put("titleEn", "หมายเลขร้านค้า");
+			cell1.put("titleEn", "Store number");
 			cell1.put("value", activity.getRef1());
 		 	column1.put("cell1", cell1);
 		 	section2.put("column1", column1);
@@ -101,10 +101,10 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			Map<String, String> cell1 = new HashMap<String, String>();
 			Map<String, String> cell2 = new HashMap<String, String>();
 		 	cell1.put("titleTh", "ธนาคาร");
-			cell1.put("titleEn", "bank name");
+			cell1.put("titleEn", "Bank");
 			cell1.put("value", BankUtil.getThaiBankName(activity.getRef1()));
 			cell2.put("titleTh", "หมายเลขบัญชี");
-			cell2.put("titleEn", "account number");
+			cell2.put("titleEn", "Account number");
 			cell2.put("value", StringUtils.hasText(activity.getRef2()) ? activity.getRef2() : "-");
 			column1.put("cell2", cell2);
 		 	column1.put("cell1", cell1);
@@ -113,7 +113,7 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			Map<String, Object> column1 = new HashMap<String, Object>();
 			Map<String, String> cell1 = new HashMap<String, String>();
 		 	cell1.put("titleTh", "ธนาคาร");
-			cell1.put("titleEn", "bank name");
+			cell1.put("titleEn", "Bank");
 			cell1.put("value", BankUtil.getThaiBankName(activity.getRef1()));
 		 	column1.put("cell1", cell1);
 		 	section2.put("column1", column1);
@@ -121,7 +121,7 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			Map<String, Object> column1 = new HashMap<String, Object>();
 			Map<String, String> cell1 = new HashMap<String, String>();
 		 	cell1.put("titleTh", "ธนาคาร");
-			cell1.put("titleEn", "bank name");
+			cell1.put("titleEn", "Bank");
 			cell1.put("value", BankUtil.getThaiBankName(activity.getRef1()));
 		 	column1.put("cell1", cell1);
 		 	section2.put("column1", column1);
@@ -129,7 +129,7 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			Map<String, Object> column1 = new HashMap<String, Object>();
 			Map<String, String> cell1 = new HashMap<String, String>();
 			cell1.put("titleTh", "ยอดเงินเข้า Wallet");
-			cell1.put("titleEn", "total amount");
+			cell1.put("titleEn", "Total amount");
 			cell1.put("value", Utils.formatAbsoluteAmount(activity.getTotalAmount()));
 			column1.put("cell1", cell1);
 			section2.put("column1", column1);	
@@ -138,10 +138,10 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			Map<String, String> cell1 = new HashMap<String, String>();
 			Map<String, String> cell2 = new HashMap<String, String>();
 		 	cell1.put("titleTh", "ธนาคาร");
-			cell1.put("titleEn", "bank name");
+			cell1.put("titleEn", "Bank");
 			cell1.put("value", BankUtil.getThaiBankName(activity.getRef1()));
 			cell2.put("titleTh", "หมายเลขบัญชี");
-			cell2.put("titleEn", "account number");
+			cell2.put("titleEn", "Account number");
 			cell2.put("value", StringUtils.hasText(activity.getRef2()) ? activity.getRef2() : "-");
 			column1.put("cell2", cell2);
 		 	column1.put("cell1", cell1);
@@ -162,15 +162,15 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			Map<String, String> cell312 = new HashMap<String, String>();
 			Map<String, String> cell321 = new HashMap<String, String>();
 			cell311.put("titleTh", "จำนวนเงิน");
-			cell311.put("titleEn", "total amount");
+			cell311.put("titleEn", "Total amount");
 			cell311.put("value", Utils.formatAbsoluteAmount(activity.getTotalAmount()));
 			column31.put("cell1", cell311);
 			section3.put("column1", column31);			
 			cell312.put("titleTh", "ยอดเงินเข้า Wallet");
-			cell312.put("titleEn", "amount");
+			cell312.put("titleEn", "Amount");
 			cell312.put("value", Utils.formatAbsoluteAmount(activity.getAmount()));
 			cell321.put("titleTh", "ค่าธรรมเนียม");
-			cell321.put("titleEn", "total fee");
+			cell321.put("titleEn", "Total fee");
 			cell321.put("value", Utils.formatAbsoluteAmount(activity.getTotalFeeAmount()));
 			column32.put("cell1", cell321);
 			column31.put("cell2", cell312);
@@ -181,10 +181,10 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			Map<String, String> cell311 = new HashMap<String, String>();
 			Map<String, String> cell321 = new HashMap<String, String>();
 			cell311.put("titleTh", "วันที่-เวลา");
-			cell311.put("titleEn", "transaction date");
+			cell311.put("titleEn", "Transaction date");
 			cell311.put("value", Utils.formatDateTime(activity.getTransactionDate()));	 
 			cell321.put("titleTh", "เลขที่อ้างอิง");
-			cell321.put("titleEn", "transaction ID");
+			cell321.put("titleEn", "Transaction ID");
 			cell321.put("value", activity.getTransactionID());
 			column31.put("cell1", cell311);
 			column32.put("cell1", cell321);
@@ -194,7 +194,7 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			Map<String, Object> column31 = new HashMap<String, Object>();
 			Map<String, String> cell311 = new HashMap<String, String>();
 			cell311.put("titleTh", "ยอดเงินเข้า Wallet");
-			cell311.put("titleEn", "total amount");
+			cell311.put("titleEn", "Total amount");
 			cell311.put("value", Utils.formatAbsoluteAmount(activity.getTotalAmount()));
 			column31.put("cell1", cell311);
 			section3.put("column1", column31);
@@ -202,7 +202,7 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			Map<String, Object> column31 = new HashMap<String, Object>();
 			Map<String, String> cell311 = new HashMap<String, String>();
 			cell311.put("titleTh", "ยอดเงินเข้า Wallet");
-			cell311.put("titleEn", "total amount");
+			cell311.put("titleEn", "Total amount");
 			cell311.put("value", Utils.formatAbsoluteAmount(activity.getTotalAmount()));
 			column31.put("cell1", cell311);
 			section3.put("column1", column31);
@@ -210,7 +210,7 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			Map<String, Object> column31 = new HashMap<String, Object>();
 			Map<String, String> cell311 = new HashMap<String, String>();
 			cell311.put("titleTh", "ยอดเงินเข้า Wallet");
-			cell311.put("titleEn", "total amount");
+			cell311.put("titleEn", "Total amount");
 			cell311.put("value", Utils.formatAbsoluteAmount(activity.getTotalAmount()));
 			column31.put("cell1", cell311);
 			section3.put("column1", column31);
@@ -218,7 +218,7 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			Map<String, Object> column31 = new HashMap<String, Object>();
 			Map<String, String> cell311 = new HashMap<String, String>();
 			cell311.put("titleTh", "ยอดเงินเข้า Wallet");
-			cell311.put("titleEn", "total amount");
+			cell311.put("titleEn", "Total amount");
 			cell311.put("value", Utils.formatAbsoluteAmount(activity.getTotalAmount()));
 			column31.put("cell1", cell311);
 			section3.put("column1", column31);
@@ -226,7 +226,7 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			Map<String, Object> column31 = new HashMap<String, Object>();
 			Map<String, String> cell311 = new HashMap<String, String>();
 			cell311.put("titleTh", "ยอดเงินเข้า Wallet");
-			cell311.put("titleEn", "total amount");
+			cell311.put("titleEn", "Total amount");
 			cell311.put("value", Utils.formatAbsoluteAmount(activity.getTotalAmount()));
 			column31.put("cell1", cell311);
 			section3.put("column1", column31);
@@ -236,10 +236,10 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			Map<String, String> cell311 = new HashMap<String, String>();
 			Map<String, String> cell321 = new HashMap<String, String>();
 			cell311.put("titleTh", "วันที่-เวลา");
-			cell311.put("titleEn", "transaction date");
+			cell311.put("titleEn", "Transaction date");
 			cell311.put("value", Utils.formatDateTime(activity.getTransactionDate()));	 
 			cell321.put("titleTh", "เลขที่อ้างอิง");
-			cell321.put("titleEn", "transaction ID");
+			cell321.put("titleEn", "Transaction ID");
 			cell321.put("value", activity.getTransactionID());
 			column31.put("cell1", cell311);
 			column32.put("cell1", cell321);
@@ -249,7 +249,7 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			Map<String, Object> column31 = new HashMap<String, Object>();
 			Map<String, String> cell311 = new HashMap<String, String>();
 			cell311.put("titleTh", "ยอดเงินเข้า Wallet");
-			cell311.put("titleEn", "total amount");
+			cell311.put("titleEn", "Total amount");
 			cell311.put("value", Utils.formatAbsoluteAmount(activity.getTotalAmount()));
 			column31.put("cell1", cell311);
 			section3.put("column1", column31);

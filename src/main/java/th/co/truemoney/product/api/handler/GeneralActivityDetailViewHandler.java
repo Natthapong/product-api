@@ -66,10 +66,10 @@ public abstract class GeneralActivityDetailViewHandler implements ActivityDetail
 		Map<String, String> cell411 = new HashMap<String, String>();
 		Map<String, String> cell421 = new HashMap<String, String>();
 		cell411.put("titleTh", "วันที่-เวลา");
-		cell411.put("titleEn", "transaction date");
+		cell411.put("titleEn", "Transaction date");
 		cell411.put("value", Utils.formatDateTime(activity.getTransactionDate()));	 
 		cell421.put("titleTh", "เลขที่อ้างอิง");
-		cell421.put("titleEn", "transaction ID");
+		cell421.put("titleEn", "Transaction ID");
 		cell421.put("value", activity.getTransactionID());
 		column41.put("cell1", cell411);
 		column42.put("cell1", cell421);

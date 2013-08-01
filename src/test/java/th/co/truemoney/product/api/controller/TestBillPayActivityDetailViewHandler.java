@@ -116,7 +116,7 @@ public class TestBillPayActivityDetailViewHandler {
 	private static final String sec4FormatStr = "{column1={cell1={titleTh=%s, titleEn=%s, value=%s}}, column2={cell1={titleTh=%s, titleEn=%s, value=%s}}}";
 	
 	private String section4String() {
-		return String.format(sec4FormatStr, "วันที่-เวลา", "transaction date", "", "เลขที่อ้างอิง", "transaction ID", "null");
+		return String.format(sec4FormatStr, "วันที่-เวลา", "Transaction date", "", "เลขที่อ้างอิง", "Transaction ID", "null");
 	}
 
 	private String section3String() {

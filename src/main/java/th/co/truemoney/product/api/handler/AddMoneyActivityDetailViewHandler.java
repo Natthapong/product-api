@@ -1,5 +1,11 @@
 package th.co.truemoney.product.api.handler;
 
+import static th.co.truemoney.product.api.domain.ServiceChannel.CHANNEL_ATM;
+import static th.co.truemoney.product.api.domain.ServiceChannel.CHANNEL_IBANKING;
+import static th.co.truemoney.product.api.domain.ServiceChannel.CHANNEL_KIOSK;
+import static th.co.truemoney.product.api.domain.ServiceChannel.CHANNEL_MOBILE;
+import static th.co.truemoney.product.api.domain.ServiceChannel.CHANNEL_TRM;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,18 +15,20 @@ import org.springframework.util.StringUtils;
 import th.co.truemoney.product.api.domain.ServiceChannel;
 import th.co.truemoney.product.api.util.BankUtil;
 import th.co.truemoney.product.api.util.Utils;
+import th.co.truemoney.serviceinventory.ewallet.domain.ActivityDetail;
 
 @Component
 public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailViewHandler {
 
 	private static final String SOF_TMCC = "tmcc";//no ref1 in list page
-	private static final Long KIOSK_CHANNEL = 33l;//
-	private static final Long CP_FRESH_MART_CHANNEL = 38l;//
-	private static final Long TMX_CHANNEL = 39l;//
-	private static final Long IOS_APP_CHANNEL = 40l;
-	private static final Long ATM_CHANNEL = 42l;
-	private static final Long IBANKING = 43l;
-	private static final Long TRM_CHANNEL = 44l;//
+//	private static final Long KIOSK_CHANNEL = 33l;//
+//	private static final Long CP_FRESH_MART_CHANNEL = 38l;//
+//	private static final Long TMX_CHANNEL = 39l;//
+//	private static final Long IOS_APP_CHANNEL = 40l;
+//	private static final Long ATM_CHANNEL = 42l;
+//	private static final Long IBANKING = 43l;
+//	private static final Long TRM_CHANNEL = 44l;//
+	
 	
 	@SuppressWarnings("serial")
 	static final Map<String , String> ref1TitleMap = new HashMap<String , String>() {{
@@ -40,6 +48,15 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 	    put("trm_ref1_title_th", "ยอดเงินเข้า Wallet");
 	}};
 	
+	private ServiceChannel channel;
+
+	@Override
+	public void handle(ActivityDetail activity) {
+		super.handle(activity);
+		Long channelID = activity.getChannel();
+		channel = ServiceChannel.getChannel(channelID.intValue());
+	}
+
 	@Override
 	public Map<String, String> buildSection1() {
 		Map<String, String> section1 = super.buildSection1();
@@ -51,11 +68,9 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			channelNameEn = "True Money Cash Card";
 			channelNameTh = "บัตรเงินสดทรูมันนี่";
 		} else {
-			Long channelID = activity.getChannel();
-			ServiceChannel channel = ServiceChannel.getChannel(channelID.intValue());
 			channelNameEn = channel.getNameEn();
 			channelNameTh = channel.getNameTh();
-			if (ServiceChannel.CHANNEL_MOBILE == channel) {
+			if (channel == CHANNEL_MOBILE) {
 				channelLogo = onlineResourceManager.getBankLogoURL(activity.getRef1());
 				section1.put("logoURL", channelLogo);
 			}
@@ -80,22 +95,19 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			ref1TitleEn = "Cash Card PIN";
 			ref1Value = activity.getRef1();
 		} else {
-			Long channelID = activity.getChannel();
-			ServiceChannel channel = ServiceChannel.getChannel(channelID.intValue());
 			ref1TitleEn = AddMoneyActivityDetailViewHandler.ref1TitleMap.get(channel.getAbbre() + "_ref1_title_en");
 			ref1TitleTh = AddMoneyActivityDetailViewHandler.ref1TitleMap.get(channel.getAbbre() + "_ref1_title_th");
 			ref1Value = activity.getRef1();
 			
-			if (ServiceChannel.CHANNEL_KIOSK == channel 
-					|| ServiceChannel.CHANNEL_TRM == channel) {
+			if (channel == CHANNEL_KIOSK || channel == CHANNEL_TRM) {
 				ref1Value = Utils.formatAbsoluteAmount(activity.getTotalAmount());
-			} else if (ServiceChannel.CHANNEL_ATM == channel 
-					|| ServiceChannel.CHANNEL_MOBILE == channel 
-					|| ServiceChannel.CHANNEL_IBANKING == channel) {
+			} else if (channel == CHANNEL_ATM 
+					|| channel == CHANNEL_MOBILE 
+					|| channel == CHANNEL_IBANKING) {
 				ref1Value = BankUtil.getThaiBankName(ref1Value);
 			}
 			
-			if (ServiceChannel.CHANNEL_MOBILE == channel) {
+			if (channel == CHANNEL_MOBILE) {
 				Map<String, String> cell2 = new HashMap<String, String>();
 				cell2.put("titleTh", "หมายเลขบัญชี");
 				cell2.put("titleEn", "Account number");
@@ -115,118 +127,53 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 	@Override
 	public Map<String, Object> buildSection3() {
 		Map<String, Object> section3 = new HashMap<String, Object>();
-		Long channel = activity.getChannel();
-		String action  = activity.getAction();
-		if (SOF_TMCC.equals(action)) {
-			Map<String, Object> column31 = new HashMap<String, Object>();
-			Map<String, Object> column32 = new HashMap<String, Object>();
-			Map<String, String> cell311 = new HashMap<String, String>();
-			Map<String, String> cell312 = new HashMap<String, String>();
-			Map<String, String> cell321 = new HashMap<String, String>();
-			cell311.put("titleTh", "จำนวนเงิน");
-			cell311.put("titleEn", "Total amount");
-			cell311.put("value", Utils.formatAbsoluteAmount(activity.getTotalAmount()));
-			column31.put("cell1", cell311);
-			section3.put("column1", column31);			
-			cell312.put("titleTh", "ยอดเงินเข้า Wallet");
-			cell312.put("titleEn", "Amount");
-			cell312.put("value", Utils.formatAbsoluteAmount(activity.getAmount()));
-			cell321.put("titleTh", "ค่าธรรมเนียม");
-			cell321.put("titleEn", "Total fee");
-			cell321.put("value", Utils.formatAbsoluteAmount(activity.getTotalFeeAmount()));
-			column32.put("cell1", cell321);
-			column31.put("cell2", cell312);
-			section3.put("column2", column32);
-		} else if (KIOSK_CHANNEL.equals(channel)) {
-			Map<String, Object> column31 = new HashMap<String, Object>();
-			Map<String, Object> column32 = new HashMap<String, Object>();
-			Map<String, String> cell311 = new HashMap<String, String>();
-			Map<String, String> cell321 = new HashMap<String, String>();
-			cell311.put("titleTh", "วันที่-เวลา");
-			cell311.put("titleEn", "Transaction date");
-			cell311.put("value", Utils.formatDateTime(activity.getTransactionDate()));	 
-			cell321.put("titleTh", "เลขที่อ้างอิง");
-			cell321.put("titleEn", "Transaction ID");
-			cell321.put("value", activity.getTransactionID());
-			column31.put("cell1", cell311);
-			column32.put("cell1", cell321);
-			section3.put("column1", column31);
-			section3.put("column2", column32);
-		} else if (CP_FRESH_MART_CHANNEL.equals(channel)) {
-			Map<String, Object> column31 = new HashMap<String, Object>();
-			Map<String, String> cell311 = new HashMap<String, String>();
-			cell311.put("titleTh", "ยอดเงินเข้า Wallet");
-			cell311.put("titleEn", "Total amount");
-			cell311.put("value", Utils.formatAbsoluteAmount(activity.getTotalAmount()));
-			column31.put("cell1", cell311);
-			section3.put("column1", column31);
-		} else if (TMX_CHANNEL.equals(channel)) {
-			Map<String, Object> column31 = new HashMap<String, Object>();
-			Map<String, String> cell311 = new HashMap<String, String>();
-			cell311.put("titleTh", "ยอดเงินเข้า Wallet");
-			cell311.put("titleEn", "Total amount");
-			cell311.put("value", Utils.formatAbsoluteAmount(activity.getTotalAmount()));
-			column31.put("cell1", cell311);
-			section3.put("column1", column31);
-		} else if (IOS_APP_CHANNEL.equals(channel)) {
-			Map<String, Object> column31 = new HashMap<String, Object>();
-			Map<String, String> cell311 = new HashMap<String, String>();
-			cell311.put("titleTh", "ยอดเงินเข้า Wallet");
-			cell311.put("titleEn", "Total amount");
-			cell311.put("value", Utils.formatAbsoluteAmount(activity.getTotalAmount()));
-			column31.put("cell1", cell311);
-			section3.put("column1", column31);
-		} else if (ATM_CHANNEL.equals(channel)) {
-			Map<String, Object> column31 = new HashMap<String, Object>();
-			Map<String, String> cell311 = new HashMap<String, String>();
-			cell311.put("titleTh", "ยอดเงินเข้า Wallet");
-			cell311.put("titleEn", "Total amount");
-			cell311.put("value", Utils.formatAbsoluteAmount(activity.getTotalAmount()));
-			column31.put("cell1", cell311);
-			section3.put("column1", column31);
-		} else if (IBANKING.equals(channel)) {
-			Map<String, Object> column31 = new HashMap<String, Object>();
-			Map<String, String> cell311 = new HashMap<String, String>();
-			cell311.put("titleTh", "ยอดเงินเข้า Wallet");
-			cell311.put("titleEn", "Total amount");
-			cell311.put("value", Utils.formatAbsoluteAmount(activity.getTotalAmount()));
-			column31.put("cell1", cell311);
-			section3.put("column1", column31);
-		} else if (TRM_CHANNEL.equals(channel)) {
-			Map<String, Object> column31 = new HashMap<String, Object>();
-			Map<String, Object> column32 = new HashMap<String, Object>();
-			Map<String, String> cell311 = new HashMap<String, String>();
-			Map<String, String> cell321 = new HashMap<String, String>();
-			cell311.put("titleTh", "วันที่-เวลา");
-			cell311.put("titleEn", "Transaction date");
-			cell311.put("value", Utils.formatDateTime(activity.getTransactionDate()));	 
-			cell321.put("titleTh", "เลขที่อ้างอิง");
-			cell321.put("titleEn", "Transaction ID");
-			cell321.put("value", activity.getTransactionID());
-			column31.put("cell1", cell311);
-			column32.put("cell1", cell321);
-			section3.put("column1", column31);
-			section3.put("column2", column32);
+		
+		// Channel TRM and KIOSK don't suppose to have section 4.
+		// Display section 4's data on section 3 area.
+		if (channel == CHANNEL_TRM || channel == CHANNEL_KIOSK) { 
+			return super.buildSection4();
 		} else {
-			Map<String, Object> column31 = new HashMap<String, Object>();
-			Map<String, String> cell311 = new HashMap<String, String>();
-			cell311.put("titleTh", "ยอดเงินเข้า Wallet");
-			cell311.put("titleEn", "Total amount");
-			cell311.put("value", Utils.formatAbsoluteAmount(activity.getTotalAmount()));
-			column31.put("cell1", cell311);
-			section3.put("column1", column31);
+			String action  = activity.getAction();
+			if (SOF_TMCC.equals(action)) {
+				Map<String, Object> column31 = new HashMap<String, Object>();
+				Map<String, Object> column32 = new HashMap<String, Object>();
+				Map<String, String> cell311 = new HashMap<String, String>();
+				Map<String, String> cell312 = new HashMap<String, String>();
+				Map<String, String> cell321 = new HashMap<String, String>();
+				cell311.put("titleTh", "จำนวนเงิน");
+				cell311.put("titleEn", "Total amount");
+				cell311.put("value", Utils.formatAbsoluteAmount(activity.getTotalAmount()));
+				column31.put("cell1", cell311);
+				section3.put("column1", column31);			
+				cell312.put("titleTh", "ยอดเงินเข้า Wallet");
+				cell312.put("titleEn", "Amount");
+				cell312.put("value", Utils.formatAbsoluteAmount(activity.getAmount()));
+				cell321.put("titleTh", "ค่าธรรมเนียม");
+				cell321.put("titleEn", "Total fee");
+				cell321.put("value", Utils.formatAbsoluteAmount(activity.getTotalFeeAmount()));
+				column32.put("cell1", cell321);
+				column31.put("cell2", cell312);
+				section3.put("column2", column32);
+			} else {
+				Map<String, Object> column31 = new HashMap<String, Object>();
+				Map<String, String> cell311 = new HashMap<String, String>();
+				cell311.put("titleTh", "ยอดเงินเข้า Wallet");
+				cell311.put("titleEn", "Total amount");
+				cell311.put("value", Utils.formatAbsoluteAmount(activity.getTotalAmount()));
+				column31.put("cell1", cell311);
+				section3.put("column1", column31);
+			}
 		}
 		return section3;
 	}
 	
 	@Override
 	public Map<String, Object> buildSection4() {
-		Long channel = activity.getChannel();
-		if (TRM_CHANNEL.equals(channel) || KIOSK_CHANNEL.equals(channel)) {
+		// Channel TRM and KIOSK don't suppose to have section 4, 
+		if (channel == CHANNEL_TRM || channel == CHANNEL_KIOSK) {
 			return new HashMap<String, Object>();
-		} else {
-			return super.buildSection4();
 		}
+		return super.buildSection4();
 	}
 	
 }

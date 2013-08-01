@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+import th.co.truemoney.product.api.domain.WalletActivity;
 import th.co.truemoney.product.api.util.Utils;
 
 @Component
@@ -26,7 +27,7 @@ public class BonusActivityDetailViewHandler extends
 		 Map<String, String> cell1 = new HashMap<String, String>();
 		 cell1.put("titleTh", "ทำรายการ");
 		 cell1.put("titleEn", "Activity");
-		 cell1.put("value", "เติมเงินด้วยบัญชีธนาคาร");//DD
+		 cell1.put("value", WalletActivity.getActionInThai(activity.getAction()));
 		 column1.put("cell1", cell1);
 		 section2.put("column1", column1);
 		 return section2;

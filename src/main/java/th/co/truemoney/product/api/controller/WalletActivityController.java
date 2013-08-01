@@ -66,6 +66,9 @@ public class WalletActivityController extends BaseController {
 			if (t == TYPE.ADD_MONEY) {
 				item.setText3En(getChannelNameEn(act.getChannel()));
 				item.setText3Th(getChannelNameTh(act.getChannel()));
+			} else if (t == TYPE.BONUS) {
+				item.setText3En("Fee refund");
+				item.setText3Th("คืนค่าธรรมเนียม");
 			} else {
 				item.setText3En(getActionNameEn(t, action));
 				item.setText3Th(getActionNameTh(t, action));
@@ -119,8 +122,8 @@ public class WalletActivityController extends BaseController {
 			return Utils.formatTelephoneNumber(ref1);
 		} else if (t == TYPE.ADD_MONEY && "debit".equals(action)) {
 			return BankUtil.getEnglishBankName(ref1);
-		} else if ("add_money".equalsIgnoreCase(ref1)) {
-			return "Direct Debit Topup";
+		} else if (t == TYPE.BONUS) {
+			return WalletActivity.getActionInEnglish(action);
 		} else {
 			return ref1;
 		}
@@ -131,8 +134,8 @@ public class WalletActivityController extends BaseController {
 			return Utils.formatTelephoneNumber(ref1);
 		} else if (t == TYPE.ADD_MONEY && "debit".equals(action)) {
 			return BankUtil.getThaiBankName(ref1);
-		} else if ("add_money".equalsIgnoreCase(ref1)) {
-			return "เติมเงินด้วยบัญชีธนาคาร";
+		} else if (t == TYPE.BONUS) {
+			return WalletActivity.getActionInThai(action);
 		} else {
 			return ref1;
 		}

@@ -29,16 +29,27 @@ public class WalletActivity {
         representEnglishText.put(TYPE.BILLPAY, "Bill Payment");
         representEnglishText.put(TYPE.BONUS, "Promotion");
 
-        actionList.put("promo_direct_debit", "คืนค่าธรรมเนียม");
+        actionList.put("promo_direct_debit", "เติมเงินด้วยบัญชีธนาคาร");
+        actionList.put("promo_bay_atmtopup", "เติมเงินด้วยเอทีเอ็ม");
+        actionList.put("promo_ktb_atmtopup", "เติมเงินด้วยเอทีเอ็ม");
+        actionList.put("promo_bbl_atmtopup", "เติมเงินด้วยเอทีเอ็ม");
+        actionList.put("promo_tmb_atmtopup", "เติมเงินด้วยเอทีเอ็ม");
+        actionList.put("promo_scb_atmtopup", "เติมเงินด้วยเอทีเอ็ม");
+        actionList.put("promo_cimb_atmtopup", "เติมเงินด้วยเอทีเอ็ม");
+        actionList.put("promo_tbank_atmtopup", "เติมเงินด้วยเอทีเอ็ม");
+        actionList.put("promo_bay_ibanking", "เติมเงินด้วยไอแบงก์กิ้ง");
+        actionList.put("promo_ktb_ibanking", "เติมเงินด้วยไอแบงก์กิ้ง");
+        actionList.put("promo_scb_ibanking", "เติมเงินด้วยไอแบงก์กิ้ง");
+        actionList.put("promo_tbank_ibanking", "เติมเงินด้วยไอแบงก์กิ้ง");
         actionList.put("tmhtopup", "ทรูมูฟ เอช");
         actionList.put("tmvtopup", "ทรูมูฟ");
         actionList.put("debtor", "ส่งเงิน");
         actionList.put("creditor", "รับเงิน");
 
-        actionList.put("mmcc", "บัตรเงินสดทรูมันนี่");
-        actionList.put("debit", "บัญชีธนาคาร");
-        actionList.put("cash", "เงินสด");
-        actionList.put("tmcc", "บัตรเงินสดทรูมันนี่");
+        //actionList.put("mmcc", "บัตรเงินสดทรูมันนี่");
+        //actionList.put("debit", "บัญชีธนาคาร");
+        //actionList.put("cash", "เงินสด");
+        //actionList.put("tmcc", "บัตรเงินสดทรูมันนี่");
         
         serviceCodeList.put("rft", 10);
         serviceCodeList.put("tmvh", 9);

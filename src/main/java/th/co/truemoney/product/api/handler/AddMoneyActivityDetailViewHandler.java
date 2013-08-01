@@ -6,56 +6,44 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import th.co.truemoney.product.api.domain.ServiceChannel;
 import th.co.truemoney.product.api.util.BankUtil;
 import th.co.truemoney.product.api.util.Utils;
 
 @Component
 public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailViewHandler {
 
-	private static final String SOF_TMCC = "tmcc";
-	private static final Long KIOSK_CHANNEL = 33l;
-	private static final Long CP_FRESH_MART_CHANNEL = 38l;
-	private static final Long TMX_CHANNEL = 39l;
+	private static final String SOF_TMCC = "tmcc";//no ref1 in list page
+	private static final Long KIOSK_CHANNEL = 33l;//
+	private static final Long CP_FRESH_MART_CHANNEL = 38l;//
+	private static final Long TMX_CHANNEL = 39l;//
 	private static final Long IOS_APP_CHANNEL = 40l;
 	private static final Long ATM_CHANNEL = 42l;
 	private static final Long IBANKING = 43l;
-	private static final Long TRM_CHANNEL = 44l;
-
+	private static final Long TRM_CHANNEL = 44l;//
+	
 	@Override
 	public Map<String, String> buildSection1() {
 		Map<String, String> section1 = super.buildSection1();
-		Long channel = activity.getChannel();
-		String action  = activity.getAction();
-		if (SOF_TMCC.equals(action)) {//no ref1 in list page
-			section1.put("titleTh", "บัตรเงินสดทรูมันนี่");
-			section1.put("titleEn", "True Money Cash Card");
-		} else if (KIOSK_CHANNEL.equals(channel)) {//
-			section1.put("titleTh", "ตู้ทรูมันนี่");
-			section1.put("titleEn", "True Money Kiosk");
-		} else if (CP_FRESH_MART_CHANNEL.equals(channel)) {//
-			section1.put("titleTh", "ซีพี เฟรชมาร์ท");
-			section1.put("titleEn", "CP Fresh Mart");
-		} else if (TMX_CHANNEL.equals(channel)) {//
-			section1.put("titleTh", "จุดบริการทรูมันนี่");
-			section1.put("titleEn", "True Money Express");		
-		} else if (IOS_APP_CHANNEL.equals(channel)) {
-			section1.put("logoURL", onlineResourceManager.getBankLogoURL(activity.getRef1()));
-			section1.put("titleTh", "บัญชีธนาคาร");
-			section1.put("titleEn", "Bank account");
-		} else if (ATM_CHANNEL.equals(channel)) {
-			section1.put("titleTh", "เอทีเอ็ม");
-			section1.put("titleEn", "ATM");			
-		} else if (IBANKING.equals(channel)) {
-			section1.put("titleTh", "ไอแบงก์กิ้ง");
-			section1.put("titleEn", "iBanking");			
-		} else if (TRM_CHANNEL.equals(channel)) {//
-			section1.put("titleTh", "ทรูช้อป");
-			section1.put("titleEn", "True Shop");			
+		String channelNameEn = "";
+		String channelNameTh = "";
+		String channelLogo = "";
+		
+		if (SOF_TMCC.equals(activity.getAction())) {
+			channelNameEn = "True Money Cash Card";
+			channelNameTh = "บัตรเงินสดทรูมันนี่";
 		} else {
-			section1.put("logoURL", onlineResourceManager.getBankLogoURL(activity.getRef1()));
-			section1.put("titleTh", "บัญชีธนาคาร");
-			section1.put("titleEn", "Bank account");
+			Long channelID = activity.getChannel();
+			ServiceChannel channel = ServiceChannel.getChannel(channelID.intValue());
+			channelNameEn = channel.getNameEn();
+			channelNameTh = channel.getNameTh();
+			if (ServiceChannel.CHANNEL_MOBILE == channel) {
+				channelLogo = onlineResourceManager.getBankLogoURL(activity.getRef1());
+				section1.put("logoURL", channelLogo);
+			}
 		}
+		section1.put("titleEn", channelNameEn);
+		section1.put("titleTh", channelNameTh);
 		return section1;
 	}
 

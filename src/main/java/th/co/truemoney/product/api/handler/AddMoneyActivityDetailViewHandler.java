@@ -69,7 +69,7 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			Map<String, String> cell1 = new HashMap<String, String>();
 		 	cell1.put("titleTh", "serial บัตรเงินสด");
 			cell1.put("titleEn", "serial number");
-			cell1.put("value", "12345678901234");
+			cell1.put("value", activity.getRef1());
 		 	column1.put("cell1", cell1);
 		 	section2.put("column1", column1);
 		} else if (KIOSK_CHANNEL.equals(channel)) {

@@ -15,7 +15,6 @@ import org.springframework.util.StringUtils;
 import th.co.truemoney.product.api.domain.ServiceChannel;
 import th.co.truemoney.product.api.util.BankUtil;
 import th.co.truemoney.product.api.util.Utils;
-import th.co.truemoney.serviceinventory.ewallet.domain.ActivityDetail;
 
 @Component
 public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailViewHandler {
@@ -47,15 +46,6 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 	    put("trm_ref1_title_en", "Total amount");
 	    put("trm_ref1_title_th", "ยอดเงินเข้า Wallet");
 	}};
-	
-	private ServiceChannel channel;
-
-	@Override
-	public void handle(ActivityDetail activity) {
-		super.handle(activity);
-		Long channelID = activity.getChannel();
-		channel = ServiceChannel.getChannel(channelID.intValue());
-	}
 
 	@Override
 	public Map<String, String> buildSection1() {
@@ -68,6 +58,8 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			channelNameEn = "True Money Cash Card";
 			channelNameTh = "บัตรเงินสดทรูมันนี่";
 		} else {
+			Long channelID = activity.getChannel();
+			ServiceChannel channel = ServiceChannel.getChannel(channelID.intValue());
 			channelNameEn = channel.getNameEn();
 			channelNameTh = channel.getNameTh();
 			if (channel == CHANNEL_MOBILE) {
@@ -95,6 +87,8 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 			ref1TitleEn = "Cash Card PIN";
 			ref1Value = activity.getRef1();
 		} else {
+			Long channelID = activity.getChannel();
+			ServiceChannel channel = ServiceChannel.getChannel(channelID.intValue());
 			ref1TitleEn = AddMoneyActivityDetailViewHandler.ref1TitleMap.get(channel.getAbbre() + "_ref1_title_en");
 			ref1TitleTh = AddMoneyActivityDetailViewHandler.ref1TitleMap.get(channel.getAbbre() + "_ref1_title_th");
 			ref1Value = activity.getRef1();
@@ -127,7 +121,8 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 	@Override
 	public Map<String, Object> buildSection3() {
 		Map<String, Object> section3 = new HashMap<String, Object>();
-		
+		Long channelID = activity.getChannel();
+		ServiceChannel channel = ServiceChannel.getChannel(channelID.intValue());
 		// Channel TRM and KIOSK don't suppose to have section 4.
 		// Display section 4's data on section 3 area.
 		if (channel == CHANNEL_TRM || channel == CHANNEL_KIOSK) { 
@@ -169,6 +164,8 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 	
 	@Override
 	public Map<String, Object> buildSection4() {
+		Long channelID = activity.getChannel();
+		ServiceChannel channel = ServiceChannel.getChannel(channelID.intValue());
 		// Channel TRM and KIOSK don't suppose to have section 4, 
 		if (channel == CHANNEL_TRM || channel == CHANNEL_KIOSK) {
 			return new HashMap<String, Object>();

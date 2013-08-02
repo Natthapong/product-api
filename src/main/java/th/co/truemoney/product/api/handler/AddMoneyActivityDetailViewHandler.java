@@ -20,13 +20,13 @@ import th.co.truemoney.product.api.util.Utils;
 public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailViewHandler {
 
 	private static final String SOF_TMCC = "tmcc";//no ref1 in list page
-//	private static final Long KIOSK_CHANNEL = 33l;//
+	private static final Long KIOSK_CHANNEL = 33l;//
 //	private static final Long CP_FRESH_MART_CHANNEL = 38l;//
 //	private static final Long TMX_CHANNEL = 39l;//
 //	private static final Long IOS_APP_CHANNEL = 40l;
 //	private static final Long ATM_CHANNEL = 42l;
 //	private static final Long IBANKING = 43l;
-//	private static final Long TRM_CHANNEL = 44l;//
+	private static final Long TRM_CHANNEL = 44l;//
 	
 	
 	@SuppressWarnings("serial")
@@ -121,11 +121,12 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 	@Override
 	public Map<String, Object> buildSection3() {
 		Map<String, Object> section3 = new HashMap<String, Object>();
-		Long channelID = activity.getChannel();
-		ServiceChannel channel = ServiceChannel.getChannel(channelID.intValue());
+		
 		// Channel TRM and KIOSK don't suppose to have section 4.
 		// Display section 4's data on section 3 area.
-		if (channel == CHANNEL_TRM || channel == CHANNEL_KIOSK) { 
+		//if (channel == CHANNEL_TRM || channel == CHANNEL_KIOSK) {
+		if (TRM_CHANNEL == activity.getChannel() 
+				|| KIOSK_CHANNEL == activity.getChannel()) {
 			return super.buildSection4();
 		} else {
 			String action  = activity.getAction();
@@ -164,10 +165,9 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 	
 	@Override
 	public Map<String, Object> buildSection4() {
-		Long channelID = activity.getChannel();
-		ServiceChannel channel = ServiceChannel.getChannel(channelID.intValue());
 		// Channel TRM and KIOSK don't suppose to have section 4, 
-		if (channel == CHANNEL_TRM || channel == CHANNEL_KIOSK) {
+		if (TRM_CHANNEL == activity.getChannel() 
+				|| KIOSK_CHANNEL == activity.getChannel()) {
 			return new HashMap<String, Object>();
 		}
 		return super.buildSection4();

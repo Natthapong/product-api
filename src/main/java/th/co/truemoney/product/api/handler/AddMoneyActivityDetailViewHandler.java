@@ -125,8 +125,8 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 		// Channel TRM and KIOSK don't suppose to have section 4.
 		// Display section 4's data on section 3 area.
 		//if (channel == CHANNEL_TRM || channel == CHANNEL_KIOSK) {
-		if (TRM_CHANNEL == activity.getChannel() 
-				|| KIOSK_CHANNEL == activity.getChannel()) {
+		if (TRM_CHANNEL.equals(activity.getChannel()) 
+				|| KIOSK_CHANNEL.equals(activity.getChannel())) {
 			return super.buildSection4();
 		} else {
 			String action  = activity.getAction();
@@ -166,8 +166,8 @@ public class AddMoneyActivityDetailViewHandler extends GeneralActivityDetailView
 	@Override
 	public Map<String, Object> buildSection4() {
 		// Channel TRM and KIOSK don't suppose to have section 4, 
-		if (TRM_CHANNEL == activity.getChannel() 
-				|| KIOSK_CHANNEL == activity.getChannel()) {
+		if (TRM_CHANNEL.equals(activity.getChannel()) 
+				|| KIOSK_CHANNEL.equals(activity.getChannel())) {
 			return new HashMap<String, Object>();
 		}
 		return super.buildSection4();

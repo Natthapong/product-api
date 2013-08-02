@@ -74,7 +74,7 @@ public class RegisterController extends BaseController {
         }
 
         TmnProfile tmnProfile = new TmnProfile();
-        tmnProfile.setEmail(email);
+        tmnProfile.setEmail(email.toLowerCase());
         tmnProfile.setFullname(request.get("fullname"));
         tmnProfile.setMobileNumber(request.get("mobileNumber"));
         String password = securityManager.encryptRSA(request.get("password"));
@@ -119,7 +119,7 @@ public class RegisterController extends BaseController {
     
     private String verifyEmail(String email) {
         try {
-            return profileService.validateEmail(MOBILE_APP_CHANNEL_ID, email);
+            return profileService.validateEmail(MOBILE_APP_CHANNEL_ID, email.toLowerCase());
         } catch (ServiceInventoryException e) {
             String errorcode = String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode());
             if (errorcode.equals("core.18")) {

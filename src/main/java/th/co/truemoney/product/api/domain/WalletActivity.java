@@ -35,7 +35,7 @@ public class WalletActivity {
         actionList.put("promo_bbl_atmtopup", "เติมเงินด้วยเอทีเอ็ม");
         actionList.put("promo_tmb_atmtopup", "เติมเงินด้วยเอทีเอ็ม");
         actionList.put("promo_scb_atmtopup", "เติมเงินด้วยเอทีเอ็ม");
-        actionList.put("promo_cimb_atmtopup", "เติมเงินด้วยเอทีเอ็ม");
+        actionList.put("promo_cimbt_atmtopup", "เติมเงินด้วยเอทีเอ็ม");
         actionList.put("promo_tbank_atmtopup", "เติมเงินด้วยเอทีเอ็ม");
         actionList.put("promo_bay_ibanking", "เติมเงินด้วยไอแบงก์กิ้ง");
         actionList.put("promo_ktb_ibanking", "เติมเงินด้วยไอแบงก์กิ้ง");

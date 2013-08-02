@@ -43,7 +43,7 @@ public class UserActionController extends BaseController {
 			throws ServiceInventoryException {
 
 		// validate
-		validateSignin(request.getUsername().trim(), request.getPassword().trim(),
+		validateSignin(request.getUsername().toLowerCase().trim(), request.getPassword().trim(),
 				request.getType().trim());
 
 		EWalletOwnerCredential userLogin = new EWalletOwnerCredential(

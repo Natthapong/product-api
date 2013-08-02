@@ -10,6 +10,12 @@ public enum ServiceChannel {
 	CHANNEL_MOBILE(40, "mbl", "Bank account", "บัญชีธนาคาร"),
 	CHANNEL_IBANKING(43, "ibk", "iBanking", "ไอแบงก์กิ้ง"),
 	CHANNEL_CP_FRESHMART(38, "cpf", "CP Fresh Mart", "ซีพี เฟรชมาร์ท");
+	//CPG - 41
+	//USSD - 31
+	//STK - 2
+	//SMS - 1
+	//SOAP - 4
+	//IVR - 20
 	
 	private Integer id;
 	

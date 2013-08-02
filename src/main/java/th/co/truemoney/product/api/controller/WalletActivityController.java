@@ -64,8 +64,13 @@ public class WalletActivityController extends BaseController {
 			item.setText2En(getDateString(act.getTransactionDate()));
 			item.setText2Th(getDateString(act.getTransactionDate()));
 			if (t == TYPE.ADD_MONEY) {
-				item.setText3En(getChannelNameEn(act.getChannel()));
-				item.setText3Th(getChannelNameTh(act.getChannel()));
+				if ("tmcc".equalsIgnoreCase(act.getAction())) {
+					item.setText3En("True Money Cash Card");
+					item.setText3Th("บัตรเงินสดทรูมันนี่");
+				} else {
+					item.setText3En(getChannelNameEn(act.getChannel()));
+					item.setText3Th(getChannelNameTh(act.getChannel()));
+				}
 			} else if (t == TYPE.BONUS) {
 				item.setText3En("Fee refund");
 				item.setText3Th("คืนค่าธรรมเนียม");

@@ -548,5 +548,21 @@ public class TestWalletActivityDetailController extends
 		assertEquals("{column1={cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=Transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=Transaction ID, value=1234567890}}}", data.get("section4").toString());
 	}
+	/*
+	DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 	
+	Long CHANNEL_ATM = ServiceChannel.CHANNEL_ATM.getId().longValue();
+	
+	public void test() throws Exception {
+		when(
+			this.activityServiceMock.getActivities(fakeAccessTokenID)
+		).thenReturn(
+			Arrays.asList(
+				new Activity(1L, CHANNEL_ATM, "add_money", "debit", "ref1", formatter.parse("2013/02/10 15:35")),
+				new Activity(2L, CHANNEL_ATM, "add_money", "cash", "ref1", formatter.parse("2013/02/10 15:35")),
+				new Activity(3L, CHANNEL_ATM, "add_money", "tmcc", "ref1", formatter.parse("2013/02/10 15:35"))
+			)
+		);
+	}
+	*/
 }

@@ -18,13 +18,14 @@ public class ActivityViewItem {
 	public ActivityViewItem() {
 	}
 	
-	public ActivityViewItem(String reportID, String type, String date, String action, String ref1) {
+	public ActivityViewItem(String reportID, String type, String date, String action, String amount, String ref1) {
 		super();
 		this.reportID = reportID;
 		this.text1Th = type;
 		this.text2Th = date;
 		this.text3Th = action;
-		this.text4Th = ref1;
+		this.text4Th = amount;
+		this.text5Th = ref1;
 	}
 
 	public String getReportID() {

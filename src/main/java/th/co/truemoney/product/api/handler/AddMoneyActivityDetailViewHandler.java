@@ -1,10 +1,10 @@
 package th.co.truemoney.product.api.handler;
 
-import static th.co.truemoney.product.api.domain.ServiceChannel.CHANNEL_ATM;
-import static th.co.truemoney.product.api.domain.ServiceChannel.CHANNEL_IBANKING;
-import static th.co.truemoney.product.api.domain.ServiceChannel.CHANNEL_KIOSK;
-import static th.co.truemoney.product.api.domain.ServiceChannel.CHANNEL_MOBILE;
-import static th.co.truemoney.product.api.domain.ServiceChannel.CHANNEL_TRM;
+import static th.co.truemoney.product.api.transaction.ServiceChannel.CHANNEL_ATM;
+import static th.co.truemoney.product.api.transaction.ServiceChannel.CHANNEL_IBANKING;
+import static th.co.truemoney.product.api.transaction.ServiceChannel.CHANNEL_KIOSK;
+import static th.co.truemoney.product.api.transaction.ServiceChannel.CHANNEL_MOBILE;
+import static th.co.truemoney.product.api.transaction.ServiceChannel.CHANNEL_TRM;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +12,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import th.co.truemoney.product.api.domain.ServiceChannel;
+import th.co.truemoney.product.api.transaction.ServiceChannel;
 import th.co.truemoney.product.api.util.BankUtil;
 import th.co.truemoney.product.api.util.Utils;
 

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.domain.ActivityViewItem;
 import th.co.truemoney.product.api.domain.ProductResponse;
-import th.co.truemoney.product.api.domain.ServiceChannel;
 import th.co.truemoney.product.api.domain.WalletActivity;
 import th.co.truemoney.product.api.domain.WalletActivity.TYPE;
 import th.co.truemoney.product.api.handler.ActivityDetailViewHandler;
@@ -27,6 +26,7 @@ import th.co.truemoney.product.api.handler.TopupMobileActivityDetailViewHandler;
 import th.co.truemoney.product.api.handler.TransferActivityDetailViewHandler;
 import th.co.truemoney.product.api.manager.BillConfigurationManager;
 import th.co.truemoney.product.api.manager.OnlineResourceManager;
+import th.co.truemoney.product.api.transaction.ServiceChannel;
 import th.co.truemoney.product.api.util.BankUtil;
 import th.co.truemoney.product.api.util.Utils;
 import th.co.truemoney.serviceinventory.ewallet.ActivityService;
@@ -55,6 +55,7 @@ public class WalletActivityController extends BaseController {
 		for (Activity act : activityList) {
 			TYPE t = WalletActivity.getType(act.getType());
 			String action = Utils.removeSuffix(act.getAction());
+			ServiceChannel channel = ServiceChannel.getChannel(act.getChannel().intValue());
 			
 			ActivityViewItem item = new ActivityViewItem();
 			item.setReportID(String.valueOf(act.getReportID()));
@@ -81,8 +82,18 @@ public class WalletActivityController extends BaseController {
 			
 			item.setText4En(getAmountString(act.getAmount()));
 			item.setText4Th(getAmountString(act.getAmount()));
-			item.setText5En(getRef1StringEn(t, action, act.getRef1()));
-			item.setText5Th(getRef1StringTh(t, action, act.getRef1()));
+			if (t == TYPE.ADD_MONEY 
+					&& ("tmcc".equalsIgnoreCase(action)
+						|| channel == ServiceChannel.CHANNEL_KIOSK
+						|| channel == ServiceChannel.CHANNEL_CPF
+						|| channel == ServiceChannel.CHANNEL_TMX
+						|| channel == ServiceChannel.CHANNEL_TRM)) {
+					item.setText5En("");
+					item.setText5Th("");
+			} else {
+				item.setText5En(getRef1StringEn(t, action, act.getRef1()));
+				item.setText5Th(getRef1StringTh(t, action, act.getRef1()));
+			}
 			itemList.add(item);
 		}
 

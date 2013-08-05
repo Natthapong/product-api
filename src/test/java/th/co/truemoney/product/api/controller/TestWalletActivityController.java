@@ -1,16 +1,16 @@
 package th.co.truemoney.product.api.controller;
 
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
+
 import java.util.Collections;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import th.co.truemoney.product.api.domain.WalletActivity;
 import th.co.truemoney.product.api.manager.OnlineResourceManager;
 import th.co.truemoney.serviceinventory.ewallet.domain.Activity;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
-import static org.mockito.Mockito.when;
-import static org.junit.Assert.assertTrue;
 
 public class TestWalletActivityController extends BaseTestController {
 

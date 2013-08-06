@@ -16,6 +16,7 @@ import th.co.truemoney.product.api.domain.LoginBean;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
+import th.co.truemoney.serviceinventory.ewallet.domain.ChangePassword;
 import th.co.truemoney.serviceinventory.ewallet.domain.ClientCredential;
 import th.co.truemoney.serviceinventory.ewallet.domain.EWalletOwnerCredential;
 import th.co.truemoney.serviceinventory.ewallet.domain.TmnProfile;
@@ -99,7 +100,20 @@ public class UserActionController extends BaseController {
 		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
-
+	
+	@RequestMapping(value = "/profiles/change-password/{accessToken}", method = RequestMethod.POST)
+	@ResponseBody
+	public ProductResponse changePassword(@PathVariable String accessToken, @RequestBody Map<String, String> request) {
+		
+		ChangePassword changePassword = new ChangePassword(request.get("oldPassword"), request.get("password"));
+		String email = profileService.changePassword(MOBILE_CHANNEL_ID, changePassword, accessToken);
+		Map<String,Object> data = new HashMap<String,Object>();
+		data.put("email", email);
+		
+		return this.responseFactory.createSuccessProductResonse(data);
+		
+	}
+	
 	private void validateSignin(String username, String password, String type) {
 
 		if (type != null) {

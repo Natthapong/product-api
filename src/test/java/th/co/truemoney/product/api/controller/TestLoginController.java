@@ -97,6 +97,9 @@ public class TestLoginController extends BaseTestController {
 		tmnProfile.setEmail("apinya@truecorp.co.th");
 		tmnProfile.setFullname("Apinya Ukachoke");
 		tmnProfile.setMobileNumber("0812345678");
+		tmnProfile.setHasPassword(Boolean.TRUE);
+		tmnProfile.setHasPin(Boolean.FALSE);
+		tmnProfile.setImageURL("https://m.truemoney.co.th/images/xxx.jsp");
 		
 		when( this.profileServiceMock.getTruemoneyProfile(anyString())).thenReturn(tmnProfile);
 		
@@ -104,7 +107,10 @@ public class TestLoginController extends BaseTestController {
 		.andExpect(jsonPath("$..email").value("apinya@truecorp.co.th"))
 		.andExpect(jsonPath("$..fullname").value("Apinya Ukachoke"))
 		.andExpect(jsonPath("$..mobileNumber").value("0812345678"))
-		.andExpect(jsonPath("$..currentBalance").value("10000"));
+		.andExpect(jsonPath("$..currentBalance").value("10000"))
+		.andExpect(jsonPath("$..hasPassword").value(Boolean.TRUE))
+		.andExpect(jsonPath("$..hasPin").value(Boolean.FALSE))
+		.andExpect(jsonPath("$..imageURL").value("https://m.truemoney.co.th/images/xxx.jsp"));
 		
 	}
 }

@@ -93,6 +93,9 @@ public class UserActionController extends BaseController {
 		data.put("fullname", tmnProfile.getFullname());
 		data.put("mobileNumber", tmnProfile.getMobileNumber());
 		data.put("currentBalance", tmnProfile.getBalance().toString());
+		data.put("hasPassword", tmnProfile.getHasPassword());
+		data.put("hasPin", tmnProfile.getHasPin());
+		data.put("imageURL", tmnProfile.getImageURL());
 		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}

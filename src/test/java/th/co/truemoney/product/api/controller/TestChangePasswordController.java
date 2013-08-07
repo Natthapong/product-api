@@ -22,7 +22,7 @@ public class TestChangePasswordController extends BaseTestController {
 		data.put("password", "yyyyyyyyy");
 		
 		String stubbedEmail = "success@change.password";
-		when(this.profileServiceMock.changePassword(any(Integer.class), any(ChangePassword.class), any(String.class))).thenReturn(stubbedEmail);
+		when(this.profileServiceMock.changePassword(any(String.class), any(ChangePassword.class))).thenReturn(stubbedEmail);
 		
 		//when //then
 		this.verifySuccess(this.doPOST("/profiles/change-password/111111111111", data))

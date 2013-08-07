@@ -106,7 +106,7 @@ public class UserActionController extends BaseController {
 	public ProductResponse changePassword(@PathVariable String accessToken, @RequestBody Map<String, String> request) {
 		
 		ChangePassword changePassword = new ChangePassword(request.get("oldPassword"), request.get("password"));
-		String email = profileService.changePassword(MOBILE_CHANNEL_ID, changePassword, accessToken);
+		String email = profileService.changePassword(accessToken, changePassword);
 		Map<String,Object> data = new HashMap<String,Object>();
 		data.put("email", email);
 		

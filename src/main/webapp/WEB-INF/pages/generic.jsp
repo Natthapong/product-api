@@ -81,6 +81,8 @@
 
 "account.profile.url" : "${apiHost}/v1/profile/%@?",
 
+"account.profile.image.upload.url" : "${apiHost}/v1/profile/image/%@?",
+
 "favorite.list.url" : "${apiHost}/v1/favorite/%@?",
 
 "favorite.billpay.add.url" : "${apiHost}/v1/favorite/add/%@?",

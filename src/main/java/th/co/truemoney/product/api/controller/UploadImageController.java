@@ -18,7 +18,7 @@ public class UploadImageController extends BaseController {
 
     private static final Integer MOBILE_CHANNEL_ID = 40;
 
-    @RequestMapping(value = "/profile/avatar/{accessToken}", method = RequestMethod.POST)
+    @RequestMapping(value = "/profile/image/{accessToken}", method = RequestMethod.POST)
     @ResponseBody
     public ProductResponse uploadImageProfile(@PathVariable String accessToken,
                                               @RequestParam("profile_image") MultipartFile file) {

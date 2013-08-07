@@ -17,6 +17,7 @@ import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.ChangePassword;
+import th.co.truemoney.serviceinventory.ewallet.domain.ChangePin;
 import th.co.truemoney.serviceinventory.ewallet.domain.ClientCredential;
 import th.co.truemoney.serviceinventory.ewallet.domain.EWalletOwnerCredential;
 import th.co.truemoney.serviceinventory.ewallet.domain.TmnProfile;
@@ -101,7 +102,7 @@ public class UserActionController extends BaseController {
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	
-	@RequestMapping(value = "/profiles/change-password/{accessToken}", method = RequestMethod.POST)
+	@RequestMapping(value = "/profile/change-password/{accessToken}", method = RequestMethod.POST)
 	@ResponseBody
 	public ProductResponse changePassword(@PathVariable String accessToken, @RequestBody Map<String, String> request) {
 		
@@ -112,6 +113,44 @@ public class UserActionController extends BaseController {
 		
 		return this.responseFactory.createSuccessProductResonse(data);
 		
+	}
+
+	@RequestMapping(value = "/profile/change-pin/{accessToken}", method = RequestMethod.PUT)
+	public @ResponseBody ProductResponse changePin(
+			@PathVariable(value = "accessToken") String accessTokenID,
+			@RequestBody Map<String, String> request) {
+		
+		ChangePin changePin = new ChangePin();
+		changePin.setOldPin(request.get("oldPin"));
+		changePin.setPin(request.get("pin"));
+		
+		String mobileNumber = profileService.changePin(accessTokenID, changePin);
+		
+		Map<String,Object> data = new HashMap<String,Object>();
+		data.put("mobileNumber", mobileNumber);
+
+		return this.responseFactory.createSuccessProductResonse(new HashMap<String, Object>());
+	}
+	
+	@RequestMapping(value = "/profile/{accessToken}", method = RequestMethod.PUT)
+	@ResponseBody
+	public ProductResponse updateProfile(@PathVariable(value = "accessToken") String accessTokenID,
+			@RequestBody Map<String, String> request) {
+		
+		TmnProfile tmnProfile = new TmnProfile();
+		tmnProfile.setFullname(request.get("fullname"));	
+		
+		tmnProfile = profileService.updateTruemoneyProfile(accessTokenID, tmnProfile);
+		Map<String,Object> data = new HashMap<String,Object>();
+		data.put("email", tmnProfile.getEmail());
+		data.put("fullname", tmnProfile.getFullname());
+		data.put("mobileNumber", tmnProfile.getMobileNumber());
+		data.put("currentBalance", tmnProfile.getBalance().toString());
+		data.put("hasPassword", tmnProfile.getHasPassword());
+		data.put("hasPin", tmnProfile.getHasPin());
+		data.put("imageURL", tmnProfile.getImageURL());
+		
+		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	
 	private void validateSignin(String username, String password, String type) {

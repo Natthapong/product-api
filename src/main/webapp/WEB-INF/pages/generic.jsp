@@ -81,6 +81,8 @@
 
 "account.profile.url" : "${apiHost}/v1/profile/%@?",
 
+"account.profile.image.upload.url" : "${apiHost}/v1/profile/image/%@?",
+
 "favorite.list.url" : "${apiHost}/v1/favorite/%@?",
 
 "favorite.billpay.add.url" : "${apiHost}/v1/favorite/add/%@?",
@@ -115,5 +117,12 @@
 
 "more.bill.messageTh" : "ดูรายการบิลที่รับชําระทั้งหมด",
 
-"more.bill.url" : "http://truemoney.com/wallet/bill.html"
+"more.bill.url" : "http://truemoney.com/wallet/bill.html",
+
+"system.offline.message" : "กำลังปรับปรุงระบบ เพื่อเพิ่มความสามารถในการให้บริการได้ดีขึ้น คุณสามารถใช้งานได้ตามปกติเวลา 05.00 น.",
+
+"system.offline.title" : "ไม่สามารถทำรายการได้",
+
+"system.offline" : "false"
+
 }

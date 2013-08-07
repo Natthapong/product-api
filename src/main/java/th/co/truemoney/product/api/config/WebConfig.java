@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -14,6 +16,8 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import th.co.truemoney.serviceinventory.ewallet.domain.ClientCredential;
+
+import javax.servlet.http.HttpServletRequest;
 
 @EnableWebMvc
 @Configuration
@@ -64,6 +68,13 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	public ClientCredential appLogin() {
 		return new ClientCredential("f7cb0d495ea6d989", "MOBILE_IPHONE", "IPHONE+1", "IOS_APP", "IOS_APP");
 	}
+
+    @Bean
+    public MultipartResolver multipartResolver() {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+        multipartResolver.setMaxUploadSize(300000); // 300kb
+        return multipartResolver;
+    }
 
 }
 

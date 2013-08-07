@@ -26,7 +26,7 @@ public class UploadImageController extends BaseController {
 		try {
 			ImageIcon profileImage = corpAndResizeProfileImage(file.getBytes());
 
-			writeJPGFile(profileImage);
+			//writeJPGFile(profileImage);
 
 		} catch (Exception ex) {
 			System.out.println("Error : " + ex);

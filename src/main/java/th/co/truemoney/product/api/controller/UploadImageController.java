@@ -1,9 +1,12 @@
 package th.co.truemoney.product.api.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import th.co.truemoney.product.api.domain.ProductResponse;
+import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
+import th.co.truemoney.serviceinventory.ewallet.domain.TmnProfile;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -18,15 +21,25 @@ public class UploadImageController extends BaseController {
 
     private static final Integer MOBILE_CHANNEL_ID = 40;
 
+	@Autowired
+	private TmnProfileService profileService;
+
     @RequestMapping(value = "/profile/image/{accessToken}", method = RequestMethod.POST)
     @ResponseBody
     public ProductResponse uploadImageProfile(@PathVariable String accessToken,
                                               @RequestParam("profile_image") MultipartFile file) {
 
-		try {
-			ImageIcon profileImage = corpAndResizeProfileImage(file.getBytes());
+		TmnProfile tmnProfile = profileService.getTruemoneyProfile(accessToken);
+		String currentImageName = tmnProfile.getImageURL();
 
-			//writeJPGFile(profileImage);
+		try {
+			ImageIcon profileImage = cropAndResizeProfileImage(file.getBytes());
+
+			//Generate New File name
+			//Write New File
+				//-- writeJPGFile(profileImage);
+			//Delete Current Name
+			//Update New File name On Core system
 
 		} catch (Exception ex) {
 			System.out.println("Error : " + ex);
@@ -35,7 +48,7 @@ public class UploadImageController extends BaseController {
         return this.responseFactory.createSuccessProductResonse(null);
     }
 
-	private ImageIcon corpAndResizeProfileImage(byte[] originalImageBytes) {
+	private ImageIcon cropAndResizeProfileImage(byte[] originalImageBytes) {
 
 		int resizePixel = 200;
 

@@ -7,8 +7,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 import java.security.Security;
+import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.BadPaddingException;
@@ -28,6 +30,44 @@ public class SecurityManager {
 	
 	public String getPublicKey() {
 		return env.getProperty("publicKey");
+	}
+
+	public String getPrivateKey() {
+		return env.getProperty("privateKey");
+	}
+
+	public String decryptRSA(String encryptedTxt) {
+		try {
+			KeyFactory keyFactory = KeyFactory.getInstance("RSA", "BC");
+
+			PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(hex2Byte(getPrivateKey()));
+			RSAPrivateKey privKey = (RSAPrivateKey) keyFactory.generatePrivate(privateKeySpec);
+
+			Cipher cipher = Cipher.getInstance("RSA/None/PKCS1Padding", "BC");
+
+			cipher.init(Cipher.DECRYPT_MODE, privKey);
+			byte[] plainText = cipher.doFinal(hex2Byte(encryptedTxt));
+
+			return new String(plainText, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (NoSuchProviderException e) {
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			e.printStackTrace();
+		} catch (InvalidKeyException e) {
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			e.printStackTrace();
+		} catch (BadPaddingException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 	
 	public String encryptRSA(String password) {

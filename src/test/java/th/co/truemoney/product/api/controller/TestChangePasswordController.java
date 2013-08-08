@@ -25,7 +25,7 @@ public class TestChangePasswordController extends BaseTestController {
 		when(this.profileServiceMock.changePassword(any(String.class), any(ChangePassword.class))).thenReturn(stubbedEmail);
 		
 		//when //then
-		this.verifySuccess(this.doPOST("/profile/change-password/111111111111", data))
+		this.verifySuccess(this.doPUT("/profile/change-password/111111111111", data))
 			.andExpect(jsonPath("$..email").value("success@change.password"));;
 		
 	}

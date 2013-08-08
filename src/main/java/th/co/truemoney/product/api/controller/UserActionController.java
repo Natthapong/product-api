@@ -102,7 +102,7 @@ public class UserActionController extends BaseController {
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	
-	@RequestMapping(value = "/profile/change-password/{accessToken}", method = RequestMethod.POST)
+	@RequestMapping(value = "/profile/change-password/{accessToken}", method = RequestMethod.PUT)
 	@ResponseBody
 	public ProductResponse changePassword(@PathVariable String accessToken, @RequestBody Map<String, String> request) {
 		

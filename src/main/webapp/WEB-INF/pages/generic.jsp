@@ -119,6 +119,12 @@
 
 "more.bill.url" : "http://truemoney.com/wallet/bill.html",
 
+"profile.change.pin.url" : "${apiHost}/v1//profile/change-pin/%@?",
+
+"profile.change.password.url" : "${apiHost}/v1/profile/change-password/%@?",
+
+"profile.update.url" : "${apiHost}/v1/profile/%@?",
+
 "system.offline.message" : "กำลังปรับปรุงระบบ เพื่อเพิ่มความสามารถในการให้บริการได้ดีขึ้น คุณสามารถใช้งานได้ตามปกติเวลา 05.00 น.",
 
 "system.offline.title" : "ไม่สามารถทำรายการได้",

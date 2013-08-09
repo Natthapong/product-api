@@ -13,13 +13,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.UUID;
 
 @Controller
 public class UploadImageController extends BaseController {
 
     private static final Integer MOBILE_CHANNEL_ID = 40;
+
+
+	private static final String rootImagePath = "";
 
 	@Autowired
 	private TmnProfileService profileService;
@@ -36,9 +38,14 @@ public class UploadImageController extends BaseController {
 			ImageIcon profileImage = cropAndResizeProfileImage(file.getBytes());
 
 			//Generate New File name
+			String newImageName = UUID.randomUUID().toString().replace("-", "").toLowerCase() + ".jpg";
+
 			//Write New File
-				//-- writeJPGFile(profileImage);
+			saveProfileImage(newImageName, profileImage);
+
 			//Delete Current Name
+			deleteOldProfileImage(currentImageName);
+
 			//Update New File name On Core system
 
 		} catch (Exception ex) {
@@ -97,22 +104,63 @@ public class UploadImageController extends BaseController {
 		return profileImage;
 	}
 
-	private void writeJPGFile(ImageIcon profileImage) {
-		BufferedImage bImage = new BufferedImage(profileImage.getIconWidth(), profileImage.getIconWidth(), BufferedImage.TYPE_INT_RGB);
+	private void saveProfileImage(String imageName, ImageIcon image) {
+
+		StringBuilder imagePath = new StringBuilder("");
+		String fname = imageName.substring(0, imageName.indexOf("."));
+		for (int i=0; i<fname.length(); ++i) {
+			imagePath.append( fname.charAt(i) + "/" );
+			File tempDir = new File(rootImagePath + imagePath.toString());
+			if (!tempDir.exists()) {
+				tempDir.mkdir();
+			}
+		}
+
+		// write JPG file
+		BufferedImage bImage = new BufferedImage(image.getIconWidth(), image.getIconWidth(), BufferedImage.TYPE_INT_RGB);
 
 		// create a graphics context from the BufferedImage and draw the icon's image into it.
 		Graphics g = bImage.createGraphics();
-		g.drawImage(profileImage.getImage(), 0, 0, null);
+		g.drawImage(image.getImage(), 0, 0, null);
 		g.dispose();
 
 		try {
 			// create a file to write the image to (make sure it exists), then use the ImageIO class
 			// to write the RenderedImage to disk as a PNG file.
-			File imageFile = new File("/Users/codebanban/Desktop/myImageFile.png");
+			String fileStringPath = rootImagePath + imagePath.toString() + imageName;
+			File imageFile = new File(fileStringPath);
 			imageFile.createNewFile();
 			ImageIO.write(bImage, "jpg", imageFile);
+
+			System.out.println("Path : " + imageFile.getAbsolutePath());
 		} catch (Exception ex) {
 			System.out.println("Error : " + ex);
+		}
+	}
+
+	private void deleteOldProfileImage(String imageName) {
+
+		if ("".equals(imageName))
+			return;
+
+		StringBuilder imagePath = new StringBuilder("");
+		String fname = imageName.substring(0, imageName.indexOf("."));
+		for (int i=0; i<fname.length(); ++i) {
+			imagePath.append( fname.charAt(i) + "/" );
+		}
+
+		File imageFile = new File(rootImagePath + imagePath + imageName);
+		imageFile.delete();
+
+
+		while(imagePath.length() > 0) {
+
+			File tempPath = new File(rootImagePath + imagePath);
+			if(tempPath.list().length > 0)
+				break;
+
+			tempPath.delete();
+			imagePath.delete(imagePath.length()-2, imagePath.length());
 		}
 	}
 

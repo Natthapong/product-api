@@ -131,15 +131,12 @@ public class UploadImageController extends BaseController {
 			File imageFile = new File(fileStringPath);
 			imageFile.createNewFile();
 			ImageIO.write(bImage, "jpg", imageFile);
-
-			System.out.println("Path : " + imageFile.getAbsolutePath());
 		} catch (Exception ex) {
 			System.out.println("Error : " + ex);
 		}
 	}
 
 	private void deleteOldProfileImage(String imageName) {
-
 		if ("".equals(imageName))
 			return;
 

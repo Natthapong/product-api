@@ -1,6 +1,5 @@
 package th.co.truemoney.product.api.controller;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -10,7 +9,6 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import th.co.truemoney.serviceinventory.ewallet.domain.ChangePin;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 public class TestChanePinController extends BaseTestController {
@@ -20,7 +18,7 @@ public class TestChanePinController extends BaseTestController {
 
 	@Test
 	public void changePinSuccess() throws Exception {
-		when(profileServiceMock.changePin(anyString(), any(ChangePin.class)))
+		when(profileServiceMock.changePin(anyString(), anyString(), anyString()))
 			.thenReturn("08xxxxxxxx");
 
 		Map<String,String> reqBody = new HashMap<String,String>();
@@ -32,7 +30,7 @@ public class TestChanePinController extends BaseTestController {
 	
 	@Test
 	public void changePinFail() throws Exception {
-		when(profileServiceMock.changePin(anyString(), any(ChangePin.class)))
+		when(profileServiceMock.changePin(anyString(), anyString(), anyString()))
 			.thenThrow(new ServiceInventoryException(400, "50001", "Error Description", "TMN-PRODUCT"));
 
 		Map<String,String> reqBody = new HashMap<String,String>();

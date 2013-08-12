@@ -1,6 +1,5 @@
 package th.co.truemoney.product.api.controller;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -20,8 +19,8 @@ public class TestUpdateProfileController extends BaseTestController {
 	private static final String updateProfileURL = String.format("/profile/%s",fakeAccessToken);
 	
 	@Test
-	public void updateProfileSuccess() throws Exception {
-		when(profileServiceMock.updateTruemoneyProfile(anyString(), any(TmnProfile.class)))
+	public void changeFullnameSuccess() throws Exception {
+		when(profileServiceMock.changeFullname(anyString(), anyString()))
 			.thenReturn(new TmnProfile("Jonh Doe", new BigDecimal(100.00)));
 
 		Map<String,String> reqBody = new HashMap<String,String>();
@@ -36,8 +35,8 @@ public class TestUpdateProfileController extends BaseTestController {
 	} 
 	
 	@Test
-	public void updateProfileFail() throws Exception {
-		when(profileServiceMock.updateTruemoneyProfile(anyString(), any(TmnProfile.class)))
+	public void changeFullnameFail() throws Exception {
+		when(profileServiceMock.changeFullname(anyString(), anyString()))
 			.thenThrow(new ServiceInventoryException(400,"","",""));
 
 		Map<String,String> reqBody = new HashMap<String,String>();

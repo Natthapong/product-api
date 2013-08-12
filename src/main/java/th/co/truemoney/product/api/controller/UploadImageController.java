@@ -1,19 +1,26 @@
 package th.co.truemoney.product.api.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import th.co.truemoney.product.api.domain.ProductResponse;
-import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
-import th.co.truemoney.serviceinventory.ewallet.domain.TmnProfile;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.UUID;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import th.co.truemoney.product.api.domain.ProductResponse;
+import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
+import th.co.truemoney.serviceinventory.ewallet.domain.TmnProfile;
 
 @Controller
 public class UploadImageController extends BaseController {
@@ -32,7 +39,7 @@ public class UploadImageController extends BaseController {
                                               @RequestParam("profile_image") MultipartFile file) {
 
 		TmnProfile tmnProfile = profileService.getTruemoneyProfile(accessToken);
-		String currentImageName = tmnProfile.getImageURL();
+		String currentImageName = tmnProfile.getImageFileName();
 
 		try {
 			ImageIcon profileImage = cropAndResizeProfileImage(file.getBytes());

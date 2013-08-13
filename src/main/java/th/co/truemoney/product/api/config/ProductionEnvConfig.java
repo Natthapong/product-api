@@ -18,4 +18,9 @@ public class ProductionEnvConfig  extends BaseEnvConfig {
 	public String mHost() {
 		return "https://m.truemoney.co.th";
 	}
+
+	@Bean @Qualifier("profileImageSavePath")
+	public String profileImageSavePath() {
+		return "profile_images/";
+	}
 }

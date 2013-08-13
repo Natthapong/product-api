@@ -18,4 +18,10 @@ public class LocalEnvConfig  extends BaseEnvConfig {
 	public String mHost() {
 		return "http://localhost:8080/m";
 	}
+
+	@Bean @Qualifier("profileImageSavePath")
+	public String profileImageSavePath() {
+		return "profile_images/";
+	}
+
 }

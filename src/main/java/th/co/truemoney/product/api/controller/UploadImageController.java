@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +29,9 @@ public class UploadImageController extends BaseController {
     private static final Integer MOBILE_CHANNEL_ID = 40;
 
 
-	private static final String rootImagePath = "";
+	@Autowired
+	@Qualifier("profileImageSavePath")
+	private String profileImageSavePath;
 
 	@Autowired
 	private TmnProfileService profileService;
@@ -54,6 +57,7 @@ public class UploadImageController extends BaseController {
 			deleteOldProfileImage(currentImageName);
 
 			//Update New File name On Core system
+			profileService.changeProfileImage(accessToken, newImageName);
 
 		} catch (Exception ex) {
 			System.out.println("Error : " + ex);
@@ -113,14 +117,11 @@ public class UploadImageController extends BaseController {
 
 	private void saveProfileImage(String imageName, ImageIcon image) {
 
-		StringBuilder imagePath = new StringBuilder("");
-		String fname = imageName.substring(0, imageName.indexOf("."));
-		for (int i=0; i<fname.length(); ++i) {
-			imagePath.append( fname.charAt(i) + "/" );
-			File tempDir = new File(rootImagePath + imagePath.toString());
-			if (!tempDir.exists()) {
-				tempDir.mkdir();
-			}
+		String imagePath = generateProfileImagePath(imageName);
+
+		File tempDir = new File(imagePath);
+		if (!tempDir.exists()) {
+			tempDir.mkdirs();
 		}
 
 		// write JPG file
@@ -134,7 +135,7 @@ public class UploadImageController extends BaseController {
 		try {
 			// create a file to write the image to (make sure it exists), then use the ImageIO class
 			// to write the RenderedImage to disk as a PNG file.
-			String fileStringPath = rootImagePath + imagePath.toString() + imageName;
+			String fileStringPath = imagePath + imageName;
 			File imageFile = new File(fileStringPath);
 			imageFile.createNewFile();
 			ImageIO.write(bImage, "jpg", imageFile);
@@ -147,25 +148,21 @@ public class UploadImageController extends BaseController {
 		if ("".equals(imageName))
 			return;
 
+		String imagePath = generateProfileImagePath(imageName);
+
+		File imageFile = new File(imagePath + imageName);
+		imageFile.delete();
+	}
+
+	private String generateProfileImagePath(String imageName) {
+
 		StringBuilder imagePath = new StringBuilder("");
 		String fname = imageName.substring(0, imageName.indexOf("."));
-		for (int i=0; i<fname.length(); ++i) {
+
+		for (int i=0; i<fname.length()-1; ++i) {
 			imagePath.append( fname.charAt(i) + "/" );
 		}
 
-		File imageFile = new File(rootImagePath + imagePath + imageName);
-		imageFile.delete();
-
-
-		while(imagePath.length() > 0) {
-
-			File tempPath = new File(rootImagePath + imagePath);
-			if(tempPath.list().length > 0)
-				break;
-
-			tempPath.delete();
-			imagePath.delete(imagePath.length()-2, imagePath.length());
-		}
+		return profileImageSavePath + imagePath.toString();
 	}
-
 }

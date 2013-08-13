@@ -18,4 +18,9 @@ public class DevelopEnvConfig extends BaseEnvConfig {
 	public String mHost() {
 		return "https://secure.truemoney-dev.com/m";
 	}
+
+	@Bean @Qualifier("profileImageSavePath")
+	public String profileImageSavePath() {
+		return "profile_images/";
+	}
 }

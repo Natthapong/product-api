@@ -1,6 +1,8 @@
 package th.co.truemoney.product.api.util;
 
 import java.math.BigDecimal;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -102,4 +104,28 @@ public final class Utils {
     public static String removeSuffix(String s) {
     	return s == null ? "" : s.replace("_c", "");
     }
+
+	public static String hashSHA1(String s) {
+
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-1");
+			byte[] bData = md.digest(s.getBytes());
+
+			return byteArrayToHexString(bData);
+		}
+		catch(NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+
+		return "";
+	}
+
+	public static String byteArrayToHexString(byte[] mdbytes) {
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < mdbytes.length; i++) {
+			sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
+		}
+
+		return sb.toString();
+	}
 }

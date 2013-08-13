@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.*;
 import org.springframework.stereotype.Component;
 import th.co.truemoney.product.api.util.FileUtil;
+import th.co.truemoney.product.api.util.Utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +19,24 @@ public class ProfileImageManager {
 	@Autowired
 	@Qualifier("profileImageSavePath")
 	private String profileImageSavePath;
+
+	@Autowired
+	@Qualifier("profileImageURLFormat")
+	private String profileImageURLFormat;
+
+	@Autowired
+	@Qualifier("profileImageURLSalt")
+	private String profileImageSalt;
+
+	public String generateProfileImageURL(String accessToken, String imageName) {
+
+		long nowMilliTime = System.currentTimeMillis();
+		String vKey = Utils.hashSHA1( String.format("%s%d%s%s", accessToken, nowMilliTime, imageName, profileImageSalt) );
+
+		String imageURL = String.format(profileImageURLFormat, "%@", imageName, nowMilliTime, vKey.toLowerCase());
+
+		return imageURL;
+	}
 
 	public String replaceProfileImage(String currentImageName, byte[] newProfileImageByte) throws IOException {
 
@@ -38,7 +57,6 @@ public class ProfileImageManager {
 
 		return newImageName;
 	}
-
 
 	private String generateNewImageName() {
 		return UUID.randomUUID().toString().replace("-", "").toLowerCase() + ".jpg";

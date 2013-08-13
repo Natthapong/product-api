@@ -1,6 +1,7 @@
 package th.co.truemoney.product.api.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 
 import java.math.BigDecimal;
 
@@ -23,4 +24,10 @@ public class TestUtils {
 	public void testFormatTelNumber() {
 		assertEquals("02-123-4567", Utils.formatTelNumber("021234567"));
 	}
+
+	@Test
+	public void testHashSHA1() {
+		assertEquals("2cc98e26c1f706e1f77c622f1bc76432d8cccc6d", Utils.hashSHA1("testhashsha1use1millisecnaja").toLowerCase());
+	}
+
 }

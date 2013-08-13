@@ -30,10 +30,11 @@ public class ProfileImageManager {
 
 	public String generateProfileImageURL(String accessToken, String imageName) {
 
+		String imageNameNoExtension = imageName.substring(0, imageName.length()-4);
 		long nowMilliTime = System.currentTimeMillis();
-		String vKey = Utils.hashSHA1( String.format("%s%d%s%s", accessToken, nowMilliTime, imageName, profileImageSalt) );
+		String vKey = Utils.hashSHA1( String.format("%s%d%s%s", accessToken, nowMilliTime, imageNameNoExtension, profileImageSalt) );
 
-		String imageURL = String.format(profileImageURLFormat, "%@", imageName, nowMilliTime, vKey.toLowerCase());
+		String imageURL = String.format(profileImageURLFormat, "%@", imageNameNoExtension, nowMilliTime, vKey.toLowerCase());
 
 		return imageURL;
 	}

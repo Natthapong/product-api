@@ -23,7 +23,7 @@ public class TestProfileImageManager {
 	@Test
 	public void testGenerateProfileURL() {
 
-		String profileImageURL = profileImageManager.generateProfileImageURL("accesstoken", "test.jpg");
+		String profileImageURL = profileImageManager.generateProfileImageURL("accesstoken", "testgenerateurl.jpg");
 		assertNotSame("", profileImageURL);
 	}
 }

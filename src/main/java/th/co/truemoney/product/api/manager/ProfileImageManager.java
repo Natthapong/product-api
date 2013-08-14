@@ -59,7 +59,7 @@ public class ProfileImageManager {
 		if (!status)
 			throw new IOException();
 
-		if (!"".equals(currentImageFilePath))
+		if (currentImageFilePath != null && !"".equals(currentImageFilePath))
 			fileUtil.deleteFile(currentImageFilePath + currentImageName);
 
 		return newImageName;

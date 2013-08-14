@@ -95,7 +95,7 @@ public class UserActionController extends BaseController {
 		data.put("currentBalance", tmnProfile.getBalance().toString());
 		data.put("hasPassword", tmnProfile.getHasPassword());
 		data.put("hasPin", tmnProfile.getHasPin());
-		data.put("imageFileName", tmnProfile.getImageFileName());
+		data.put("imageURL", tmnProfile.getImageFileName());
 		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
@@ -145,7 +145,7 @@ public class UserActionController extends BaseController {
 		data.put("currentBalance", tmnProfile.getBalance().toString());
 		data.put("hasPassword", tmnProfile.getHasPassword());
 		data.put("hasPin", tmnProfile.getHasPin());
-		data.put("imageFileName", tmnProfile.getImageFileName());
+		data.put("imageURL", tmnProfile.getImageFileName());
 		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}

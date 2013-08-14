@@ -1,17 +1,20 @@
 package th.co.truemoney.product.api.manager;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.*;
-import org.springframework.stereotype.Component;
-import th.co.truemoney.product.api.util.FileUtil;
-import th.co.truemoney.product.api.util.Utils;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.UUID;
+
+import javax.swing.ImageIcon;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import th.co.truemoney.product.api.util.FileUtil;
+import th.co.truemoney.product.api.util.Utils;
 
 @Component
 public class ProfileImageManager {
@@ -29,17 +32,17 @@ public class ProfileImageManager {
 	private String profileImageSalt;
 
 	public String generateProfileImageURL(String accessToken, String imageName) {
+		
+		if (StringUtils.hasText(imageName)) {
+			String imageNameNoExtension = extractFileName(imageName);
+			long nowMilliTime = System.currentTimeMillis();
+			String vKey = Utils.hashSHA1( String.format("%s%d%s%s", accessToken, nowMilliTime, imageNameNoExtension, profileImageSalt) );
 
-		if (imageName == null || "".equals(imageName.trim()))
+			return String.format(profileImageURLFormat, "%@", imageNameNoExtension, nowMilliTime, vKey.toLowerCase());
+		} else {
 			return "";
-
-		String imageNameNoExtension = imageName.substring(0, imageName.length()-4);
-		long nowMilliTime = System.currentTimeMillis();
-		String vKey = Utils.hashSHA1( String.format("%s%d%s%s", accessToken, nowMilliTime, imageNameNoExtension, profileImageSalt) );
-
-		String imageURL = String.format(profileImageURLFormat, "%@", imageNameNoExtension, nowMilliTime, vKey.toLowerCase());
-
-		return imageURL;
+		}
+		
 	}
 
 	public String replaceProfileImage(String currentImageName, byte[] newProfileImageByte) throws IOException {
@@ -65,10 +68,10 @@ public class ProfileImageManager {
 	private String generateNewImageName() {
 		return UUID.randomUUID().toString().replace("-", "").toLowerCase() + ".jpg";
 	}
-
+	
+	private static int TARGET_IMAGE_PIXEL = 200;
+	
 	private ImageIcon cropAndResizeProfileImage(byte[] originalImageBytes) {
-
-		int resizePixel = 200;
 
 		ImageIcon profileImage = new ImageIcon(originalImageBytes);
 		int profileWidth = profileImage.getIconWidth();
@@ -104,10 +107,10 @@ public class ProfileImageManager {
 		}
 
 		//Check Image width/height > limit
-		if (profileWidth > resizePixel || profileHeight > resizePixel) {
+		if (profileWidth > TARGET_IMAGE_PIXEL || profileHeight > TARGET_IMAGE_PIXEL) {
 			//--- Resize Profile Image ---//
 			Image img = profileImage.getImage() ;
-			Image newImage = img.getScaledInstance( resizePixel, resizePixel,  java.awt.Image.SCALE_SMOOTH ) ;
+			Image newImage = img.getScaledInstance( TARGET_IMAGE_PIXEL, TARGET_IMAGE_PIXEL,  java.awt.Image.SCALE_SMOOTH ) ;
 
 			profileImage = new ImageIcon( newImage );
 		}
@@ -116,17 +119,25 @@ public class ProfileImageManager {
 	}
 
 	private String generateProfileImagePath(String imageName) {
-
-		if ("".equals(imageName))
+		if (StringUtils.hasText(imageName)) {
+			StringBuilder imagePath = new StringBuilder("");
+			String fname = extractFileName(imageName);
+			
+			for (int i=0; i<fname.length()-1; ++i) {
+				imagePath.append( fname.charAt(i) + "/" );
+			}
+			return profileImageSavePath + imagePath.toString();
+		} else {
 			return "";
-
-		StringBuilder imagePath = new StringBuilder("");
-		String fname = imageName.substring(0, imageName.indexOf("."));
-
-		for (int i=0; i<fname.length()-1; ++i) {
-			imagePath.append( fname.charAt(i) + "/" );
 		}
-
-		return profileImageSavePath + imagePath.toString();
+	}
+	
+	private String extractFileName(String filenameWithExtension) {
+		String[] ff = filenameWithExtension.split(".");
+		if (ff.length > 0) {
+			return ff[0];
+		} else {
+			return "";
+		}
 	}
 }

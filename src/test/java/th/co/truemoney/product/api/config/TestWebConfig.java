@@ -97,7 +97,7 @@ public class TestWebConfig extends BaseEnvConfig {
 
 	@Bean @Qualifier("profileImageSavePath")
 	public String profileImageSavePath() {
-		return "profile_images/";
+		return "target/profile_images/";
 	}
 	
 	@Bean

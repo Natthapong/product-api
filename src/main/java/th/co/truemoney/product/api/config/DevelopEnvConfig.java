@@ -31,6 +31,6 @@ public class DevelopEnvConfig extends BaseEnvConfig {
 
 	@Bean @Qualifier("profileImageSavePath")
 	public String profileImageSavePath() {
-		return "profile_images/";
+		return "/share/images/";
 	}
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.domain.ProductResponse;
+import th.co.truemoney.product.api.manager.ProfileImageManager;
 import th.co.truemoney.product.api.util.Utils;
 import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
@@ -39,6 +40,9 @@ public class P2PController extends BaseController {
 
 	@Autowired
 	private TmnProfileService profileService;
+	
+	@Autowired
+	private ProfileImageManager profileImageManager;
 
 	@RequestMapping(value = "/draft-transaction/{accessToken}", method = RequestMethod.POST)
 	@ResponseBody
@@ -56,10 +60,12 @@ public class P2PController extends BaseController {
 		}
 
 		P2PTransferDraft transaction = transferService.createAndVerifyTransferDraft(mobileNumber, inputAmount, accessToken);
-
+		String profileImageURL = profileImageManager.generateProfileImageURL(accessToken, transaction.getImageFileName());
+		
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("mobileNumber", Utils.formatMobileNumber(transaction.getMobileNumber()));
 		data.put("recipientName", transaction.getFullname());
+		data.put("recipientImageURL", profileImageURL);
 		data.put("draftTransactionID", transaction.getID());
 		data.put("amount", transaction.getAmount());
 
@@ -138,7 +144,9 @@ public class P2PController extends BaseController {
 
 		P2PTransactionConfirmationInfo info = transaction.getConfirmationInfo();
 		P2PTransferDraft draftTxn = transaction.getDraftTransaction();
-
+		
+		String profileImageURL = profileImageManager.generateProfileImageURL(accessToken, draftTxn.getImageFileName());
+		
 		BigDecimal balance = this.profileService.getEwalletBalance(accessToken);
 
 		Map<String, Object> data = new HashMap<String, Object>();
@@ -146,6 +154,7 @@ public class P2PController extends BaseController {
 
 		data.put("amount", draftTxn.getAmount());
 		data.put("recipientName", draftTxn.getFullname());
+		data.put("recipientImageURL", profileImageURL);
 		data.put("transactionID", info.getTransactionID());
 		data.put("transactionDate", info.getTransactionDate());
 		data.put("mobileNumber", Utils.formatMobileNumber(draftTxn.getMobileNumber()));

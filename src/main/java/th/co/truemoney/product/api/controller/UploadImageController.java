@@ -1,15 +1,9 @@
 package th.co.truemoney.product.api.controller;
 
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.UUID;
-
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
+import java.util.Collection;
+import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,8 +19,6 @@ import th.co.truemoney.serviceinventory.ewallet.domain.TmnProfile;
 
 @Controller
 public class UploadImageController extends BaseController {
-
-    private static final Integer MOBILE_CHANNEL_ID = 40;
 
 	@Autowired
 	private TmnProfileService profileService;
@@ -52,7 +44,7 @@ public class UploadImageController extends BaseController {
 			System.out.println("Error : " + ex);
 		}
 
-        return this.responseFactory.createSuccessProductResonse(null);
+        return this.responseFactory.createSuccessProductResonse(Collections.<String, Object> emptyMap());
     }
 
 }

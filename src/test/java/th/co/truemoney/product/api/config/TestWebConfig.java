@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import th.co.truemoney.product.api.manager.MessageManager;
 import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
 import th.co.truemoney.serviceinventory.ewallet.ActivityService;
@@ -45,12 +44,7 @@ public class TestWebConfig extends BaseEnvConfig {
 	@Bean DirectDebitSourceOfFundService sourceOfFundService() {
 		return Mockito.mock(DirectDebitSourceOfFundService.class);
 	}
-
-	@Bean
-	public MessageManager messageManager() {
-		return Mockito.mock(MessageManager.class);
-	}
-
+	
 	@Bean
 	public TopUpService topupService() {
 		return Mockito.mock(TopUpService.class);

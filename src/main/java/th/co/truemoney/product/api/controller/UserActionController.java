@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.domain.LoginBean;
 import th.co.truemoney.product.api.domain.ProductResponse;
+import th.co.truemoney.product.api.manager.ProfileImageManager;
 import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.ClientCredential;
@@ -31,6 +32,9 @@ public class UserActionController extends BaseController {
 
 	@Autowired
 	private ClientCredential appLogin;
+
+	@Autowired
+	private ProfileImageManager profileImageManager;
 
 
 	public void setProfileService(TmnProfileService profileService) {
@@ -88,6 +92,8 @@ public class UserActionController extends BaseController {
 	@ResponseBody
 	public ProductResponse getUserProfile(@PathVariable String accessToken) {
 		TmnProfile tmnProfile = profileService.getTruemoneyProfile(accessToken);
+		String profileImageURL = profileImageManager.generateProfileImageURL(accessToken, tmnProfile.getImageFileName());
+
 		Map<String,Object> data = new HashMap<String,Object>();
 		data.put("email", tmnProfile.getEmail());
 		data.put("fullname", tmnProfile.getFullname());
@@ -95,7 +101,7 @@ public class UserActionController extends BaseController {
 		data.put("currentBalance", tmnProfile.getBalance().toString());
 		data.put("hasPassword", tmnProfile.getHasPassword());
 		data.put("hasPin", tmnProfile.getHasPin());
-		data.put("imageURL", tmnProfile.getImageFileName());
+		data.put("imageURL", profileImageURL);
 		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}

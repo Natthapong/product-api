@@ -30,7 +30,7 @@ public class ProfileImageManager {
 
 	public String generateProfileImageURL(String accessToken, String imageName) {
 
-		if ("".equals(imageName.trim()))
+		if (imageName == null || "".equals(imageName.trim()))
 			return "";
 
 		String imageNameNoExtension = imageName.substring(0, imageName.length()-4);

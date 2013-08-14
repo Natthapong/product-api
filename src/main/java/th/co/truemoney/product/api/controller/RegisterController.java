@@ -36,9 +36,6 @@ public class RegisterController extends BaseController {
     private TmnProfileService profileService;
 
     @Autowired
-    private UserActionController userActionController;
-
-    @Autowired
     private SecurityManager securityManager;
 
     @RequestMapping(value = "/profiles/validate-email", method = RequestMethod.POST)

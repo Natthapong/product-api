@@ -6,14 +6,14 @@ import th.co.truemoney.serviceinventory.ewallet.domain.ActivityDetail;
 
 public interface ActivityDetailViewHandler {
 	
-	public void handle(ActivityDetail activity);
+	void handle(ActivityDetail activity);
 
-	public Map<String, String> buildSection1();
+	Map<String, String> buildSection1();
 
-	public Map<String, Object> buildSection2();
+	Map<String, Object> buildSection2();
 
-	public Map<String, Object> buildSection3();
+	Map<String, Object> buildSection3();
 
-	public Map<String, Object> buildSection4();
+	Map<String, Object> buildSection4();
 	
 }

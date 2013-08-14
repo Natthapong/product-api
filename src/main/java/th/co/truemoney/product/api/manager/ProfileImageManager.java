@@ -56,7 +56,7 @@ public class ProfileImageManager {
 		if (!status)
 			throw new IOException();
 
-		if (!"".equals(currentImageFilePath))
+		if (currentImageFilePath != null && !"".equals(currentImageFilePath))
 			fileUtil.deleteFile(currentImageFilePath + currentImageName);
 
 		return newImageName;
@@ -117,7 +117,7 @@ public class ProfileImageManager {
 
 	private String generateProfileImagePath(String imageName) {
 
-		if ("".equals(imageName))
+		if (imageName == null || "".equals(imageName))
 			return "";
 
 		StringBuilder imagePath = new StringBuilder("");

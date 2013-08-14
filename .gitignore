@@ -11,3 +11,4 @@ mem.*
 target/
 .idea/
 .DS_Store
+profile_images/*

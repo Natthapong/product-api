@@ -110,7 +110,7 @@ public class ProfileImageManager {
 		if (profileWidth > TARGET_IMAGE_PIXEL || profileHeight > TARGET_IMAGE_PIXEL) {
 			//--- Resize Profile Image ---//
 			Image img = profileImage.getImage() ;
-			Image newImage = img.getScaledInstance( TARGET_IMAGE_PIXEL, TARGET_IMAGE_PIXEL,  java.awt.Image.SCALE_SMOOTH ) ;
+			Image newImage = img.getScaledInstance( TARGET_IMAGE_PIXEL, TARGET_IMAGE_PIXEL, Image.SCALE_SMOOTH ) ;
 
 			profileImage = new ImageIcon( newImage );
 		}

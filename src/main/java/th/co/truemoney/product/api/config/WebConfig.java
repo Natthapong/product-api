@@ -17,8 +17,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import th.co.truemoney.serviceinventory.ewallet.domain.ClientCredential;
 
-import javax.servlet.http.HttpServletRequest;
-
 @EnableWebMvc
 @Configuration
 @ComponentScan({

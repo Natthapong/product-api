@@ -64,15 +64,13 @@ public class UserActionController extends BaseController {
 			token = profileService.login(userLogin, appLogin);
 		} catch (ServiceInventoryException e) {
 			String errorcode = String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode());
-			if (errorcode.equals("core.1011") || errorcode.equals("core.1013")
+			if ("mobile".equals(request.getType()) && (errorcode.equals("core.1011") 
+					|| errorcode.equals("core.1013")
 					|| errorcode.equals("core.1014")
 					|| errorcode.equals("core.3")
 					|| errorcode.equals("core.4")
-					|| errorcode.equals("core.5")) {
-				if ("mobile".equals(request.getType())) {
-					throw new ServiceInventoryException(400, "50001",
-							"Invalid mobile or pin", "TMN-PRODUCT");
-				}
+					|| errorcode.equals("core.5"))) {
+					throw new ServiceInventoryException(400, "50001","Invalid mobile or pin", "TMN-PRODUCT");
 			}
 			throw e;
 		}

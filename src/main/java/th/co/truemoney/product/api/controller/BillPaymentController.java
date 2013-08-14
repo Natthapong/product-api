@@ -130,10 +130,10 @@ public class BillPaymentController extends BaseController {
         try{
             bill = billPaymentService.retrieveBillInformationWithKeyin(target, ref1, ref2, amount, InquiryOutstandingBillType.valueFromString(inquiryType), accessTokenID);
         }catch(ServiceInventoryException e){
-            if("PCS.PCS-30024".equals(String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode()))){
-                if("tmvh".equals(Utils.removeSuffix(target)) || "trmv".equals(Utils.removeSuffix(target))){
-                    throw new ServiceInventoryException(500,"70000","","TMN-PRODUCT");
-                }
+        	String error = String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode());
+        	String targetCode = Utils.removeSuffix(target);
+            if("PCS.PCS-30024".equals(error) && ("tmvh".equalsIgnoreCase(targetCode) || "trmv".equalsIgnoreCase(targetCode))){
+            	throw new ServiceInventoryException(500,"70000","","TMN-PRODUCT");
             }
             throw e;
         }

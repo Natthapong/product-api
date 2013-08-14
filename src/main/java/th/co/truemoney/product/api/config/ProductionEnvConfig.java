@@ -26,11 +26,11 @@ public class ProductionEnvConfig  extends BaseEnvConfig {
 
 	@Bean @Qualifier("profileImageURLSalt")
 	public String profileImageURLSalt() {
-		return "Pfu03-.G +W$T;k%*)Aw+-<R%5N<->>:8z08|q-y}Z~[r<&5)@H]DUzBF Q.e~2_";
+		return "nx4+6m^{XET.UD+jqdin(6Ls+%DNyHG7h{$A[`kJ,BMQ/NybqqS1u5)9ir9qO=?B";
 	}
 
 	@Bean @Qualifier("profileImageSavePath")
 	public String profileImageSavePath() {
-		return "profile_images/";
+		return "/share/images/";
 	}
 }

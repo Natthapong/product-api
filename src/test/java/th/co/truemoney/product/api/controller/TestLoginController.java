@@ -40,7 +40,8 @@ public class TestLoginController extends BaseTestController {
 						.andExpect(jsonPath("$..mobileNumber").exists())
 						.andExpect(jsonPath("$..currentBalance").exists())
 						.andExpect(jsonPath("$..fullname").exists())
-						.andExpect(jsonPath("$..accessToken").exists());
+						.andExpect(jsonPath("$..accessToken").exists())
+						.andExpect(jsonPath("$..imageURL").exists());
 	}
 
 	@Test
@@ -110,7 +111,7 @@ public class TestLoginController extends BaseTestController {
 		.andExpect(jsonPath("$..currentBalance").value("10000"))
 		.andExpect(jsonPath("$..hasPassword").value(Boolean.TRUE))
 		.andExpect(jsonPath("$..hasPin").value(Boolean.FALSE))
-		.andExpect(jsonPath("$..imageURL").value("xxx.jsp"));
+		.andExpect(jsonPath("$..imageURL").exists());
 		
 	}
 }

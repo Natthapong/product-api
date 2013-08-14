@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import th.co.truemoney.product.api.domain.LoginBean;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.manager.ProfileImageManager;
+import th.co.truemoney.product.api.manager.SecurityManager;
 import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.ClientCredential;
@@ -35,6 +36,9 @@ public class UserActionController extends BaseController {
 
 	@Autowired
 	private ProfileImageManager profileImageManager;
+	
+    @Autowired
+    private SecurityManager securityManager;
 
 
 	public void setProfileService(TmnProfileService profileService) {
@@ -112,7 +116,7 @@ public class UserActionController extends BaseController {
 		
 		String oldPassword = request.get("oldPassword");
 		String newPassword = request.get("password");
-		String email = profileService.changePassword(accessToken, oldPassword, newPassword);
+		String email = profileService.changePassword(accessToken, oldPassword, securityManager.encryptRSA(newPassword));
 		Map<String,Object> data = new HashMap<String,Object>();
 		data.put("email", email);
 		
@@ -128,7 +132,7 @@ public class UserActionController extends BaseController {
 		String oldPin = request.get("oldPin");
 		String newPin = request.get("pin");
 		
-		String mobileNumber = profileService.changePin(accessTokenID, oldPin, newPin);
+		String mobileNumber = profileService.changePin(accessTokenID, oldPin, securityManager.encryptRSA(newPin));
 		
 		Map<String,Object> data = new HashMap<String,Object>();
 		data.put("mobileNumber", mobileNumber);

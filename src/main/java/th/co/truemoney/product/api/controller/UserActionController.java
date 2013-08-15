@@ -126,7 +126,7 @@ public class UserActionController extends BaseController {
 		try {
 			String oldPassword = request.get("oldPassword");
 			String newPassword = request.get("password");
-			String email = profileService.changePassword(accessToken, oldPassword, newPassword);
+			String email = profileService.changePassword(accessToken, oldPassword, securityManager.encryptRSA(newPassword));
 			Map<String,Object> data = new HashMap<String,Object>();
 			data.put("email", email);
 			
@@ -154,7 +154,7 @@ public class UserActionController extends BaseController {
 			String oldPin = request.get("oldPin");
 			String newPin = request.get("pin");
 			
-			String mobileNumber = profileService.changePin(accessTokenID, oldPin, newPin);
+			String mobileNumber = profileService.changePin(accessTokenID, oldPin,  securityManager.encryptRSA(newPin));
 			
 			Map<String,Object> data = new HashMap<String,Object>();
 			data.put("mobileNumber", mobileNumber);

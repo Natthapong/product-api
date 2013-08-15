@@ -3,7 +3,6 @@ package th.co.truemoney.product.api.manager;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.UUID;
 
 import javax.swing.ImageIcon;
@@ -15,6 +14,7 @@ import org.springframework.util.StringUtils;
 
 import th.co.truemoney.product.api.util.FileUtil;
 import th.co.truemoney.product.api.util.Utils;
+import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 @Component
 public class ProfileImageManager {
@@ -45,7 +45,7 @@ public class ProfileImageManager {
 		
 	}
 
-	public String replaceProfileImage(String currentImageName, byte[] newProfileImageByte) throws IOException {
+	public String replaceProfileImage(String currentImageName, byte[] newProfileImageByte) throws ServiceInventoryException {
 
 		String newImageName = generateNewImageName();
 		String newImageFilePath = generateProfileImagePath(newImageName);
@@ -54,10 +54,14 @@ public class ProfileImageManager {
 		ImageIcon newProfileImage = cropAndResizeProfileImage(newProfileImageByte);
 
 		FileUtil fileUtil = new FileUtil();
-		boolean status = fileUtil.saveImageJPGFile(newImageFilePath, newImageName, newProfileImage);
-
-		if (!status)
-			throw new IOException();
+		if (newImageFilePath == null || "".equals(newImageFilePath))
+			throw new ServiceInventoryException(400, "030001","new image file is null or empty", "TMN-PRODUCT");		
+			
+		try {
+			fileUtil.saveImageJPGFile(newImageFilePath, newImageName, newProfileImage);
+		} catch (Exception e) {
+			throw new ServiceInventoryException(400, "030001", e.getMessage(), "TMN-PRODUCT");		
+		}
 
 		if (currentImageFilePath != null && !"".equals(currentImageFilePath))
 			fileUtil.deleteFile(currentImageFilePath + currentImageName);

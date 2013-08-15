@@ -16,7 +16,7 @@ import java.io.IOException;
  */
 public class FileUtil {
 
-	public boolean saveImageJPGFile(String filePath, String fileName, ImageIcon image) throws IOException {
+	public boolean saveImageJPGFile(String filePath, String fileName, ImageIcon image) throws IOException, Exception {
 
 		try {
 			File fPath = new File(filePath);
@@ -41,6 +41,8 @@ public class FileUtil {
 			return true;
 		} catch (IOException ex) {
 			throw ex;
+		} catch (Exception e) {
+			throw e;
 		}
 	}
 

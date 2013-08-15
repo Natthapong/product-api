@@ -25,7 +25,7 @@ public class FileUtilTest {
 	}
 	
 	@Test
-	public void testSaveImageJPGFile() throws IOException {
+	public void testSaveImageJPGFile() throws Exception {
 		util.saveImageJPGFile(targetFolder + "a/b/c/d/", "abcd.jpg", new ImageIcon(sourceFolder + "/images/default.jpeg"));
 		
 		assertTrue(new File(targetFolder + "a/b/c/d/abcd.jpg").exists());

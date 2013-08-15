@@ -133,11 +133,12 @@ public class ProfileImageManager {
 	}
 	
 	private String extractFileName(String filenameWithExtension) {
-		String[] ff = filenameWithExtension.split(".");
+		String[] ff = filenameWithExtension.split("[.]");
 		if (ff.length > 0) {
 			return ff[0];
 		} else {
 			return "";
 		}
 	}
+	
 }

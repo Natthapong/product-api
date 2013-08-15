@@ -131,6 +131,8 @@
 
 "system.offline.title" : "ไม่สามารถทำรายการได้",
 
-"system.offline" : "false"
+"system.offline" : "false",
+
+"support.video.url" : "http://youtu.be/-IfbA6X8TXo"
 
 }

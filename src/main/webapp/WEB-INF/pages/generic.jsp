@@ -119,7 +119,7 @@
 
 "more.bill.url" : "http://truemoney.com/wallet/bill.html",
 
-"profile.change.pin.url" : "${apiHost}/v1//profile/change-pin/%@?",
+"profile.change.pin.url" : "${apiHost}/v1/profile/change-pin/%@?",
 
 "profile.change.password.url" : "${apiHost}/v1/profile/change-password/%@?",
 

@@ -133,6 +133,13 @@
 
 "system.offline" : "false",
 
-"support.video.url" : "http://youtu.be/-IfbA6X8TXo"
+"support.video.url" : "http://youtu.be/-IfbA6X8TXo",
+
+"available.epin.prices" : [ { "price" : "50" }, 
+							{ "price" : "90" }, 
+							{ "price" : "150" }, 
+							{ "price" : "300" }, 
+							{ "price" : "500" }, 
+							{ "price" : "1000" }]
 
 }

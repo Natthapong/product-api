@@ -26,10 +26,10 @@ public class TestEPINConfigurationManager {
 		
 	@Test
 	public void testLoadConfigFile() {
-		List<EPINPrice> config = configuration.getEpinPrice();
+		List<String> config = configuration.getEpinPrice();
 		int i = 0;
-		for (EPINPrice epinPrice: config) {
-			assertEquals(price.get(i++), epinPrice.getPrice());
+		for (String epinPrice: config) {
+			assertEquals(price.get(i++), epinPrice);
 		}
 	}
 

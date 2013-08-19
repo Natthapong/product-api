@@ -1,42 +1,32 @@
 package th.co.truemoney.product.api.manager;
 
-import java.io.IOException;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class EPINConfigurationManager {
 	
-	private Map<String, List<EPINPrice>> configurations;
+	@Autowired
+	private Environment env;
 	
-	private ObjectMapper mapper = new ObjectMapper(new JsonFactory());
-
-	private String configFile = "src/main/webapp/WEB-INF/pages/epinPrice.jsp";
+	private List<String> priceList = null;
 	
-	public EPINConfigurationManager(){
-		try {
-			configurations = mapper.readValue(
-					new FileSystemResource(configFile).getFile(), 
-					new TypeReference<HashMap<String, List<EPINPrice>>>() {});
-		} catch (JsonParseException e1) {
-			e1.printStackTrace();
-		} catch (IOException e2) {
-			e2.printStackTrace();
+	public List<String> getEpinPrice() {
+		if (priceList == null) {
+			String priceStr = env.getProperty("\"available.epin.prices\"");
+			priceStr = priceStr.trim();
+			priceStr = priceStr.replace("[", "");
+			priceStr = priceStr.replace("]", "");
+			priceStr = priceStr.replaceAll("\"", "");
+			priceStr = priceStr.replaceAll(" ", "");
+			System.out.println(priceStr);
+			priceList = Arrays.asList(priceStr.split(","));
 		}
-	}
-	
-	public List<EPINPrice> getEpinPrice() {
-		List<EPINPrice> configuration = configurations.get("available.epin.prices");
-		return configuration;
+		return priceList;
 	}
 	
 }

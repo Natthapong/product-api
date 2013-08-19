@@ -135,6 +135,6 @@
 
 "support.video.url" : "http://youtu.be/-IfbA6X8TXo",
 
-<jsp:include page="epinPrice.jsp" />
+<jsp:include page="../classes/epin_price_list.conf" />
 
 }

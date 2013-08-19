@@ -6,7 +6,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
 @Configuration
-@PropertySource("classpath:rsa_public.key")
+@PropertySource({"classpath:rsa_public.key", "classpath:epin_price_list.conf"})
 public class BaseEnvConfig {
 
 	@Autowired

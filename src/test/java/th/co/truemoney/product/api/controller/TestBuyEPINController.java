@@ -5,14 +5,12 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
-import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Assert;
 import org.junit.Test;
 
-
+import th.co.truemoney.serviceinventory.buy.domain.BuyProduct;
 import th.co.truemoney.serviceinventory.buy.domain.BuyProductDraft;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 
@@ -32,7 +30,9 @@ public class TestBuyEPINController extends BaseTestController {
 		otp.setReferenceCode("xxxx");
 		otp.setOtpString("123456");
 		
-		BuyProductDraft buyProductDraft = new BuyProductDraft("epin_c", "0811111111", epinAmount);
+		BuyProduct buyProduct = new BuyProduct("epin_c", epinAmount);
+		BuyProductDraft buyProductDraft = new BuyProductDraft("draftID", buyProduct);
+		buyProductDraft.setRecipientMobileNumber("0811111111");
 		
 		when(buyProductServiceMock.createAndVerifyBuyProductDraft(anyString(), anyString(), any(BigDecimal.class), anyString())).thenReturn(buyProductDraft);
 		

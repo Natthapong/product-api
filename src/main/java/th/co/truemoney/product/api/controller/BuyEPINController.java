@@ -19,6 +19,7 @@ import th.co.truemoney.product.api.manager.EPINConfigurationManager;
 import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.buy.BuyProductService;
+import th.co.truemoney.serviceinventory.buy.domain.BuyProduct;
 import th.co.truemoney.serviceinventory.buy.domain.BuyProductDraft;
 import th.co.truemoney.serviceinventory.buy.domain.BuyProductTransaction;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
@@ -63,15 +64,16 @@ public class BuyEPINController extends BaseController {
 			throw new InvalidParameterException("40001");
 		}
 		
-		BuyProductDraft transaction =  buyProductService.createAndVerifyBuyProductDraft("epin_c", recipientMobileNumber, epinAmount, accessToken);
-		
-		OTP otp = authService.requestOTP(transaction.getID(), accessToken);
+		BuyProductDraft draft =  buyProductService.createAndVerifyBuyProductDraft("epin_c", recipientMobileNumber, epinAmount, accessToken);
+        BuyProduct buyProduct = draft.getBuyProductInfo();
+        
+		OTP otp = authService.requestOTP(draft.getID(), accessToken);
 		
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("draftTransactionID", transaction.getID());
+		data.put("draftTransactionID", draft.getID());
 		data.put("mobileNumber", otp.getMobileNumber());
 		data.put("otpRefCode", otp.getReferenceCode());
-		data.put("amount", transaction.getAmount());
+		data.put("amount", buyProduct.getAmount());
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}

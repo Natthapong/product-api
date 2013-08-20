@@ -26,6 +26,7 @@ import th.co.truemoney.product.api.config.TestWebConfig;
 import th.co.truemoney.product.api.handler.TransferActivityDetailViewHandler;
 import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
+import th.co.truemoney.serviceinventory.buy.BuyProductService;
 import th.co.truemoney.serviceinventory.ewallet.ActivityService;
 import th.co.truemoney.serviceinventory.ewallet.DirectDebitSourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.FavoriteService;
@@ -63,6 +64,9 @@ public abstract class BaseTestController {
 
 	@Autowired
 	protected TopUpMobileService topUpMobileServiceMock;
+	
+	@Autowired
+	protected BuyProductService buyProductServiceMock;
 
 	@Autowired
 	protected ActivityService activityServiceMock;
@@ -86,6 +90,7 @@ public abstract class BaseTestController {
 		this.p2pTransferServiceMock = wac.getBean(P2PTransferService.class);
 		this.billPaymentServiceMock = wac.getBean(BillPaymentService.class);
 		this.topUpMobileServiceMock = wac.getBean(TopUpMobileService.class);
+		this.buyProductServiceMock = wac.getBean(BuyProductService.class);
 		this.activityServiceMock = wac.getBean(ActivityService.class);
 		this.favoriteServiceMock = wac.getBean(FavoriteService.class);
 		this.transactionAuthenServiceMock = wac.getBean(TransactionAuthenService.class);
@@ -99,6 +104,7 @@ public abstract class BaseTestController {
 		reset(this.p2pTransferServiceMock);
 		reset(this.billPaymentServiceMock);
 		reset(this.topUpMobileServiceMock);
+		reset(this.buyProductServiceMock);
 		reset(this.activityServiceMock);
 		reset(this.favoriteServiceMock);
    	    reset(this.transactionAuthenServiceMock);

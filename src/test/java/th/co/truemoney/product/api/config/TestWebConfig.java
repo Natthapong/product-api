@@ -11,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.bill.BillPaymentService;
+import th.co.truemoney.serviceinventory.buy.BuyProductService;
 import th.co.truemoney.serviceinventory.ewallet.ActivityService;
 import th.co.truemoney.serviceinventory.ewallet.DirectDebitSourceOfFundService;
 import th.co.truemoney.serviceinventory.ewallet.FavoriteService;
@@ -73,6 +74,10 @@ public class TestWebConfig extends BaseEnvConfig {
 
 	@Bean TransactionAuthenService transactionAuthenService() {
 		return Mockito.mock(TransactionAuthenService.class);
+	}
+	
+	@Bean BuyProductService buyProductService() {
+		return Mockito.mock(BuyProductService.class);
 	}
 	
 	@Bean @Qualifier("apiHost")

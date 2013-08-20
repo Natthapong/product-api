@@ -135,6 +135,16 @@
 
 "support.video.url" : "http://youtu.be/-IfbA6X8TXo",
 
+"buy.e-pin.verify.url" : "${apiHost}/v1/buy/e-pin/draft/verifyAndCreate/%@?",
+
+"buy.e-pin.confirm.url" : "${apiHost}/v1/buy/e-pin/confirm/%@/%@?",
+
+"buy.e-pin.status.url" : "${apiHost}/v1/buy/e-pin/%@/status/%@?",
+
+"buy.e-pin.details.url" : "${apiHost}/v1/buy/e-pin/%@/detail/%@?",
+
+"buy.e-pin.resend-otp.url" : "${apiHost}/v1/buy/e-pin/resend-otp/%@/%@?",
+
 <jsp:include page="../classes/epin_price_list.conf" />
 
 }

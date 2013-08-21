@@ -18,7 +18,7 @@ public class TestBuyEPINController extends BaseTestController {
 
 	private static final String fakeAccessToken = "111111111111";
 	
-	private static final String createBuyEpinURL = String.format("/buy/e-pin/draft-transaction/%s", fakeAccessToken);
+	private static final String createBuyEpinURL = String.format("/buy/e-pin/draft/verifyAndCreate/%s", fakeAccessToken);
 	
 	@Test
 	public void createBuyEpinSuccess() throws Exception {

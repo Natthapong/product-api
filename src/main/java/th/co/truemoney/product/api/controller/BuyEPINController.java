@@ -43,7 +43,7 @@ public class BuyEPINController extends BaseController {
 	@Autowired
 	private EPINConfigurationManager epinConfigurationManager;
 	
-	@RequestMapping(value = "/draft-transaction/{accessToken}", method = RequestMethod.POST)
+	@RequestMapping(value = "/draft/verifyAndCreate/{accessToken}", method = RequestMethod.POST)
 	@ResponseBody
 	public ProductResponse createBuyEpinDraft (
 			@PathVariable String accessToken,

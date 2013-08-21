@@ -123,8 +123,7 @@ public class BuyEPINController extends BaseController {
 	@ResponseBody
 	public ProductResponse getBuyEpinDetail(
 			@PathVariable String draftTransactionID, 
-			@PathVariable String accessToken,
-			@RequestBody Map<String, String> request) 
+			@PathVariable String accessToken) 
 		throws ServiceInventoryException {
 		
 		BuyProductTransaction transaction = buyProductService.getBuyProductResult(draftTransactionID, accessToken);
@@ -145,7 +144,7 @@ public class BuyEPINController extends BaseController {
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	
-	@RequestMapping(value = "resend-otp/{draftTransactionID}/{accessToken}", method = RequestMethod.GET)
+	@RequestMapping(value = "/resend-otp/{draftTransactionID}/{accessToken}", method = RequestMethod.GET)
 	@ResponseBody
 	public ProductResponse resendOtpInBuyProductService(
 			@PathVariable String draftTransactionID,

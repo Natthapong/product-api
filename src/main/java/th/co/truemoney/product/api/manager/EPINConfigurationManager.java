@@ -1,6 +1,6 @@
 package th.co.truemoney.product.api.manager;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,9 +14,9 @@ public class EPINConfigurationManager {
 	@Autowired
 	private Environment env;
 	
-	private List<String> priceList = null;
+	private List<Integer> priceList = null;
 	
-	public List<String> getEpinPrice() {
+	public List<Integer> getEpinPrice() {
 		if (priceList == null) {
 			String priceStr = env.getProperty("\"available.epin.prices\"");
 			if (priceStr == null) {
@@ -27,7 +27,12 @@ public class EPINConfigurationManager {
 								   .replaceAll("\\]", "")
 								   .replaceAll("\"", "")
 								   .replaceAll(" ", "");
-				priceList = Arrays.asList(priceStr.split(","));
+				
+				String[] prices = priceStr.split(",");
+				priceList = new ArrayList<Integer>();
+				for (String price : prices) {
+					priceList.add(Integer.parseInt(price));
+				}
 			}
 			
 		}

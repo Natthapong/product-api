@@ -1,6 +1,6 @@
 package th.co.truemoney.product.api.manager;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,14 +22,13 @@ public class TestEPINConfigurationManager {
 	@Autowired
 	private EPINConfigurationManager configuration;
 	
-	private static List<String> price = Arrays.asList("50", "90", "150", "300", "500", "1000");
+	private static List<Integer> priceList = Arrays.asList(50, 90, 150, 300, 500, 1000);
 		
 	@Test
 	public void testLoadConfigFile() {
-		List<String> config = configuration.getEpinPrice();
-		int i = 0;
-		for (String epinPrice: config) {
-			assertEquals(price.get(i++), epinPrice);
+		List<Integer> config = configuration.getEpinPrice();
+		for (Integer price: config) {
+			assertTrue(priceList.contains(price));
 		}
 	}
 

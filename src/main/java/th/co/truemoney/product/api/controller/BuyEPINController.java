@@ -50,13 +50,13 @@ public class BuyEPINController extends BaseController {
 			@RequestBody Map<String, String> request)
 		throws ServiceInventoryException {
 
-		List<String> priceList = epinConfigurationManager.getEpinPrice();
+		List<Integer> priceList = epinConfigurationManager.getEpinPrice();
 		
 		String recipientMobileNumber = request.get("recipientMobileNumber");
 		String amount = request.get("amount").replace(",", "");
 		BigDecimal epinAmount = new BigDecimal(amount);
 		
-		if(!priceList.contains(amount)) {
+		if(!priceList.contains(Float.valueOf(amount).intValue())) {
 			throw new InvalidParameterException("5000");
 		}
 		

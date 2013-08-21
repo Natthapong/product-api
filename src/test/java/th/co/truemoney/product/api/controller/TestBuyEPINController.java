@@ -13,11 +13,12 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import th.co.truemoney.serviceinventory.buy.domain.BuyProduct;
+import th.co.truemoney.serviceinventory.buy.domain.BuyProductConfirmationInfo;
 import th.co.truemoney.serviceinventory.buy.domain.BuyProductDraft;
-import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
-import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
-import th.co.truemoney.serviceinventory.topup.domain.TopUpMobileDraft;
 import th.co.truemoney.serviceinventory.buy.domain.BuyProductTransaction;
+import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
+import th.co.truemoney.serviceinventory.ewallet.domain.Transaction.Status;
+import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 public class TestBuyEPINController extends BaseTestController {
 
@@ -31,24 +32,22 @@ public class TestBuyEPINController extends BaseTestController {
 	
 	private static final String getBuyEpinURL = String.format("/buy/e-pin/%s/details/%s", "1111111111", fakeAccessToken);
 	
+	private static final String resendOtpURL = String.format("/buy/e-pin/resend-otp/%s/%s", "1111111111", fakeAccessToken);
+	
 	@Test
 	public void createBuyEpinSuccess() throws Exception {
 		
 		String amount = "50";
 		BigDecimal epinAmount = new BigDecimal(amount);
-		OTP otp = new OTP();
-		otp.setMobileNumber("0811111111");
-		otp.setReferenceCode("xxxx");
-		otp.setOtpString("123456");
 		
 		BuyProduct buyProduct = new BuyProduct("epin_c", epinAmount);
 		BuyProductDraft buyProductDraft = new BuyProductDraft("draftID", buyProduct);
 		buyProductDraft.setRecipientMobileNumber("0811111111");
 		
-		when(buyProductServiceMock.createAndVerifyBuyProductDraft(anyString(), anyString(), any(BigDecimal.class), anyString())).thenReturn(buyProductDraft);
+		when(buyProductServiceMock.createAndVerifyBuyProductDraft(anyString(), anyString(), any(BigDecimal.class), anyString())).thenReturn(createBuyProductDraftStub());
 		
 		when(transactionAuthenServiceMock.requestOTP(anyString(), anyString()))
-				.thenReturn(otp);
+				.thenReturn(createOtpStub());
 		
 		Map<String, Object> params = new HashMap<String, Object>();
         params.put("amount", amount);
@@ -147,6 +146,21 @@ public class TestBuyEPINController extends BaseTestController {
 	}
 	
 	@Test
+	public void integrationTestGetBuyEpinDetailsSuccess() throws Exception {
+
+		when(
+				buyProductServiceMock.getBuyProductResult(anyString(),
+						anyString())).thenReturn(
+								createBuyProductTransactionStub());
+
+		when(profileServiceMock.getEwalletBalance(anyString())).thenReturn(
+				new BigDecimal(5000));
+
+		this.verifySuccess(this.doGET(getBuyEpinURL)).andExpect(
+				jsonPath("data").exists());
+	}
+	
+	@Test
 	public void getBuyEpinDetailsFail() throws Exception {
 
 		when(
@@ -157,4 +171,64 @@ public class TestBuyEPINController extends BaseTestController {
 		this.verifyFailed(this.doGET(getBuyEpinURL));
 	}
 	
+	@Test
+	public void resendOTPSuccess() throws Exception {
+		when(transactionAuthenServiceMock.requestOTP(anyString(), anyString())).thenReturn(createOtpStub());
+		when(buyProductServiceMock.getBuyProductDraftDetails(anyString(), anyString())).thenReturn(createBuyProductDraftStub());
+		
+		
+		this.verifySuccess(this.doGET(resendOtpURL)).andExpect(
+				jsonPath("data").exists());
+	}
+	
+	private BuyProductDraft createBuyProductDraftStub() {
+		BuyProduct buyProduct = new BuyProduct("epin_c", new BigDecimal(50));
+		BuyProductDraft buyProductDraft = new BuyProductDraft("draftID", buyProduct);
+		buyProductDraft.setBuyProductInfo(buyProduct);
+		return buyProductDraft;
+	}
+	
+	private BuyProductTransaction createBuyProductTransactionStub() {
+
+		BuyProductTransaction transaction = new BuyProductTransaction();
+		transaction.setType("type");
+		transaction.setStatus(Status.SUCCESS);
+		transaction.setID("1111111111");
+		
+		BuyProductConfirmationInfo buyProductInfo = new BuyProductConfirmationInfo();
+		buyProductInfo.setTransactionID("1111111111");
+		buyProductInfo.setTransactionDate("25/04/13 10:03");
+		
+		transaction.setConfirmationInfo(buyProductInfo);
+		
+		BuyProductDraft draft = new BuyProductDraft();
+		draft.setTransactionID("1111111111");
+		draft.setRecipientMobileNumber("0891111111");
+		draft.setSelectedSourceOfFundType("EW");
+		
+		BuyProduct buyProduct = new BuyProduct();
+		buyProduct.setTarget("epin_c");
+		buyProduct.setAmount(new BigDecimal(50));
+		buyProduct.setID("1111111111");
+		
+		draft.setBuyProductInfo(buyProduct);
+		
+		draft.setType("type");
+		draft.setOtpReferenceCode("ASDF");
+		draft.setAccessTokenID(fakeAccessToken);
+		draft.setID("1111111111");
+		draft.setStatus(th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status.OTP_CONFIRMED);		
+		
+		transaction.setDraftTransaction(draft);
+		
+		return transaction;
+	}
+	
+	private OTP createOtpStub() {
+		OTP otp = new OTP();
+		otp.setMobileNumber("0811111111");
+		otp.setReferenceCode("xxxx");
+		otp.setOtpString("123456");
+		return otp;
+	}
 }

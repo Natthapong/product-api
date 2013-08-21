@@ -30,6 +30,8 @@ import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 @RequestMapping(value = "/buy/e-pin")
 public class BuyEPINController extends BaseController {
 	
+	private static final String PRODUCT_TARGET = "ecash_c";
+
 	@Autowired
 	private BuyProductService buyProductService;
 	
@@ -65,7 +67,7 @@ public class BuyEPINController extends BaseController {
 			}
 		}
 		
-		BuyProductDraft draft =  buyProductService.createAndVerifyBuyProductDraft("epin_c", recipientMobileNumber, epinAmount, accessToken);
+		BuyProductDraft draft =  buyProductService.createAndVerifyBuyProductDraft(PRODUCT_TARGET, recipientMobileNumber, epinAmount, accessToken);
         BuyProduct buyProduct = draft.getBuyProductInfo();
         
 		OTP otp = authService.requestOTP(draft.getID(), accessToken);

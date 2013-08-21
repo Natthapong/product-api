@@ -23,7 +23,6 @@ import th.co.truemoney.serviceinventory.buy.domain.BuyProduct;
 import th.co.truemoney.serviceinventory.buy.domain.BuyProductDraft;
 import th.co.truemoney.serviceinventory.buy.domain.BuyProductTransaction;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
-import th.co.truemoney.serviceinventory.ewallet.domain.DraftTransaction.Status;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
@@ -60,8 +59,10 @@ public class BuyEPINController extends BaseController {
 			throw new InvalidParameterException("5000");
 		}
 		
-		if(!ValidateUtil.checkMobileNumber(recipientMobileNumber)){
-			throw new InvalidParameterException("40001");
+		if(!ValidateUtil.isEmpty(recipientMobileNumber)) {
+			if(!ValidateUtil.checkMobileNumber(recipientMobileNumber)){
+				throw new InvalidParameterException("40001");
+			}
 		}
 		
 		BuyProductDraft draft =  buyProductService.createAndVerifyBuyProductDraft("epin_c", recipientMobileNumber, epinAmount, accessToken);
@@ -91,7 +92,9 @@ public class BuyEPINController extends BaseController {
 		otp.setOtpString(request.get("otpString"));
 		otp.setReferenceCode(request.get("otpRefCode"));
 		
-		Status status = authService.verifyOTP(draftTransactionID, otp, accessToken);
+		BuyProductDraft.Status status = authService.verifyOTP(draftTransactionID, otp, accessToken);
+		
+		buyProductService.performBuyProduct(draftTransactionID, accessToken);
 		
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("status", status.getStatus());
@@ -109,8 +112,47 @@ public class BuyEPINController extends BaseController {
 		BuyProductTransaction.Status status = buyProductService.getBuyProductStatus(draftTransactionID, accessToken); 
 		
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("transferStatus", status.getStatus());
+		data.put("status", status.getStatus());
 
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
+	
+	@RequestMapping(value = "/{draftTransactionID}/details/{accessToken}", method = RequestMethod.GET)
+	@ResponseBody
+	public ProductResponse getBuyEpinDetail(
+			@PathVariable String draftTransactionID, 
+			@PathVariable String accessToken,
+			@RequestBody Map<String, String> request) 
+		throws ServiceInventoryException {
+		
+		BuyProductTransaction transaction = buyProductService.getBuyProductResult(draftTransactionID, accessToken);
+		BuyProduct buyProductInfo = transaction.getDraftTransaction().getBuyProductInfo();
+		
+		String txnID = transaction.getConfirmationInfo().getTransactionID();
+		String recipientMobileNumber = transaction.getDraftTransaction().getRecipientMobileNumber();
+		BigDecimal epinAmount = transaction.getDraftTransaction().getBuyProductInfo().getAmount();
+		BigDecimal currentBalance = this.profileService.getEwalletBalance(accessToken);
+		String txnDate = transaction.getConfirmationInfo().getTransactionDate();
+		
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("transactionID", txnID);
+		data.put("recipientMobileNumber", recipientMobileNumber);
+		data.put("amount", epinAmount);
+		data.put("currentEwalletBalance", currentBalance);
+		data.put("transactionDate", txnDate);
+		
+		return this.responseFactory.createSuccessProductResonse(data);
+	}
+	
+	@RequestMapping(value = "resend-otp/{draftTransactionID}/{accessToken}", method = RequestMethod.GET)
+	@ResponseBody
+	public ProductResponse resendOtpInBuyProductService(
+			@PathVariable String draftTransactionID,
+			@PathVariable String accessToken,
+			@RequestBody Map<String, String> request) 
+		throws ServiceInventoryException {
+		
+		return null;
+	}
+	
 }

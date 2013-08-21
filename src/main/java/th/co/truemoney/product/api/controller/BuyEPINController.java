@@ -92,9 +92,9 @@ public class BuyEPINController extends BaseController {
 		otp.setOtpString(request.get("otpString"));
 		otp.setReferenceCode(request.get("otpRefCode"));
 		
-		BuyProductDraft.Status status = authService.verifyOTP(draftTransactionID, otp, accessToken);
+		authService.verifyOTP(draftTransactionID, otp, accessToken);
 		
-		buyProductService.performBuyProduct(draftTransactionID, accessToken);
+		BuyProductTransaction.Status status = buyProductService.performBuyProduct(draftTransactionID, accessToken);
 		
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("status", status.getStatus());
@@ -126,7 +126,6 @@ public class BuyEPINController extends BaseController {
 		throws ServiceInventoryException {
 		
 		BuyProductTransaction transaction = buyProductService.getBuyProductResult(draftTransactionID, accessToken);
-		BuyProduct buyProductInfo = transaction.getDraftTransaction().getBuyProductInfo();
 		
 		String txnID = transaction.getConfirmationInfo().getTransactionID();
 		String recipientMobileNumber = transaction.getDraftTransaction().getRecipientMobileNumber();
@@ -148,11 +147,19 @@ public class BuyEPINController extends BaseController {
 	@ResponseBody
 	public ProductResponse resendOtpInBuyProductService(
 			@PathVariable String draftTransactionID,
-			@PathVariable String accessToken,
-			@RequestBody Map<String, String> request) 
+			@PathVariable String accessToken) 
 		throws ServiceInventoryException {
 		
-		return null;
+		OTP otp = authService.requestOTP(draftTransactionID, accessToken);
+		BuyProductDraft draft = buyProductService.getBuyProductDraftDetails(draftTransactionID, accessToken);
+		
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("draftTransactionID", draftTransactionID);
+		data.put("mobileNumber", otp.getMobileNumber());
+		data.put("otpRefCode", otp.getReferenceCode());
+		data.put("amount", draft.getBuyProductInfo().getAmount());
+
+		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	
 }

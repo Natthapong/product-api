@@ -29,6 +29,8 @@ public class TestBuyEPINController extends BaseTestController {
 	
 	private static final String checkStatusURL = String.format("/buy/e-pin/%s/status/%s", "1111111111", fakeAccessToken);
 	
+	private static final String getBuyEpinURL = String.format("/buy/e-pin/%s/details/%s", "1111111111", fakeAccessToken);
+	
 	@Test
 	public void createBuyEpinSuccess() throws Exception {
 		
@@ -74,16 +76,22 @@ public class TestBuyEPINController extends BaseTestController {
 		when(
 				transactionAuthenServiceMock.verifyOTP(anyString(),
 						any(OTP.class), anyString())).thenReturn(
-				TopUpMobileDraft.Status.OTP_CONFIRMED);
+				BuyProductDraft.Status.OTP_CONFIRMED);
 
+		when(buyProductServiceMock.performBuyProduct(anyString(),anyString()))
+			.thenReturn(BuyProductTransaction.Status.PROCESSING);
+		
+		
 		Map<String, Object> reqBody = new HashMap<String, Object>();
 		reqBody.put("otpString", "123456");
 		reqBody.put("otpRefCode", "QWE");
+		reqBody.put("mobileNumber", "08xxxxxxxx");
 
 		this.verifySuccess(this.doPUT(confirmOTPURL, reqBody))
 				.andExpect(jsonPath("data").exists())
-				.andExpect(jsonPath("$..status").value("CONFIRMED"));
+				.andExpect(jsonPath("$..status").value("PROCESSING"));
 
+		Mockito.verify(transactionAuthenServiceMock).verifyOTP(anyString(),	any(OTP.class), anyString());
 		Mockito.verify(buyProductServiceMock).performBuyProduct(anyString(), anyString());
 	}
 	
@@ -137,4 +145,16 @@ public class TestBuyEPINController extends BaseTestController {
 		this.verifyFailed(this.doGET(checkStatusURL, reqBody));
 
 	}
+	
+	@Test
+	public void getBuyEpinDetailsFail() throws Exception {
+
+		when(
+				buyProductServiceMock.getBuyProductResult(anyString(),
+						anyString())).thenThrow(
+				new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
+
+		this.verifyFailed(this.doGET(getBuyEpinURL));
+	}
+	
 }

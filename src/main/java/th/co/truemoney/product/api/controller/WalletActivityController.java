@@ -169,10 +169,10 @@ public class WalletActivityController extends BaseController {
 	@ResponseBody
 	public ProductResponse getActivityDetails(@PathVariable String reportID, @PathVariable String accessTokenID) {
 		
-		ActivityDetail activity = activityService.getActivityDetail(new Long(reportID), accessTokenID);
+		ActivityDetail activityDetail = activityService.getActivityDetail(new Long(reportID), accessTokenID);
 		
-		ActivityDetailViewHandler handler = getActivityDetailHandler(activity.getType());
-		handler.handle(activity);
+		ActivityDetailViewHandler handler = getActivityDetailHandler(activityDetail.getType());
+		handler.handle(activityDetail);
 		
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("section1", handler.buildSection1());
@@ -184,11 +184,14 @@ public class WalletActivityController extends BaseController {
 			data.put("section4", handler.buildSection4());
 		}
 		
-		TYPE t = WalletActivity.getType(Utils.removeSuffix(activity.getType()));
+		TYPE t = WalletActivity.getType(Utils.removeSuffix(activityDetail.getType()));
 		if (t ==  TYPE.TRANSFER) {
-			data.put("personalMessage", transferActivityDetailViewHandler.buildPersonalMessage(activity.getPersonalMessage()) );
+			data.put("personalMessage", transferActivityDetailViewHandler.buildPersonalMessage(activityDetail.getPersonalMessage()) );
 		}
-		 
+		
+		data.put("isFavoritable", activityDetail.isFavoritable());
+		data.put("isFavorited", activityDetail.isFavorited());
+		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	

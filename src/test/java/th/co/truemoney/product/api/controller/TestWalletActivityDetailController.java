@@ -75,8 +75,6 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), fakeAccessTokenID);
 		Map<String,Object> respData = resp.getData();
 		assertNull(respData.get("personalMessage"));
-		
-		
 	}	
 	
 	@Test
@@ -97,12 +95,13 @@ public class TestWalletActivityDetailController extends
 
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
-
+		
+		assertTrue(data.containsKey("isFavoritable"));
+		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/tmvh@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=หมายเลขโทรศัพท์, titleEn=mobile number, value=089-765-4333}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=Transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=Transaction ID, value=1234567890}}}", data.get("section4").toString());
-		
 	}
 	
 	@Test
@@ -124,6 +123,8 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertTrue(data.containsKey("isFavoritable"));
+		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/trmv@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=หมายเลขโทรศัพท์, titleEn=mobile number, value=089-765-4333}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
@@ -149,7 +150,9 @@ public class TestWalletActivityDetailController extends
 
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(4L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
-
+		
+		assertTrue(data.containsKey("isFavoritable"));
+		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/ti@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
 		assertEquals("{column1={cell2={titleTh=เลขที่ใบแจ้งค่าบริการ, titleEn=invoice number, value=923178945372901}, cell1={titleTh=รหัสลูกค้า/หมายเลขโทรศัพท์, titleEn=Telephone Number/Customer Number, value=864895245}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
@@ -174,7 +177,9 @@ public class TestWalletActivityDetailController extends
 
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(4L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
-
+		
+		assertTrue(data.containsKey("isFavoritable"));
+		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/tmvh@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=รหัสลูกค้า/หมายเลขโทรศัพท์, titleEn=Mobile Number, value=089-123-4567}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
@@ -200,6 +205,8 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(4L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertTrue(data.containsKey("isFavoritable"));
+		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/tr@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=เลขที่อ้างอิง 1/หมายเลขโทรศัพท์, titleEn=Telephone Number, value=02-000-0000}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
@@ -225,6 +232,8 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(4L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertTrue(data.containsKey("isFavoritable"));
+		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/ti@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=รหัสลูกค้า/หมายเลขโทรศัพท์, titleEn=Telephone Number/Customer Number, value=864895245}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
@@ -250,6 +259,8 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(4L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertTrue(data.containsKey("isFavoritable"));
+		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/ti@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=รหัสลูกค้า/หมายเลขโทรศัพท์, titleEn=Telephone Number/Customer Number, value=864895245}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
@@ -273,6 +284,8 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(5L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertTrue(data.containsKey("isFavoritable"));
+		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{titleTh=คืนค่าธรรมเนียม, titleEn=Fee refund}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=ทำรายการ, titleEn=Activity, value=เติมเงินด้วยบัญชีธนาคาร}}}", data.get("section2").toString());
 		assertEquals("{column1={cell1={titleTh=ยอดเงินเข้า Wallet, titleEn=Total amount, value=23,455.50}}}", data.get("section3").toString());
@@ -299,6 +312,8 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertTrue(data.containsKey("isFavoritable"));
+		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{logoURL=http://localhost:8080/images/logo_bank/ktb@2x.png, titleTh=บัญชีธนาคาร, titleEn=Bank account}", data.get("section1").toString());
 		assertEquals("{column1={cell2={titleTh=หมายเลขบัญชี, titleEn=Account number, value=***7412}, cell1={titleTh=ธนาคาร, titleEn=Bank, value=ธนาคารกรุงไทย}}}", data.get("section2").toString());
 		assertEquals("{column1={cell1={titleTh=ยอดเงินเข้า Wallet, titleEn=Total amount, value=24,690.00}}}", data.get("section3").toString());
@@ -326,11 +341,12 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertTrue(data.containsKey("isFavoritable"));
+		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{titleTh=บัตรเงินสดทรูมันนี่, titleEn=True Money Cash Card}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=รหัสบัตรเงินสด, titleEn=Cash Card PIN, value=12345678901234}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=ยอดเงินเข้า Wallet, titleEn=Amount, value=139.50}, cell1={titleTh=จำนวนเงิน, titleEn=Total amount, value=150.00}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=Total fee, value=10.50}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=Transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=Transaction ID, value=1234567890}}}", data.get("section4").toString());
-	
 	}
 	
 	@Test
@@ -353,12 +369,13 @@ public class TestWalletActivityDetailController extends
 
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
-
+		
+		assertTrue(data.containsKey("isFavoritable"));
+		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{titleTh=ตู้ทรูมันนี่, titleEn=True Money Kiosk}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=ยอดเงินเข้า Wallet, titleEn=Total amount, value=2,000.00}}}", data.get("section2").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=Transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=Transaction ID, value=1234567890}}}", data.get("section3").toString());
 		assertFalse(data.containsKey("section4"));
-		
 	}
 
 	@Test
@@ -381,12 +398,13 @@ public class TestWalletActivityDetailController extends
 
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
-
+		
+		assertTrue(data.containsKey("isFavoritable"));
+		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{titleTh=ซีพี เฟรชมาร์ท, titleEn=CP Fresh Mart}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=หมายเลขสาขา, titleEn=Store number, value=12345678901234}}}", data.get("section2").toString());
 		assertEquals("{column1={cell1={titleTh=ยอดเงินเข้า Wallet, titleEn=Total amount, value=2,000.00}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=Transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=Transaction ID, value=1234567890}}}", data.get("section4").toString());
-		
 	}
 	
 	@Test
@@ -409,12 +427,13 @@ public class TestWalletActivityDetailController extends
 
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
-
+		
+		assertTrue(data.containsKey("isFavoritable"));
+		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{titleTh=จุดบริการทรูมันนี่, titleEn=True Money Express}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=หมายเลขร้านค้า, titleEn=Store number, value=12345678901234}}}", data.get("section2").toString());
 		assertEquals("{column1={cell1={titleTh=ยอดเงินเข้า Wallet, titleEn=Total amount, value=2,000.00}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=Transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=Transaction ID, value=1234567890}}}", data.get("section4").toString());
-		
 	}
 	
 	@Test
@@ -437,12 +456,13 @@ public class TestWalletActivityDetailController extends
 
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
-
+		
+		assertTrue(data.containsKey("isFavoritable"));
+		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{titleTh=เอทีเอ็ม, titleEn=ATM}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=ธนาคาร, titleEn=Bank, value=null}}}", data.get("section2").toString());
 		assertEquals("{column1={cell1={titleTh=ยอดเงินเข้า Wallet, titleEn=Total amount, value=2,000.00}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=Transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=Transaction ID, value=1234567890}}}", data.get("section4").toString());
-		
 	}
 	
 	@Test
@@ -465,12 +485,13 @@ public class TestWalletActivityDetailController extends
 
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
-
+		
+		assertTrue(data.containsKey("isFavoritable"));
+		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{titleTh=ไอแบงก์กิ้ง, titleEn=iBanking}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=ธนาคาร, titleEn=Bank, value=null}}}", data.get("section2").toString());
 		assertEquals("{column1={cell1={titleTh=ยอดเงินเข้า Wallet, titleEn=Total amount, value=2,000.00}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=Transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=Transaction ID, value=1234567890}}}", data.get("section4").toString());
-		
 	}
 	
 	@Test
@@ -494,11 +515,12 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 
+		assertTrue(data.containsKey("isFavoritable"));
+		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{titleTh=ทรูช้อป, titleEn=True Shop}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=ยอดเงินเข้า Wallet, titleEn=Total amount, value=2,000.00}}}", data.get("section2").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=Transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=Transaction ID, value=1234567890}}}", data.get("section3").toString());
 		assertFalse(data.containsKey("section4"));
-		
 	}
 	
 	@Test
@@ -518,7 +540,9 @@ public class TestWalletActivityDetailController extends
 
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(7L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
-
+		
+		assertTrue(data.containsKey("isFavoritable"));
+		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{titleTh=ส่งเงิน, titleEn=debtor}", data.get("section1").toString());
 		assertEquals("{column1={cell2={titleTh=ชื่อผู้รับ, titleEn=account owner, value=ทวี คุณบิดา}, cell1={titleTh=หมายเลขผู้รับ, titleEn=account number, value=085-382-8482}}}", data.get("section2").toString());
 		assertEquals("{column1={cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}}", data.get("section3").toString());
@@ -543,26 +567,11 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(7L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertTrue(data.containsKey("isFavoritable"));
+		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{titleTh=รับเงิน, titleEn=creditor}", data.get("section1").toString());
 		assertEquals("{column1={cell2={titleTh=ชื่อผู้ส่ง, titleEn=account owner, value=ทวี คุณบิดา}, cell1={titleTh=หมายเลขผู้ส่ง, titleEn=account number, value=085-382-8482}}}", data.get("section2").toString());
 		assertEquals("{column1={cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=Transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=Transaction ID, value=1234567890}}}", data.get("section4").toString());
 	}
-	/*
-	DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-	
-	Long CHANNEL_ATM = ServiceChannel.CHANNEL_ATM.getId().longValue();
-	
-	public void test() throws Exception {
-		when(
-			this.activityServiceMock.getActivities(fakeAccessTokenID)
-		).thenReturn(
-			Arrays.asList(
-				new Activity(1L, CHANNEL_ATM, "add_money", "debit", "ref1", formatter.parse("2013/02/10 15:35")),
-				new Activity(2L, CHANNEL_ATM, "add_money", "cash", "ref1", formatter.parse("2013/02/10 15:35")),
-				new Activity(3L, CHANNEL_ATM, "add_money", "tmcc", "ref1", formatter.parse("2013/02/10 15:35"))
-			)
-		);
-	}
-	*/
 }

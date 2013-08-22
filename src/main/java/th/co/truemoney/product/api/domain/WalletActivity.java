@@ -66,11 +66,12 @@ public class WalletActivity {
         ADD_MONEY, // add money to wallet
         TRANSFER, // transfer money to/from other wallet
         BILLPAY, // bill payment using wallet
-        BONUS; // kick back money to wallet
+        BONUS, // kick back money to wallet
+        UNKNOWN;
     }
 
     public static WalletActivity.TYPE getType(String s) {
-        if (TYPE.TOPUP_MOBILE.name().equalsIgnoreCase(s)) {
+    	if (TYPE.TOPUP_MOBILE.name().equalsIgnoreCase(s)) {
             return TYPE.TOPUP_MOBILE;
         } else if (TYPE.ADD_MONEY.name().equalsIgnoreCase(s)) {
             return TYPE.ADD_MONEY;
@@ -81,7 +82,7 @@ public class WalletActivity {
         } else if (TYPE.BONUS.name().equalsIgnoreCase(s)) {
             return TYPE.BONUS;
         }
-        throw new IllegalArgumentException("No Enum specified for '" + s + "'");
+        return TYPE.UNKNOWN;
     }
 
     public static String getTypeInEnglish(TYPE type) {

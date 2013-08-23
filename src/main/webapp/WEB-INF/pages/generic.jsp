@@ -141,7 +141,7 @@
 
 "buy.e-pin.status.url" : "${apiHost}/v1/buy/e-pin/%@/status/%@?",
 
-"buy.e-pin.details.url" : "${apiHost}/v1/buy/e-pin/%@/detail/%@?",
+"buy.e-pin.details.url" : "${apiHost}/v1/buy/e-pin/%@/details/%@?",
 
 "buy.e-pin.resend-otp.url" : "${apiHost}/v1/buy/e-pin/resend-otp/%@/%@?",
 

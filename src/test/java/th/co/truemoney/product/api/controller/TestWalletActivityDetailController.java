@@ -592,4 +592,34 @@ public class TestWalletActivityDetailController extends
 		assertEquals("{column1={cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=Transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=Transaction ID, value=1234567890}}}", data.get("section4").toString());
 	}
+	
+	@Test
+	public void buyEpinActivityDetails() throws Exception {
+		Date txnDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2013/02/10 15:35");
+
+		ActivityDetail detail = new ActivityDetail();
+		detail.setType(TYPE.BUY_CASHCARD.name());
+		detail.setAction("ecash");
+		detail.setRef1("0895185926");
+		detail.setRef2("123456789012345678"); //epin serial number
+		detail.setAdditionalData("12345678901234"); // epin code
+		detail.setAmount(new BigDecimal(139.50));
+		detail.setServiceFee(new BigDecimal(0));
+		detail.setTransactionDate(txnDate);
+		detail.setTransactionID("1234567890");
+		detail.setChannel(new Long("40"));
+
+		when(this.activityServiceMock.getActivityDetail(6L, fakeAccessTokenID)).thenReturn(detail);
+
+		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
+		Map<String, Object> data = resp.getData();
+		
+		assertEquals("buy_cashcard", data.get("serviceType"));
+		assertTrue(data.containsKey("isFavoritable"));
+		assertTrue(data.containsKey("isFavorited"));
+		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/ecash@2x.png, titleTh=ซื้อบัตรเงินสดทรูมันนี่, titleEn=True Money Cash Card}", data.get("section1").toString());
+		assertEquals("{column1={cell2={titleTh=รหัสเติมเงิน, titleEn=cash card code, value=12345678901234}, cell1={titleTh=ผู้รับบัตรเงินสด, titleEn=recipient mobile number, value=089-518-5926}}}", data.get("section2").toString());
+		assertEquals("{column1={cell2={titleTh=เลขที่บัตรเงินสดทรูมันนี่, titleEn=cash card serial number, value=123456789012345678}, cell1={titleTh=ยอดชำระ, titleEn=amount, value=139.50}}}", data.get("section3").toString());
+		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=Transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=Transaction ID, value=1234567890}}}", data.get("section4").toString());
+	}
 }

@@ -22,12 +22,14 @@ public class WalletActivity {
         representThaiText.put(TYPE.TRANSFER, "โอนเงิน");
         representThaiText.put(TYPE.BILLPAY, "จ่ายบิล");
         representThaiText.put(TYPE.BONUS, "โปรโมชั่น");
+        representThaiText.put(TYPE.BUY_CASHCARD, "ซื้อบัตรเงินสดทรูมันนี่");
 
         representEnglishText.put(TYPE.TOPUP_MOBILE, "Topup Mobile");
         representEnglishText.put(TYPE.ADD_MONEY, "Add Money");
         representEnglishText.put(TYPE.TRANSFER, "Transfer");
         representEnglishText.put(TYPE.BILLPAY, "Bill Payment");
         representEnglishText.put(TYPE.BONUS, "Promotion");
+        representEnglishText.put(TYPE.BUY_CASHCARD, "True Money Cash Card");
 
         actionList.put("promo_direct_debit", "เติมเงินด้วยบัญชีธนาคาร");
         actionList.put("promo_bay_atmtopup", "เติมเงินด้วยเอทีเอ็ม");
@@ -50,6 +52,7 @@ public class WalletActivity {
         actionList.put("debit", "บัญชีธนาคาร");
         actionList.put("cash", "เงินสด");
         actionList.put("tmcc", "บัตรเงินสดทรูมันนี่");
+        actionList.put("ecash", "บัตรเงินสดทรูมันนี่");
         
         serviceCodeList.put("rft", 10);
         serviceCodeList.put("tmvh", 9);
@@ -67,6 +70,7 @@ public class WalletActivity {
         TRANSFER, // transfer money to/from other wallet
         BILLPAY, // bill payment using wallet
         BONUS, // kick back money to wallet
+        BUY_CASHCARD,
         UNKNOWN;
     }
 
@@ -81,6 +85,8 @@ public class WalletActivity {
             return TYPE.BILLPAY;
         } else if (TYPE.BONUS.name().equalsIgnoreCase(s)) {
             return TYPE.BONUS;
+        } else if (TYPE.BUY_CASHCARD.name().equalsIgnoreCase(s)) {
+        	return TYPE.BUY_CASHCARD;
         }
         return TYPE.UNKNOWN;
     }

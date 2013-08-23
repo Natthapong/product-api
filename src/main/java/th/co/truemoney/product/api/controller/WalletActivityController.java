@@ -22,6 +22,7 @@ import th.co.truemoney.product.api.handler.ActivityDetailViewHandler;
 import th.co.truemoney.product.api.handler.AddMoneyActivityDetailViewHandler;
 import th.co.truemoney.product.api.handler.BillPayActivityDetailViewHandler;
 import th.co.truemoney.product.api.handler.BonusActivityDetailViewHandler;
+import th.co.truemoney.product.api.handler.BuyCashCardActivityDetailViewHandler;
 import th.co.truemoney.product.api.handler.TopupMobileActivityDetailViewHandler;
 import th.co.truemoney.product.api.handler.TransferActivityDetailViewHandler;
 import th.co.truemoney.product.api.manager.BillConfigurationManager;
@@ -189,8 +190,8 @@ public class WalletActivityController extends BaseController {
 			data.put("personalMessage", transferActivityDetailViewHandler.buildPersonalMessage(activityDetail.getPersonalMessage()) );
 		}
 		data.put("serviceType", activityDetail.getType().toLowerCase());
-		data.put("isFavoritable", activityDetail.isFavoritable());
-		data.put("isFavorited", activityDetail.isFavorited());
+		data.put("isFavoritable", activityDetail.isFavoritable() ? "yes" : "no");
+		data.put("isFavorited", activityDetail.isFavorited() ? "yes" : "no");
 		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
@@ -205,6 +206,8 @@ public class WalletActivityController extends BaseController {
 	private BillPayActivityDetailViewHandler billPayActivityDetailViewHandler;
 	@Autowired
 	private BonusActivityDetailViewHandler bonusActivityDetailViewHandler;
+	@Autowired
+	private BuyCashCardActivityDetailViewHandler buyCashCardActivityDetailViewHandler;
 	
 	
 	private ActivityDetailViewHandler getActivityDetailHandler(String type) {
@@ -220,6 +223,8 @@ public class WalletActivityController extends BaseController {
 				return billPayActivityDetailViewHandler;
 			case BONUS:
 				return bonusActivityDetailViewHandler;
+			case BUY_CASHCARD:
+				return buyCashCardActivityDetailViewHandler;
 			default:
 				throw new IllegalArgumentException("No support handler for '" + type + "' activity type");
 		}

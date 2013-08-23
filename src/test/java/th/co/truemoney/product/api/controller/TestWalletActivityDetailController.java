@@ -96,6 +96,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertEquals("topup_mobile", data.get("serviceType"));
 		assertTrue(data.containsKey("isFavoritable"));
 		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/tmvh@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
@@ -123,6 +124,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(3L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertEquals("topup_mobile", data.get("serviceType"));
 		assertTrue(data.containsKey("isFavoritable"));
 		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/trmv@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
@@ -151,6 +153,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(4L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertEquals("billpay", data.get("serviceType"));
 		assertTrue(data.containsKey("isFavoritable"));
 		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/ti@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
@@ -178,6 +181,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(4L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertEquals("billpay", data.get("serviceType"));
 		assertTrue(data.containsKey("isFavoritable"));
 		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/tmvh@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
@@ -205,6 +209,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(4L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertEquals("billpay", data.get("serviceType"));
 		assertTrue(data.containsKey("isFavoritable"));
 		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/tr@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
@@ -232,6 +237,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(4L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertEquals("billpay", data.get("serviceType"));
 		assertTrue(data.containsKey("isFavoritable"));
 		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/ti@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
@@ -259,6 +265,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(4L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertEquals("billpay", data.get("serviceType"));
 		assertTrue(data.containsKey("isFavoritable"));
 		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/ti@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
@@ -284,6 +291,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(5L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertEquals("bonus", data.get("serviceType"));
 		assertTrue(data.containsKey("isFavoritable"));
 		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{titleTh=คืนค่าธรรมเนียม, titleEn=Fee refund}", data.get("section1").toString());
@@ -312,6 +320,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertEquals("add_money", data.get("serviceType"));
 		assertTrue(data.containsKey("isFavoritable"));
 		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{logoURL=http://localhost:8080/images/logo_bank/ktb@2x.png, titleTh=บัญชีธนาคาร, titleEn=Bank account}", data.get("section1").toString());
@@ -341,6 +350,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertEquals("add_money", data.get("serviceType"));
 		assertTrue(data.containsKey("isFavoritable"));
 		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{titleTh=บัตรเงินสดทรูมันนี่, titleEn=True Money Cash Card}", data.get("section1").toString());
@@ -370,6 +380,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertEquals("add_money", data.get("serviceType"));
 		assertTrue(data.containsKey("isFavoritable"));
 		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{titleTh=ตู้ทรูมันนี่, titleEn=True Money Kiosk}", data.get("section1").toString());
@@ -399,6 +410,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertEquals("add_money", data.get("serviceType"));
 		assertTrue(data.containsKey("isFavoritable"));
 		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{titleTh=ซีพี เฟรชมาร์ท, titleEn=CP Fresh Mart}", data.get("section1").toString());
@@ -428,6 +440,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertEquals("add_money", data.get("serviceType"));
 		assertTrue(data.containsKey("isFavoritable"));
 		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{titleTh=จุดบริการทรูมันนี่, titleEn=True Money Express}", data.get("section1").toString());
@@ -457,6 +470,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertEquals("add_money", data.get("serviceType"));
 		assertTrue(data.containsKey("isFavoritable"));
 		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{titleTh=เอทีเอ็ม, titleEn=ATM}", data.get("section1").toString());
@@ -486,6 +500,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertEquals("add_money", data.get("serviceType"));
 		assertTrue(data.containsKey("isFavoritable"));
 		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{titleTh=ไอแบงก์กิ้ง, titleEn=iBanking}", data.get("section1").toString());
@@ -514,7 +529,8 @@ public class TestWalletActivityDetailController extends
 
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(6L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
-
+		
+		assertEquals("add_money", data.get("serviceType"));
 		assertTrue(data.containsKey("isFavoritable"));
 		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{titleTh=ทรูช้อป, titleEn=True Shop}", data.get("section1").toString());
@@ -541,6 +557,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(7L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertEquals("transfer", data.get("serviceType"));
 		assertTrue(data.containsKey("isFavoritable"));
 		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{titleTh=ส่งเงิน, titleEn=debtor}", data.get("section1").toString());
@@ -567,6 +584,7 @@ public class TestWalletActivityDetailController extends
 		ProductResponse resp = controller.getActivityDetails(String.valueOf(7L), fakeAccessTokenID);
 		Map<String, Object> data = resp.getData();
 		
+		assertEquals("transfer", data.get("serviceType"));
 		assertTrue(data.containsKey("isFavoritable"));
 		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{titleTh=รับเงิน, titleEn=creditor}", data.get("section1").toString());

@@ -188,7 +188,7 @@ public class WalletActivityController extends BaseController {
 		if (t ==  TYPE.TRANSFER) {
 			data.put("personalMessage", transferActivityDetailViewHandler.buildPersonalMessage(activityDetail.getPersonalMessage()) );
 		}
-		
+		data.put("serviceType", activityDetail.getType().toLowerCase());
 		data.put("isFavoritable", activityDetail.isFavoritable());
 		data.put("isFavorited", activityDetail.isFavorited());
 		

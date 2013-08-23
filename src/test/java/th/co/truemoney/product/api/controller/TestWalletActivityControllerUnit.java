@@ -80,6 +80,7 @@ public class TestWalletActivityControllerUnit {
                 { new Activity(4L, "billpay", df.parse("10-03-2013"), "bwc_c", "222222222", 40L), new ActivityViewItem(String.valueOf(4L), "จ่ายบิล", "10/03/13", "เอ็ม พาวเวอร์", "0.00", "222222222") },
                 { new Activity(4L, "billpay", df.parse("10-03-2013"), "uob_c", "222222222", 40L), new ActivityViewItem(String.valueOf(4L), "จ่ายบิล", "10/03/13", "บัตรเครดิตธนาคารยูโอบี", "0.00", "222222222") },
                 { new Activity(4L, "billpay", df.parse("10-03-2013"), "fc_c", "222222222", 40L), new ActivityViewItem(String.valueOf(4L), "จ่ายบิล", "10/03/13", "กรุงศรี เฟิร์สชอยส์", "0.00", "222222222") },
+                { new Activity(5L, "buy_cashcard", df.parse("10-03-2013"), "ecash_c", "0895667655", 40L), new ActivityViewItem(String.valueOf(5L), "ซื้อบัตรเงินสดทรูมันนี่", "10/03/13", "บัตรเงินสดทรูมันนี่", "0.00", "089-566-7655") }
         });
     }
 

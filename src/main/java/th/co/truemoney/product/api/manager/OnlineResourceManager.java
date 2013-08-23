@@ -35,6 +35,8 @@ public class OnlineResourceManager {
     		// transfer_creditor
     		String action = Utils.removeSuffix(lower(activity.getAction()));
     		type = String.format("%s_%s", type, action);
+    	} else if (TYPE.BUY_CASHCARD == WalletActivity.getType(type)) {
+    		type = "buy";
     	}
     	
         return mHost + LOGO_ACTIVITY_TYPE_URL + type + ".png";

@@ -147,7 +147,10 @@ public class WalletActivityController extends BaseController {
 	}
 	
 	private String getRef1StringTh(TYPE t, String action, String ref1) {
-		if (t == TYPE.TOPUP_MOBILE || t == TYPE.TRANSFER || t == TYPE.BILLPAY) {
+		if (t == TYPE.TOPUP_MOBILE 
+				|| t == TYPE.TRANSFER 
+				|| t == TYPE.BILLPAY 
+				|| t == TYPE.BUY_CASHCARD) {
 			return Utils.formatTelephoneNumber(ref1);
 		} else if (t == TYPE.ADD_MONEY && "debit".equals(action)) {
 			return BankUtil.getThaiBankName(ref1);

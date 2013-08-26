@@ -20,6 +20,7 @@ import th.co.truemoney.product.api.util.ValidateUtil;
 import th.co.truemoney.serviceinventory.authen.TransactionAuthenService;
 import th.co.truemoney.serviceinventory.buy.BuyProductService;
 import th.co.truemoney.serviceinventory.buy.domain.BuyProduct;
+import th.co.truemoney.serviceinventory.buy.domain.BuyProductConfirmationInfo;
 import th.co.truemoney.serviceinventory.buy.domain.BuyProductDraft;
 import th.co.truemoney.serviceinventory.buy.domain.BuyProductTransaction;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
@@ -127,20 +128,21 @@ public class BuyEPINController extends BaseController {
 		throws ServiceInventoryException {
 		
 		BuyProductTransaction transaction = buyProductService.getBuyProductResult(draftTransactionID, accessToken);
+		BuyProductConfirmationInfo confirmedInfo = transaction.getConfirmationInfo();
+		BuyProductDraft draftInfo = transaction.getDraftTransaction();
 		
-		String txnID = transaction.getConfirmationInfo().getTransactionID();
-		String recipientMobileNumber = transaction.getDraftTransaction().getRecipientMobileNumber();
-		BigDecimal epinAmount = transaction.getDraftTransaction().getBuyProductInfo().getAmount();
-		BigDecimal currentBalance = this.profileService.getEwalletBalance(accessToken);
-		String txnDate = transaction.getConfirmationInfo().getTransactionDate();
 		
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("transactionID", txnID);
-		data.put("recipientMobileNumber", recipientMobileNumber);
-		data.put("amount", epinAmount);
-		data.put("currentEwalletBalance", currentBalance);
-		data.put("transactionDate", txnDate);
+		data.put("epinCode", confirmedInfo.getPin());
+		data.put("epinSerial", confirmedInfo.getSerial());
+		data.put("transactionID", confirmedInfo.getTransactionID());
+		data.put("amount", draftInfo.getBuyProductInfo().getAmount());
+		data.put("transactionDate", confirmedInfo.getTransactionDate());
+		data.put("recipientMobileNumber", draftInfo.getRecipientMobileNumber());
 		
+		BigDecimal currentBalance = this.profileService.getEwalletBalance(accessToken);
+		data.put("currentEwalletBalance", currentBalance);
+
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	

@@ -145,6 +145,8 @@
 
 "buy.e-pin.resend-otp.url" : "${apiHost}/v1/buy/e-pin/resend-otp/%@/%@?",
 
+"buy.e-pin.resend-pin.url" : "${apiHost}/v1/buy/e-pin/resend-pin/%@/%@?",
+
 <jsp:include page="../classes/epin_price_list.conf" />
 
 }

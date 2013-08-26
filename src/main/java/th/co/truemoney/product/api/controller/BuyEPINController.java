@@ -23,6 +23,7 @@ import th.co.truemoney.serviceinventory.buy.domain.BuyProduct;
 import th.co.truemoney.serviceinventory.buy.domain.BuyProductConfirmationInfo;
 import th.co.truemoney.serviceinventory.buy.domain.BuyProductDraft;
 import th.co.truemoney.serviceinventory.buy.domain.BuyProductTransaction;
+import th.co.truemoney.serviceinventory.ewallet.ActivityService;
 import th.co.truemoney.serviceinventory.ewallet.TmnProfileService;
 import th.co.truemoney.serviceinventory.ewallet.domain.OTP;
 import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
@@ -45,6 +46,9 @@ public class BuyEPINController extends BaseController {
 	@Autowired
 	private EPINConfigurationManager epinConfigurationManager;
 	
+	@Autowired
+	private ActivityService activityService;
+	
 	@RequestMapping(value = "/draft/verifyAndCreate/{accessToken}", method = RequestMethod.POST)
 	@ResponseBody
 	public ProductResponse createBuyEpinDraft (
@@ -62,12 +66,10 @@ public class BuyEPINController extends BaseController {
 			throw new InvalidParameterException("5000");
 		}
 		
-		if(!ValidateUtil.isEmpty(recipientMobileNumber)) {
-			if(!ValidateUtil.checkMobileNumber(recipientMobileNumber)){
-				throw new InvalidParameterException("40001");
-			}
+		if(!ValidateUtil.isEmpty(recipientMobileNumber) && !ValidateUtil.checkMobileNumber(recipientMobileNumber)){
+			throw new InvalidParameterException("40001");
 		}
-		
+			
 		BuyProductDraft draft =  buyProductService.createAndVerifyBuyProductDraft(PRODUCT_TARGET, recipientMobileNumber, epinAmount, accessToken);
         BuyProduct buyProduct = draft.getBuyProductInfo();
         
@@ -165,4 +167,18 @@ public class BuyEPINController extends BaseController {
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	
+	@RequestMapping(value = "/resend-pin/{historyID}/{accessToken}", method = RequestMethod.GET)
+	@ResponseBody
+	public ProductResponse resendEpin(
+			@PathVariable String historyID, 
+			@PathVariable String accessToken)
+		throws ServiceInventoryException {
+		
+		boolean status = activityService.resendEPIN(Long.parseLong(historyID), accessToken);
+		
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("status", status);
+		
+		return this.responseFactory.createSuccessProductResonse(data);
+	}
 }

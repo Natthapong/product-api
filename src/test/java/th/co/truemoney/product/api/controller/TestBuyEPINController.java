@@ -34,6 +34,8 @@ public class TestBuyEPINController extends BaseTestController {
 	
 	private static final String resendOtpURL = String.format("/buy/e-pin/resend-otp/%s/%s", "1111111111", fakeAccessToken);
 	
+	private static final String resendEpinURL = String.format("/buy/e-pin/resend-pin/%s/%s", "222222", fakeAccessToken);
+	
 	@Test
 	public void createBuyEpinSuccess() throws Exception {
 		
@@ -179,6 +181,13 @@ public class TestBuyEPINController extends BaseTestController {
 		
 		this.verifySuccess(this.doGET(resendOtpURL)).andExpect(
 				jsonPath("data").exists());
+	}
+	
+	@Test
+	public void resendPINSuccess() throws Exception {
+		when(activityServiceMock.resendEPIN(any(Long.class), anyString())).thenReturn(Boolean.TRUE);
+		
+		this.verifySuccess(this.doGET(resendEpinURL)).andExpect(jsonPath("data").exists());
 	}
 	
 	private BuyProductDraft createBuyProductDraftStub() {

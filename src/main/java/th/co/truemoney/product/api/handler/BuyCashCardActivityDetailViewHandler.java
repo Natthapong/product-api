@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import th.co.truemoney.product.api.domain.WalletActivity;
 import th.co.truemoney.product.api.util.Utils;
 
 @Component
@@ -17,8 +16,8 @@ public class BuyCashCardActivityDetailViewHandler extends
 		String action = Utils.removeSuffix(activity.getAction());
 		Map<String, String> section1 = super.buildSection1();
 		section1.put("logoURL", onlineResourceManager.getActivityActionLogoURL(action));
-		section1.put("titleTh", WalletActivity.getTypeInThai(activity.getType()));
-		section1.put("titleEn", WalletActivity.getTypeInEnglish(activity.getType()));
+		section1.put("titleTh", "");
+		section1.put("titleEn", "");
 		return section1;
 	}
 

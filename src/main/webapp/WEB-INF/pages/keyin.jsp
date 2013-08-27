@@ -202,8 +202,8 @@
                 },
                 {
                   "serviceCode": "ing",
-                  "titleTh": "ไอเอ็นจี ประกันชีวิต",
-                  "titleEn": "ING Life Assurance",
+                  "titleTh": "เอฟดับบลิวดี ประกันชีวิต",
+                  "titleEn": "FWD Life Assurance",
                   "logo": "${mHost}/images/logo_bill/ing@2x.png"
                 },
                 {

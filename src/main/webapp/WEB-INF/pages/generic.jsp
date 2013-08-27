@@ -39,6 +39,8 @@
 
 "register.webview.policy.url" : "${mHost}/info/register/policy.html",
 
+"register.webview.faq.url" : "${mHost}/info/register/faq.html",
+
 "register.verify.email.url" : "${apiHost}/v1/ewallet/profiles/validate-email?",
 
 "register.prepare.url" : "${apiHost}/v1/ewallet/profiles?",

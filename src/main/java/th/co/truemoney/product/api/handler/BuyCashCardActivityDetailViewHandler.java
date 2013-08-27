@@ -47,7 +47,7 @@ public class BuyCashCardActivityDetailViewHandler extends
 		Map<String, Object> column31 = new HashMap<String, Object>();
 		Map<String, String> cell311 = new HashMap<String, String>();
 		Map<String, String> cell312 = new HashMap<String, String>();
-		cell311.put("titleTh", "ยอดชำระ");
+		cell311.put("titleTh", "จำนวนเงิน");
 		cell311.put("titleEn", "amount");
 		cell311.put("value", Utils.formatAbsoluteAmount(activity.getAmount()));
 		column31.put("cell1", cell311);

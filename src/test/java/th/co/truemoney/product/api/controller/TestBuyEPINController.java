@@ -207,7 +207,9 @@ public class TestBuyEPINController extends BaseTestController {
 		BuyProductConfirmationInfo buyProductInfo = new BuyProductConfirmationInfo();
 		buyProductInfo.setTransactionID("1111111111");
 		buyProductInfo.setTransactionDate("25/04/13 10:03");
-		
+		buyProductInfo.setPin("12345678901234");
+		buyProductInfo.setSerial("123456789012345678");
+		buyProductInfo.setExpireDate("25/04/13");
 		transaction.setConfirmationInfo(buyProductInfo);
 		
 		BuyProductDraft draft = new BuyProductDraft();

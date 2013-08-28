@@ -618,7 +618,7 @@ public class TestWalletActivityDetailController extends
 		assertTrue(data.containsKey("isFavoritable"));
 		assertTrue(data.containsKey("isFavorited"));
 		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/ecash@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
-		assertEquals("{column1={cell2={titleTh=รหัสเติมเงิน, titleEn=cash card code, value=12345678901234}, cell1={titleTh=ผู้รับบัตรเงินสด, titleEn=recipient mobile number, value=089-518-5926}}}", data.get("section2").toString());
+		assertEquals("{column1={cell2={titleTh=รหัสเติมเงิน, titleEn=cash card code, value=1234 5678 9012 34}, cell1={titleTh=ผู้รับบัตรเงินสด, titleEn=recipient mobile number, value=089-518-5926}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=เลขที่บัตรเงินสดทรูมันนี่, titleEn=cash card serial number, value=123456789012345678}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=139.50}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=Transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=Transaction ID, value=1234567890}}}", data.get("section4").toString());
 	}

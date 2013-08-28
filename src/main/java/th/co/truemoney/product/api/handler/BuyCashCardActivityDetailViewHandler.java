@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import th.co.truemoney.product.api.util.Utils;
+import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 @Component
 public class BuyCashCardActivityDetailViewHandler extends
@@ -35,7 +36,7 @@ public class BuyCashCardActivityDetailViewHandler extends
 		
 		cell212.put("titleTh", "รหัสเติมเงิน");
 		cell212.put("titleEn", "cash card code");
-		cell212.put("value", activity.getAdditionalData());
+		cell212.put("value", displayFormatPin(activity.getAdditionalData()));
 		column21.put("cell2", cell212);
 		return section2;
 	}
@@ -58,6 +59,19 @@ public class BuyCashCardActivityDetailViewHandler extends
 		cell312.put("value", this.activity.getRef2());
 		column31.put("cell2", cell312);
 		return section3;
+	}
+	
+	private String displayFormatPin(String decryptedTxt) {
+		if (decryptedTxt != null && decryptedTxt.length() == 14) {
+			String part_1 = decryptedTxt.substring(0,4);
+			String part_2 = decryptedTxt.substring(4,8);
+			String part_3 = decryptedTxt.substring(8,12);
+			String part_4 = decryptedTxt.substring(12,14);
+			String formatPin = (part_1 + " " +part_2+ " " +part_3+ " " +part_4);
+			return formatPin;
+		} else {
+			throw new ServiceInventoryException(500, "503", "invalid pin length", "TMN-PRODUCT");
+		}
 	}
 	
 }

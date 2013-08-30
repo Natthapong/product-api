@@ -1,6 +1,7 @@
 package th.co.truemoney.product.api.controller;
 
 import java.security.InvalidParameterException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -200,11 +201,9 @@ public class UserActionController extends BaseController {
     public ProductResponse changeImageProfileStatus(@PathVariable String accessToken,
     												@RequestBody Map<String, String> request) {
 		Boolean status = Boolean.parseBoolean(request.get("status"));
-		TmnProfile profile = profileService.changeProfileImageStatus(accessToken, status);
-		Map<String,Object> data = new HashMap<String,Object>();
-		data.put("profileImageStatus", profile.getProfileImageStatus());
+		profileService.changeProfileImageStatus(accessToken, status);
 
-        return this.responseFactory.createSuccessProductResonse(data);
+        return this.responseFactory.createSuccessProductResonse(Collections.<String, Object> emptyMap());
     }
 
 	private void validateSignin(String username, String password, String type) {

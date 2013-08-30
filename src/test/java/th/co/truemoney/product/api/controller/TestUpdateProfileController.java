@@ -48,16 +48,13 @@ public class TestUpdateProfileController extends BaseTestController {
 	
 	@Test	
 	public void changeProfileImageStatusSuccess() throws Exception {
-		TmnProfile profile = new TmnProfile();
-		profile.setProfileImageStatus(true);
 		when(
 			profileServiceMock.changeProfileImageStatus(anyString(), any(Boolean.class))
-		).thenReturn(profile);
+		).thenReturn("done");
 		
 		Map<String,String> reqBody = new HashMap<String,String>();
 		reqBody.put("status", "true");
 		
-		this.verifySuccess(doPOST("/profile/change-image-status/" + fakeAccessToken, reqBody)
-				.andExpect(jsonPath("$..profileImageStatus").value(true)));
+		this.verifySuccess(doPOST("/profile/change-image-status/" + fakeAccessToken, reqBody));
 	}
 }

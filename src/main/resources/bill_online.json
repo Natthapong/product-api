@@ -778,5 +778,50 @@
       "isInquiryOnline":false,
       "minAmount":10.0,
       "maxAmount":30000.0
+   },
+   "cyp":{
+      "titleEn":"cyp",
+      "titleTh":"ค่าบริการ ชยภาค",
+      "ref1Type":"none",
+      "ref2Type":"none",
+      "ref1TitleEn":"Ref. No. 1",
+      "ref1TitleTh":"เลขที่สัญญา",
+      "ref2TitleEn":"Ref. No. 2",
+      "ref2TitleTh":"เลขที่อ้างอิง",
+      "ref1Placeholder":"เลขที่สัญญา 16 หลัก",
+      "ref2Placeholder":"เลขที่อ้างอิง 16 หลัก",
+      "isInquiryOnline":false,
+      "minAmount":10.0,
+      "maxAmount":30000.0
+   },
+   "ttk":{
+      "titleEn":"ttk",
+      "titleTh":"ค่าบริการ ฐิติกร",
+      "ref1Type":"none",
+      "ref2Type":"none",
+      "ref1TitleEn":"Ref. No. 1",
+      "ref1TitleTh":"เลขที่สัญญา",
+      "ref2TitleEn":"Ref. No. 2",
+      "ref2TitleTh":"เลขที่อ้างอิง",
+      "ref1Placeholder":"เลขที่สัญญา 16 หลัก",
+      "ref2Placeholder":"เลขที่อ้างอิง 16 หลัก",
+      "isInquiryOnline"false:,
+      "minAmount":10.0,
+      "maxAmount":30000.0
+   },
+   "tvg":{
+      "titleEn":"tvg",
+      "titleTh":"ทรูวิชั่นส์",
+      "ref1Type":"none",
+      "ref2Type":"none",
+      "ref1TitleEn":"Customer Number",
+      "ref1TitleTh":"หมายเลขสมาชิก",
+      "ref2TitleEn":"invoice number",
+      "ref2TitleTh":"เลขที่ใบแจ้งค่าบริการ",
+      "ref1Placeholder":"หมายเลขสมาชิกทรูวิชั่นส์",
+      "ref2Placeholder":"เลขที่ใบแจ้งค่าบริการ",
+      "isInquiryOnline":false,
+      "minAmount":145.52,
+      "maxAmount":10000.0
    }
 }

@@ -21,18 +21,6 @@
                     "logo": "${mHost}/images/logo_bill/ti@2x.png"
                 },
                 {
-                    "serviceCode": "dstv",
-                    "titleTh": "ทรูวิชั่นส์ ระบบจานดาวเทียม",
-                    "titleEn": "TrueVisions - Satellite",
-                    "logo": "${mHost}/images/logo_bill/dstv@2x.png"
-                },
-                {
-                    "serviceCode": "catv",
-                    "titleTh": "ทรูวิชั่นส์ ระบบเคเบิ้ล",
-                    "titleEn": "TrueVisions - Cable",
-                    "logo": "${mHost}/images/logo_bill/catv@2x.png"
-                },
-                {
                     "serviceCode": "tlp",
                     "titleTh": "ทรูไลฟ์ พลัส",
                     "titleEn": "TrueLife Plus",

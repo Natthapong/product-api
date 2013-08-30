@@ -26,8 +26,6 @@ import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 @Controller
 public class UserActionController extends BaseController {
 
-	private static final Integer MOBILE_CHANNEL_ID = 40;
-
 	@Autowired
 	private TmnProfileService profileService;
 
@@ -57,7 +55,7 @@ public class UserActionController extends BaseController {
 		EWalletOwnerCredential userLogin = new EWalletOwnerCredential(
 				request.getUsername().trim(),
 				request.getPassword().trim(),
-				MOBILE_CHANNEL_ID);
+				MOBILE_APP_CHANNEL_ID);
 
 		String token = "";
 		try {
@@ -197,6 +195,18 @@ public class UserActionController extends BaseController {
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	
+	@RequestMapping(value = "/profile/change-image-status/{accessToken}", method = RequestMethod.POST)
+    @ResponseBody
+    public ProductResponse changeImageProfileStatus(@PathVariable String accessToken,
+    												@RequestBody Map<String, String> request) {
+		Boolean status = Boolean.parseBoolean(request.get("status"));
+		TmnProfile profile = profileService.changeProfileImageStatus(accessToken, status);
+		Map<String,Object> data = new HashMap<String,Object>();
+		data.put("profileImageStatus", profile.getProfileImageStatus());
+
+        return this.responseFactory.createSuccessProductResonse(data);
+    }
+
 	private void validateSignin(String username, String password, String type) {
 
 		if (type != null) {

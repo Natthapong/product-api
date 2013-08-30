@@ -170,8 +170,6 @@ public class TestRegisterController {
 		profileMock.setMobileNumber("0899999999");
 		profileMock.setPassword("werw2345");
 		profileMock.setBalance(new BigDecimal(0.00));
-		profileMock.setStatus(0);
-		profileMock.setType("C");
 		profileMock.setThaiID("1212121212121");
 
 		Map<String,String> mockData = new HashMap<String, String>();

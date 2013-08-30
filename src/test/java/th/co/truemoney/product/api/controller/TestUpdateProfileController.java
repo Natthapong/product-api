@@ -1,5 +1,6 @@
 package th.co.truemoney.product.api.controller;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -17,7 +18,7 @@ public class TestUpdateProfileController extends BaseTestController {
 
 	private static final String fakeAccessToken = "1111111111";
 	private static final String updateProfileURL = String.format("/profile/%s",fakeAccessToken);
-	
+
 	@Test
 	public void changeFullnameSuccess() throws Exception {
 		when(profileServiceMock.changeFullname(anyString(), anyString()))
@@ -45,4 +46,18 @@ public class TestUpdateProfileController extends BaseTestController {
 		this.verifyFailed(doPUT(updateProfileURL, reqBody));
 	} 
 	
+	@Test	
+	public void changeProfileImageStatusSuccess() throws Exception {
+		TmnProfile profile = new TmnProfile();
+		profile.setProfileImageStatus(true);
+		when(
+			profileServiceMock.changeProfileImageStatus(anyString(), any(Boolean.class))
+		).thenReturn(profile);
+		
+		Map<String,String> reqBody = new HashMap<String,String>();
+		reqBody.put("status", "true");
+		
+		this.verifySuccess(doPOST("/profile/change-image-status/" + fakeAccessToken, reqBody)
+				.andExpect(jsonPath("$..profileImageStatus").value(true)));
+	}
 }

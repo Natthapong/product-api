@@ -53,7 +53,7 @@ public class TestBillPayActivityDetailViewHandler {
 				{ new BillTest("cimbpe", "cimbpe", "เพอร์ซันนัลแคช ซีไอเอ็มบี ไทย", "12345", "", "เลขที่บัญชี", "54321", "Ref. 2", "วงเงินกู้") },
 				{ new BillTest("tqmlife", "tqmlife", "ทีคิวเอ็ม ประกันชีวิต", "12345", "Ref. No. 1", "เลขที่อ้างอิง 1", "54321", "Ref. No. 2", "เลขที่อ้างอิง 2") },
 				{ new BillTest("bkip", "bkip", "กรุงเทพประกันภัย", "12345", "Policy Number", "กรมธรรม์เลขที่", "54321", "", "เลขที่อ้างอิง 2") },
-				{ new BillTest("ing", "ing", "ไอเอ็นจี ประกันชีวิต", "12345", "Customer Number", "หมายเลขลูกค้า", "54321", "Due Date", "กำหนดชำระ") },
+				{ new BillTest("ing", "ing", "เอฟดับบลิวดี ประกันชีวิต", "12345", "Customer Number", "หมายเลขลูกค้า", "54321", "Due Date", "กำหนดชำระ") },
 				{ new BillTest("mti", "mti", "เมืองไทยประกันภัย", "12345", "Proposal ID", "เลขที่ใบคำขอ", "54321", "Ref. No. 2", "เลขที่ตัวแทน") },
 				{ new BillTest("mthai", "mthai", "เมืองไทยประกันชีวิต", "12345", "Policy Number", "เลขที่กรมธรรม์") },
 				{ new BillTest("hiway", "hiway", "ไฮเวย์", "12345", "Ref. No. 1", "เลขที่อ้างอิง", "54321", "Ref. No. 2", "สัญญาเลขที่") },

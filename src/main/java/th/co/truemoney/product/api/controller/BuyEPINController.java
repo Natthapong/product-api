@@ -135,7 +135,7 @@ public class BuyEPINController extends BaseController {
 		
 		
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("epinCode", confirmedInfo.getPin());
+		data.put("epinCode", displayFormatPin(confirmedInfo.getPin()));
 		data.put("epinSerial", confirmedInfo.getSerial());
 		data.put("transactionID", confirmedInfo.getTransactionID());
 		data.put("amount", draftInfo.getBuyProductInfo().getAmount());
@@ -181,4 +181,18 @@ public class BuyEPINController extends BaseController {
 		
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
+	
+	private String displayFormatPin(String decryptedTxt) {
+		if (decryptedTxt != null && decryptedTxt.length() == 14) {
+			String part_1 = decryptedTxt.substring(0,4);
+			String part_2 = decryptedTxt.substring(4,8);
+			String part_3 = decryptedTxt.substring(8,12);
+			String part_4 = decryptedTxt.substring(12,14);
+			String formatPin = (part_1 + " " +part_2+ " " +part_3+ " " +part_4);
+			return formatPin;
+		} else {
+			throw new ServiceInventoryException(500, "503", "invalid pin length", "TMN-PRODUCT");
+		}
+	}
+	
 }

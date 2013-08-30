@@ -271,7 +271,7 @@
    },
    "ing":{
       "titleEn":"ing",
-      "titleTh":"ไอเอ็นจี ประกันชีวิต",
+      "titleTh":"เอฟดับบลิวดี ประกันชีวิต",
       "ref1Type":"none",
       "ref2Type":"none",
       "ref1TitleEn":"Customer Number",
@@ -805,7 +805,7 @@
       "ref2TitleTh":"เลขที่อ้างอิง",
       "ref1Placeholder":"เลขที่สัญญา 16 หลัก",
       "ref2Placeholder":"เลขที่อ้างอิง 16 หลัก",
-      "isInquiryOnline"false:,
+      "isInquiryOnline":false,
       "minAmount":10.0,
       "maxAmount":30000.0
    },

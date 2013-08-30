@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.domain.BillResponse;
 import th.co.truemoney.product.api.domain.ProductResponse;
+import th.co.truemoney.product.api.manager.BillConfiguration;
 import th.co.truemoney.product.api.manager.BillConfigurationManager;
 import th.co.truemoney.product.api.manager.MessageManager;
 import th.co.truemoney.product.api.util.Utils;
@@ -353,7 +354,11 @@ public class BillPaymentController extends BaseController {
 
         Bill bill = txn.getDraftTransaction().getBillInfo();
         String target = Utils.removeSuffix(bill.getTarget());
-        
+        BillConfiguration billConf = billConfigurationManager.getBillReference(target);
+        if (billConf != null) {
+        	data.put("billNameEn", billConf.getTitleEn());
+        	data.put("billNameTh", billConf.getTitleTh());
+        }
         if ("tmvh".equals(target) || "trmv".equals(target) || "rft".equals(target)) {
             // remark message that display at the bottom of receipt
             data.put("remarkEn", messageManager.getMessageEn("payment.bill.remark"));

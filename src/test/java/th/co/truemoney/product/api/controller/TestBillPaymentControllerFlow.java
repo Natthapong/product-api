@@ -126,7 +126,9 @@ public class TestBillPaymentControllerFlow extends BaseTestController {
                 this.doGET(String.format("/bill-payment/%s/details/%s", billPaymentID, token))
                     ).andExpect(jsonPath("$..amount").value(inputAmount)
                     ).andExpect(jsonPath("$..totalFee").value("10")
-                    ).andExpect(jsonPath("$..totalAmount").value("210.00"));
+                    ).andExpect(jsonPath("$..totalAmount").value("210.00")
+                    ).andExpect(jsonPath("$..billNameEn").value("tmvh")
+                    ).andExpect(jsonPath("$..billNameTh").value("ทรูมูฟ เอช"));
     }
 
 }

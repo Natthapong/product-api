@@ -129,6 +129,8 @@
 
 "profile.update.image.url" : "${apiHost}/v1/profile/image/%@?",
 
+"profile.update.image.status.url" : "${apiHost}/v1/profile/change-image-status/%@?",
+
 "system.offline.message" : "กำลังปรับปรุงระบบ เพื่อเพิ่มความสามารถในการให้บริการได้ดีขึ้น คุณสามารถใช้งานได้ตามปกติเวลา 05.00 น.",
 
 "system.offline.title" : "ไม่สามารถทำรายการได้",

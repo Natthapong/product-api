@@ -14,7 +14,7 @@ import th.co.truemoney.serviceinventory.bill.domain.SourceOfFund;
 
 public final class Utils {
 
-    private static List<String> trueCorpBills = Arrays.asList("catv", "dstv", "tcg", "ti", "tic", "tlp", "tmvh", "tr", "trmv", "true", "rft", "tmob", "tgv");
+    private static List<String> trueCorpBills = Arrays.asList("catv", "dstv", "tcg", "ti", "tic", "tlp", "tmvh", "tr", "trmv", "true", "rft", "tmob", "tvg");
 
     public static Boolean isTrueCorpBill(String target) {
         return trueCorpBills.contains(target);

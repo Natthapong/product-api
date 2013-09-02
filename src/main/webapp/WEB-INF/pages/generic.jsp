@@ -149,7 +149,7 @@
 
 "buy.e-pin.resend-pin.url" : "${apiHost}/v1/buy/e-pin/resend-pin/%@/%@?",
 
-"wallet.itunes.download.url" : "https://itunes.apple.com/th/app/truemoney-wallet/id663885752?l=th&mt=8",
+"wallet.itunes.download.url" : "https://itunes.apple.com/app/truemoney-wallet/id663885752?l=th&mt=8",
 
 "support.minimum.app.version" : "0.9",
 

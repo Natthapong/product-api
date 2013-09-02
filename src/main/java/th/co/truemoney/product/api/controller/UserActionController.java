@@ -104,7 +104,7 @@ public class UserActionController extends BaseController {
 			data.put("hasPassword", tmnProfile.getHasPassword());
 			data.put("hasPin", tmnProfile.getHasPin());
 			data.put("imageURL", profileImageURL);
-			
+			data.put("profileImageStatus", tmnProfile.getProfileImageStatus().toString());
 			return this.responseFactory.createSuccessProductResonse(data);
 		} catch (ServiceInventoryException e){
 			String errorcode = String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode());

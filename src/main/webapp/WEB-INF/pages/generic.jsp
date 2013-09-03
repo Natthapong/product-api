@@ -129,6 +129,8 @@
 
 "profile.update.image.url" : "${apiHost}/v1/profile/image/%@?",
 
+"profile.update.image.status.url" : "${apiHost}/v1/profile/change-image-status/%@?",
+
 "system.offline.message" : "กำลังปรับปรุงระบบ เพื่อเพิ่มความสามารถในการให้บริการได้ดีขึ้น คุณสามารถใช้งานได้ตามปกติเวลา 05.00 น.",
 
 "system.offline.title" : "ไม่สามารถทำรายการได้",
@@ -149,7 +151,7 @@
 
 "buy.e-pin.resend-pin.url" : "${apiHost}/v1/buy/e-pin/resend-pin/%@/%@?",
 
-"wallet.itunes.download.url" : "https://itunes.apple.com/th/app/truemoney-wallet/id663885752?l=th&mt=8",
+"wallet.itunes.download.url" : "https://itunes.apple.com/app/truemoney-wallet/id663885752?l=th&mt=8",
 
 "support.minimum.app.version" : "0.9",
 

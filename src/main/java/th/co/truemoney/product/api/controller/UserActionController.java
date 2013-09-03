@@ -1,6 +1,7 @@
 package th.co.truemoney.product.api.controller;
 
 import java.security.InvalidParameterException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,8 +26,6 @@ import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 @Controller
 public class UserActionController extends BaseController {
-
-	private static final Integer MOBILE_CHANNEL_ID = 40;
 
 	@Autowired
 	private TmnProfileService profileService;
@@ -57,7 +56,7 @@ public class UserActionController extends BaseController {
 		EWalletOwnerCredential userLogin = new EWalletOwnerCredential(
 				request.getUsername().trim(),
 				request.getPassword().trim(),
-				MOBILE_CHANNEL_ID);
+				MOBILE_APP_CHANNEL_ID);
 
 		String token = "";
 		try {
@@ -105,7 +104,7 @@ public class UserActionController extends BaseController {
 			data.put("hasPassword", tmnProfile.getHasPassword());
 			data.put("hasPin", tmnProfile.getHasPin());
 			data.put("imageURL", profileImageURL);
-			
+			data.put("profileImageStatus", tmnProfile.getProfileImageStatus().toString());
 			return this.responseFactory.createSuccessProductResonse(data);
 		} catch (ServiceInventoryException e){
 			String errorcode = String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode());
@@ -197,6 +196,16 @@ public class UserActionController extends BaseController {
 		return this.responseFactory.createSuccessProductResonse(data);
 	}
 	
+	@RequestMapping(value = "/profile/change-image-status/{accessToken}", method = RequestMethod.POST)
+    @ResponseBody
+    public ProductResponse changeImageProfileStatus(@PathVariable String accessToken,
+    												@RequestBody Map<String, String> request) {
+		Boolean status = Boolean.parseBoolean(request.get("status"));
+		profileService.changeProfileImageStatus(accessToken, status);
+
+        return this.responseFactory.createSuccessProductResonse(Collections.<String, Object> emptyMap());
+    }
+
 	private void validateSignin(String username, String password, String type) {
 
 		if (type != null) {

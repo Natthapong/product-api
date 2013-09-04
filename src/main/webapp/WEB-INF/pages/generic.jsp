@@ -9,6 +9,8 @@
 
 "instruction.addmoney.direct.debit" : "${mHost}/info/addmoney/instruction/direct_debit/index.html",
 
+"instruction.addmoney.internet" : "${mHost}/info/addmoney/instruction/internet/index.html",
+
 "instruction.addmoney.kiosk" : "${mHost}/info/addmoney/instruction/kiosk/kiosk.html",
 
 "instruction.addmoney.trm" : "${mHost}/info/addmoney/instruction/trm/trueshop.html",

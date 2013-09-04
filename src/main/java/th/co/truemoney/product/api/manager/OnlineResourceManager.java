@@ -47,11 +47,7 @@ public class OnlineResourceManager {
     }
 
     public String getActivityActionLogoURL(String action) {
-        
         action = Utils.removeSuffix(lower(action));
-        action = "tmhtopup".equals(action) ? "tmvh" : action;
-        action = "tmvtopup".equals(action)  ? "trmv" : action;
-        
         return mHost + LOGO_BILL_URL + action + "@2x.png";
      }
     

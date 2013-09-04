@@ -99,7 +99,7 @@ public class TestWalletActivityDetailController extends
 		assertEquals("topup_mobile", data.get("serviceType"));
 		assertTrue(data.containsKey("isFavoritable"));
 		assertTrue(data.containsKey("isFavorited"));
-		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/tmvh@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
+		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/tmhtopup@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=หมายเลขโทรศัพท์, titleEn=mobile number, value=089-765-4333}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=Transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=Transaction ID, value=1234567890}}}", data.get("section4").toString());
@@ -127,7 +127,7 @@ public class TestWalletActivityDetailController extends
 		assertEquals("topup_mobile", data.get("serviceType"));
 		assertTrue(data.containsKey("isFavoritable"));
 		assertTrue(data.containsKey("isFavorited"));
-		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/trmv@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
+		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/tmvtopup@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=หมายเลขโทรศัพท์, titleEn=mobile number, value=089-765-4333}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=Transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=Transaction ID, value=1234567890}}}", data.get("section4").toString());

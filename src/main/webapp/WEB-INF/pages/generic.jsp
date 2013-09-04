@@ -139,7 +139,7 @@
 
 "system.offline" : "false",
 
-"support.video.url" : "${mHost}/video/truemoney_wallet.mp4",
+"support.video.url" : "${mHost}/info/register/introduction.html",
 
 "buy.e-pin.verify.url" : "${apiHost}/v1/buy/e-pin/draft/verifyAndCreate/%@?",
 

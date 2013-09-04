@@ -44,6 +44,7 @@ public class WalletActivity {
         actionList.put("promo_scb_ibanking", "เติมเงินด้วยไอแบงก์กิ้ง");
         actionList.put("promo_tbank_ibanking", "เติมเงินด้วยไอแบงก์กิ้ง");
         actionList.put("tmhtopup", "ทรูมูฟ เอช");
+        actionList.put("rfttopup", "ทรูมูฟ เอช");
         actionList.put("tmvtopup", "ทรูมูฟ");
         actionList.put("debtor", "ส่งเงิน");
         actionList.put("creditor", "รับเงิน");

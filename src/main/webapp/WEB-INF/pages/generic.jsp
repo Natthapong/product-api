@@ -148,16 +148,16 @@
 "buy.e-pin.status.url" : "${apiHost}/v1/buy/e-pin/%@/status/%@?",
 
 "buy.e-pin.details.url" : "${apiHost}/v1/buy/e-pin/%@/details/%@?",
-
+d
 "buy.e-pin.resend-otp.url" : "${apiHost}/v1/buy/e-pin/resend-otp/%@/%@?",
 
 "buy.e-pin.resend-pin.url" : "${apiHost}/v1/buy/e-pin/resend-pin/%@/%@?",
 
 "wallet.itunes.download.url" : "https://itunes.apple.com/app/truemoney-wallet/id663885752?l=th&mt=8",
 
-"support.minimum.app.version" : "0.9",
+"support.minimum.app.version" : "1.0",
 
-"support.maximum.app.version" : "1.1",
+"support.maximum.app.version" : "1.2",
 
 <jsp:include page="../classes/epin_price_list.conf" />
 

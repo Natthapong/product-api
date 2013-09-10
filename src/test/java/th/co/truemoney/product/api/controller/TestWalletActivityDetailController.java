@@ -196,7 +196,7 @@ public class TestWalletActivityDetailController extends
 
 		ActivityDetail detail = new ActivityDetail();
 		detail.setType(TYPE.BILLPAY.name());
-		detail.setAction("tr_c");
+		detail.setAction("true_c");
 		detail.setRef1("020000000");
 		detail.setRef2("");
 		detail.setAmount(new BigDecimal(23455.50));
@@ -212,7 +212,7 @@ public class TestWalletActivityDetailController extends
 		assertEquals("billpay", data.get("serviceType"));
 		assertTrue(data.containsKey("isFavoritable"));
 		assertTrue(data.containsKey("isFavorited"));
-		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/tr@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
+		assertEquals("{logoURL=http://localhost:8080/images/logo_bill/true@2x.png, titleTh=, titleEn=}", data.get("section1").toString());
 		assertEquals("{column1={cell1={titleTh=เลขที่อ้างอิง 1/หมายเลขโทรศัพท์, titleEn=Telephone Number, value=02-000-0000}}}", data.get("section2").toString());
 		assertEquals("{column1={cell2={titleTh=รวมเงินที่ชำระ, titleEn=total amount, value=24,690.00}, cell1={titleTh=จำนวนเงิน, titleEn=amount, value=23,455.50}}, column2={cell1={titleTh=ค่าธรรมเนียม, titleEn=total fee, value=1,234.50}}}", data.get("section3").toString());
 		assertEquals("{column1={cell1={titleTh=วันที่-เวลา, titleEn=Transaction date, value=10/02/13 15:35}}, column2={cell1={titleTh=เลขที่อ้างอิง, titleEn=Transaction ID, value=1234567890}}}", data.get("section4").toString());

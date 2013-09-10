@@ -62,7 +62,7 @@ public class TestWalletActivityControllerUnit {
                 { new Activity(2L, "bonus", df.parse("10-03-2013"), "promo_direct_debit", "add_money", 40L), new ActivityViewItem(String.valueOf(2L), "โปรโมชั่น", "10/03/13", "คืนค่าธรรมเนียม", "0.00", "เติมเงินด้วยบัญชีธนาคาร") },
                 { new Activity(3L, "billpay", df.parse("10-03-2013"), "catv_c", "111111111", 40L), new ActivityViewItem(String.valueOf(3L), "จ่ายบิล", "10/03/13", "ทรูวิชั่นส์", "0.00", "111111111") },
                 { new Activity(3L, "billpay", df.parse("10-03-2013"), "dstv_c", "111111111", 40L), new ActivityViewItem(String.valueOf(3L), "จ่ายบิล", "10/03/13", "ทรูวิชั่นส์", "0.00", "111111111") },
-                { new Activity(3L, "billpay", df.parse("10-03-2013"), "tr_c", "111111111", 40L), new ActivityViewItem(String.valueOf(3L), "จ่ายบิล", "10/03/13", "โทรศัพท์บ้านทรู", "0.00", "111111111") },
+                { new Activity(3L, "billpay", df.parse("10-03-2013"), "true_c", "111111111", 40L), new ActivityViewItem(String.valueOf(3L), "จ่ายบิล", "10/03/13", "โทรศัพท์บ้านทรู", "0.00", "111111111") },
                 { new Activity(3L, "billpay", df.parse("10-03-2013"), "tmvh_c", "111111111", 40L), new ActivityViewItem(String.valueOf(3L), "จ่ายบิล", "10/03/13", "ทรูมูฟ เอช", "0.00", "111111111") },
                 { new Activity(3L, "billpay", df.parse("10-03-2013"), "trmv_c", "111111111", 40L), new ActivityViewItem(String.valueOf(3L), "จ่ายบิล", "10/03/13", "ทรูมูฟ", "0.00", "111111111") },
                 { new Activity(3L, "billpay", df.parse("10-03-2013"), "ti_c", "111111111", 40L), new ActivityViewItem(String.valueOf(3L), "จ่ายบิล", "10/03/13", "ทรูออนไลน์", "0.00", "111111111") },

@@ -29,8 +29,8 @@
       "minAmount":10.0, 
       "maxAmount":30000.0
    },
-   "tr":{
-      "titleEn":"tr",
+   "true":{
+      "titleEn":"true",
       "titleTh":"โทรศัพท์บ้านทรู",
       "ref1Type":"none",
       "ref2Type":"none",
@@ -823,5 +823,20 @@
       "isInquiryOnline":false,
       "minAmount":145.52,
       "maxAmount":10000.0
+   },
+   "tot":{
+      "titleEn":"tot",
+      "titleTh":"โทรศัพท์บ้านทีโอที",
+      "ref1Type":"none",
+      "ref2Type":"none",
+      "ref1TitleEn":"Telephone Number",
+      "ref1TitleTh":"เลขที่อ้างอิง 1/หมายเลขโทรศัพท์",
+      "ref2TitleEn":"Ref. 2",
+      "ref2TitleTh":"เลขที่อ้างอิง 2",
+      "ref1Placeholder":"เบอร์โทรศัพท์บ้าน",
+      "ref2Placeholder":"",
+      "isInquiryOnline":true,
+      "minAmount":50.0,
+      "maxAmount":30000.0
    }
 }

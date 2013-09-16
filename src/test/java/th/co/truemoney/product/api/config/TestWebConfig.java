@@ -24,6 +24,7 @@ import th.co.truemoney.serviceinventory.transfer.P2PTransferService;
 @EnableWebMvc
 @Configuration
 @ComponentScan({
+	"th.co.truemoney.product.api.credential",
 	"th.co.truemoney.product.api.controller",
 	"th.co.truemoney.product.api.manager",
 	"th.co.truemoney.product.api.handler",
@@ -105,9 +106,14 @@ public class TestWebConfig extends BaseEnvConfig {
 		return "target/profile_images/";
 	}
 	
-	@Bean
-	public ClientCredential appLogin() {
-		return new ClientCredential("f7cb0d495ea6d989", "MOBILE_IPHONE", "IPHONE+1", "iPhone", "iPhone");
+	@Bean @Qualifier("iOSAppLogin")
+	public ClientCredential iOSAppLogin() {
+		return new ClientCredential("f7cb0d495ea6d989", "MOBILE_IPHONE", "IPHONE+1", "IOS_APP", "IOS_APP");
+	}
+	
+	@Bean @Qualifier("androidAppLogin")
+	public ClientCredential androidAppLogin() {
+		return new ClientCredential("f7cb0d495ea6d989", "MOBILE_IPHONE", "IPHONE+1", "Android", "Android");
 	}
 	
 }

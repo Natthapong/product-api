@@ -19,8 +19,6 @@ public class BaseController {
 	@Autowired
 	protected ProductResponseFactory responseFactory;
 	
-	public static final int MOBILE_APP_CHANNEL_ID = 40;
-	
 	private Logger logger = Logger.getLogger(BaseController.class);
 	
 	@ExceptionHandler(InvalidParameterException.class)

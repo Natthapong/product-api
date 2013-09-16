@@ -33,7 +33,7 @@ public class TestLoginController extends BaseTestController {
 		).thenReturn(new TmnProfile("Jonh Doe", new BigDecimal(100.00)));
 
 		this.verifySuccess(
-				this.doPOST("/signin",
+				this.doPOST("/signin?device_type=iPhone",
 						new LoginBean("customer@truemoney.co.th", "password", "email")))
 						.andExpect(jsonPath("$.data").exists())
 						.andExpect(jsonPath("$..email").exists())
@@ -65,7 +65,7 @@ public class TestLoginController extends BaseTestController {
 		).thenThrow(
 				new ServiceInventoryException(400, "4", "Invalid Username or Password", "core"));
 		this.verifyFailed(
-				this.doPOST("/signin",
+				this.doPOST("/signin?device_type=iPhone",
 						new LoginBean("customer@truemoney.co.th", "password","email"))
 		).andExpect(jsonPath("$.code").value("4")
 		).andExpect(jsonPath("$.messageEn").value("Invalid Email or Password")
@@ -82,7 +82,7 @@ public class TestLoginController extends BaseTestController {
 				new ServiceInventoryException(400, "1006", "confirm umarket failed.", "TMN-SERVICE-INVENTORY")
 		);
 		this.verifyFailed(
-				this.doPOST("/signin",
+				this.doPOST("/signin?device_type=android",
 						new LoginBean("customer@truemoney.co.th", "password", "email"))
 		).andExpect(jsonPath("$.code").value("1006")
 		).andExpect(jsonPath("$.messageEn").value("confirm umarket failed.")

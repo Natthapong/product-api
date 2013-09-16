@@ -1,5 +1,6 @@
 package th.co.truemoney.product.api.config;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -24,8 +25,6 @@ import th.co.truemoney.serviceinventory.ewallet.domain.ClientCredential;
 	"th.co.truemoney.serviceinventory.ewallet.client"
 })
 public class WebConfig extends WebMvcConfigurerAdapter {
-
-	public static final Integer MOBILE_APP_CHANNEL_ID = 40;
 
 	@Bean
 	public ViewResolver getViewResolver() {
@@ -62,11 +61,16 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return messageSource;
     }
 
-	@Bean
-	public ClientCredential appLogin() {
+	@Bean @Qualifier("iOSAppLogin")
+	public ClientCredential iOSAppLogin() {
 		return new ClientCredential("f7cb0d495ea6d989", "MOBILE_IPHONE", "IPHONE+1", "IOS_APP", "IOS_APP");
 	}
-
+	
+	@Bean @Qualifier("androidAppLogin")
+	public ClientCredential androidAppLogin() {
+		return new ClientCredential("f7cb0d495ea6d989", "MOBILE_IPHONE", "IPHONE+1", "Android", "Android");
+	}
+	
     @Bean
     public MultipartResolver multipartResolver() {
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();

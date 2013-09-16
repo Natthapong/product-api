@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import th.co.truemoney.product.api.credential.factory.EwalletChannelFactory;
 import th.co.truemoney.product.api.domain.OTPBean;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.manager.SecurityManager;
@@ -37,18 +39,21 @@ public class RegisterController extends BaseController {
 
     @Autowired
     private SecurityManager securityManager;
+    
+	@Autowired
+	private EwalletChannelFactory ewalletChannelFactory;
 
     @RequestMapping(value = "/profiles/validate-email", method = RequestMethod.POST)
     @ResponseBody
     public ProductResponse validateEmail(
-            @RequestBody Map<String, String> request)
+            @RequestBody Map<String, String> request, HttpServletRequest httpRequest)
             throws ServiceInventoryException {
 
         String email = request.get("email");
         if (!ValidateUtil.checkEmail(email)) {
             throw new InvalidParameterException("40000");
         }
-        String returnData = verifyEmail(email);
+        String returnData = verifyEmail(email, getEwalletChannelID(httpRequest));
 
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("email", returnData);
@@ -59,7 +64,7 @@ public class RegisterController extends BaseController {
     @RequestMapping(value = "/profiles", method = RequestMethod.POST)
     @ResponseBody
     public ProductResponse createProfile(
-            @RequestBody Map<String, String> request)
+            @RequestBody Map<String, String> request, HttpServletRequest httpRequest)
             throws ServiceInventoryException {
         String email = request.get("email");
 
@@ -78,7 +83,7 @@ public class RegisterController extends BaseController {
         tmnProfile.setPassword(password);
         tmnProfile.setThaiID(request.get("thaiID"));
 
-        OTP returnData = requestCreateProfile(tmnProfile);
+        OTP returnData = requestCreateProfile(tmnProfile, getEwalletChannelID(httpRequest));
 
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("otpRefCode", returnData.getReferenceCode());
@@ -89,9 +94,9 @@ public class RegisterController extends BaseController {
     
     @RequestMapping(value = "/profiles/verify-otp", method = RequestMethod.POST)
     public @ResponseBody ProductResponse confirmCreateProfile(
-    	   @RequestBody @Valid OTPBean otpBean) throws ServiceInventoryException {
+    	   @RequestBody @Valid OTPBean otpBean, HttpServletRequest httpRequest) throws ServiceInventoryException {
 
-        confirmCreateProfile(otpBean.toOTPObj());
+        confirmCreateProfile(otpBean.toOTPObj(), getEwalletChannelID(httpRequest));
         
         return this.responseFactory.createSuccessProductResonse(Collections.<String, Object>emptyMap());
     }
@@ -114,9 +119,9 @@ public class RegisterController extends BaseController {
 						HTTP_BAD_REQUEST, INVALID_PARAMETER, errorMessage, PRODUCT_NAMESPACE));
 	}
     
-    private String verifyEmail(String email) {
+    private String verifyEmail(String email, Integer channelID) {
         try {
-            return profileService.validateEmail(MOBILE_APP_CHANNEL_ID, email.toLowerCase());
+            return profileService.validateEmail(channelID, email.toLowerCase());
         } catch (ServiceInventoryException e) {
             String errorcode = String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode());
             if (errorcode.equals("core.18")) {
@@ -126,10 +131,10 @@ public class RegisterController extends BaseController {
         }
     }
 
-    private OTP requestCreateProfile(TmnProfile tmnProfile) {
+    private OTP requestCreateProfile(TmnProfile tmnProfile, Integer channelID) {
 
         try {
-            return profileService.createProfile(MOBILE_APP_CHANNEL_ID, tmnProfile);
+            return profileService.createProfile(channelID, tmnProfile);
         } catch (ServiceInventoryException e) {
             String errorcode = String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode());
             if (errorcode.equals("core.18")) {
@@ -140,9 +145,9 @@ public class RegisterController extends BaseController {
         }
     }
 
-    private void confirmCreateProfile(OTP otp) {
+    private void confirmCreateProfile(OTP otp, Integer channelID) {
         try {
-            profileService.confirmCreateProfile(MOBILE_APP_CHANNEL_ID, otp);
+            profileService.confirmCreateProfile(channelID, otp);
         } catch (ServiceInventoryException e) {
             String errorcode = String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode());
             if (!errorcode.equals("next.18")) {
@@ -151,5 +156,14 @@ public class RegisterController extends BaseController {
 
         }
     }
+
+	private Integer getEwalletChannelID(HttpServletRequest httpRequest) {
+		String deviceType = httpRequest.getParameter("device_type");		
+		if (ValidateUtil.isEmpty(deviceType)) {
+			throw new InvalidParameterException("50002");
+		}
+		Integer channelID = ewalletChannelFactory.createCredential(deviceType);
+		return channelID;
+	}
     
 }

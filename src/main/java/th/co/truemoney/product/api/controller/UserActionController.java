@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import th.co.truemoney.product.api.credential.factory.CredentialFactory;
+import th.co.truemoney.product.api.credential.factory.EwalletChannelFactory;
 import th.co.truemoney.product.api.domain.LoginBean;
 import th.co.truemoney.product.api.domain.ProductResponse;
 import th.co.truemoney.product.api.manager.ProfileImageManager;
@@ -31,7 +35,10 @@ public class UserActionController extends BaseController {
 	private TmnProfileService profileService;
 
 	@Autowired
-	private ClientCredential appLogin;
+	private CredentialFactory appLoginFactory;
+	
+	@Autowired
+	private EwalletChannelFactory ewalletChannelFactory;
 
 	@Autowired
 	private ProfileImageManager profileImageManager;
@@ -46,20 +53,20 @@ public class UserActionController extends BaseController {
 
 	@RequestMapping(value = "/signin", method = RequestMethod.POST)
 	@ResponseBody
-	public ProductResponse signin(@RequestBody LoginBean request)
+	public ProductResponse signin(@RequestBody LoginBean request, HttpServletRequest httpRequest)
 			throws ServiceInventoryException {
 
 		// validate
-		validateSignin(request.getUsername().toLowerCase().trim(), request.getPassword().trim(),
-				request.getType().trim());
+		validateSignin(request.getUsername().toLowerCase().trim(), request.getPassword().trim(),request.getType().trim(), httpRequest.getParameter("device_type"));
 
-		EWalletOwnerCredential userLogin = new EWalletOwnerCredential(
-				request.getUsername().trim(),
-				request.getPassword().trim(),
-				MOBILE_APP_CHANNEL_ID);
-
+		String username = request.getUsername().trim();
+		String password = request.getPassword().trim();
+		String deviceType = httpRequest.getParameter("device_type").trim();		
+		EWalletOwnerCredential userLogin = new EWalletOwnerCredential(username, password, ewalletChannelFactory.createCredential(deviceType));
+		
 		String token = "";
 		try {
+			ClientCredential appLogin = appLoginFactory.createCredential(deviceType);
 			token = profileService.login(userLogin, appLogin);
 		} catch (ServiceInventoryException e) {
 			String errorcode = String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode());
@@ -206,7 +213,7 @@ public class UserActionController extends BaseController {
         return this.responseFactory.createSuccessProductResonse(Collections.<String, Object> emptyMap());
     }
 
-	private void validateSignin(String username, String password, String type) {
+	private void validateSignin(String username, String password, String type, String deviceType) {
 
 		if (type != null) {
 			if ("email".equals(type)) {
@@ -226,6 +233,11 @@ public class UserActionController extends BaseController {
 				}
 			}
 		}
+		
+		if (ValidateUtil.isEmpty(deviceType)) {
+			throw new InvalidParameterException("50002");
+		}
+		
 	}
 
 }

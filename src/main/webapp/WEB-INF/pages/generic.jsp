@@ -129,7 +129,7 @@
 
 "profile.update.url" : "${apiHost}/v1/profile/%@?",
 
-"profile.update.image.url" : "${apiHost}/v1/profile/image/%@?",
+"profile.update.image.url" : "${apiHost}/v1/profile/image/%@?hello=%%\d%%\d", 
 
 "profile.update.image.status.url" : "${apiHost}/v1/profile/change-image-status/%@?",
 

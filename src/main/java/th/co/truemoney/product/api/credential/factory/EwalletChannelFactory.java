@@ -2,8 +2,6 @@ package th.co.truemoney.product.api.credential.factory;
 
 import org.springframework.stereotype.Component;
 
-import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
-
 @Component
 public class EwalletChannelFactory {
 
@@ -13,11 +11,9 @@ public class EwalletChannelFactory {
 	public Integer createCredential(String deviceType) {
 		if ("android".equals(deviceType)) {
 			return ANDROID_APP_CHANNEL_ID;
-		} else if (deviceType != null && deviceType.startsWith("iP"))  {
-			return IOS_APP_CHANNEL_ID;
 		} else {
-			throw new ServiceInventoryException();
-		}
+			return IOS_APP_CHANNEL_ID;
+		} 
 	}
 	
 }

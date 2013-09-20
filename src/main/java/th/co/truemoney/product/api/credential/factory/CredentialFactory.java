@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import th.co.truemoney.serviceinventory.ewallet.domain.ClientCredential;
-import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 
 @Component
 public class CredentialFactory {
@@ -19,10 +18,8 @@ public class CredentialFactory {
 	public ClientCredential createCredential(String deviceType) {
 		if ("android".equals(deviceType)) {
 			return androidAppLogin;
-		} else if (deviceType != null && deviceType.startsWith("iP"))  {
-			return iOSAppLogin;
 		} else {
-			throw new ServiceInventoryException();
-		}
+			return iOSAppLogin;
+		} 
 	}
 }

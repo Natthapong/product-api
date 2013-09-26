@@ -158,11 +158,8 @@ public class RegisterController extends BaseController {
     }
 
 	private Integer getEwalletChannelID(HttpServletRequest httpRequest) {
-		String deviceType = httpRequest.getParameter("device_type");		
-		if (ValidateUtil.isEmpty(deviceType)) {
-			throw new InvalidParameterException("50002");
-		}
-		Integer channelID = ewalletChannelFactory.createCredential(deviceType);
+		String deviceOS = ValidateUtil.isEmpty(httpRequest.getParameter("device_os")) ? "" : httpRequest.getParameter("device_os");
+		Integer channelID = ewalletChannelFactory.createCredential(deviceOS);
 		return channelID;
 	}
     

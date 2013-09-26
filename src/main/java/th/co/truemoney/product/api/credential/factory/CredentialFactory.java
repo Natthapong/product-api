@@ -15,8 +15,8 @@ public class CredentialFactory {
 	@Autowired @Qualifier("androidAppLogin")
 	private ClientCredential androidAppLogin;
 
-	public ClientCredential createCredential(String deviceType) {
-		if ("android".equals(deviceType)) {
+	public ClientCredential createCredential(String deviceOS) {
+		if ("android".equals(deviceOS)) {
 			return androidAppLogin;
 		} else {
 			return iOSAppLogin;

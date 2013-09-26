@@ -74,7 +74,7 @@ public class TestRegisterController {
 				this.tmnProfileServiceMock.validateEmail(anyInt(), any(String.class))
 		).thenReturn(email);
 
-		ResultActions result = doPost("/ewallet/profiles/validate-email?device_type=android", data);
+		ResultActions result = doPost("/ewallet/profiles/validate-email", data);
 		
 		result.andExpect(status().isOk());
 		result.andExpect(jsonPath("$.code").value("20000"));
@@ -98,7 +98,7 @@ public class TestRegisterController {
 				this.tmnProfileServiceMock.validateEmail(anyInt(), any(String.class))
 		).thenThrow(new ServiceInventoryException(400, failedCode, failedMessage,failedNamespace));
 		
-		ResultActions result = doPost("/ewallet/profiles/validate-email?device_type=android", data);
+		ResultActions result = doPost("/ewallet/profiles/validate-email", data);
 		
 		result.andExpect(status().isInternalServerError());
 		result.andExpect(jsonPath("$.code").value(failedCode));
@@ -125,7 +125,7 @@ public class TestRegisterController {
 			this.tmnProfileServiceMock.createProfile(anyInt(), any(TmnProfile.class))
 		).thenReturn(otp);
 		
-		ResultActions result = doPost("/ewallet/profiles?device_type=android", tmnProfile);
+		ResultActions result = doPost("/ewallet/profiles", tmnProfile);
 		
 		result.andExpect(status().isOk());
 		result.andExpect(jsonPath("$.code").value("20000"));
@@ -152,7 +152,7 @@ public class TestRegisterController {
 			.thenThrow(new ServiceInventoryException(400, failedCode, failedMessage,
 					failedNamespace));
 		
-		ResultActions result = doPost("/ewallet/profiles?device_type=android", tmnProfile);
+		ResultActions result = doPost("/ewallet/profiles", tmnProfile);
 		
 		result.andExpect(status().isInternalServerError());
 		result.andExpect(jsonPath("$.code").value(failedCode));
@@ -192,7 +192,7 @@ public class TestRegisterController {
 				this.tmnProfileServiceMock.getTruemoneyProfile(
 						any(String.class))).thenReturn(profileMock);
 		
-		ResultActions result = doPost("/ewallet/profiles/verify-otp?device_type=android", mockData);
+		ResultActions result = doPost("/ewallet/profiles/verify-otp", mockData);
 		
 		result.andExpect(status().isOk());
 		result.andExpect(jsonPath("$.code").value("20000"));
@@ -234,7 +234,7 @@ public class TestRegisterController {
 				this.tmnProfileServiceMock.getTruemoneyProfile(
 						any(String.class))).thenReturn(profileMock);
 		
-		ResultActions result = doPost("/ewallet/profiles/verify-otp?device_type=android", mockData);
+		ResultActions result = doPost("/ewallet/profiles/verify-otp", mockData);
 		
 		result.andExpect(status().isInternalServerError());
 		result.andExpect(jsonPath("$.code").value(failedCode));
@@ -281,7 +281,7 @@ public class TestRegisterController {
 						any(ClientCredential.class))
 			).thenReturn("");
 		
-		ResultActions result = doPost("/ewallet/profiles/verify-otp?device_type=android", mockData);
+		ResultActions result = doPost("/ewallet/profiles/verify-otp", mockData);
 		
 		result.andExpect(status().isInternalServerError());
 		result.andExpect(jsonPath("$.code").value(failedCode));
@@ -329,7 +329,7 @@ public class TestRegisterController {
 						any(ClientCredential.class))
 			).thenReturn("");
 		
-		ResultActions result = doPost("/ewallet/profiles/verify-otp?device_type=android", mockData);
+		ResultActions result = doPost("/ewallet/profiles/verify-otp", mockData);
 		
 		result.andExpect(status().isInternalServerError());
 		result.andExpect(jsonPath("$.code").value(failedCode));

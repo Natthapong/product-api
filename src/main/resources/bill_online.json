@@ -838,5 +838,35 @@
       "isInquiryOnline":true,
       "minAmount":50.0,
       "maxAmount":30000.0
+   },
+   "pea":{
+      "titleEn":"pea",
+      "titleTh":"การไฟฟ้าส่วนภูมิภาค",
+      "ref1Type":"none",
+      "ref2Type":"none",
+      "ref1TitleEn":"Account Number",
+      "ref1TitleTh":"หมายเลขผู้ใช้ไฟฟ้า",
+      "ref2TitleEn":"Ref. 2",
+      "ref2TitleTh":"ใบแจ้งค่าไฟฟ้าเลขที่",
+      "ref1Placeholder":"",
+      "ref2Placeholder":"",
+      "isInquiryOnline":false,
+      "minAmount":1.00,
+      "maxAmount":30000.0
+   },
+   "ttt":{
+      "titleEn":"ttt",
+      "titleTh":"โทรศัพท์บ้านทีทีแอนด์ที",
+      "ref1Type":"none",
+      "ref2Type":"none",
+      "ref1TitleEn":"Telephone Number",
+      "ref1TitleTh":"เลขที่อ้างอิง 1/หมายเลขโทรศัพท์",
+      "ref2TitleEn":"Ref. 2",
+      "ref2TitleTh":"เลขที่อ้างอิง 2",
+      "ref1Placeholder":"เบอร์โทรศัพท์บ้าน",
+      "ref2Placeholder":"",
+      "isInquiryOnline":false,
+      "minAmount":50.0,
+      "maxAmount":30000.0
    }
 }

@@ -61,6 +61,8 @@
 
 "payment.barcode.detail.url" : "${apiHost}/v1/bill-payment/barcode/%@/%@?",
 
+"payment.multi.barcode.detail.url" : "${apiHost}/v1/bill-payment/barcode/info/%@?",
+
 "payment.bill.create.url" : "${apiHost}/v1/bill-payment/verify/%@?",
 
 "payment.bill.confirm.url" : "${apiHost}/v1/bill-payment/%@/confirm/%@?",

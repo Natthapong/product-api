@@ -31,6 +31,12 @@
                     "titleTh": "ทรู 006",
                     "titleEn": "True 006",
                     "logo": "${mHost}/images/logo_bill/tic@2x.png"
+                },
+                {
+                	"serviceCode": "true",
+                	"titleTh": "โทรศัพท์บ้านทรู",
+                    "titleEn": "Fixed Line",
+                    "logo": "${mHost}/images/logo_bill/true@2x.png"
                 }
             ]
         },

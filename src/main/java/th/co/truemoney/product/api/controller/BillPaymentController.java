@@ -2,11 +2,13 @@ package th.co.truemoney.product.api.controller;
 
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,12 +80,21 @@ public class BillPaymentController extends BaseController {
     public @ResponseBody
     ProductResponse getBillInformationFromMultiBarcode(
     		@PathVariable String accessTokenID,
-    		@RequestBody List<String> barcodeList) {
+    		@RequestBody Map<String, String> request) {
     	
     	StopWatch timer = new StopWatch("getBillInformation ("+accessTokenID+")");
         timer.start();
         
-        if (barcodeList.size() <= 0) {
+        List<String> barcodeList = new ArrayList<String>();
+        
+        Set<String> keys = request.keySet();
+        for (String k : keys) {
+        	if (k.startsWith("barcode")) {
+        		barcodeList.add(request.get(k));
+        	}
+        }
+        
+        if (barcodeList.isEmpty()) {
         	throw new InvalidParameterException("5000");//TODO Fix this
         }
         

@@ -480,6 +480,8 @@ public class BillPaymentController extends BaseController {
             result = "ไทยประกันชีวิต";
         }else if("dlt".equals(target)){
             result = "กรมการขนส่งทางบก";
+        }else if("pea".equals(target)) {
+        	result = "การไฟฟ้าส่วนภูมิภาค";
         }
         return result;
     }

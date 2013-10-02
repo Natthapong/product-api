@@ -159,7 +159,7 @@
 
 "wallet.itunes.download.url" : "https://itunes.apple.com/app/truemoney-wallet/id663885752?l=th&mt=8",
 
-"support.minimum.app.version" : "1.2.1",
+"support.minimum.app.version" : "1.2",
 
 "support.maximum.app.version" : "1.2.1",
 

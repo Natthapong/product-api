@@ -82,8 +82,7 @@ public class BillPaymentController extends BaseController {
     		@PathVariable String accessTokenID,
     		@RequestBody Map<String, String> request) {
     	
-    	StopWatch timer = new StopWatch("getBillInformation ("+accessTokenID+")");
-        timer.start();
+    	StopWatch timer = startTimer("getBillInformation ("+accessTokenID+")");
         
         List<String> barcodeList = new ArrayList<String>();
         
@@ -103,8 +102,7 @@ public class BillPaymentController extends BaseController {
         Map<String, Object> data = BillResponse.builder()
                                         .setBill(bill)
                                         .buildBillInfoResponse();
-        timer.stop();
-        logger.info(timer.shortSummary());
+        stopTimer(timer);
 
         return createResponse(data);
     }
@@ -122,8 +120,7 @@ public class BillPaymentController extends BaseController {
             @PathVariable String barcode,
             @PathVariable String accessTokenID) {
 
-        StopWatch timer = new StopWatch("getBillInformation ("+accessTokenID+")");
-        timer.start();
+        StopWatch timer = startTimer("getBillInformation ("+accessTokenID+")");
         
         List<String> barcodeList = Arrays.asList(barcode);
         Bill bill = getBillInformationFromBarcode(barcodeList, accessTokenID);
@@ -131,8 +128,7 @@ public class BillPaymentController extends BaseController {
         Map<String, Object> data = BillResponse.builder()
                                         .setBill(bill)
                                         .buildBillInfoResponse();
-        timer.stop();
-        logger.info(timer.shortSummary());
+        stopTimer(timer);
 
         return createResponse(data);
     }
@@ -209,7 +205,6 @@ public class BillPaymentController extends BaseController {
     @RequestMapping(value = "/favorite/bill/{accessTokenID}", method = RequestMethod.POST)
     public @ResponseBody
     ProductResponse getBillInformationFromFavorite(@PathVariable String accessTokenID,@RequestBody Map<String, String> request){
-        // get
         String target = request.get("target");
         String ref1 = request.get("ref1");
         String ref2 = request.containsKey("ref2") ? request.get("ref2") : "";
@@ -273,8 +268,7 @@ public class BillPaymentController extends BaseController {
             @PathVariable String accessTokenID,
             @RequestBody Map<String, String> request) {
 
-        StopWatch timer = new StopWatch("createBillPayment ("+accessTokenID+")");
-        timer.start();
+        StopWatch timer = startTimer("createBillPayment ("+accessTokenID+")");
 
         String billID = (String)request.get("billID");
         BigDecimal inputAmount = new BigDecimal(request.get("amount").replace(",", ""));
@@ -287,9 +281,7 @@ public class BillPaymentController extends BaseController {
                                         .setOTP(otp)
                                         .setPaymentDraft(paymentDraft)
                                         .buildBillCreateResponse();
-
-        timer.stop();
-        logger.info(timer.shortSummary());
+        stopTimer(timer);
 
         return createResponse(data);
     }
@@ -302,10 +294,9 @@ public class BillPaymentController extends BaseController {
             @PathVariable String accessTokenID,
             @RequestBody Map<String, String> request) {
 
-        StopWatch timer = new StopWatch("verifyBillPayment for favorite bill ("+accessTokenID+")");
-        timer.start();
-        String inputAmount = request.get("amount");
+        StopWatch timer = startTimer("verifyBillPayment for favorite bill ("+accessTokenID+")");
 
+        String inputAmount = request.get("amount");
         if (ValidateUtil.isEmpty(inputAmount)) {
             throw new InvalidParameterException("60000");
         }
@@ -327,8 +318,7 @@ public class BillPaymentController extends BaseController {
             data.put("ref1", formattedTelNumber);
         }
 
-        timer.stop();
-        logger.info(timer.shortSummary());
+        stopTimer(timer);
 
         return createResponse(data);
     }
@@ -341,8 +331,7 @@ public class BillPaymentController extends BaseController {
             @PathVariable String accessTokenID,
             @RequestBody Map<String, String> request) {
 
-        StopWatch timer = new StopWatch("confirmBillPayment ("+accessTokenID+")");
-        timer.start();
+        StopWatch timer = startTimer("confirmBillPayment ("+accessTokenID+")");
 
         BillPaymentDraft draft = billPaymentService.getBillPaymentDraftDetail(draftID, accessTokenID);
         BillPaymentDraft.Status draftStatus = draft.getStatus();
@@ -361,9 +350,8 @@ public class BillPaymentController extends BaseController {
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("billPaymentStatus", transactionStatus.getStatus());
         data.put("billPaymentID", draftID); //billPaymentID has the same value as draftID
-
-        timer.stop();
-        logger.info(timer.shortSummary());
+        
+        stopTimer(timer);
 
         return createResponse(data);
     }
@@ -375,16 +363,14 @@ public class BillPaymentController extends BaseController {
             @PathVariable String billPaymentID,
             @PathVariable String accessTokenID) {
 
-        StopWatch timer = new StopWatch("getBillPaymentStatus ("+accessTokenID+")");
-        timer.start();
+        StopWatch timer = startTimer("getBillPaymentStatus ("+accessTokenID+")");
 
         BillPaymentTransaction.Status sts = this.billPaymentService.getBillPaymentStatus(billPaymentID, accessTokenID);
 
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("billPaymentStatus", sts.getStatus());
 
-        timer.stop();
-        logger.info(timer.shortSummary());
+        stopTimer(timer);
 
         return createResponse(data);
     }
@@ -396,8 +382,7 @@ public class BillPaymentController extends BaseController {
             @PathVariable String billPaymentID,
             @PathVariable String accessTokenID) {
 
-        StopWatch timer = new StopWatch("getBillPaymentDetail ("+accessTokenID+")");
-        timer.start();
+        StopWatch timer = startTimer("getBillPaymentDetail ("+accessTokenID+")");
 
         BillPaymentTransaction txn = this.billPaymentService.getBillPaymentResult(billPaymentID, accessTokenID);
 
@@ -428,9 +413,8 @@ public class BillPaymentController extends BaseController {
             String formattedTelNumber = Utils.formatTelNumber(bill.getRef1());
             data.put("ref1", formattedTelNumber);
         }
-
-        timer.stop();
-        logger.info(timer.shortSummary());
+        
+        stopTimer(timer);
 
         return createResponse(data);
     }
@@ -469,21 +453,28 @@ public class BillPaymentController extends BaseController {
 			BillConfigurationManager billConfigurationManager) {
 		this.billConfigurationManager = billConfigurationManager;
 	}
-
-	private String getTargetTitle(String target){
-        String result = "";
-        if("mea".equals(target)){
-            result = "การไฟฟ้านครหลวง";
-        }else if("water".equals(target)){
-            result = "การประปานครหลวง";
-        }else if("tli".equals(target)){
-            result = "ไทยประกันชีวิต";
-        }else if("dlt".equals(target)){
-            result = "กรมการขนส่งทางบก";
-        }else if("pea".equals(target)) {
-        	result = "การไฟฟ้าส่วนภูมิภาค";
-        }
-        return result;
+    
+    private StopWatch startTimer(String id) {
+    	StopWatch timer = new StopWatch(id);
+        timer.start();
+        return timer;
+    }
+    
+    private void stopTimer(StopWatch timer) {
+    	timer.stop();
+        logger.info(timer.shortSummary());
+    }
+    
+    private static Map<String, String> targetNameMap = new HashMap<String, String>();
+    static {
+    	targetNameMap.put("mea", "การไฟฟ้านครหลวง");
+    	targetNameMap.put("water", "การประปานครหลวง");
+    	targetNameMap.put("tli", "ไทยประกันชีวิต");
+    	targetNameMap.put("dlt", "กรมการขนส่งทางบก");
+    	targetNameMap.put("pea", "การไฟฟ้าส่วนภูมิภาค");
+    }
+	private String getTargetTitle(String target) {
+		return targetNameMap.containsKey(target) ? targetNameMap.get(target) : "";
     }
 
 }

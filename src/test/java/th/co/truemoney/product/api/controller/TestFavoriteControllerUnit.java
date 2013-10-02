@@ -157,19 +157,19 @@ public class TestFavoriteControllerUnit {
         assertEquals(6, items.size());
 
         FavoriteItem item0 = items.get(0);
-        assertEquals(9, item0.getWeight());
+        assertEquals(10, item0.getWeight());
         assertEquals("01/05/13 10:10", formatDateTime(item0.getDate()));
 
         FavoriteItem item1 = items.get(1);
-        assertEquals(9, item1.getWeight());
+        assertEquals(10, item1.getWeight());
         assertEquals("02/05/13 10:10", formatDateTime(item1.getDate()));
 
         FavoriteItem item2 = items.get(2);
-        assertEquals(9, item2.getWeight());
+        assertEquals(10, item2.getWeight());
         assertEquals("03/05/13 10:10", formatDateTime(item2.getDate()));
 
         FavoriteItem item3 = items.get(3);
-        assertEquals(8, item3.getWeight());
+        assertEquals(9, item3.getWeight());
 
         FavoriteItem item4 = items.get(4);
         assertEquals(5, item4.getWeight());

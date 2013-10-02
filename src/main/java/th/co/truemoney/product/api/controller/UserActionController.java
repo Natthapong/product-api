@@ -57,16 +57,17 @@ public class UserActionController extends BaseController {
 			throws ServiceInventoryException {
 
 		// validate
-		validateSignin(request.getUsername().toLowerCase().trim(), request.getPassword().trim(),request.getType().trim(), httpRequest.getParameter("device_type"));
+		validateSignin(request.getUsername().toLowerCase().trim(), request.getPassword().trim(),request.getType().trim());
 
 		String username = request.getUsername().trim();
 		String password = request.getPassword().trim();
-		String deviceType = httpRequest.getParameter("device_type").trim();		
-		EWalletOwnerCredential userLogin = new EWalletOwnerCredential(username, password, ewalletChannelFactory.createCredential(deviceType));
+		String deviceOS = ValidateUtil.isEmpty(httpRequest.getParameter("device_os")) ? "" : httpRequest.getParameter("device_os");
+				
+		EWalletOwnerCredential userLogin = new EWalletOwnerCredential(username, password, ewalletChannelFactory.createCredential(deviceOS));
 		
 		String token = "";
 		try {
-			ClientCredential appLogin = appLoginFactory.createCredential(deviceType);
+			ClientCredential appLogin = appLoginFactory.createCredential(deviceOS);
 			token = profileService.login(userLogin, appLogin);
 		} catch (ServiceInventoryException e) {
 			String errorcode = String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode());
@@ -213,7 +214,7 @@ public class UserActionController extends BaseController {
         return this.responseFactory.createSuccessProductResonse(Collections.<String, Object> emptyMap());
     }
 
-	private void validateSignin(String username, String password, String type, String deviceType) {
+	private void validateSignin(String username, String password, String type) {
 
 		if (type != null) {
 			if ("email".equals(type)) {
@@ -225,7 +226,6 @@ public class UserActionController extends BaseController {
 				}
 			} else if ("mobile".equals(type)) {
 				if (!ValidateUtil.checkMobileNumber(username)) {
-					System.out.println("Mobile error");
 					throw new InvalidParameterException("50001");
 				}
 				if (ValidateUtil.isEmpty(password)) {
@@ -233,11 +233,6 @@ public class UserActionController extends BaseController {
 				}
 			}
 		}
-		
-		if (ValidateUtil.isEmpty(deviceType)) {
-			throw new InvalidParameterException("50002");
-		}
-		
 	}
 
 }

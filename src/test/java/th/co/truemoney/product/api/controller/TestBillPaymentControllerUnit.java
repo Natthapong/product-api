@@ -259,14 +259,14 @@ public class TestBillPaymentControllerUnit {
                 anyString(), anyString());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
+    @SuppressWarnings("unchecked")
     public void getBillInformationSuccess() throws ServiceInventoryException,
             ParseException {
 
         when(
                 billPaymentServiceMock.retrieveBillInformationWithBarcode(
-                        anyString(), anyString())).thenReturn(
+                        any(List.class), anyString())).thenReturn(
                 createStubbedBillInfo());
 
         ProductResponse resp = billPaymentController.getBillInformationFromBarcode(

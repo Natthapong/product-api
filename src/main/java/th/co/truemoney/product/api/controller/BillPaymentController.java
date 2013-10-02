@@ -2,9 +2,13 @@ package th.co.truemoney.product.api.controller;
 
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,8 +68,54 @@ public class BillPaymentController extends BaseController {
     BillConfigurationManager billConfigurationManager;
     
     private Logger logger = Logger.getLogger(BillPaymentController.class);
+    
+    /**
+     * Get multi-barcode bill information
+     * 
+     * @param accessTokenID
+     * @param barcodeList
+     * @return
+     */
+    @RequestMapping(value = "/barcode/info/{accessTokenID}", method = RequestMethod.POST) 
+    public @ResponseBody
+    ProductResponse getBillInformationFromMultiBarcode(
+    		@PathVariable String accessTokenID,
+    		@RequestBody Map<String, String> request) {
+    	
+    	StopWatch timer = new StopWatch("getBillInformation ("+accessTokenID+")");
+        timer.start();
+        
+        List<String> barcodeList = new ArrayList<String>();
+        
+        Set<String> keys = request.keySet();
+        for (String k : keys) {
+        	if (k.startsWith("barcode")) {
+        		barcodeList.add(request.get(k));
+        	}
+        }
+        
+        if (barcodeList.isEmpty()) {
+        	throw new InvalidParameterException("5000");//TODO Fix this
+        }
+        
+        Bill bill = getBillInformationFromBarcode(barcodeList, accessTokenID);
+        
+        Map<String, Object> data = BillResponse.builder()
+                                        .setBill(bill)
+                                        .buildBillInfoResponse();
+        timer.stop();
+        logger.info(timer.shortSummary());
 
-    // get bill by barcode
+        return createResponse(data);
+    }
+    
+    /**
+     * Get single barcode bill information
+     * 
+     * @param barcode
+     * @param accessTokenID
+     * @return
+     */
     @RequestMapping(value = "/barcode/{barcode}/{accessTokenID}", method = RequestMethod.GET)
     public @ResponseBody
     ProductResponse getBillInformationFromBarcode(
@@ -74,10 +124,23 @@ public class BillPaymentController extends BaseController {
 
         StopWatch timer = new StopWatch("getBillInformation ("+accessTokenID+")");
         timer.start();
-        Bill bill;
+        
+        List<String> barcodeList = Arrays.asList(barcode);
+        Bill bill = getBillInformationFromBarcode(barcodeList, accessTokenID);
 
-        try{
-            bill = billPaymentService.retrieveBillInformationWithBarcode(barcode, accessTokenID);
+        Map<String, Object> data = BillResponse.builder()
+                                        .setBill(bill)
+                                        .buildBillInfoResponse();
+        timer.stop();
+        logger.info(timer.shortSummary());
+
+        return createResponse(data);
+    }
+    
+    private Bill getBillInformationFromBarcode(List<String> barcodeList, String accessTokenID) {
+    	Bill bill;
+    	try{
+            bill = billPaymentService.retrieveBillInformationWithBarcode(barcodeList, accessTokenID);
         }catch(ServiceInventoryException e){
             if(("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace()) && "1012".equals(e.getErrorCode()))){
                 String targetTitle = getTargetTitle(Utils.removeSuffix(e.getData().get("target").toString()));
@@ -99,17 +162,10 @@ public class BillPaymentController extends BaseController {
                 throw e;
             }
         }
-
-        Map<String, Object> data = BillResponse.builder()
-                                        .setBill(bill)
-                                        .buildBillInfoResponse();
-        timer.stop();
-        logger.info(timer.shortSummary());
-
-        return createResponse(data);
+    	return bill;
     }
-
-  //get bill key-in
+    
+    //get bill key-in
     @RequestMapping(value = "/key-in/bill/{accessTokenID}", method = RequestMethod.POST)
     public @ResponseBody
     ProductResponse getBillInformationFromKeyInBillCode(

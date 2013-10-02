@@ -61,6 +61,8 @@
 
 "payment.barcode.detail.url" : "${apiHost}/v1/bill-payment/barcode/%@/%@?",
 
+"payment.multi.barcode.detail.url" : "${apiHost}/v1/bill-payment/barcode/info/%@?",
+
 "payment.bill.create.url" : "${apiHost}/v1/bill-payment/verify/%@?",
 
 "payment.bill.confirm.url" : "${apiHost}/v1/bill-payment/%@/confirm/%@?",
@@ -129,7 +131,7 @@
 
 "profile.update.url" : "${apiHost}/v1/profile/%@?",
 
-"profile.update.image.url" : "${apiHost}/v1/profile/image/%@?",
+"profile.update.image.url" : "${apiHost}/v1/profile/image/%@?", 
 
 "profile.update.image.status.url" : "${apiHost}/v1/profile/change-image-status/%@?",
 
@@ -140,6 +142,8 @@
 "system.offline" : "false",
 
 "support.video.url" : "${mHost}/info/register/introduction.html",
+
+"support.intro.video.url" : "${mHost}/info/register/introduction.html",
 
 "buy.e-pin.verify.url" : "${apiHost}/v1/buy/e-pin/draft/verifyAndCreate/%@?",
 
@@ -155,9 +159,9 @@
 
 "wallet.itunes.download.url" : "https://itunes.apple.com/app/truemoney-wallet/id663885752?l=th&mt=8",
 
-"support.minimum.app.version" : "1.0",
+"support.minimum.app.version" : "1.2",
 
-"support.maximum.app.version" : "1.2",
+"support.maximum.app.version" : "1.2.1",
 
 <jsp:include page="../classes/epin_price_list.conf" />
 

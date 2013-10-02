@@ -9,12 +9,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentConfirmationInfo;
@@ -39,7 +42,9 @@ public class TestBillPaymentController extends BaseTestController {
         private static final String fakeBillPaymentID = fakeAccessToken;
 
         private static final String getBarcodeDetailURL = String.format("/bill-payment/barcode/%s/%s", fakeBarcode, fakeAccessToken);
-
+        
+        private static final String getMultiBarcodeDetailURL = String.format("/bill-payment/barcode/info/%s", fakeAccessToken);
+        
         private static final String createBillPaymentURL = String.format("/bill-payment/verify/%s", fakeAccessToken);
 
         private static final String confirmBillPaymentURL = String.format("/bill-payment/%s/confirm/%s", fakeBillID, fakeAccessToken);
@@ -54,27 +59,63 @@ public class TestBillPaymentController extends BaseTestController {
 
         private static final String getKeyInBillPaymentURL = String.format("/bill-payment/key-in/bill/%s", fakeAccessToken);
 
-        @Test
-        public void getBillInformationSuccess() throws Exception {
+		@Test
+		@SuppressWarnings("unchecked")
+        public void getSingleBarcodeBillInformationSuccess() throws Exception {
                 when(
                         billPaymentServiceMock.retrieveBillInformationWithBarcode(
-                                anyString(),
+                                any(List.class),
                                 anyString()
                         )
                 ).thenReturn(createStubbedBillInfo("tcg"));
 
                 this.verifySuccess(this.doGET(getBarcodeDetailURL))
-                .andExpect(jsonPath("$.data.titleTh").value(""))
-                .andExpect(jsonPath("$.data.titleEn").value(""))
-                .andExpect(jsonPath("$..isFavoritable").doesNotExist())
-                .andExpect(jsonPath("$..dueDate").value("30/08/2013"));
+	                .andExpect(jsonPath("$.data.titleTh").value(""))
+	                .andExpect(jsonPath("$.data.titleEn").value(""))
+	                .andExpect(jsonPath("$..isFavoritable").doesNotExist())
+	                .andExpect(jsonPath("$..dueDate").value("30/08/2013"));
         }
-
-        @Test
+        
+		@Test
+		@SuppressWarnings("unchecked")
+        public void getMultiBarcodeBillInformationSuccess() throws Exception {
+        	String b1 = "|11111";
+        	String b2 = "|22222";
+        	String b3 = "|33333";
+        	Map<String, String> barcodeMap = new HashMap<String, String>();
+        	barcodeMap.put("barcode1", b1);
+        	barcodeMap.put("barcode2", b2);
+        	barcodeMap.put("barcode3", b3);
+        	when(
+        		billPaymentServiceMock.retrieveBillInformationWithBarcode(
+        				any(List.class),
+        				anyString()
+        		)
+        	).thenReturn(new Bill("1", "pea", "111112222233333", null, new BigDecimal(500.00)));
+        	
+        	this.verifySuccess(this.doPOST(getMultiBarcodeDetailURL, barcodeMap)
+        			.andExpect(jsonPath("$.data.target").value("pea")));
+        }
+        
+		@Test
+		@SuppressWarnings("unchecked")
+        public void getMultiBarcodeBillInformationInvalidRequestParameter() throws Exception {
+        	when ( 
+        		billPaymentServiceMock.retrieveBillInformationWithBarcode(
+        			any(List.class), 
+        			anyString()
+        		)
+        	).thenReturn(new Bill("1", "pea", "111112222233333", null, new BigDecimal(500.00)));
+        	
+        	this.verifyBadRequest(this.doPOST(getMultiBarcodeDetailURL, new HashMap<String, String>()).andDo(MockMvcResultHandlers.print()));
+        }
+		
+		@Test
+		@SuppressWarnings("unchecked")
         public void getBillInformationFail() throws Exception {
                 when(
                         billPaymentServiceMock.retrieveBillInformationWithBarcode(
-                                anyString(),
+                                any(List.class),
                                 anyString()
                         )
                 ).thenThrow(new ServiceInventoryException(400, "", "", "TMN-PRODUCT"));
@@ -82,7 +123,8 @@ public class TestBillPaymentController extends BaseTestController {
                 this.verifyFailed(this.doGET(getBarcodeDetailURL));
         }
 
-        @Test
+		@Test
+		@SuppressWarnings("unchecked")
         public void getBillInformationOverdueMEAFail() throws Exception {
             String strDate = "20/05/2013";
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -94,7 +136,7 @@ public class TestBillPaymentController extends BaseTestController {
 
                 when(
                         billPaymentServiceMock.retrieveBillInformationWithBarcode(
-                                anyString(),
+                                any(List.class),
                                 anyString()
                         )
                 ).thenThrow(new ServiceInventoryException(500, "1012", "", "TMN-SERVICE-INVENTORY", "", data));
@@ -105,7 +147,8 @@ public class TestBillPaymentController extends BaseTestController {
                 .andExpect(jsonPath("$.messageTh").value(containsString("1,234.55")));
         }
 
-        @Test
+		@Test
+		@SuppressWarnings("unchecked")
         public void getBillInformationOverdueWATERFail() throws Exception {
             String strDate = "20/05/2013";
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -117,7 +160,7 @@ public class TestBillPaymentController extends BaseTestController {
 
                 when(
                         billPaymentServiceMock.retrieveBillInformationWithBarcode(
-                                anyString(),
+                                any(List.class),
                                 anyString()
                         )
                 ).thenThrow(new ServiceInventoryException(500, "1012", "", "TMN-SERVICE-INVENTORY", "", data));

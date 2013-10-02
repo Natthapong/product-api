@@ -55,9 +55,10 @@ public class WalletActivity {
         actionList.put("tmcc", "บัตรเงินสดทรูมันนี่");
         actionList.put("ecash", "บัตรเงินสดทรูมันนี่");
         
-        serviceCodeList.put("rft", 10);
-        serviceCodeList.put("tmvh", 9);
-        serviceCodeList.put("trmv", 8);
+        serviceCodeList.put("rft", 11);
+        serviceCodeList.put("tmvh", 10);
+        serviceCodeList.put("trmv", 9);
+        serviceCodeList.put("true", 8);
         serviceCodeList.put("tr", 7);
         serviceCodeList.put("ti", 6);
         serviceCodeList.put("tlp", 5);

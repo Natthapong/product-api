@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import th.co.truemoney.serviceinventory.bill.domain.Bill;
 import th.co.truemoney.serviceinventory.bill.domain.BillPaymentConfirmationInfo;
@@ -94,7 +96,7 @@ public class TestBillPaymentController extends BaseTestController {
         	this.verifySuccess(this.doPOST(getMultiBarcodeDetailURL, barcodeMap)
         			.andExpect(jsonPath("$.data.target").value("pea")));
         }
-        /*
+        
 		@Test
 		@SuppressWarnings("unchecked")
         public void getMultiBarcodeBillInformationInvalidRequestParameter() throws Exception {
@@ -105,9 +107,9 @@ public class TestBillPaymentController extends BaseTestController {
         		)
         	).thenReturn(new Bill("1", "pea", "111112222233333", null, new BigDecimal(500.00)));
         	
-        	this.verifyBadRequest(this.doPOST(getMultiBarcodeDetailURL, new ArrayList<String>()).andDo(MockMvcResultHandlers.print()));
+        	this.verifyBadRequest(this.doPOST(getMultiBarcodeDetailURL, new HashMap<String, String>()).andDo(MockMvcResultHandlers.print()));
         }
-		*/
+		
 		@Test
 		@SuppressWarnings("unchecked")
         public void getBillInformationFail() throws Exception {

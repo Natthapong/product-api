@@ -51,7 +51,51 @@ import th.co.truemoney.serviceinventory.exception.ServiceInventoryException;
 @Controller
 @RequestMapping(value = "/bill-payment")
 public class BillPaymentController extends BaseController {
+	
+	private static final String PRODUCT_NSPACE = "TMN-PRODUCT";
 
+	private static final String PARAM_REF1 = "ref1";
+    private static final String PARAM_REF2 = "ref2";
+    private static final String PARAM_TARGET = "target";
+    private static final String PARAM_AMOUNT = "amount";
+    private static final String PARAM_BILL_ID = "billID";
+    private static final String PARAM_DUE_DATE = "dueDate";
+    private static final String PARAM_OTP_STR = "otpString";
+    private static final String PARAM_REMARK_TH = "remarkTh";
+    private static final String PARAM_REMARK_EN = "remarkEn";
+    private static final String PARAM_OTP_REF = "otpRefCode";
+    private static final String PARAM_INQUIRY_TYPE = "inquiry";
+    private static final String PARAM_BARCODE_PREFIX = "barcode";
+    private static final String PARAM_BILL_NAME_TH = "billNameTh";
+    private static final String PARAM_BILL_NAME_EN = "billNameEn";
+    private static final String PARAM_TARGET_TITLE = "targetTitle";
+    private static final String PARAM_MOBILE_NUMBER = "mobileNumber";
+    private static final String PARAM_BILL_PAYMENT_ID = "billPaymentID";
+    private static final String PARAM_BILL_PAYMENT_STATUS = "billPaymentStatus";
+    
+    private static Map<String, String> targetNameMap = new HashMap<String, String>();
+    static {
+    	targetNameMap.put("tli", "ไทยประกันชีวิต");
+    	targetNameMap.put("mea", "การไฟฟ้านครหลวง");
+    	targetNameMap.put("dlt", "กรมการขนส่งทางบก");
+    	targetNameMap.put("pea", "การไฟฟ้าส่วนภูมิภาค");
+    	targetNameMap.put("water", "การประปานครหลวง");
+    }
+    
+	private static final Map<String, String[]> billInfoErrorMapping = new HashMap<String, String[]>();
+    static {
+    	billInfoErrorMapping.put("PCS:PCS-30024", new String[]{ PRODUCT_NSPACE, "70000"});
+    	billInfoErrorMapping.put("TMN-SERVICE-INVENTORY:1012", new String[]{ PRODUCT_NSPACE, "80000" });
+    	billInfoErrorMapping.put("TMN-SERVICE-INVENTORY:1020", new String[]{ PRODUCT_NSPACE, "80000" });
+    	billInfoErrorMapping.put("TMN-SERVICE-INVENTORY:1021", new String[]{ PRODUCT_NSPACE, "80001" });
+    	billInfoErrorMapping.put("MEA:C-02", new String[]{ "TMN-PRODUCT", "80001"});
+    }
+
+	private Logger logger = Logger.getLogger(BillPaymentController.class);
+
+	@Autowired
+	private BillConfigurationManager billConfigurationManager;
+	
     @Autowired
     private BillPaymentService billPaymentService;
 
@@ -63,11 +107,6 @@ public class BillPaymentController extends BaseController {
 
     @Autowired
     private MessageManager messageManager;
-    
-    @Autowired
-    BillConfigurationManager billConfigurationManager;
-    
-    private Logger logger = Logger.getLogger(BillPaymentController.class);
     
     /**
      * Get multi-barcode bill information
@@ -84,15 +123,7 @@ public class BillPaymentController extends BaseController {
     	
     	StopWatch timer = startTimer("getBillInformation ("+accessTokenID+")");
         
-        List<String> barcodeList = new ArrayList<String>();
-        
-        Set<String> keys = request.keySet();
-        for (String k : keys) {
-        	if (k.startsWith("barcode")) {
-        		barcodeList.add(request.get(k));
-        	}
-        }
-        
+        List<String> barcodeList = getBarcodeParameterList(request);
         if (barcodeList.isEmpty()) {
         	throw new InvalidParameterException("5000");//TODO Fix this
         }
@@ -105,6 +136,18 @@ public class BillPaymentController extends BaseController {
         stopTimer(timer);
 
         return createResponse(data);
+    }
+    
+    private List<String> getBarcodeParameterList(Map<String, String> request) {
+    	List<String> barcodeList = new ArrayList<String>();
+        Set<String> keys = request.keySet();
+        for (String k : keys) {
+        	// 'barcode1', 'barcode2', 'barcode3' is expected
+        	if (k.startsWith(PARAM_BARCODE_PREFIX)) {
+        		barcodeList.add(request.get(k));
+        	}
+        }
+        return barcodeList;
     }
     
     /**
@@ -132,61 +175,60 @@ public class BillPaymentController extends BaseController {
 
         return createResponse(data);
     }
-    
+        
     private Bill getBillInformationFromBarcode(List<String> barcodeList, String accessTokenID) {
-    	Bill bill;
     	try{
-            bill = billPaymentService.retrieveBillInformationWithBarcode(barcodeList, accessTokenID);
-        }catch(ServiceInventoryException e){
-            if(("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace()) && "1012".equals(e.getErrorCode()))){
-                String targetTitle = getTargetTitle(Utils.removeSuffix(e.getData().get("target").toString()));
-                e.setErrorCode("80000");
-                e.setErrorNamespace("TMN-PRODUCT");
-                Date dueDate = new Date((Long)e.getData().get("dueDate"));
-                e.getData().put("dueDate",Utils.formatDate4Y(dueDate));
-                e.getData().put("targetTitle",targetTitle);
-                throw e;
-            } else if(("TMN-SERVICE-INVENTORY".equals(e.getErrorNamespace()) && "1021".equals(e.getErrorCode()))){
-                String targetTitle = getTargetTitle(Utils.removeSuffix(e.getData().get("target").toString()));
-                e.setErrorCode("80001");
-                e.setErrorNamespace("TMN-PRODUCT");
-                Date dueDate = new Date((Long)e.getData().get("dueDate"));
-                e.getData().put("dueDate",Utils.formatDate4Y(dueDate));
-                e.getData().put("targetTitle",targetTitle);
-                throw e;                
-            } else{
-                throw e;
-            }
+            return billPaymentService.retrieveBillInformationWithBarcode(barcodeList, accessTokenID);
+        } catch(ServiceInventoryException e) {
+        	String errorLookupKey = String.format("%s:%s", e.getErrorNamespace(), e.getErrorCode());
+        	if (billInfoErrorMapping.containsKey(errorLookupKey)) {
+        		String targetCode = Utils.removeSuffix(e.getData().get(PARAM_TARGET).toString());
+        		e.getData().put(PARAM_TARGET_TITLE, getTargetTitle(targetCode));
+        		Date dueDate = new Date((Long)e.getData().get(PARAM_DUE_DATE));
+        		e.getData().put(PARAM_DUE_DATE,Utils.formatDate4Y(dueDate));
+        		String[] newError = billInfoErrorMapping.get(errorLookupKey);
+        		e.setErrorNamespace(newError[0]);
+        		e.setErrorCode(newError[1]);
+        	}
+            throw e;
         }
-    	return bill;
+    }
+    
+    private String getRequestParameter(Map<String, String> parameters, String parameterName, String defaultValue)  {
+    	return parameters.containsKey(parameterName) ? parameters.get(parameterName) : defaultValue;
     }
     
     //get bill key-in
     @RequestMapping(value = "/key-in/bill/{accessTokenID}", method = RequestMethod.POST)
     public @ResponseBody
     ProductResponse getBillInformationFromKeyInBillCode(
-            @PathVariable String accessTokenID, @RequestBody Map<String,String> request) {
+            @PathVariable String accessTokenID, 
+            @RequestBody Map<String,String> request) {
 
-        String target = request.get("target");
-        String ref1 = request.get("ref1");
-        String ref2 = request.containsKey("ref2") ? request.get("ref2") : "";
-        String inquiryType = request.get("inquiry");
-        String inputAmount = request.containsKey("amount") ? request.get("amount") : "0";
+        String ref1Val = getRequestParameter(request, PARAM_REF1, "");
+        String ref2Val = getRequestParameter(request, PARAM_REF2, "");
+        String target = getRequestParameter(request, PARAM_TARGET, "");
+        String inputAmount = getRequestParameter(request, PARAM_AMOUNT, "0");
+        String inquiryType = getRequestParameter(request, PARAM_INQUIRY_TYPE, "");
 
         if (ValidateUtil.isEmpty(target)) {
             throw new InvalidParameterException("60000");
         }
 
         BigDecimal amount = new BigDecimal(inputAmount.replace(",", ""));
+        InquiryOutstandingBillType type = InquiryOutstandingBillType.valueFromString(inquiryType);
 
         Bill bill;
         try{
-            bill = billPaymentService.retrieveBillInformationWithKeyin(target, ref1, ref2, amount, InquiryOutstandingBillType.valueFromString(inquiryType), accessTokenID);
-        }catch(ServiceInventoryException e){
-        	String error = String.format("%s.%s", e.getErrorNamespace(), e.getErrorCode());
-        	String targetCode = Utils.removeSuffix(target);
-            if("PCS.PCS-30024".equals(error) && ("tmvh".equalsIgnoreCase(targetCode) || "trmv".equalsIgnoreCase(targetCode))){
-            	throw new ServiceInventoryException(500,"70000","","TMN-PRODUCT");
+            bill = billPaymentService.retrieveBillInformationWithKeyin(target, ref1Val, ref2Val, amount, type, accessTokenID);
+        } catch(ServiceInventoryException e)  {
+        	String errorLookupKey = String.format("%s:%s", e.getErrorNamespace(), e.getErrorCode());
+            if (billInfoErrorMapping.containsKey(errorLookupKey)) {
+            	String targetCode = Utils.removeSuffix(target);
+            	String[] newError = billInfoErrorMapping.get(errorLookupKey);
+            	if ("tmvh".equalsIgnoreCase(targetCode) || "trmv".equalsIgnoreCase(targetCode)) {
+            		throw new ServiceInventoryException(500, newError[1],"", newError[0]);
+            	}
             }
             throw e;
         }
@@ -200,55 +242,54 @@ public class BillPaymentController extends BaseController {
 
         return createResponse(data);
     }
-
+    
     // get bill favorite
     @RequestMapping(value = "/favorite/bill/{accessTokenID}", method = RequestMethod.POST)
     public @ResponseBody
-    ProductResponse getBillInformationFromFavorite(@PathVariable String accessTokenID,@RequestBody Map<String, String> request){
-        String target = request.get("target");
-        String ref1 = request.get("ref1");
-        String ref2 = request.containsKey("ref2") ? request.get("ref2") : "";
-        String inquiryType = request.get("inquiry");
-        String inputAmount = request.containsKey("amount") ? request.get("amount") : "0";
+    ProductResponse getBillInformationFromFavorite(
+    		@PathVariable String accessTokenID,
+    		@RequestBody Map<String, String> request) {
+    	
+    	String ref1Val = getRequestParameter(request, PARAM_REF1, "");
+        String ref2Val = getRequestParameter(request, PARAM_REF2, "");
+        String target = getRequestParameter(request, PARAM_TARGET, "");
+        String inputAmount = getRequestParameter(request, PARAM_AMOUNT, "0");
+        String inquiryType = getRequestParameter(request, PARAM_INQUIRY_TYPE, "");
 
         if (ValidateUtil.isEmpty(target)) {
             throw new InvalidParameterException("60000");
         }
 
         BigDecimal amount = new BigDecimal(inputAmount.replace(",", ""));
-
+        InquiryOutstandingBillType type = InquiryOutstandingBillType.valueFromString(inquiryType);
+        
         Bill bill = null;
         try {
-            bill = billPaymentService.retrieveBillInformationWithUserFavorite(
-            		target, ref1, ref2, amount, InquiryOutstandingBillType.valueFromString(inquiryType), accessTokenID);
+            bill = billPaymentService.retrieveBillInformationWithUserFavorite(target, ref1Val, ref2Val, amount, type, accessTokenID);
         } catch(ServiceInventoryException e) {
-        	String error = e.getErrorNamespace() + "." + e.getErrorCode();
-            if("PCS.PCS-30024".equals(error)) {
+        	String errorLookupKey = e.getErrorNamespace() + ":" + e.getErrorCode();
+        	if("PCS:PCS-30024".equals(errorLookupKey)) {
             	String serviceCode = Utils.removeSuffix(target);
                 if("tmvh".equals(serviceCode) || "trmv".equals(serviceCode)){
-                    throw new ServiceInventoryException(500,"70000","","TMN-PRODUCT");
+                    throw new ServiceInventoryException(500, "70000","", PRODUCT_NSPACE);
                 } else if("mea".equals(serviceCode)) {
-                    throw new ServiceInventoryException(500,"90000","","TMN-PRODUCT");
+                    throw new ServiceInventoryException(500, "90000","", PRODUCT_NSPACE);
                 }
-            } else if(("TMN-SERVICE-INVENTORY.1012".equals(error)) 
-            		|| ("TMN-SERVICE-INVENTORY.1020".equals(error))) {
-                String serviceCode = e.getData().get("target").toString();
-                Date dueDate = new Date((Long)e.getData().get("dueDate"));
-                e.setErrorCode("80000");
-                e.setErrorNamespace("TMN-PRODUCT");
-                e.getData().put("dueDate",Utils.formatDate4Y(dueDate));
-                e.getData().put("targetTitle", getTargetTitle(Utils.removeSuffix(serviceCode)));
-                throw e;
-            } else if ("MEA.C-02".equals(error)) {
-            	String targetTitle = getTargetTitle(Utils.removeSuffix(target));
-            	Map<String, Object> data = new HashMap<String, Object>();
-            	data.put("targetTitle", targetTitle);
-
-            	e.setData(data);
-            	e.setErrorCode("80001");
-            	e.setErrorNamespace("TMN-PRODUCT");
-			}
-            
+        	} else if (billInfoErrorMapping.containsKey(errorLookupKey)) {
+            	String[] newError = billInfoErrorMapping.get(errorLookupKey);
+                e.setErrorCode(newError[1]);
+                e.setErrorNamespace(newError[0]);
+                
+                if (e.getData().containsKey(PARAM_TARGET)) {
+                	String targetCode = e.getData().get(PARAM_TARGET).toString();
+                	e.getData().put(PARAM_TARGET_TITLE, getTargetTitle(Utils.removeSuffix(targetCode)));
+                }
+                
+                if (e.getData().containsKey(PARAM_DUE_DATE)) {
+                	Date dueDate = new Date((Long)e.getData().get(PARAM_DUE_DATE));
+                	e.getData().put(PARAM_DUE_DATE,Utils.formatDate4Y(dueDate));
+                }
+            }
             throw e;
         }
 
@@ -257,7 +298,7 @@ public class BillPaymentController extends BaseController {
                 .buildBillInfoResponse();
 
         String formattedMobileNumber = Utils.formatTelephoneNumber(bill.getRef1());
-        data.put("ref1", formattedMobileNumber);
+        data.put(PARAM_REF1, formattedMobileNumber);
         return createResponse(data);
     }
 
@@ -270,8 +311,9 @@ public class BillPaymentController extends BaseController {
 
         StopWatch timer = startTimer("createBillPayment ("+accessTokenID+")");
 
-        String billID = (String)request.get("billID");
-        BigDecimal inputAmount = new BigDecimal(request.get("amount").replace(",", ""));
+        String billID = getRequestParameter(request, PARAM_BILL_ID, "");
+        String amount = getRequestParameter(request, PARAM_AMOUNT, "").replaceAll(",", "");
+        BigDecimal inputAmount = new BigDecimal(amount);
 
         BillPaymentDraft paymentDraft = this.billPaymentService.verifyPaymentAbility(billID, inputAmount, accessTokenID);
 
@@ -295,13 +337,13 @@ public class BillPaymentController extends BaseController {
             @RequestBody Map<String, String> request) {
 
         StopWatch timer = startTimer("verifyBillPayment for favorite bill ("+accessTokenID+")");
-
-        String inputAmount = request.get("amount");
+        
+        String inputAmount = getRequestParameter(request, PARAM_AMOUNT, "").replaceAll(",", "");
         if (ValidateUtil.isEmpty(inputAmount)) {
             throw new InvalidParameterException("60000");
         }
 
-        BigDecimal amount = new BigDecimal(inputAmount.replace(",", ""));
+        BigDecimal amount = new BigDecimal(inputAmount);
         BillPaymentDraft paymentDraft = billPaymentService.verifyPaymentAbility(
                 billInfoID, amount, accessTokenID);
 
@@ -312,10 +354,10 @@ public class BillPaymentController extends BaseController {
         Bill bill = paymentDraft.getBillInfo();
         if(ValidateUtil.isMobileNumber(bill.getRef1())) {
             String formattedMobileNumber = Utils.formatMobileNumber(bill.getRef1());
-            data.put("ref1", formattedMobileNumber);
+            data.put(PARAM_REF1, formattedMobileNumber);
         }else if(ValidateUtil.isTelNumber(bill.getRef1())){
             String formattedTelNumber = Utils.formatTelNumber(bill.getRef1());
-            data.put("ref1", formattedTelNumber);
+            data.put(PARAM_REF1, formattedTelNumber);
         }
 
         stopTimer(timer);
@@ -335,11 +377,11 @@ public class BillPaymentController extends BaseController {
 
         BillPaymentDraft draft = billPaymentService.getBillPaymentDraftDetail(draftID, accessTokenID);
         BillPaymentDraft.Status draftStatus = draft.getStatus();
-
+        
         if (draftStatus != Status.OTP_CONFIRMED) {
-            String otpStr = request.get("otpString");
-            String otpRef = request.get("otpRefCode");
-            String mobile = request.get("mobileNumber");
+            String otpStr = getRequestParameter(request, PARAM_OTP_STR, "");
+            String otpRef = getRequestParameter(request, PARAM_OTP_REF, "");
+            String mobile = getRequestParameter(request, PARAM_MOBILE_NUMBER, "");
 
             OTP otp = new OTP(mobile, otpRef, otpStr);
             authService.verifyOTP(draftID, otp, accessTokenID);
@@ -348,8 +390,8 @@ public class BillPaymentController extends BaseController {
         BillPaymentTransaction.Status transactionStatus = billPaymentService.performPayment(draftID, accessTokenID);
 
         Map<String, Object> data = new HashMap<String, Object>();
-        data.put("billPaymentStatus", transactionStatus.getStatus());
-        data.put("billPaymentID", draftID); //billPaymentID has the same value as draftID
+        data.put(PARAM_BILL_PAYMENT_STATUS, transactionStatus.getStatus());
+        data.put(PARAM_BILL_PAYMENT_ID, draftID); //billPaymentID has the same value as draftID
         
         stopTimer(timer);
 
@@ -368,7 +410,7 @@ public class BillPaymentController extends BaseController {
         BillPaymentTransaction.Status sts = this.billPaymentService.getBillPaymentStatus(billPaymentID, accessTokenID);
 
         Map<String, Object> data = new HashMap<String, Object>();
-        data.put("billPaymentStatus", sts.getStatus());
+        data.put(PARAM_BILL_PAYMENT_STATUS, sts.getStatus());
 
         stopTimer(timer);
 
@@ -397,21 +439,21 @@ public class BillPaymentController extends BaseController {
         String target = Utils.removeSuffix(bill.getTarget());
         BillConfiguration billConf = billConfigurationManager.getBillReference(target);
         if (billConf != null) {
-        	data.put("billNameEn", billConf.getTitleEn());
-        	data.put("billNameTh", billConf.getTitleTh());
+        	data.put(PARAM_BILL_NAME_EN, billConf.getTitleEn());
+        	data.put(PARAM_BILL_NAME_TH, billConf.getTitleTh());
         }
         if ("tmvh".equals(target) || "trmv".equals(target) || "rft".equals(target)) {
             // remark message that display at the bottom of receipt
-            data.put("remarkEn", messageManager.getMessageEn("payment.bill.remark"));
-            data.put("remarkTh", messageManager.getMessageTh("payment.bill.remark"));
+            data.put(PARAM_REMARK_EN, messageManager.getMessageEn("payment.bill.remark"));
+            data.put(PARAM_REMARK_TH, messageManager.getMessageTh("payment.bill.remark"));
         }
 
         if(ValidateUtil.isMobileNumber(bill.getRef1())){
             String formattedMobileNumber = Utils.formatMobileNumber(bill.getRef1());
-            data.put("ref1", formattedMobileNumber);
+            data.put(PARAM_REF1, formattedMobileNumber);
         }else if(ValidateUtil.isTelNumber(bill.getRef1())){
             String formattedTelNumber = Utils.formatTelNumber(bill.getRef1());
-            data.put("ref1", formattedTelNumber);
+            data.put(PARAM_REF1, formattedTelNumber);
         }
         
         stopTimer(timer);
@@ -427,7 +469,7 @@ public class BillPaymentController extends BaseController {
             @PathVariable String billCode) {
         
     	Map<String, Object> data = new HashMap<String, Object>();
-    	data.put("target", billCode);
+    	data.put(PARAM_TARGET, billCode);
     	data.putAll(billConfigurationManager.getBillInfoResponse(billCode));
 
         return createResponse(data);
@@ -465,14 +507,6 @@ public class BillPaymentController extends BaseController {
         logger.info(timer.shortSummary());
     }
     
-    private static Map<String, String> targetNameMap = new HashMap<String, String>();
-    static {
-    	targetNameMap.put("mea", "การไฟฟ้านครหลวง");
-    	targetNameMap.put("water", "การประปานครหลวง");
-    	targetNameMap.put("tli", "ไทยประกันชีวิต");
-    	targetNameMap.put("dlt", "กรมการขนส่งทางบก");
-    	targetNameMap.put("pea", "การไฟฟ้าส่วนภูมิภาค");
-    }
 	private String getTargetTitle(String target) {
 		return targetNameMap.containsKey(target) ? targetNameMap.get(target) : "";
     }

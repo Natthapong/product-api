@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import th.co.truemoney.product.api.domain.BillResponse;
 import th.co.truemoney.product.api.domain.ProductResponse;
+import th.co.truemoney.product.api.manager.BillCategoryConfigurationManager;
 import th.co.truemoney.product.api.manager.BillConfiguration;
 import th.co.truemoney.product.api.manager.BillConfigurationManager;
 import th.co.truemoney.product.api.manager.MessageManager;
@@ -95,6 +96,9 @@ public class BillPaymentController extends BaseController {
 
 	@Autowired
 	private BillConfigurationManager billConfigurationManager;
+	
+	@Autowired
+	private BillCategoryConfigurationManager billCategoryConfigurationManager;
 	
     @Autowired
     private BillPaymentService billPaymentService;
@@ -471,6 +475,18 @@ public class BillPaymentController extends BaseController {
     	Map<String, Object> data = new HashMap<String, Object>();
     	data.put(PARAM_TARGET, billCode);
     	data.putAll(billConfigurationManager.getBillInfoResponse(billCode));
+
+        return createResponse(data);
+    }
+    
+    //getAllBillpayment
+    @RequestMapping(value = "/list/{accessTokenID}", method = RequestMethod.GET)
+    public @ResponseBody
+    ProductResponse getAllBillPaymentList(
+    		@PathVariable String accessTokenID) {
+        
+    	Map<String, Object> data = new HashMap<String, Object>();
+    	data.put("categories", billCategoryConfigurationManager.getBillCategoryConfigurations());
 
         return createResponse(data);
     }

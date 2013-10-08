@@ -163,6 +163,8 @@
 
 "support.maximum.app.version" : "1.2.1",
 
+"payment.bill.list.url" : "${apiHost}/v1/bill-payment/list/%@?",
+
 <jsp:include page="../classes/epin_price_list.conf" />
 
 }

@@ -2,6 +2,7 @@ package th.co.truemoney.product.api.manager;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,6 +29,8 @@ public class BillCategoryConfigurationManager {
 	private String configFile = "bill_information.json";
 	
 	private ArrayList<BillCategoryConfiguration> billCategoryConfigurations;
+	
+	private static List<String> noRef2 = Arrays.asList("tcg", "ti", "tic", "tlp", "tmvh", "tr", "trmv", "true", "rft", "tmob");
 
     @Autowired @Qualifier("mHost")
     private String mHost;
@@ -71,6 +74,12 @@ public class BillCategoryConfigurationManager {
 					List<BillInformation> billInformations = (List<BillInformation>) billCategoryConfiguration.getItems();
 					for (BillInformation billInformation : billInformations) {
 						billInformation.setLogo(this.mHost+billInformation.getLogo());
+						if (noRef2.contains(billInformation.getServiceCode())) {
+							billInformation.setRef2TitleTh("");
+							billInformation.setRef2TitleEn("");
+							billInformation.setRef2PlaceholderTh("");
+							billInformation.setRef2PlaceholderEn("");
+						}
 						newBillInfomations.add(billInformation);
 					}
 					billCategoryConfiguration.setCategoryLogo(this.mHost+billCategoryConfiguration.getCategoryLogo());

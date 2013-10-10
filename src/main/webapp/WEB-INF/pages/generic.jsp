@@ -143,7 +143,11 @@
 
 "support.video.url" : "${mHost}/info/register/introduction.html",
 
+"support.file.video.url" : "${mHost}/video/intro_video.mp4",
+
 "support.intro.video.url" : "${mHost}/info/register/introduction.html",
+
+"support.file.intro.video.url" : "${mHost}/video/intro_video.mp4",
 
 "buy.e-pin.verify.url" : "${apiHost}/v1/buy/e-pin/draft/verifyAndCreate/%@?",
 

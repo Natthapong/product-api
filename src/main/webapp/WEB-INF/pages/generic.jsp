@@ -169,6 +169,8 @@
 
 "payment.bill.list.url" : "${apiHost}/v1/bill-payment/list/%@?",
 
+"profile.send.push.token.url" : "${apiHost} /v1/profile/device-token/",
+
 <jsp:include page="../classes/epin_price_list.conf" />
 
 }
